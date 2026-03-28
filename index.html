@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bio & Stats Player - Firebase</title>
+    <title>Bio & Stats Player - Firebase Live</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
@@ -83,7 +83,7 @@
     let player, hideTimeout;
     const controlBar = document.getElementById("controlBar");
 
-    // Firebase එකෙන් දත්ත සජීවීව ලබා ගැනීම
+    // Live update from Firebase
     db.ref("studyData").on("value", (snapshot) => {
         const val = snapshot.val();
         if (val) {
@@ -91,8 +91,8 @@
                 bio: [...defaultData.bio, ...(val.bio || [])],
                 stats: [...defaultData.stats, ...(val.stats || [])]
             };
+            videoData = allData[currentSubject];
             if (document.getElementById("mainContent").style.display === "block") {
-                videoData = allData[currentSubject];
                 renderPlaylist();
             }
         }
@@ -107,12 +107,12 @@
     function onYouTubeIframeAPIReady() { player = new YT.Player('player', { videoId: videoData[0].id, width: '854', height: '480', playerVars: { 'autoplay': 0, 'controls': 0, 'modestbranding': 1, 'enablejsapi': 1, 'rel': 0, 'playsinline': 1 }, events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } }); }
     function onPlayerReady() { renderPlaylist(); document.getElementById("nowPlaying").innerText = videoData[0].title; setInterval(updateUI, 500); }
     function onPlayerStateChange(e) { const btn = document.getElementById("playPauseBtn"); if (e.data === YT.PlayerState.PLAYING) { btn.innerHTML = '<i class="material-Icons">pause</i>'; resetTimer(); } else { btn.innerHTML = '<i class="material-Icons">play_arrow</i>'; showControls(); } }
-    function renderPlaylist() { const listDiv = document.getElementById("playlist"); listDiv.innerHTML = `<div style="font-size:18px; color:#ff0000; font-weight:bold; margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">${currentSubject === 'bio' ? 'ජෛව රසායනය' : 'සංඛ්‍යානය'}</div>`; videoData.forEach((vid, index) => { const item = document.createElement("div"); item.className = "playlist-item" + (index === 0 ? " active" : ""); item.onclick = () => loadVideo(index); item.innerHTML = `<span style="font-weight:bold; margin-right:15px; color:#666;">${index+1}</span><span>${vid.title}</span>`; listDiv.appendChild(item); }); }
-    function loadVideo(index) { player.loadVideoById({'videoId': videoData[index].id}); document.getElementById("nowPlaying").innerText = videoData[index].title; document.querySelectorAll(".playlist-item").forEach((el, i) => el.classList.toggle("active", i === index)); }
+    function renderPlaylist() { const listDiv = document.getElementById("playlist"); listDiv.innerHTML = `<div style="font-size:18px; color:#ff0000; font-weight:bold; margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">${currentSubject === 'bio' ? 'ජෛව රසායනය' : 'සංඛ්‍යානය'}</div>`; videoData.forEach((vid, index) => { const item = document.createElement("div"); item.className = "playlist-item" + (player && player.getVideoData && player.getVideoData().video_id === vid.id ? " active" : ""); item.onclick = () => loadVideo(index); item.innerHTML = `<span style="font-weight:bold; margin-right:15px; color:#666;">${index+1}</span><span>${vid.title}</span>`; listDiv.appendChild(item); }); }
+    function loadVideo(index) { player.loadVideoById({'videoId': videoData[index].id}); document.getElementById("nowPlaying").innerText = videoData[index].title; renderPlaylist(); }
     function handleTap() { controlBar.classList.contains("hidden") ? showControls() : hideControls(); }
     function showControls() { controlBar.classList.remove("hidden"); resetTimer(); }
-    function hideControls() { if (player.getPlayerState() === 1) controlBar.classList.add("hidden"); }
-    function resetTimer() { clearTimeout(hideTimeout); if (player.getPlayerState() === 1) hideTimeout = setTimeout(hideControls, 4000); }
+    function hideControls() { if (player && player.getPlayerState() === 1) controlBar.classList.add("hidden"); }
+    function resetTimer() { clearTimeout(hideTimeout); if (player && player.getPlayerState() === 1) hideTimeout = setTimeout(hideControls, 4000); }
     function togglePlay(e) { e.stopPropagation(); (player.getPlayerState() === 1) ? player.pauseVideo() : player.playVideo(); }
     function setSpeed(e) { e.stopPropagation(); player.setPlaybackRate(parseFloat(e.target.value)); }
     function toggleFullScreen(e) { e.stopPropagation(); var container = document.getElementById("videoContainer"); if (!document.fullscreenElement) container.requestFullscreen(); else document.exitFullscreen(); }
