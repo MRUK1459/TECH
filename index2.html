@@ -13,13 +13,10 @@
         .nav-btn.active { background: #ff0000; border-color: #ff0000; }
         .section { display: none; }
         .section.active { display: block; }
-        label { display: block; font-size: 12px; color: #888; margin: 10px 0 5px 2px; }
         input, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333; background: #222; color: #fff; box-sizing: border-box; outline: none; margin-bottom: 10px; }
         .action-btn { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; }
         .action-btn.red { background: #ff0000; }
-        
-        /* List Styles */
-        .list-container { margin-top: 30px; border-top: 1px solid #333; padding-top: 20px; }
+        .list-container { margin-top: 30px; border-top: 1px solid #333; padding-top: 20px; width: 100%; }
         .list-title { font-size: 16px; color: #ff0000; margin-bottom: 15px; font-weight: bold; }
         .item-card { background: #1a1a1a; padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #222; }
         .item-info { font-size: 13px; }
@@ -33,14 +30,13 @@
 
     <div class="container">
         <h2>Admin Dashboard</h2>
-
         <div class="nav-buttons">
             <button class="nav-btn active" id="btnSub" onclick="toggleSection('subject')">Subject</button>
             <button class="nav-btn" id="btnVid" onclick="toggleSection('video')">Video</button>
         </div>
 
         <div id="subjectSection" class="section active">
-            <input type="text" id="newSubKey" placeholder="විෂයේ නම (English)">
+            <input type="text" id="newSubKey" placeholder="විෂයේ ID එක (උදා: ict)">
             <input type="text" id="newSubName" placeholder="විෂයේ නම (සිංහල)">
             <button class="action-btn red" onclick="addNewSubject()">Subject එක හදන්න</button>
         </div>
@@ -56,8 +52,7 @@
 
         <div class="list-container">
             <div class="list-title" id="listHeader">මතකයේ ඇති විෂයන්</div>
-            <div id="itemsDisplay">
-                </div>
+            <div id="itemsDisplay"></div>
         </div>
     </div>
 
@@ -88,7 +83,6 @@
         loadItems();
     }
 
-    // දත්ත පෙන්වීම
     function loadItems() {
         const display = document.getElementById("itemsDisplay");
         const header = document.getElementById("listHeader");
@@ -132,7 +126,6 @@
         }
     }
 
-    // Add Functions
     function addNewSubject() {
         const key = document.getElementById("newSubKey").value.toLowerCase().trim();
         const name = document.getElementById("newSubName").value.trim();
@@ -166,12 +159,13 @@
         setTimeout(() => s.style.display = "none", 3000);
     }
 
-    // සජීවීව Dropdown එක යාවත්කාලීන කිරීම
     db.ref("subjects").on("value", (snapshot) => {
         const select = document.getElementById("targetSubject");
         select.innerHTML = '<option value="bio">ජෛව රසායනය</option><option value="stats">සංඛ්‍යානය</option>';
         snapshot.forEach((child) => {
-            select.innerHTML += `<option value="${child.key}">${child.val()}</option>`;
+            if(child.key !== 'bio' && child.key !== 'stats') {
+                select.innerHTML += `<option value="${child.key}">${child.val()}</option>`;
+            }
         });
     });
 
