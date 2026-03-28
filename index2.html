@@ -3,49 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Portal - Admin Panel</title>
+    <title>Smart Bulk Admin - Study Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body { background: #0b0b0b; color: white; font-family: 'Roboto', sans-serif; margin: 0; padding: 20px; }
         .container { max-width: 800px; margin: 0 auto; }
         h1 { color: #ff0000; text-align: center; }
-        .card { background: #111; border: 1px solid #222; padding: 20px; border-radius: 12px; margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 500; color: #ccc; }
-        input, select { width: 100%; padding: 12px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #ff0000; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #cc0000; }
-        .video-list { margin-top: 30px; }
-        .video-item { display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 15px; margin-bottom: 10px; border-radius: 8px; border-left: 4px solid #ff0000; }
-        .delete-btn { width: auto; background: #444; padding: 5px 15px; font-size: 12px; }
+        .card { background: #111; border: 1px solid #222; padding: 25px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #ff0000; }
+        select, textarea { width: 100%; padding: 12px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+        button { width: 100%; padding: 15px; background: #ff0000; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
+        button:hover { background: #cc0000; transform: translateY(-2px); }
+        .status { margin-top: 10px; font-size: 14px; text-align: center; color: #aaa; }
+        .video-list { margin-top: 40px; }
+        .video-item { display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 12px 15px; margin-bottom: 8px; border-radius: 8px; border-left: 4px solid #ff0000; }
+        .delete-btn { background: #444; color: white; padding: 5px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; }
         .delete-btn:hover { background: #ff0000; }
-        .badge { background: #333; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin-right: 10px; }
+        .badge { background: #333; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-right: 10px; color: #ff0000; border: 1px solid #ff0000; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Admin Panel</h1>
+    <h1>Smart Bulk Uploader</h1>
     
     <div class="card">
-        <h3>නව වීඩියෝවක් එක් කරන්න</h3>
-        <label>විෂය තෝරන්න</label>
+        <label>විෂය තෝරන්න (Subject)</label>
         <select id="subjectSelect">
             <option value="bio">ජෛව රසායනය (Bio)</option>
             <option value="stats">සංඛ්‍යානය (Stats)</option>
         </select>
+
+        <label>මුළු ලිපියම මෙතනට Paste කරන්න (Full Text)</label>
+        <textarea id="bulkData" rows="12" placeholder="PAPER 2&#10;https://youtube.com/embed/...&#10;&#10;PAPER 3&#10;https://youtube.com/embed/..."></textarea>
         
-        <label>වීඩියෝ මාතෘකාව (Title)</label>
-        <input type="text" id="vidTitle" placeholder="උදා: Day 08 - Part 01">
-        
-        <label>YouTube Video ID</label>
-        <input type="text" id="vidId" placeholder="උදා: lMR_RtHbGcw">
-        
-        <button onclick="addVideo()">වීඩියෝව ඇතුළත් කරන්න</button>
+        <button onclick="processAndUpload()">සියල්ල හඳුනාගෙන ඇතුළත් කරන්න</button>
+        <div id="statusMsg" class="status"></div>
     </div>
 
     <div class="video-list">
-        <h3>දැනට පවතින වීඩියෝ (Live Updates)</h3>
-        <div id="displayArea">Loading data...</div>
+        <h3>දැනට පවතින වීඩියෝ</h3>
+        <div id="displayArea">පූරණය වේ...</div>
     </div>
 </div>
 
@@ -53,7 +51,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
 <script>
-    // ඔබේ Firebase Config එක මෙතනටද ඇතුළත් කරන්න
     const firebaseConfig = {
         apiKey: "AIzaSyApozqbVy4DFupEKafsU_oeC9RUAq1ljuU",
         authDomain: "tech-590c8.firebaseapp.com",
@@ -66,37 +63,60 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // වීඩියෝවක් Firebase වෙත එක් කිරීම
-    function addVideo() {
-        const sub = document.getElementById("subjectSelect").value;
-        const title = document.getElementById("vidTitle").value;
-        const id = document.getElementById("vidId").value;
-
-        if (title === "" || id === "") {
-            alert("කරුණාකර සියලු විස්තර පුරවන්න!");
-            return;
-        }
-
-        const newVideo = { id: id, title: title };
-        
-        // පවතින ලැයිස්තුවට අලුත් එක එකතු කිරීම
-        db.ref("studyData/" + sub).push(newVideo).then(() => {
-            alert("වීඩියෝව සාර්ථකව එක් කරන ලදී!");
-            document.getElementById("vidTitle").value = "";
-            document.getElementById("vidId").value = "";
-        });
+    function extractVideoID(url) {
+        const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+        const match = url.trim().match(regExp);
+        return (match && match[7].length === 11) ? match[7] : null;
     }
 
-    // Firebase එකෙන් දත්ත කියවා පෙන්වීම
+    async function processAndUpload() {
+        const sub = document.getElementById("subjectSelect").value;
+        const rawText = document.getElementById("bulkData").value;
+        const lines = rawText.split('\n');
+        const statusMsg = document.getElementById("statusMsg");
+        
+        let currentTitle = "";
+        let count = 0;
+
+        statusMsg.innerText = "සැකසෙමින් පවතී...";
+
+        for (let line of lines) {
+            line = line.trim();
+            if (line === "") continue;
+
+            // පේළිය ලිපිනයක් (URL) ද කියා බලන්න
+            if (line.includes("http")) {
+                const vidId = extractVideoID(line);
+                if (vidId && currentTitle !== "") {
+                    await db.ref("studyData/" + sub).push({
+                        id: vidId,
+                        title: currentTitle
+                    });
+                    count++;
+                    currentTitle = ""; // ඊළඟ වීඩියෝව සඳහා හිස් කරන්න
+                }
+            } else {
+                // URL එකක් නොවේ නම් එය Title එක ලෙස සලකන්න
+                currentTitle = line;
+            }
+        }
+
+        if (count > 0) {
+            alert(`වීඩියෝ ${count} ක් සාර්ථකව හඳුනාගෙන එක් කරන ලදී!`);
+            document.getElementById("bulkData").value = "";
+            statusMsg.innerText = "";
+        } else {
+            alert("කිසිදු වීඩියෝවක් හඳුනාගත නොහැකි විය. කරුණාකර නිවැරදි Format එක භාවිතා කරන්න.");
+            statusMsg.innerText = "";
+        }
+    }
+
+    // දත්ත පෙන්වීම
     db.ref("studyData").on("value", (snapshot) => {
         const data = snapshot.val();
         const displayArea = document.getElementById("displayArea");
         displayArea.innerHTML = "";
-
-        if (!data) {
-            displayArea.innerHTML = "<p>තවමත් වීඩියෝ එක් කර නැත.</p>";
-            return;
-        }
+        if (!data) return;
 
         for (let sub in data) {
             for (let key in data[sub]) {
@@ -104,10 +124,7 @@
                 const item = document.createElement("div");
                 item.className = "video-item";
                 item.innerHTML = `
-                    <div>
-                        <span class="badge">${sub.toUpperCase()}</span>
-                        <strong>${video.title}</strong>
-                    </div>
+                    <div><span class="badge">${sub.toUpperCase()}</span><strong>${video.title}</strong></div>
                     <button class="delete-btn" onclick="deleteVideo('${sub}', '${key}')">Delete</button>
                 `;
                 displayArea.appendChild(item);
@@ -115,11 +132,8 @@
         }
     });
 
-    // වීඩියෝවක් ඉවත් කිරීම
     function deleteVideo(sub, key) {
-        if (confirm("මෙම වීඩියෝව ඉවත් කිරීමට අවශ්‍යද?")) {
-            db.ref(`studyData/${sub}/${key}`).remove();
-        }
+        if (confirm("මකන්නද?")) db.ref(`studyData/${sub}/${key}`).remove();
     }
 </script>
 
