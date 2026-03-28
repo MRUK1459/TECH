@@ -2,250 +2,59 @@
 <html lang="si">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bio & Stats Player - Admin Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Admin Panel - Add Recordings</title>
     <style>
-        body { background: #000; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; color: white; overflow-x: hidden; }
-        .material-Icons { font-family: 'Material Icons'; font-size: 32px; display: inline-block; line-height: 1; }
-
-        /* Login */
-        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0b0b; z-index: 999999; display: flex; align-items: center; justify-content: center; }
-        .login-box { background: #111; padding: 30px; border-radius: 15px; width: 85%; max-width: 350px; text-align: center; border: 1px solid #222; }
-        .login-box input { width: 100%; padding: 14px; margin: 10px 0; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; outline: none; }
-        .login-box button { width: 100%; padding: 14px; background: #ff0000; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-
-        /* Admin Dashboard UI */
-        #adminPanel { display: none; padding: 20px; background: #111; margin: 20px; border-radius: 15px; border: 1px dashed #ff0000; }
-        .admin-input { padding: 10px; margin: 5px; border-radius: 5px; border: 1px solid #444; background: #222; color: white; width: 250px; }
-        .admin-btn { padding: 10px 20px; background: #008cff; color: white; border: none; border-radius: 8px; cursor: pointer; }
-
-        /* Subject Menu */
-        #subjectMenu { display: none; height: 80vh; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
-        .menu-card { width: 85%; max-width: 350px; padding: 25px; text-align: center; background: #111; border: 2px solid #ff0000; border-radius: 15px; cursor: pointer; font-size: 20px; font-weight: bold; transition: 0.3s; }
-        .menu-card:hover { background: #ff0000; }
-
-        /* Video Player Area */
-        #mainContent { display: none; padding: 10px; }
-        .back-btn { max-width: 854px; margin: 0 auto 10px; display: flex; align-items: center; color: #ff0000; cursor: pointer; background: none; border: none; font-size: 16px; gap: 5px; }
-        .video-box { position: relative; max-width: 854px; margin: 10px auto; background: #000; border-radius: 12px; overflow: hidden; aspect-ratio: 16 / 9; z-index: 10; }
-        #player { width: 100%; height: 100%; position: absolute; top: 0; left: 0; pointer-events: none; }
-        .click-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; cursor: pointer; background: transparent; }
-        
-        .custom-controls { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.95)); display: flex; flex-direction: column; padding: 20px 25px; transition: 0.4s; z-index: 99999 !important; }
-        .custom-controls.hidden { opacity: 0; transform: translateY(30px); pointer-events: none; }
-
-        /* Seek Bar */
-        .seek-bar-container { width: 100%; display: flex; align-items: center; margin-bottom: 15px; cursor: pointer; position: relative; height: 12px; }
-        .seek-bar-slider { width: 100%; height: 6px; background: rgba(255,255,255,0.25); border-radius: 3px; position: relative; }
-        .seek-bar-progress { height: 100%; background: #ff0000; width: 0%; border-radius: 3px; }
-        .seek-bar-knob { width: 18px; height: 18px; background: #ff0000; border-radius: 50%; position: absolute; top: 50%; transform: translate(-50%, -50%); left: 0%; }
-        
-        .time-row { display: flex; align-items: center; justify-content: space-between; }
-        .controls-left { display: flex; align-items: center; gap: 20px; }
-        .time-display { font-size: 15px; color: #fff; font-weight: 500; }
-        .now-playing { font-size: 14px; color: #ccc; max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .icon-btn { background: none; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; padding: 5px; }
-        .select-style { background: rgba(255,255,255,0.1); color: white; border: 1px solid #444; padding: 6px 10px; border-radius: 6px; font-size: 14px; }
-        
-        .playlist-container { max-width: 854px; margin: 20px auto; background: #111; border-radius: 12px; padding: 15px; border: 1px solid #222; }
-        .playlist-item { display: flex; align-items: center; padding: 16px; margin-bottom: 8px; background: #1a1a1a; border-radius: 10px; cursor: pointer; }
-        .playlist-item.active { border: 1px solid #ff0000; background: rgba(255, 0, 0, 0.05); }
+        body { background: #0b0b0b; color: white; font-family: sans-serif; display: flex; justify-content: center; padding: 50px; }
+        .admin-box { background: #111; padding: 30px; border-radius: 15px; border: 1px solid #ff0000; width: 400px; }
+        input, select, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; box-sizing: border-box; }
+        input, select { background: #1a1a1a; color: white; }
+        button { background: #ff0000; color: white; font-weight: bold; cursor: pointer; border: none; }
+        .msg { color: #00ff00; text-align: center; display: none; }
     </style>
 </head>
 <body>
 
-    <div id="loginOverlay">
-        <div class="login-box">
-            <h2 style="color:#ff0000">Study Portal</h2>
-            <input type="text" id="username" placeholder="Username">
-            <input type="password" id="password" placeholder="Password">
-            <button onclick="checkLogin()">ඇතුල් වන්න</button>
-            <p id="error" style="color:red; display:none; margin-top:10px;">විස්තර වැරදියි!</p>
-        </div>
-    </div>
-
-    <div id="adminPanel">
-        <h3 style="color: #008cff; margin-top: 0;">Admin: Add New Recording</h3>
-        <select id="targetSubject" class="admin-input" style="width: 100px;">
-            <option value="bio">Bio</option>
-            <option value="stats">Stats</option>
-        </select>
-        <input type="text" id="newVidTitle" class="admin-input" placeholder="Video Title (Ex: Day 08)">
-        <input type="text" id="newVidId" class="admin-input" placeholder="YouTube Video ID">
-        <button class="admin-btn" onclick="addNewVideo()">Add to Playlist</button>
-        <button class="admin-btn" style="background:#444;" onclick="resetData()">Reset All</button>
-    </div>
-
-    <div id="subjectMenu">
-        <h2 style="margin-bottom: 20px;">විෂය තෝරන්න</h2>
-        <div class="menu-card" onclick="startSubject('bio')">ජෛව රසායනය</div>
-        <div class="menu-card" onclick="startSubject('stats')">සංඛ්‍යානය</div>
-    </div>
-
-    <div id="mainContent">
-        <button class="back-btn" onclick="goBack()"><i class="material-icons">arrow_back</i> විෂය මාරු කරන්න</button>
-        <div class="video-box" id="videoContainer">
-            <div id="player"></div>
-            <div class="click-layer" id="mainOverlay" onclick="handleTap()"></div>
-            <div class="custom-controls" id="controlBar">
-                <div class="seek-bar-container" id="seekBarContainer" onclick="handleSeek(event)">
-                    <div class="seek-bar-slider">
-                        <div class="seek-bar-progress" id="seekBarProgress"></div>
-                        <div class="seek-bar-knob" id="seekBarKnob"></div>
-                    </div>
-                </div>
-                <div class="time-row">
-                    <div class="controls-left">
-                        <button class="icon-btn" onclick="togglePlay(event)" id="playPauseBtn"><i class="material-Icons">play_arrow</i></button>
-                        <div class="time-display"><span id="currentTime">0:00</span> / <span id="duration">0:00</span></div>
-                        <div class="now-playing" id="nowPlaying">Loading...</div>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:15px;">
-                        <select class="select-style" id="speed" onchange="setSpeed(event)">
-                            <option value="0.5">0.5x</option><option value="1" selected>1.0x</option><option value="1.5">1.5x</option><option value="2">2.0x</option>
-                        </select>
-                        <button class="icon-btn" onclick="toggleFullScreen(event)" id="fullscreenBtn"><i class="material-Icons">fullscreen</i></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="playlist-container" id="playlist"></div>
-    </div>
+<div class="admin-box">
+    <h2 style="color:#ff0000; text-align: center;">Admin Panel</h2>
+    <label>විෂය තෝරන්න:</label>
+    <select id="sub">
+        <option value="bio">ජෛව රසායනය (Bio)</option>
+        <option value="stats">සංඛ්‍යානය (Stats)</option>
+    </select>
+    
+    <label>වීඩියෝවේ නම:</label>
+    <input type="text" id="title" placeholder="Ex: ජෛව රසායනය - Day 08">
+    
+    <label>YouTube Video ID:</label>
+    <input type="text" id="vidId" placeholder="Ex: 9wKjkB0OUCA">
+    
+    <button onclick="saveToIndex()">Index එකට ඇතුළත් කරන්න</button>
+    <p id="status" class="msg">සාර්ථකව ඇතුළත් කළා!</p>
+</div>
 
 <script>
-    const VALID_USER = "Ulindu kawishka";
-    const VALID_PASS = "200704938Uk";
+    function saveToIndex() {
+        const sub = document.getElementById("sub").value;
+        const title = document.getElementById("title").value;
+        const id = document.getElementById("vidId").value;
 
-    // මුලික දත්ත
-    const defaultData = {
-        bio: [
-            { id: "lMR_RtHbGcw", title: "ජෛව රසායනය ( Day 01 )" }, { id: "SOi5karTuQU", title: "Day 02 [Part 01]" }, { id: "2iCOyz9fWME", title: "Day 02 [Part 02]" }, 
-            { id: "IcMmdsa3yw8", title: "ජෛව රසායනය - Day 03" }, { id: "pp49TELoPs0", title: "ජෛව රසායනය - Day 04" }, { id: "AdfjiYBNDTw", title: "Day 04 [Part 2]" }, 
-            { id: "XH3uO16T7A0", title: "ජෛව රසායනය - Day 05" }, { id: "hpdxRUjHJhU", title: "Day 05 [Part 2]" }, { id: "G36isU4cPhU", title: "ජෛව රසායනය - Day 06" }, 
-            { id: "ilScRAwcJmI", title: "Day 07 [Part 1]" }, { id: "9wKjkB0OUCA", title: "Day 07 [Part 2]" }
-        ],
-        stats: [
-            { id: "Gs2c3SgYk2o", title: "සංඛ්‍යානය - Day 01" }, { id: "s1WtwxKA8hQ", title: "සංඛ්‍යානය - Day 02" },
-            { id: "RL-MjG739qE", title: "සංඛ්‍යානය - Day 02 {Part 02}" }, { id: "AyFdasZua54", title: "සංඛ්‍යානය - Day 03" },
-            { id: "tvye27rdKQM", title: "සංඛ්‍යානය - Day 03 {Part 02}" }, { id: "1tMScxVcZOE", title: "සංඛ්‍යානය - Day 04" },
-            { id: "MDZ_JjdjijM", title: "සංඛ්‍යානය - Day 05" }, { id: "41lefx60PXk", title: "සංඛ්‍යානය - Day 05 {Part 02}" },
-            { id: "B_g_AnkOxQ8", title: "සංඛ්‍යානය - Day 06" }
-        ]
-    };
+        if(!title || !id) { alert("කරුණාකර විස්තර පුරවන්න!"); return; }
 
-    // දත්ත පූරණය (LocalStorage එකෙන් හෝ Default)
-    let allData = JSON.parse(localStorage.getItem("studyData")) || defaultData;
-    let currentSubject = 'bio';
-    let player, hideTimeout;
-    const controlBar = document.getElementById("controlBar");
-
-    window.onload = function() {
-        if (localStorage.getItem("isLoggedIn") === "true") { showMenu(); }
-    };
-
-    function checkLogin() { 
-        const u = document.getElementById("username").value;
-        const p = document.getElementById("password").value;
-        if (u === VALID_USER && p === VALID_PASS) { 
-            localStorage.setItem("isLoggedIn", "true");
-            showMenu(); 
-        } else { document.getElementById("error").style.display = "block"; } 
-    }
-
-    function showMenu() {
-        document.getElementById("loginOverlay").style.display = "none";
-        document.getElementById("subjectMenu").style.display = "flex";
-        document.getElementById("adminPanel").style.display = "block"; // ඇඩ්මින් පැනලය පෙන්වයි
-    }
-
-    // --- Admin Functions (දත්ත එක් කිරීම) ---
-    function addNewVideo() {
-        const sub = document.getElementById("targetSubject").value;
-        const title = document.getElementById("newVidTitle").value;
-        const id = document.getElementById("newVidId").value;
-
-        if (title && id) {
-            allData[sub].push({ id: id, title: title });
-            localStorage.setItem("studyData", JSON.stringify(allData)); // Save to memory
-            alert("වීඩියෝව සාර්ථකව ඇතුළත් කළා!");
-            
-            // ප්ලේයර් එකේ සිටී නම් ප්ලේලිස්ට් එක අප්ඩේට් කරන්න
-            if(document.getElementById("mainContent").style.display === "block" && currentSubject === sub) {
-                renderPlaylist();
-            }
-            
-            // ෆීල්ඩ් හිස් කරන්න
-            document.getElementById("newVidTitle").value = "";
-            document.getElementById("newVidId").value = "";
-        } else {
-            alert("කරුණාකර සියලු විස්තර පුරවන්න!");
-        }
-    }
-
-    function resetData() {
-        if(confirm("සියලුම දත්ත මකා දමා මුල් තත්වයට පත් කරන්නද?")) {
-            localStorage.removeItem("studyData");
-            location.reload();
-        }
-    }
-
-    // --- Player Logic ---
-    function startSubject(sub) {
-        currentSubject = sub;
-        document.getElementById("subjectMenu").style.display = "none";
-        document.getElementById("mainContent").style.display = "block";
-        if(!player) loadYouTubeAPI(); else { renderPlaylist(); loadVideo(0); }
-    }
-
-    function renderPlaylist() {
-        const listDiv = document.getElementById("playlist");
-        const videoData = allData[currentSubject];
-        listDiv.innerHTML = `<div style="font-size:18px; color:#ff0000; font-weight:bold; margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">${currentSubject === 'bio' ? 'ජෛව රසායනය' : 'සංඛ්‍යානය'}</div>`;
+        // දැනට තියෙන දත්ත ලබා ගැනීම
+        let allData = JSON.parse(localStorage.getItem("studyData")) || { bio: [], stats: [] };
         
-        videoData.forEach((vid, index) => {
-            const item = document.createElement("div");
-            item.className = "playlist-item" + (index === 0 ? " active" : "");
-            item.onclick = () => loadVideo(index);
-            item.innerHTML = `<span style="font-weight:bold; margin-right:15px; color:#666;">${index+1}</span><span>${vid.title}</span>`;
-            listDiv.appendChild(item);
-        });
+        // අලුත් එක ඇතුලත් කිරීම
+        allData[sub].push({ id: id, title: title });
+        
+        // නැවත Save කිරීම
+        localStorage.setItem("studyData", JSON.stringify(allData));
+
+        document.getElementById("status").style.display = "block";
+        setTimeout(() => { document.getElementById("status").style.display = "none"; }, 3000);
+        
+        document.getElementById("title").value = "";
+        document.getElementById("vidId").value = "";
     }
-
-    function loadVideo(index) {
-        const vidId = allData[currentSubject][index].id;
-        const title = allData[currentSubject][index].title;
-        player.loadVideoById({'videoId': vidId});
-        document.getElementById("nowPlaying").innerText = title;
-        document.querySelectorAll(".playlist-item").forEach((el, i) => el.classList.toggle("active", i === index));
-    }
-
-    // --- YouTube & Controls (Common) ---
-    function loadYouTubeAPI() { var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api"; var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag); }
-
-    function onYouTubeIframeAPIReady() {
-        player = new YT.Player('player', {
-            videoId: allData[currentSubject][0].id,
-            width: '854', height: '480',
-            playerVars: { 'autoplay': 0, 'controls': 0, 'modestbranding': 1, 'enablejsapi': 1, 'rel': 0, 'playsinline': 1 },
-            events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
-        });
-    }
-
-    function onPlayerReady() { renderPlaylist(); document.getElementById("nowPlaying").innerText = allData[currentSubject][0].title; setInterval(updateUI, 500); }
-    function onPlayerStateChange(e) { if (e.data === YT.PlayerState.PLAYING) { document.getElementById("playPauseBtn").innerHTML = '<i class="material-Icons">pause</i>'; resetTimer(); } else { document.getElementById("playPauseBtn").innerHTML = '<i class="material-Icons">play_arrow</i>'; showControls(); } }
-    function handleTap() { controlBar.classList.contains("hidden") ? showControls() : hideControls(); }
-    function showControls() { controlBar.classList.remove("hidden"); resetTimer(); }
-    function hideControls() { if (player.getPlayerState() === 1) controlBar.classList.add("hidden"); }
-    function resetTimer() { clearTimeout(hideTimeout); if (player.getPlayerState() === 1) hideTimeout = setTimeout(hideControls, 4000); }
-    function togglePlay(e) { e.stopPropagation(); (player.getPlayerState() === 1) ? player.pauseVideo() : player.playVideo(); }
-    function setSpeed(e) { e.stopPropagation(); player.setPlaybackRate(parseFloat(e.target.value)); }
-    function toggleFullScreen(e) { e.stopPropagation(); var container = document.getElementById("videoContainer"); if (!document.fullscreenElement) container.requestFullscreen(); else document.exitFullscreen(); }
-    function handleSeek(e) { e.stopPropagation(); var rect = document.getElementById("seekBarContainer").getBoundingClientRect(); player.seekTo(player.getDuration() * ((e.clientX - rect.left) / rect.width), true); }
-    function goBack() { if(player) player.pauseVideo(); document.getElementById("mainContent").style.display = "none"; document.getElementById("subjectMenu").style.display = "flex"; }
-    function updateUI() { if (player && player.getCurrentTime) { var curr = player.getCurrentTime(), dur = player.getDuration(); document.getElementById("currentTime").innerText = formatTime(curr); document.getElementById("duration").innerText = formatTime(dur); if (dur > 0) { var p = (curr / dur) * 100; document.getElementById("seekBarProgress").style.width = p + "%"; document.getElementById("seekBarKnob").style.left = p + "%"; } } }
-    function formatTime(t) { t = Math.round(t); var m = Math.floor(t / 60), s = t % 60; return m + ":" + (s < 10 ? "0" : "") + s; }
 </script>
 </body>
 </html>
