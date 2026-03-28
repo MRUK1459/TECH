@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ජෛව රසායනය - Secure Player</title>
+    <title>ජෛව රසායනය - YouTube Player UI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        body { background: #000; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; color: white; overflow-x: hidden; }
+        body { background: #000; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; color: white; overflow-x: hidden; }
 
         /* --- Login Screen Styles --- */
         #loginOverlay {
@@ -25,7 +27,6 @@
             background: #1a1a1a; border: 1px solid #333;
             color: white; border-radius: 8px; box-sizing: border-box; outline: none;
         }
-        .login-box input:focus { border-color: #ff0000; }
         .login-box button {
             width: 100%; padding: 14px; background: #ff0000;
             color: white; border: none; border-radius: 8px;
@@ -33,38 +34,94 @@
         }
         .error-msg { color: #ff4444; font-size: 12px; margin-top: 15px; display: none; }
 
-        /* --- Player Styles --- */
+        /* --- Player Styles (පෙර තිබූ ප්‍රමාණයට) --- */
         #mainContent { display: none; padding: 10px; }
         .video-box {
             position: relative; max-width: 800px; margin: 10px auto;
             background: #000; border-radius: 12px; overflow: hidden;
             box-shadow: 0 10px 40px rgba(0,0,0,0.9); aspect-ratio: 16 / 9;
+            user-select: none; /* Text selection වැළැක්වීමට */
         }
         #player { width: 100%; height: 100%; pointer-events: none; }
         .video-box:fullscreen { max-width: 100%; width: 100%; height: 100vh; border-radius: 0; }
+        
+        /* ක්ලික් ස්තරය - Single click එකෙන් controls පෙන්වයි, Double click එකෙන් 10s ඉදිරියට යයි */
         .click-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 15; cursor: pointer; }
 
-        /* Slim Control Bar */
-        .custom-bar {
+        /* --- YouTube-like Controls Row --- */
+        .custom-controls {
             position: absolute; bottom: 0; left: 0; right: 0;
             background: linear-gradient(transparent, rgba(0,0,0,0.95));
-            display: flex; flex-direction: column; padding: 10px 15px; transition: 0.4s; z-index: 20;
+            padding: 8px 12px; transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+            z-index: 20;
+            display: flex; flex-direction: column;
         }
-        .custom-bar.hidden { opacity: 0; transform: translateY(15px); pointer-events: none; }
-        .time-display { display: flex; justify-content: space-between; font-size: 11px; color: #bbb; margin-bottom: 5px; }
-        .controls-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-        .seek-bar { width: 100%; cursor: pointer; accent-color: #ff0000; height: 3px; margin-bottom: 8px; }
-        .btn { background: #ff0000; color: white; border: none; padding: 6px 14px; cursor: pointer; font-weight: bold; border-radius: 5px; font-size: 12px; }
-        .select-style { background: #222; color: white; border: 1px solid #444; padding: 4px; border-radius: 4px; font-size: 11px; }
+        .custom-controls.hidden { opacity: 0; transform: translateY(20px); pointer-events: none; }
 
-        /* Playlist Styles */
+        /* Seek Bar - Slider */
+        .seek-bar-container { width: 100%; display: flex; align-items: center; margin-bottom: 5px; cursor: pointer; }
+        .seek-bar-slider {
+            width: 100%; height: 3px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 1.5px;
+            overflow: visible; /* Knob එක පෙනීමට */
+            position: relative;
+        }
+        .seek-bar-progress { height: 100%; background: #ff0000; width: 0%; border-radius: 1.5px; }
+        
+        /* YouTube knob රවුම - Hover කළ විට දර්ශනය වේ */
+        .seek-bar-knob {
+            width: 12px; height: 12px; background: #ff0000;
+            border-radius: 50%; position: absolute;
+            top: 50%; transform: translate(-50%, -50%);
+            left: 0%; transition: opacity 0.2s;
+            opacity: 0; /* Hover කළ විට පමනක් පෙන්වන්න */
+        }
+        .seek-bar-container:hover .seek-bar-knob { opacity: 1; }
+
+        .time-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .controls-row { display: flex; align-items: center; gap: 15px; }
+
+        .time-display { font-size: 12px; color: #ccc; font-family: 'Roboto', sans-serif; white-space: nowrap; }
+        .now-playing { font-size: 13px; color: #fff; font-weight: 500; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+
+        /* YouTube Icons Button ස්ටයිල් */
+        .icon-btn {
+            background: none; border: none;
+            color: #fff; cursor: pointer;
+            padding: 0; margin: 0;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0.9; transition: opacity 0.2s, transform 0.1s;
+        }
+        .icon-btn:hover { opacity: 1; }
+        .icon-btn:active { transform: scale(0.9); }
+        .icon-btn .material-Icons { font-size: 24px; }
+
+        /* Speed Dropdown Menu (YouTube style) */
+        .speed-menu {
+            position: absolute; bottom: 50px; right: 10px;
+            background: #111; border-radius: 8px; border: 1px solid #222;
+            padding: 8px 0; width: 120px;
+            display: none; flex-direction: column-reverse; /* YouTube මෙන් ඉහළට විවෘත වේ */
+            z-index: 30;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .speed-menu.open { display: flex; }
+        .speed-item {
+            padding: 10px 15px; font-size: 13px; color: #ccc;
+            cursor: pointer; transition: background 0.2s;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .speed-item:hover { background: #222; color: #fff; }
+        .speed-item.active { color: #ff0000; font-weight: 500; }
+        .speed-item.active .material-Icons { display: inline-block; font-size: 18px; color: #ff0000; }
+        .speed-item .material-Icons { display: none; }
+
+        /* Playlist Styles (පෙර තිබූ ඒවා) */
         .playlist-container { max-width: 800px; margin: 20px auto; background: #111; border-radius: 12px; padding: 15px; border: 1px solid #222; }
         .playlist-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: #ff0000; border-bottom: 1px solid #333; padding-bottom: 10px; }
         .playlist-item { display: flex; align-items: center; padding: 12px; margin-bottom: 8px; background: #1a1a1a; border-radius: 8px; cursor: pointer; transition: 0.2s; }
-        .playlist-item:hover { background: #222; }
         .playlist-item.active { background: #ff000015; border: 1px solid #ff0000; }
-        .item-index { font-weight: bold; margin-right: 15px; color: #555; }
-        .item-name { font-size: 14px; color: #eee; }
     </style>
 </head>
 <body>
@@ -82,29 +139,41 @@
     <div id="mainContent">
         <div class="video-box" id="videoContainer">
             <div id="player"></div>
-            <div class="click-layer" onclick="toggleControls()"></div>
+            <div class="click-layer" onclick="toggleControls()" ondblclick="skipForward(event)"></div>
             
-            <div class="custom-bar" id="controlBar">
-                <input type="range" class="seek-bar" id="seekBar" value="0" step="0.1">
-                <div class="time-display">
-                    <span id="currentTime">00:00</span>
-                    <span id="nowPlaying" style="color: #fff; opacity: 0.8; font-size: 12px;">වීඩියෝව තෝරන්න</span>
-                    <span id="duration">00:00</span>
+            <div class="custom-controls" id="controlBar">
+                <div class="seek-bar-container" id="seekBarContainer" onclick="handleSeek(event)">
+                    <div class="seek-bar-slider">
+                        <div class="seek-bar-progress" id="seekBarProgress"></div>
+                        <div class="seek-bar-knob" id="seekBarKnob"></div>
+                    </div>
                 </div>
-                <div class="controls-row">
-                    <div style="display:flex; gap:8px;">
-                        <button class="btn" onclick="playVideo(event)">▶ Play</button>
-                        <button class="btn" style="background:#444;" onclick="pauseVideo(event)">II Pause</button>
+
+                <div class="time-row">
+                    <div class="controls-row">
+                        <button class="icon-btn" onclick="togglePlay(event)" id="playPauseBtn">
+                            <i class="material-Icons">play_arrow</i> </button>
+                        <div class="time-display">
+                            <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
+                        </div>
+                        <div class="now-playing" id="nowPlaying">වීඩියෝව තෝරන්න</div>
                     </div>
-                    <div style="display:flex; gap:8px;">
-                        <select class="select-style" id="speed" onchange="setSpeed(event)">
-                            <option value="0.5">0.5x</option>
-                            <option value="1" selected>1x Speed</option>
-                            <option value="1.5">1.5x</option>
-                            <option value="2">2x</option>
-                        </select>
-                        <button class="btn" style="background:#222;" onclick="toggleFullScreen(event)">⛶ Full Screen</button>
+
+                    <div class="controls-row">
+                        <button class="icon-btn" onclick="toggleSpeedMenu(event)">
+                            <i class="material-Icons">settings</i>
+                        </button>
+                        <button class="icon-btn" onclick="toggleFullScreen(event)" id="fullscreenBtn">
+                            <i class="material-Icons">fullscreen</i>
+                        </button>
                     </div>
+                </div>
+
+                <div class="speed-menu" id="speedMenu">
+                    <div class="speed-item" onclick="setSpeed(event, 0.5)">0.5x <i class="material-Icons">check</i></div>
+                    <div class="speed-item active" onclick="setSpeed(event, 1)" id="speedNormal">Normal <i class="material-Icons">check</i></div>
+                    <div class="speed-item" onclick="setSpeed(event, 1.5)">1.5x <i class="material-Icons">check</i></div>
+                    <div class="speed-item" onclick="setSpeed(event, 2)">2x <i class="material-Icons">check</i></div>
                 </div>
             </div>
         </div>
@@ -115,27 +184,19 @@
     </div>
 
 <script>
-    // --- Login Logic ---
     const VALID_USER = "Ulindu kawishka";
     const VALID_PASS = "200704938Uk";
 
-    // App එක විවෘත වන විටම කලින් Login වී ඇත්දැයි පරීක්ෂා කිරීම
     document.addEventListener("DOMContentLoaded", function() {
-        if (localStorage.getItem("app_authenticated") === "true") {
-            showPlayer();
-        }
+        if (localStorage.getItem("app_authenticated") === "true") showPlayer();
     });
 
     function checkLogin() {
-        const u = document.getElementById("username").value;
-        const p = document.getElementById("password").value;
-        const err = document.getElementById("error");
-
-        if (u === VALID_USER && p === VALID_PASS) {
-            localStorage.setItem("app_authenticated", "true"); // ලොගින් දත්ත සේව් කිරීම
+        if (document.getElementById("username").value === VALID_USER && document.getElementById("password").value === VALID_PASS) {
+            localStorage.setItem("app_authenticated", "true");
             showPlayer();
         } else {
-            err.style.display = "block";
+            document.getElementById("error").style.display = "block";
         }
     }
 
@@ -145,7 +206,6 @@
         loadYouTubeAPI();
     }
 
-    // --- YouTube Player Logic ---
     const videoData = [
         { id: "lMR_RtHbGcw", title: "ජෛව රසායනය ( Day 01 )" },
         { id: "SOi5karTuQU", title: "ජෛව රසායනය ( Day 02 )[Part 01]" },
@@ -169,26 +229,42 @@
 
     var player, hideTimeout, currentVidIndex = 0;
     var controlBar = document.getElementById("controlBar");
+    var speedMenu = document.getElementById("speedMenu");
+    var playPauseBtn = document.getElementById("playPauseBtn");
+    var seekBarProgress = document.getElementById("seekBarProgress");
+    var seekBarKnob = document.getElementById("seekBarKnob");
 
     function onYouTubeIframeAPIReady() {
         player = new YT.Player('player', {
             videoId: videoData[0].id,
-            playerVars: { 'autoplay': 0, 'controls': 0, 'modestbranding': 1, 'enablejsapi': 1, 'rel': 0 },
+            // YT Controls සම්පූර්ණයෙන්ම ඉවත් කර JavaScript API භාවිත කරයි
+            playerVars: { 'autoplay': 0, 'controls': 0, 'modestbranding': 1, 'enablejsapi': 1, 'rel': 0, 'playsinline': 1 },
             events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
         });
+    }
+
+    // Double-click to skip forward 10s
+    function skipForward(e) {
+        e.stopPropagation();
+        if (player && player.getCurrentTime) player.seekTo(player.getCurrentTime() + 10, true);
     }
 
     function onPlayerReady() {
         renderPlaylist();
         document.getElementById("nowPlaying").innerText = videoData[0].title;
-        setInterval(updateUI, 500);
+        setInterval(updateUI, 250); // Seek bar එක වඩාත් සුමටව යාවත්කාලීන කිරීමට
     }
 
     function onPlayerStateChange(event) {
-        if (event.data === YT.PlayerState.ENDED) {
+        if (event.data === YT.PlayerState.PLAYING) {
+            playPauseBtn.innerHTML = '<i class="material-Icons">pause</i>'; // YouTube Pause Icon
+            resetTimer();
+        } else if (event.data === YT.PlayerState.PAUSED) {
+            playPauseBtn.innerHTML = '<i class="material-Icons">play_arrow</i>'; // YouTube Play Icon
+            showControls();
+        } else if (event.data === YT.PlayerState.ENDED) {
             if (currentVidIndex < videoData.length - 1) loadVideo(currentVidIndex + 1);
         }
-        if (event.data === YT.PlayerState.PLAYING) resetTimer();
     }
 
     function renderPlaylist() {
@@ -197,7 +273,7 @@
             const item = document.createElement("div");
             item.className = "playlist-item" + (index === 0 ? " active" : "");
             item.onclick = () => loadVideo(index);
-            item.innerHTML = `<span class="item-index">${(index+1).toString().padStart(2,'0')}</span><span class="item-name">${vid.title}</span>`;
+            item.innerHTML = `<span style="margin-right:15px; color:#555; font-weight:bold;">${index+1}</span><span style="font-size:14px;">${vid.title}</span>`;
             listDiv.appendChild(item);
         });
     }
@@ -210,19 +286,45 @@
         showControls();
     }
 
+    // --- Controls Row Functions ---
     function toggleControls() { controlBar.classList.contains("hidden") ? showControls() : hideControls(); }
     function showControls() { controlBar.classList.remove("hidden"); resetTimer(); }
     function hideControls() { if (player.getPlayerState() === 1) controlBar.classList.add("hidden"); }
     function resetTimer() { clearTimeout(hideTimeout); if (player.getPlayerState() === 1) hideTimeout = setTimeout(hideControls, 3000); }
 
-    function playVideo(e) { e.stopPropagation(); player.playVideo(); }
-    function pauseVideo(e) { e.stopPropagation(); player.pauseVideo(); showControls(); }
-    function setSpeed(e) { e.stopPropagation(); player.setPlaybackRate(parseFloat(document.getElementById("speed").value)); }
+    function togglePlay(e) { e.stopPropagation(); (player.getPlayerState() === 1) ? player.pauseVideo() : player.playVideo(); }
     
+    function toggleSpeedMenu(e) { e.stopPropagation(); speedMenu.classList.toggle("open"); }
+    
+    function setSpeed(e, rate) {
+        e.stopPropagation();
+        player.setPlaybackRate(rate);
+        speedMenu.classList.remove("open");
+        
+        // Active item එක වෙනස් කිරීම
+        document.querySelectorAll(".speed-item").forEach(el => el.classList.remove("active"));
+        if(rate === 1) document.getElementById("speedNormal").classList.add("active");
+        else e.target.classList.add("active");
+    }
+
     function toggleFullScreen(e) {
         e.stopPropagation();
         var container = document.getElementById("videoContainer");
-        if (!document.fullscreenElement) container.requestFullscreen(); else document.exitFullscreen();
+        if (!document.fullscreenElement) {
+            container.requestFullscreen();
+            document.getElementById("fullscreenBtn").innerHTML = '<i class="material-Icons">fullscreen_exit</i>';
+        } else {
+            document.exitFullscreen();
+            document.getElementById("fullscreenBtn").innerHTML = '<i class="material-Icons">fullscreen</i>';
+        }
+    }
+
+    // --- YouTube-like Seek Bar Functions ---
+    function handleSeek(e) {
+        e.stopPropagation();
+        var rect = document.getElementById("seekBarContainer").getBoundingClientRect();
+        var pos = (e.clientX - rect.left) / rect.width;
+        player.seekTo(player.getDuration() * pos, true);
     }
 
     function updateUI() {
@@ -230,18 +332,25 @@
             var curr = player.getCurrentTime(), dur = player.getDuration();
             document.getElementById("currentTime").innerText = formatTime(curr);
             document.getElementById("duration").innerText = formatTime(dur);
-            if (dur > 0) document.getElementById("seekBar").value = (curr / dur) * 100;
+            
+            // YouTube-style progress bar and knob update
+            if (dur > 0) {
+                var percentage = (curr / dur) * 100;
+                seekBarProgress.style.width = percentage + "%";
+                seekBarKnob.style.left = percentage + "%";
+            }
         }
     }
 
     function formatTime(t) {
         t = Math.round(t);
         var m = Math.floor(t / 60), s = t % 60;
-        return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+        return (m < 10 ? "" : "") + m + ":" + (s < 10 ? "0" : "") + s;
     }
 
-    document.getElementById("seekBar").addEventListener("input", function(e) {
-        player.seekTo(player.getDuration() * (this.value / 100));
+    // Click on speed menu item close logic
+    document.addEventListener("click", function(e) {
+        if (!speedMenu.contains(e.target)) speedMenu.classList.remove("open");
     });
 </script>
 
