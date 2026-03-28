@@ -7,33 +7,19 @@
     <style>
         body { background: #000; color: white; font-family: 'Roboto', sans-serif; display: flex; flex-direction: column; align-items: center; padding: 50px 10px; }
         .admin-box { background: #111; padding: 30px; border-radius: 15px; border: 1px dashed #ff0000; width: 90%; max-width: 400px; text-align: center; }
-        .admin-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: white; box-sizing: border-box; outline: none; }
-        .admin-btn { width: 100%; padding: 12px; background: #008cff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.3s; }
-        .admin-btn:hover { background: #0056b3; }
-        .reset-btn { width: 100%; padding: 10px; background: #333; color: #ff4444; border: 1px solid #444; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; font-size: 13px; }
-        .reset-btn:hover { background: #ff4444; color: white; }
-        .status { color: #00ff00; margin-top: 10px; display: none; font-size: 14px; }
+        .admin-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: white; box-sizing: border-box; }
+        .admin-btn { width: 100%; padding: 12px; background: #008cff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .status { color: #00ff00; margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
     <div class="admin-box">
-        <h2 style="color: #ff0000; margin-bottom: 20px;">Admin Dashboard</h2>
-        
-        <label style="display: block; text-align: left; font-size: 14px; color: #888;">විෂය තෝරන්න:</label>
-        <select id="targetSubject" class="admin-input">
-            <option value="bio">ජෛව රසායනය (Bio)</option>
-            <option value="stats">සංඛ්‍යානය (Stats)</option>
-        </select>
-
-        <input type="text" id="newVidTitle" class="admin-input" placeholder="වීඩියෝවේ නම (උදා: Day 08)">
-        <input type="text" id="newVidId" class="admin-input" placeholder="YouTube Video ID එක">
-        
-        <button class="admin-btn" onclick="addNewVideo()">වීඩියෝව ඇතුළත් කරන්න</button>
-        <p id="statusMsg" class="status">සාර්ථකව ඇතුළත් කළා! ✅</p>
-
-        <hr style="border: 0; border-top: 1px solid #222; margin: 20px 0;">
-        
-        <button class="reset-btn" onclick="resetDatabase()">දත්ත සියල්ල මකන්න (Reset)</button>
+        <h2 style="color: #ff0000;">Admin Dashboard</h2>
+        <select id="targetSubject" class="admin-input"><option value="bio">Bio</option><option value="stats">Stats</option></select>
+        <input type="text" id="newVidTitle" class="admin-input" placeholder="Title (Day 08)">
+        <input type="text" id="newVidId" class="admin-input" placeholder="YouTube Video ID">
+        <button class="admin-btn" onclick="addNewVideo()">Add Now</button>
+        <p id="statusMsg" class="status">Added Successfully!</p>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -52,36 +38,20 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // වීඩියෝ එකක් ඇතුළත් කිරීම
     function addNewVideo() {
         const sub = document.getElementById("targetSubject").value;
         const title = document.getElementById("newVidTitle").value;
         const id = document.getElementById("newVidId").value;
-        
         if (title && id) {
             db.ref("studyData/" + sub).once("value").then((snapshot) => {
                 let list = snapshot.val() || [];
                 list.push({ id: id, title: title });
                 db.ref("studyData/" + sub).set(list).then(() => {
-                    document.getElementById("statusMsg").innerText = "සාර්ථකව ඇතුළත් කළා! ✅";
                     document.getElementById("statusMsg").style.display = "block";
                     setTimeout(() => { document.getElementById("statusMsg").style.display = "none"; }, 3000);
                     document.getElementById("newVidTitle").value = "";
                     document.getElementById("newVidId").value = "";
                 });
-            });
-        } else {
-            alert("කරුණාකර නම සහ ID එක ඇතුළත් කරන්න!");
-        }
-    }
-
-    // දත්ත මකා දැමීම (Reset)
-    function resetDatabase() {
-        if (confirm("ඔබට විශ්වාසද? ඔබ ඇතුළත් කළ සියලුම වීඩියෝ මැකී යනු ඇත!")) {
-            db.ref("studyData").remove().then(() => {
-                document.getElementById("statusMsg").innerText = "සියලු දත්ත මැකුවා! 🗑️";
-                document.getElementById("statusMsg").style.display = "block";
-                setTimeout(() => { document.getElementById("statusMsg").style.display = "none"; }, 3000);
             });
         }
     }
