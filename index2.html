@@ -3,68 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Add New Recording</title>
+    <title>Admin Panel - Firebase</title>
     <style>
         body { background: #000; color: white; font-family: 'Roboto', sans-serif; display: flex; flex-direction: column; align-items: center; padding: 50px 10px; }
         .admin-box { background: #111; padding: 30px; border-radius: 15px; border: 1px dashed #ff0000; width: 90%; max-width: 400px; text-align: center; }
         .admin-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: white; box-sizing: border-box; }
         .admin-btn { width: 100%; padding: 12px; background: #008cff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-        .reset-btn { background: #444; margin-top: 15px; font-size: 12px; }
+        .reset-btn { background: #ff4444; margin-top: 15px; font-size: 12px; }
         .status { color: #00ff00; margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
-
     <div class="admin-box">
         <h2 style="color: #ff0000;">Admin Dashboard</h2>
-        <p>අලුත් වීඩියෝවක් ඇතුළත් කරන්න</p>
-        
-        <select id="targetSubject" class="admin-input">
-            <option value="bio">ජෛව රසායනය (Bio)</option>
-            <option value="stats">සංඛ්‍යානය (Stats)</option>
-        </select>
-        
-        <input type="text" id="newVidTitle" class="admin-input" placeholder="Video Title (Ex: Day 08)">
-        <input type="text" id="newVidId" class="admin-input" placeholder="YouTube Video ID">
-        
-        <button class="admin-btn" onclick="addNewVideo()">Add to Index</button>
+        <p>Firebase හරහා සජීවීව ඇතුළත් කරන්න</p>
+        <select id="targetSubject" class="admin-input"><option value="bio">ජෛව රසායනය (Bio)</option><option value="stats">සංඛ්‍යානය (Stats)</option></select>
+        <input type="text" id="newVidTitle" class="admin-input" placeholder="Video Title (Ex: Day 08)"><input type="text" id="newVidId" class="admin-input" placeholder="YouTube Video ID">
+        <button class="admin-btn" onclick="addNewVideo()">Firebase වෙත එක් කරන්න</button>
         <p id="statusMsg" class="status">සාර්ථකව ඇතුළත් කළා!</p>
-
-        <button class="admin-btn reset-btn" onclick="resetData()">Reset All Data</button>
+        <button class="admin-btn reset-btn" onclick="resetFirebaseData()">Database එක හිස් කරන්න</button>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
 <script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyApozqbVy4DFupEKafsU_oeC9RUAq1ljuU",
+        authDomain: "tech-590c8.firebaseapp.com",
+        databaseURL: "https://tech-590c8-default-rtdb.firebaseio.com",
+        projectId: "tech-590c8",
+        storageBucket: "tech-590c8.firebasestorage.app",
+        messagingSenderId: "379663698743",
+        appId: "1:379663698743:web:7fba89d9f7b231ca6828b2"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
     function addNewVideo() {
         const sub = document.getElementById("targetSubject").value;
         const title = document.getElementById("newVidTitle").value;
         const id = document.getElementById("newVidId").value;
 
         if (title && id) {
-            // දැනට පවතින දත්ත ලබා ගැනීම (එය නැත්නම් හිස් object එකක් ගැනීම)
-            let storedData = JSON.parse(localStorage.getItem("studyData")) || { bio: [], stats: [] };
-            
-            // අලුත් වීඩියෝව අදාළ විෂයට එක් කිරීම
-            storedData[sub].push({ id: id, title: title });
-            
-            // නැවත මතකයේ තැන්පත් කිරීම
-            localStorage.setItem("studyData", JSON.stringify(storedData));
-            
-            // සාර්ථක පණිවිඩය පෙන්වීම
-            document.getElementById("statusMsg").style.display = "block";
-            setTimeout(() => { document.getElementById("statusMsg").style.display = "none"; }, 3000);
-
-            // Inputs හිස් කිරීම
-            document.getElementById("newVidTitle").value = "";
-            document.getElementById("newVidId").value = "";
+            db.ref("studyData/" + sub).once("value").then((snapshot) => {
+                let currentList = snapshot.val() || [];
+                currentList.push({ id: id, title: title });
+                
+                db.ref("studyData/" + sub).set(currentList).then(() => {
+                    document.getElementById("statusMsg").style.display = "block";
+                    setTimeout(() => { document.getElementById("statusMsg").style.display = "none"; }, 3000);
+                    document.getElementById("newVidTitle").value = "";
+                    document.getElementById("newVidId").value = "";
+                });
+            });
         } else {
             alert("කරුණාකර සියලු විස්තර පුරවන්න!");
         }
     }
 
-    function resetData() {
-        if(confirm("ඇතුළත් කළ සියලුම දත්ත මකා දමන්නද? (මෙය Default වීඩියෝ වලට බලපාන්නේ නැත)")) {
-            localStorage.removeItem("studyData");
-            alert("දත්ත මකා දැමුවා.");
+    function resetFirebaseData() {
+        if(confirm("Firebase හි ඇති සියලුම දත්ත මකා දැමීමට සහතිකද?")) {
+            db.ref("studyData").remove().then(() => alert("දත්ත මකා දැමුවා."));
         }
     }
 </script>
