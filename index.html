@@ -3,51 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bio Chemistry Player - Final Fix</title>
+    <title>Bio & Stats Learning App</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         body { background: #000; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; color: white; overflow-x: hidden; }
         .material-Icons { font-family: 'Material Icons'; font-size: 32px; display: inline-block; line-height: 1; }
 
+        /* Login Screen */
         #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0b0b; z-index: 999999; display: flex; align-items: center; justify-content: center; }
         .login-box { background: #111; padding: 30px; border-radius: 15px; width: 85%; max-width: 350px; text-align: center; border: 1px solid #222; }
-        .login-box input { width: 100%; padding: 14px; margin: 10px 0; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; }
-        .login-box button { width: 100%; padding: 14px; background: #ff0000; color: white; border: none; border-radius: 8px; font-weight: bold; }
+        .login-box input { width: 100%; padding: 14px; margin: 10px 0; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; outline: none; }
+        .login-box button { width: 100%; padding: 14px; background: #ff0000; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-        #mainContent { display: none; padding: 10px; }
+        /* Home Menu Styles (Your Sketch) */
+        #homeMenu { display: none; height: 100vh; flex-direction: column; align-items: center; justify-content: center; gap: 20px; background: #000; }
+        .menu-card { 
+            width: 85%; 
+            max-width: 400px; 
+            padding: 25px; 
+            text-align: center; 
+            background: #111; 
+            border: 2px solid #ff0000; 
+            border-radius: 15px; 
+            cursor: pointer; 
+            font-size: 22px; 
+            font-weight: bold; 
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.1);
+        }
+        .menu-card:hover { background: #ff0000; color: #fff; transform: scale(1.02); }
 
-        /* ප්ලේයරය සහ කන්ට්‍රෝල්ස් එකට තබා ගන්නා ප්‍රධාන බහාලුම */
+        /* Player Section Styles */
+        #playerSection { display: none; padding: 10px; }
+        .back-btn { 
+            max-width: 854px; margin: 0 auto 15px; display: flex; align-items: center; 
+            color: #ccc; cursor: pointer; font-weight: 500; gap: 5px; background: none; border: none; padding: 0;
+        }
+        .back-btn:hover { color: #ff0000; }
+
         .video-box { 
-            position: relative; 
-            max-width: 854px; 
-            margin: 10px auto; 
-            background: #000; 
-            border-radius: 12px; 
-            overflow: hidden; 
-            aspect-ratio: 16 / 9; 
-            z-index: 10;
+            position: relative; max-width: 854px; margin: 0 auto; background: #000; 
+            border-radius: 12px; overflow: hidden; aspect-ratio: 16 / 9; z-index: 10;
         }
 
         #player { width: 100%; height: 100%; position: absolute; top: 0; left: 0; pointer-events: none; }
-        
-        /* මේ ලේයර් එක තමයි වීඩියෝව මත ස්පර්ශය හසුරවන්නේ */
         .click-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; cursor: pointer; background: transparent; }
 
-        /* Fullscreen වලදීත් පෙනෙන ලෙස Z-index එක උපරිම කළා */
         .custom-controls { 
             position: absolute; bottom: 0; left: 0; right: 0; 
             background: linear-gradient(transparent, rgba(0,0,0,0.95)); 
-            display: flex; flex-direction: column; 
-            padding: 20px 25px; 
-            transition: 0.4s; 
-            z-index: 99999 !important; /* වෙනත් ඕනෑම දෙයකට වඩා උඩින් */
+            display: flex; flex-direction: column; padding: 20px 25px; transition: 0.4s; z-index: 99999 !important;
         }
         .custom-controls.hidden { opacity: 0; transform: translateY(30px); pointer-events: none; }
-
-        /* Fullscreen වලදී සියලු අංග පෙනෙන බව තහවුරු කිරීමට */
-        .video-box:fullscreen .custom-controls,
-        .video-box:-webkit-full-screen .custom-controls { z-index: 2147483647 !important; }
 
         .seek-bar-container { width: 100%; display: flex; align-items: center; margin-bottom: 15px; cursor: pointer; position: relative; height: 12px; }
         .seek-bar-slider { width: 100%; height: 6px; background: rgba(255,255,255,0.25); border-radius: 3px; position: relative; }
@@ -60,10 +68,8 @@
         .now-playing { font-size: 14px; color: #ccc; max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .icon-btn { background: none; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; padding: 5px; }
 
-        .select-style { background: rgba(255,255,255,0.1); color: white; border: 1px solid #444; padding: 6px 10px; border-radius: 6px; font-size: 14px; }
-
         .playlist-container { max-width: 854px; margin: 20px auto; background: #111; border-radius: 12px; padding: 15px; border: 1px solid #222; }
-        .playlist-item { display: flex; align-items: center; padding: 16px; margin-bottom: 8px; background: #1a1a1a; border-radius: 10px; cursor: pointer; }
+        .playlist-item { display: flex; align-items: center; padding: 16px; margin-bottom: 8px; background: #1a1a1a; border-radius: 10px; cursor: pointer; border: 1px solid transparent; }
         .playlist-item.active { border-color: #ff0000; background: rgba(255, 0, 0, 0.05); }
 
         .video-box:fullscreen { width: 100vw; height: 100vh; max-width: 100vw; margin: 0; border-radius: 0; }
@@ -73,7 +79,7 @@
 
     <div id="loginOverlay">
         <div class="login-box">
-            <h2 style="color:#ff0000">Bio Chemistry</h2>
+            <h2 style="color:#ff0000">Online Learning</h2>
             <input type="text" id="username" placeholder="Username">
             <input type="password" id="password" placeholder="Password">
             <button onclick="checkLogin()">ඇතුල් වන්න</button>
@@ -81,7 +87,15 @@
         </div>
     </div>
 
-    <div id="mainContent">
+    <div id="homeMenu">
+        <h2 style="margin-bottom: 30px; letter-spacing: 1px;">පාඩම් මාලාව තෝරන්න</h2>
+        <div class="menu-card" onclick="openSubject('bio')">ජෛව රසායනය</div>
+        <div class="menu-card" onclick="openSubject('stats')">සංඛ්‍යානය</div>
+    </div>
+
+    <div id="playerSection">
+        <button class="back-btn" onclick="goBack()"><i class="material-icons">arrow_back</i> Back to Menu</button>
+        
         <div class="video-box" id="videoContainer">
             <div id="player"></div>
             <div class="click-layer" id="mainOverlay" onclick="handleTap(event)"></div>
@@ -99,10 +113,7 @@
                         <div class="now-playing" id="nowPlaying">Loading...</div>
                     </div>
                     <div style="display:flex; align-items:center; gap:15px;">
-                        <select class="select-style" id="speed" onchange="setSpeed(event)">
-                            <option value="0.5">0.5x</option><option value="1" selected>1.0x</option><option value="1.5">1.5x</option><option value="2">2.0x</option>
-                        </select>
-                        <button class="icon-btn" onclick="toggleFullScreen(event)" id="fullscreenBtn"><i class="material-Icons">fullscreen</i></button>
+                        <button class="icon-btn" onclick="toggleFullScreen(event)"><i class="material-Icons">fullscreen</i></button>
                     </div>
                 </div>
             </div>
@@ -114,104 +125,117 @@
     const VALID_USER = "Ulindu kawishka";
     const VALID_PASS = "200704938Uk";
 
-    document.addEventListener("DOMContentLoaded", function() { if (localStorage.getItem("app_authenticated") === "true") showPlayer(); });
-    function checkLogin() { if (document.getElementById("username").value === VALID_USER && document.getElementById("password").value === VALID_PASS) { localStorage.setItem("app_authenticated", "true"); showPlayer(); } else { document.getElementById("error").style.display = "block"; } }
-    function showPlayer() { document.getElementById("loginOverlay").style.display = "none"; document.getElementById("mainContent").style.display = "block"; loadYouTubeAPI(); }
+    const subjects = {
+        bio: [
+            { id: "lMR_RtHbGcw", title: "ජෛව රසායනය ( Day 01 )" }, { id: "SOi5karTuQU", title: "Day 02 [Part 01]" }, { id: "2iCOyz9fWME", title: "Day 02 [Part 02]" }, 
+            { id: "IcMmdsa3yw8", title: "ජෛව රසායනය - Day 03" }, { id: "pp49TELoPs0", title: "ජෛව රසායනය - Day 04" }, { id: "AdfjiYBNDTw", title: "Day 04 [Part 2]" }, 
+            { id: "XH3uO16T7A0", title: "ජෛව රසායනය - Day 05" }, { id: "hpdxRUjHJhU", title: "Day 05 [Part 2]" }, { id: "G36isU4cPhU", title: "ජෛව රසායනය - Day 06" }, 
+            { id: "ilScRAwcJmI", title: "Day 07 [Part 1]" }, { id: "9wKjkB0OUCA", title: "Day 07 [Part 2]" }
+        ],
+        stats: [
+            { id: "Gs2c3SgYk2o", title: "සංඛ්‍යානය - Day 01" }, { id: "s1WtwxKA8hQ", title: "සංඛ්‍යානය - Day 02" },
+            { id: "RL-MjG739qE", title: "සංඛ්‍යානය - Day 02 {Part 02}" }, { id: "AyFdasZua54", title: "සංඛ්‍යානය - Day 03" },
+            { id: "tvye27rdKQM", title: "සංඛ්‍යානය - Day 03 {Part 02}" }, { id: "1tMScxVcZOE", title: "සංඛ්‍යානය - Day 04" },
+            { id: "MDZ_JjdjijM", title: "සංඛ්‍යානය - Day 05" }, { id: "41lefx60PXk", title: "සංඛ්‍යානය - Day 05 {Part 02}" },
+            { id: "B_g_AnkOxQ8", title: "සංඛ්‍යානය - Day 06" }
+        ]
+    };
 
-    const videoData = [
-        { id: "lMR_RtHbGcw", title: "ජෛව රසායනය ( Day 01 )" }, { id: "SOi5karTuQU", title: "Day 02 [Part 01]" }, { id: "2iCOyz9fWME", title: "Day 02 [Part 02]" }, 
-        { id: "IcMmdsa3yw8", title: "ජෛව රසායනය - Day 03" }, { id: "pp49TELoPs0", title: "ජෛව රසායනය - Day 04" }, { id: "AdfjiYBNDTw", title: "Day 04 [Part 2]" }, 
-        { id: "XH3uO16T7A0", title: "ජෛව රසායනය - Day 05" }, { id: "hpdxRUjHJhU", title: "Day 05 [Part 2]" }, { id: "G36isU4cPhU", title: "ජෛව රසායනය - Day 06" }, 
-        { id: "ilScRAwcJmI", title: "Day 07 [Part 1]" }, { id: "9wKjkB0OUCA", title: "Day 07 [Part 2]" }
-    ];
+    let currentSubject = '';
+    let player, hideTimeout;
 
-    function loadYouTubeAPI() { var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api"; var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag); }
+    // Login Check
+    function checkLogin() { 
+        if (document.getElementById("username").value === VALID_USER && document.getElementById("password").value === VALID_PASS) { 
+            document.getElementById("loginOverlay").style.display = "none"; 
+            document.getElementById("homeMenu").style.display = "flex"; 
+            loadYouTubeAPI();
+        } else { 
+            document.getElementById("error").style.display = "block"; 
+        } 
+    }
 
-    var player, hideTimeout, currentVidIndex = 0;
-    var controlBar = document.getElementById("controlBar");
+    // Navigation
+    function openSubject(type) {
+        currentSubject = type;
+        document.getElementById("homeMenu").style.display = "none";
+        document.getElementById("playerSection").style.display = "block";
+        if(player) {
+            loadVideo(0);
+            renderPlaylist();
+        }
+    }
+
+    function goBack() {
+        if(player) player.pauseVideo();
+        document.getElementById("playerSection").style.display = "none";
+        document.getElementById("homeMenu").style.display = "flex";
+    }
+
+    // YT Player Logic
+    function loadYouTubeAPI() { 
+        var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api"; 
+        var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag); 
+    }
 
     function onYouTubeIframeAPIReady() {
         player = new YT.Player('player', {
-            videoId: videoData[0].id,
-            width: '854', height: '480',
+            height: '480', width: '854', videoId: subjects.bio[0].id,
             playerVars: { 'autoplay': 0, 'controls': 0, 'modestbranding': 1, 'enablejsapi': 1, 'rel': 0, 'playsinline': 1 },
             events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
         });
     }
 
-    function onPlayerReady(event) {
-        event.target.setPlaybackQuality('medium');
-        renderPlaylist();
-        document.getElementById("nowPlaying").innerText = videoData[0].title;
-        setInterval(() => { if (player && player.getPlayerState() === 1) player.setPlaybackQuality('medium'); }, 2000);
-        setInterval(updateUI, 500);
-    }
-
-    function onPlayerStateChange(event) {
-        const btn = document.getElementById("playPauseBtn");
-        if (event.data === YT.PlayerState.PLAYING) {
-            btn.innerHTML = '<i class="material-Icons">pause</i>';
-            resetTimer();
-        } else {
-            btn.innerHTML = '<i class="material-Icons">play_arrow</i>';
-            showControls();
-        }
+    function onPlayerReady() { 
+        renderPlaylist(); 
+        setInterval(updateUI, 500); 
     }
 
     function renderPlaylist() {
         const listDiv = document.getElementById("playlist");
-        listDiv.innerHTML = '<div style="font-size:18px; color:#ff0000; font-weight:bold; margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">පාඩම් මාලාව</div>';
-        videoData.forEach((vid, index) => {
+        listDiv.innerHTML = `<h3 style="color:#ff0000; margin-bottom:15px;">Playlist</h3>`;
+        subjects[currentSubject].forEach((vid, index) => {
             const item = document.createElement("div");
-            item.className = "playlist-item" + (index === 0 ? " active" : "");
+            item.className = "playlist-item";
             item.onclick = () => loadVideo(index);
             item.innerHTML = `<span style="font-weight:bold; margin-right:15px; color:#666;">${index+1}</span><span>${vid.title}</span>`;
             listDiv.appendChild(item);
         });
+        updateActiveItem(0);
     }
 
     function loadVideo(index) {
-        currentVidIndex = index;
-        player.loadVideoById({'videoId': videoData[index].id, 'suggestedQuality': 'medium'});
-        document.getElementById("nowPlaying").innerText = videoData[index].title;
+        const video = subjects[currentSubject][index];
+        player.loadVideoById(video.id);
+        document.getElementById("nowPlaying").innerText = video.title;
+        updateActiveItem(index);
+    }
+
+    function updateActiveItem(index) {
         document.querySelectorAll(".playlist-item").forEach((el, i) => el.classList.toggle("active", i === index));
-        showControls();
     }
 
-    // Tap handling to show/hide controls
-    function handleTap(e) {
-        e.preventDefault();
-        if (controlBar.classList.contains("hidden")) {
-            showControls();
-        } else {
-            hideControls();
-        }
+    // UI Controls
+    function onPlayerStateChange(e) {
+        const btn = document.getElementById("playPauseBtn");
+        btn.innerHTML = (e.data === YT.PlayerState.PLAYING) ? '<i class="material-Icons">pause</i>' : '<i class="material-Icons">play_arrow</i>';
+        if (e.data === YT.PlayerState.PLAYING) resetTimer(); else showControls();
     }
 
-    function showControls() { controlBar.classList.remove("hidden"); resetTimer(); }
-    function hideControls() { if (player.getPlayerState() === 1) controlBar.classList.add("hidden"); }
+    function handleTap() {
+        const cb = document.getElementById("controlBar");
+        if (cb.classList.contains("hidden")) showControls(); else hideControls();
+    }
+
+    function showControls() { document.getElementById("controlBar").classList.remove("hidden"); resetTimer(); }
+    function hideControls() { if (player.getPlayerState() === 1) document.getElementById("controlBar").classList.add("hidden"); }
     function resetTimer() { clearTimeout(hideTimeout); if (player.getPlayerState() === 1) hideTimeout = setTimeout(hideControls, 4000); }
 
     function togglePlay(e) { e.stopPropagation(); (player.getPlayerState() === 1) ? player.pauseVideo() : player.playVideo(); }
-    function setSpeed(e) { e.stopPropagation(); player.setPlaybackRate(parseFloat(e.target.value)); }
-    
-    function toggleFullScreen(e) {
-        if(e) e.stopPropagation();
-        var container = document.getElementById("videoContainer");
-        if (!document.fullscreenElement) {
-            if (container.requestFullscreen) container.requestFullscreen();
-            else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
-            else if (container.msRequestFullscreen) container.msRequestFullscreen();
-        } else {
-            if (document.exitFullscreen) document.exitFullscreen();
-        }
-    }
 
     function handleSeek(e) {
-        e.stopPropagation();
         var rect = document.getElementById("seekBarContainer").getBoundingClientRect();
-        var pos = (e.clientX - rect.left) / rect.width;
-        player.seekTo(player.getDuration() * pos, true);
+        player.seekTo(player.getDuration() * ((e.clientX - rect.left) / rect.width), true);
     }
 
     function updateUI() {
@@ -227,6 +251,11 @@
         }
     }
     function formatTime(t) { t = Math.round(t); var m = Math.floor(t / 60), s = t % 60; return m + ":" + (s < 10 ? "0" : "") + s; }
+
+    function toggleFullScreen() {
+        var container = document.getElementById("videoContainer");
+        if (!document.fullscreenElement) container.requestFullscreen(); else document.exitFullscreen();
+    }
 </script>
 </body>
 </html>
