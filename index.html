@@ -73,34 +73,32 @@
     const VALID_USER = "Ulindu";
     const VALID_PASS = "2007";
     
-    // Default ලැයිස්තුව
+    // වීඩියෝ ලැයිස්තු සම්පූර්ණයෙන්ම හිස් කරන ලදී
     const defaultData = {
-        bio: [{ id: "lMR_RtHbGcw", title: "ජෛව රසායනය ( Day 01 )" }, { id: "SOi5karTuQU", title: "Day 02 [Part 01]" }, { id: "2iCOyz9fWME", title: "Day 02 [Part 02]" }, { id: "IcMmdsa3yw8", title: "ජෛව රසායනය - Day 03" }, { id: "pp49TELoPs0", title: "ජෛව රසායනය - Day 04" }, { id: "AdfjiYBNDTw", title: "Day 04 [Part 2]" }, { id: "XH3uO16T7A0", title: "ජෛව රසායනය - Day 05" }, { id: "hpdxRUjHJhU", title: "Day 05 [Part 2]" }, { id: "G36isU4cPhU", title: "ජෛව රසායනය - Day 06" }, { id: "ilScRAwcJmI", title: "Day 07 [Part 1]" }, { id: "9wKjkB0OUCA", title: "Day 07 [Part 2]" }],
-        stats: [{ id: "Gs2c3SgYk2o", title: "සංඛ්‍යානය - Day 01" }, { id: "s1WtwxKA8hQ", title: "සංඛ්‍යානය - Day 02" }, { id: "RL-MjG739qE", title: "සංඛ්‍යානය - Day 02 {Part 02}" }, { id: "AyFdasZua54", title: "සංඛ්‍යානය - Day 03" }, { id: "tvye27rdKQM", title: "සංඛ්‍යානය - Day 03 {Part 02}" }, { id: "1tMScxVcZOE", title: "සංඛ්‍යානය - Day 04" }, { id: "MDZ_JjdjijM", title: "සංඛ්‍යානය - Day 05" }, { id: "41lefx60PXk", title: "සංඛ්‍යානය - Day 05 {Part 02}" }, { id: "B_g_AnkOxQ8", title: "සංඛ්‍යානය - Day 06" }]
+        bio: [],
+        stats: []
     };
 
-    let allData = { bio: [...defaultData.bio], stats: [...defaultData.stats] };
+    let allData = { bio: [], stats: [] };
     let currentSubject = 'bio';
-    let videoData = allData.bio;
+    let videoData = [];
     let player, hideTimeout;
     const controlBar = document.getElementById("controlBar");
 
-    // Firebase Live Updates - නිවැරදි කළ කොටස
+    // Firebase Live Updates
     db.ref("studyData").on("value", (snapshot) => {
         const val = snapshot.val();
         if (val) {
-            // Firebase Objects Array බවට හරවා Default ඒවට එකතු කිරීම
             const fbBio = val.bio ? Object.values(val.bio) : [];
             const fbStats = val.stats ? Object.values(val.stats) : [];
 
             allData = {
-                bio: [...defaultData.bio, ...fbBio],
-                stats: [...defaultData.stats, ...fbStats]
+                bio: fbBio,
+                stats: fbStats
             };
             
             videoData = allData[currentSubject];
             
-            // ප්ලේයර් එක දැනටමත් තිබේ නම් ප්ලේලිස්ට් එක අලුත් කරන්න
             if (document.getElementById("mainContent").style.display === "block") {
                 renderPlaylist();
             }
@@ -116,23 +114,47 @@
         videoData = allData[sub]; 
         document.getElementById("subjectMenu").style.display = "none"; 
         document.getElementById("mainContent").style.display = "block"; 
-        if(!player) loadYouTubeAPI(); 
-        else { renderPlaylist(); loadVideo(0); } 
+        
+        // ලැයිස්තුවේ වීඩියෝ තිබේ නම් පමණක් ප්ලේයරය සකසන්න
+        if (videoData.length > 0) {
+            if(!player) loadYouTubeAPI(); 
+            else { renderPlaylist(); loadVideo(0); } 
+        } else {
+            document.getElementById("playlist").innerHTML = "<p style='text-align:center; padding:20px;'>තවමත් වීඩියෝ ඇතුළත් කර නැත.</p>";
+            document.getElementById("nowPlaying").innerText = "No Videos Available";
+        }
     }
 
     function goBack() { if(player) player.pauseVideo(); document.getElementById("mainContent").style.display = "none"; document.getElementById("subjectMenu").style.display = "flex"; }
     function loadYouTubeAPI() { var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api"; var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag); }
-    function onYouTubeIframeAPIReady() { player = new YT.Player('player', { videoId: videoData[0].id, width: '854', height: '480', playerVars: { 'autoplay': 0, 'controls': 0, 'modestbranding': 1, 'enablejsapi': 1, 'rel': 0, 'playsinline': 1 }, events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } }); }
+    
+    function onYouTubeIframeAPIReady() { 
+        if (videoData.length > 0) {
+            player = new YT.Player('player', { 
+                videoId: videoData[0].id, 
+                width: '854', 
+                height: '480', 
+                playerVars: { 'autoplay': 0, 'controls': 0, 'modestbranding': 1, 'enablejsapi': 1, 'rel': 0, 'playsinline': 1 }, 
+                events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } 
+            }); 
+        }
+    }
+
     function onPlayerReady() { renderPlaylist(); document.getElementById("nowPlaying").innerText = videoData[0].title; setInterval(updateUI, 500); }
     function onPlayerStateChange(e) { const btn = document.getElementById("playPauseBtn"); if (e.data === YT.PlayerState.PLAYING) { btn.innerHTML = '<i class="material-Icons">pause</i>'; resetTimer(); } else { btn.innerHTML = '<i class="material-Icons">play_arrow</i>'; showControls(); } }
     
     function renderPlaylist() { 
         const listDiv = document.getElementById("playlist"); 
         listDiv.innerHTML = `<div style="font-size:18px; color:#ff0000; font-weight:bold; margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">${currentSubject === 'bio' ? 'ජෛව රසායනය' : 'සංඛ්‍යානය'}</div>`; 
+        
+        if (videoData.length === 0) {
+            listDiv.innerHTML += "<p style='text-align:center;'>වීඩියෝ නොමැත.</p>";
+            return;
+        }
+
         videoData.forEach((vid, index) => { 
             const item = document.createElement("div"); 
             item.className = "playlist-item";
-            // වත්මන් වීඩියෝව Active ද බලන්න
             if (player && player.getVideoData && player.getVideoData().video_id === vid.id) {
                 item.className += " active";
             }
@@ -142,15 +164,22 @@
         }); 
     }
 
-    function loadVideo(index) { player.loadVideoById({'videoId': videoData[index].id}); document.getElementById("nowPlaying").innerText = videoData[index].title; renderPlaylist(); }
+    function loadVideo(index) { 
+        if (videoData[index]) {
+            player.loadVideoById({'videoId': videoData[index].id}); 
+            document.getElementById("nowPlaying").innerText = videoData[index].title; 
+            renderPlaylist(); 
+        }
+    }
+
     function handleTap() { controlBar.classList.contains("hidden") ? showControls() : hideControls(); }
     function showControls() { controlBar.classList.remove("hidden"); resetTimer(); }
     function hideControls() { if (player && player.getPlayerState() === 1) controlBar.classList.add("hidden"); }
     function resetTimer() { clearTimeout(hideTimeout); if (player && player.getPlayerState() === 1) hideTimeout = setTimeout(hideControls, 4000); }
-    function togglePlay(e) { e.stopPropagation(); (player.getPlayerState() === 1) ? player.pauseVideo() : player.playVideo(); }
-    function setSpeed(e) { e.stopPropagation(); player.setPlaybackRate(parseFloat(e.target.value)); }
+    function togglePlay(e) { e.stopPropagation(); if(player) (player.getPlayerState() === 1) ? player.pauseVideo() : player.playVideo(); }
+    function setSpeed(e) { e.stopPropagation(); if(player) player.setPlaybackRate(parseFloat(e.target.value)); }
     function toggleFullScreen(e) { e.stopPropagation(); var container = document.getElementById("videoContainer"); if (!document.fullscreenElement) container.requestFullscreen(); else document.exitFullscreen(); }
-    function handleSeek(e) { e.stopPropagation(); var rect = document.getElementById("seekBarContainer").getBoundingClientRect(); player.seekTo(player.getDuration() * ((e.clientX - rect.left) / rect.width), true); }
+    function handleSeek(e) { e.stopPropagation(); if(player) { var rect = document.getElementById("seekBarContainer").getBoundingClientRect(); player.seekTo(player.getDuration() * ((e.clientX - rect.left) / rect.width), true); } }
     function updateUI() { if (player && player.getCurrentTime) { var curr = player.getCurrentTime(), dur = player.getDuration(); document.getElementById("currentTime").innerText = formatTime(curr); document.getElementById("duration").innerText = formatTime(dur); if (dur > 0) { var p = (curr / dur) * 100; document.getElementById("seekBarProgress").style.width = p + "%"; document.getElementById("seekBarKnob").style.left = p + "%"; } } }
     function formatTime(t) { t = Math.round(t); var m = Math.floor(t / 60), s = t % 60; return m + ":" + (s < 10 ? "0" : "") + s; }
 </script>
