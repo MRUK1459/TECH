@@ -3,50 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bio & Stats Learning App</title>
+    <title>Online Learning Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         body { background: #000; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; color: white; overflow-x: hidden; }
         .material-Icons { font-family: 'Material Icons'; font-size: 32px; display: inline-block; line-height: 1; }
 
-        /* Login Screen */
+        /* Login Overlay */
         #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0b0b; z-index: 999999; display: flex; align-items: center; justify-content: center; }
         .login-box { background: #111; padding: 30px; border-radius: 15px; width: 85%; max-width: 350px; text-align: center; border: 1px solid #222; }
         .login-box input { width: 100%; padding: 14px; margin: 10px 0; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; outline: none; }
         .login-box button { width: 100%; padding: 14px; background: #ff0000; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-        /* Home Menu Styles (Your Sketch) */
-        #homeMenu { display: none; height: 100vh; flex-direction: column; align-items: center; justify-content: center; gap: 20px; background: #000; }
+        /* Home Menu */
+        #homeMenu { display: none; height: 100vh; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
         .menu-card { 
-            width: 85%; 
-            max-width: 400px; 
-            padding: 25px; 
-            text-align: center; 
-            background: #111; 
-            border: 2px solid #ff0000; 
-            border-radius: 15px; 
-            cursor: pointer; 
-            font-size: 22px; 
-            font-weight: bold; 
-            transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.1);
+            width: 85%; max-width: 400px; padding: 25px; text-align: center; 
+            background: #111; border: 2px solid #ff0000; border-radius: 15px; 
+            cursor: pointer; font-size: 22px; font-weight: bold; transition: 0.3s;
         }
-        .menu-card:hover { background: #ff0000; color: #fff; transform: scale(1.02); }
+        .menu-card:hover { background: #ff0000; transform: scale(1.02); }
 
-        /* Player Section Styles */
+        /* Player Section */
         #playerSection { display: none; padding: 10px; }
         .back-btn { 
             max-width: 854px; margin: 0 auto 15px; display: flex; align-items: center; 
-            color: #ccc; cursor: pointer; font-weight: 500; gap: 5px; background: none; border: none; padding: 0;
+            color: #ccc; cursor: pointer; background: none; border: none; padding: 0; gap: 5px;
         }
-        .back-btn:hover { color: #ff0000; }
 
         .video-box { 
             position: relative; max-width: 854px; margin: 0 auto; background: #000; 
             border-radius: 12px; overflow: hidden; aspect-ratio: 16 / 9; z-index: 10;
         }
-
         #player { width: 100%; height: 100%; position: absolute; top: 0; left: 0; pointer-events: none; }
         .click-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; cursor: pointer; background: transparent; }
 
@@ -64,43 +53,41 @@
 
         .time-row { display: flex; align-items: center; justify-content: space-between; }
         .controls-left { display: flex; align-items: center; gap: 20px; }
-        .time-display { font-size: 15px; color: #fff; font-weight: 500; }
-        .now-playing { font-size: 14px; color: #ccc; max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .icon-btn { background: none; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; padding: 5px; }
+        .time-display { font-size: 15px; color: #fff; }
+        .now-playing { font-size: 14px; color: #ccc; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .icon-btn { background: none; border: none; color: #fff; cursor: pointer; padding: 5px; }
 
         .playlist-container { max-width: 854px; margin: 20px auto; background: #111; border-radius: 12px; padding: 15px; border: 1px solid #222; }
         .playlist-item { display: flex; align-items: center; padding: 16px; margin-bottom: 8px; background: #1a1a1a; border-radius: 10px; cursor: pointer; border: 1px solid transparent; }
         .playlist-item.active { border-color: #ff0000; background: rgba(255, 0, 0, 0.05); }
-
-        .video-box:fullscreen { width: 100vw; height: 100vh; max-width: 100vw; margin: 0; border-radius: 0; }
     </style>
 </head>
 <body>
 
     <div id="loginOverlay">
         <div class="login-box">
-            <h2 style="color:#ff0000">Online Learning</h2>
+            <h2 style="color:#ff0000">Bio & Stats Login</h2>
             <input type="text" id="username" placeholder="Username">
             <input type="password" id="password" placeholder="Password">
             <button onclick="checkLogin()">ඇතුල් වන්න</button>
-            <p id="error" style="color:red; display:none; margin-top:10px;">වැරදියි!</p>
+            <p id="error" style="color:red; display:none; margin-top:10px;">විස්තර වැරදියි!</p>
         </div>
     </div>
 
     <div id="homeMenu">
-        <h2 style="margin-bottom: 30px; letter-spacing: 1px;">පාඩම් මාලාව තෝරන්න</h2>
+        <h2 style="margin-bottom: 30px;">පාඩම් මාලාව තෝරන්න</h2>
         <div class="menu-card" onclick="openSubject('bio')">ජෛව රසායනය</div>
         <div class="menu-card" onclick="openSubject('stats')">සංඛ්‍යානය</div>
+        <p onclick="logout()" style="color: #555; cursor: pointer; margin-top: 20px;">Logout</p>
     </div>
 
     <div id="playerSection">
-        <button class="back-btn" onclick="goBack()"><i class="material-icons">arrow_back</i> Back to Menu</button>
-        
+        <button class="back-btn" onclick="goBack()"><i class="material-icons">arrow_back</i> මුල් පිටුවට</button>
         <div class="video-box" id="videoContainer">
             <div id="player"></div>
-            <div class="click-layer" id="mainOverlay" onclick="handleTap(event)"></div>
+            <div class="click-layer" onclick="handleTap()"></div>
             <div class="custom-controls" id="controlBar">
-                <div class="seek-bar-container" id="seekBarContainer" onclick="handleSeek(event)">
+                <div class="seek-bar-container" onclick="handleSeek(event)">
                     <div class="seek-bar-slider">
                         <div class="seek-bar-progress" id="seekBarProgress"></div>
                         <div class="seek-bar-knob" id="seekBarKnob"></div>
@@ -112,9 +99,7 @@
                         <div class="time-display"><span id="currentTime">0:00</span> / <span id="duration">0:00</span></div>
                         <div class="now-playing" id="nowPlaying">Loading...</div>
                     </div>
-                    <div style="display:flex; align-items:center; gap:15px;">
-                        <button class="icon-btn" onclick="toggleFullScreen(event)"><i class="material-Icons">fullscreen</i></button>
-                    </div>
+                    <button class="icon-btn" onclick="toggleFullScreen()"><i class="material-Icons">fullscreen</i></button>
                 </div>
             </div>
         </div>
@@ -144,26 +129,42 @@
     let currentSubject = '';
     let player, hideTimeout;
 
-    // Login Check
+    // --- වැදගත්ම කොටස: Auto Login Check ---
+    window.onload = function() {
+        if (localStorage.getItem("isLoggedIn") === "true") {
+            showHome();
+        }
+    };
+
     function checkLogin() { 
-        if (document.getElementById("username").value === VALID_USER && document.getElementById("password").value === VALID_PASS) { 
-            document.getElementById("loginOverlay").style.display = "none"; 
-            document.getElementById("homeMenu").style.display = "flex"; 
-            loadYouTubeAPI();
+        const u = document.getElementById("username").value;
+        const p = document.getElementById("password").value;
+        if (u === VALID_USER && p === VALID_PASS) { 
+            localStorage.setItem("isLoggedIn", "true"); // ලොගින් එක සදාකාලිකව මතක තබා ගනී
+            showHome();
         } else { 
             document.getElementById("error").style.display = "block"; 
         } 
     }
 
-    // Navigation
+    function logout() {
+        localStorage.removeItem("isLoggedIn");
+        location.reload();
+    }
+
+    function showHome() {
+        document.getElementById("loginOverlay").style.display = "none"; 
+        document.getElementById("homeMenu").style.display = "flex"; 
+        loadYouTubeAPI();
+    }
+
+    // --- ප්ලේයර් සහ මෙනු හසුරුවන කොටස් ---
     function openSubject(type) {
         currentSubject = type;
         document.getElementById("homeMenu").style.display = "none";
         document.getElementById("playerSection").style.display = "block";
-        if(player) {
-            loadVideo(0);
-            renderPlaylist();
-        }
+        renderPlaylist();
+        loadVideo(0);
     }
 
     function goBack() {
@@ -172,8 +173,8 @@
         document.getElementById("homeMenu").style.display = "flex";
     }
 
-    // YT Player Logic
     function loadYouTubeAPI() { 
+        if (window.YT) return; // දැනටමත් Load වී ඇත්නම් නැවත අවශ්‍ය නැත
         var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api"; 
         var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag); 
     }
@@ -182,18 +183,13 @@
         player = new YT.Player('player', {
             height: '480', width: '854', videoId: subjects.bio[0].id,
             playerVars: { 'autoplay': 0, 'controls': 0, 'modestbranding': 1, 'enablejsapi': 1, 'rel': 0, 'playsinline': 1 },
-            events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
+            events: { 'onReady': () => setInterval(updateUI, 500), 'onStateChange': onPlayerStateChange }
         });
-    }
-
-    function onPlayerReady() { 
-        renderPlaylist(); 
-        setInterval(updateUI, 500); 
     }
 
     function renderPlaylist() {
         const listDiv = document.getElementById("playlist");
-        listDiv.innerHTML = `<h3 style="color:#ff0000; margin-bottom:15px;">Playlist</h3>`;
+        listDiv.innerHTML = `<h3 style="color:#ff0000; border-bottom:1px solid #333; padding-bottom:10px;">පාඩම් ලැයිස්තුව</h3>`;
         subjects[currentSubject].forEach((vid, index) => {
             const item = document.createElement("div");
             item.className = "playlist-item";
@@ -201,21 +197,15 @@
             item.innerHTML = `<span style="font-weight:bold; margin-right:15px; color:#666;">${index+1}</span><span>${vid.title}</span>`;
             listDiv.appendChild(item);
         });
-        updateActiveItem(0);
     }
 
     function loadVideo(index) {
         const video = subjects[currentSubject][index];
         player.loadVideoById(video.id);
         document.getElementById("nowPlaying").innerText = video.title;
-        updateActiveItem(index);
-    }
-
-    function updateActiveItem(index) {
         document.querySelectorAll(".playlist-item").forEach((el, i) => el.classList.toggle("active", i === index));
     }
 
-    // UI Controls
     function onPlayerStateChange(e) {
         const btn = document.getElementById("playPauseBtn");
         btn.innerHTML = (e.data === YT.PlayerState.PLAYING) ? '<i class="material-Icons">pause</i>' : '<i class="material-Icons">play_arrow</i>';
@@ -224,7 +214,7 @@
 
     function handleTap() {
         const cb = document.getElementById("controlBar");
-        if (cb.classList.contains("hidden")) showControls(); else hideControls();
+        cb.classList.contains("hidden") ? showControls() : hideControls();
     }
 
     function showControls() { document.getElementById("controlBar").classList.remove("hidden"); resetTimer(); }
@@ -251,11 +241,7 @@
         }
     }
     function formatTime(t) { t = Math.round(t); var m = Math.floor(t / 60), s = t % 60; return m + ":" + (s < 10 ? "0" : "") + s; }
-
-    function toggleFullScreen() {
-        var container = document.getElementById("videoContainer");
-        if (!document.fullscreenElement) container.requestFullscreen(); else document.exitFullscreen();
-    }
+    function toggleFullScreen() { var v = document.getElementById("videoContainer"); if (!document.fullscreenElement) v.requestFullscreen(); else document.exitFullscreen(); }
 </script>
 </body>
 </html>
