@@ -3,25 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Firebase</title>
+    <title>Admin - Live Update</title>
     <style>
         body { background: #000; color: white; font-family: 'Roboto', sans-serif; display: flex; flex-direction: column; align-items: center; padding: 50px 10px; }
         .admin-box { background: #111; padding: 30px; border-radius: 15px; border: 1px dashed #ff0000; width: 90%; max-width: 400px; text-align: center; }
         .admin-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: white; box-sizing: border-box; }
         .admin-btn { width: 100%; padding: 12px; background: #008cff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-        .reset-btn { background: #ff4444; margin-top: 15px; font-size: 12px; }
         .status { color: #00ff00; margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
     <div class="admin-box">
         <h2 style="color: #ff0000;">Admin Dashboard</h2>
-        <p>Firebase හරහා සජීවීව ඇතුළත් කරන්න</p>
-        <select id="targetSubject" class="admin-input"><option value="bio">ජෛව රසායනය (Bio)</option><option value="stats">සංඛ්‍යානය (Stats)</option></select>
-        <input type="text" id="newVidTitle" class="admin-input" placeholder="Video Title (Ex: Day 08)"><input type="text" id="newVidId" class="admin-input" placeholder="YouTube Video ID">
-        <button class="admin-btn" onclick="addNewVideo()">Firebase වෙත එක් කරන්න</button>
-        <p id="statusMsg" class="status">සාර්ථකව ඇතුළත් කළා!</p>
-        <button class="admin-btn reset-btn" onclick="resetFirebaseData()">Database එක හිස් කරන්න</button>
+        <select id="targetSubject" class="admin-input"><option value="bio">Bio</option><option value="stats">Stats</option></select>
+        <input type="text" id="newVidTitle" class="admin-input" placeholder="Title (Day 08)">
+        <input type="text" id="newVidId" class="admin-input" placeholder="YouTube Video ID">
+        <button class="admin-btn" onclick="addNewVideo()">Add Now</button>
+        <p id="statusMsg" class="status">Added Successfully!</p>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -44,27 +42,17 @@
         const sub = document.getElementById("targetSubject").value;
         const title = document.getElementById("newVidTitle").value;
         const id = document.getElementById("newVidId").value;
-
         if (title && id) {
             db.ref("studyData/" + sub).once("value").then((snapshot) => {
-                let currentList = snapshot.val() || [];
-                currentList.push({ id: id, title: title });
-                
-                db.ref("studyData/" + sub).set(currentList).then(() => {
+                let list = snapshot.val() || [];
+                list.push({ id: id, title: title });
+                db.ref("studyData/" + sub).set(list).then(() => {
                     document.getElementById("statusMsg").style.display = "block";
                     setTimeout(() => { document.getElementById("statusMsg").style.display = "none"; }, 3000);
                     document.getElementById("newVidTitle").value = "";
                     document.getElementById("newVidId").value = "";
                 });
             });
-        } else {
-            alert("කරුණාකර සියලු විස්තර පුරවන්න!");
-        }
-    }
-
-    function resetFirebaseData() {
-        if(confirm("Firebase හි ඇති සියලුම දත්ත මකා දැමීමට සහතිකද?")) {
-            db.ref("studyData").remove().then(() => alert("දත්ත මකා දැමුවා."));
         }
     }
 </script>
