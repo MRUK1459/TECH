@@ -3,29 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Live Update</title>
+    <title>Study Portal - Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        body { background: #000; color: white; font-family: 'Roboto', sans-serif; display: flex; flex-direction: column; align-items: center; padding: 50px 10px; }
-        .admin-box { background: #111; padding: 30px; border-radius: 15px; border: 1px dashed #ff0000; width: 90%; max-width: 400px; text-align: center; }
-        .admin-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: white; box-sizing: border-box; }
-        .admin-btn { width: 100%; padding: 12px; background: #008cff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-        .status { color: #00ff00; margin-top: 10px; display: none; }
+        body { background: #0b0b0b; color: white; font-family: 'Roboto', sans-serif; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #ff0000; text-align: center; }
+        .card { background: #111; border: 1px solid #222; padding: 20px; border-radius: 12px; margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 500; color: #ccc; }
+        input, select { width: 100%; padding: 12px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #ff0000; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #cc0000; }
+        .video-list { margin-top: 30px; }
+        .video-item { display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 15px; margin-bottom: 10px; border-radius: 8px; border-left: 4px solid #ff0000; }
+        .delete-btn { width: auto; background: #444; padding: 5px 15px; font-size: 12px; }
+        .delete-btn:hover { background: #ff0000; }
+        .badge { background: #333; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin-right: 10px; }
     </style>
 </head>
 <body>
-    <div class="admin-box">
-        <h2 style="color: #ff0000;">Admin Dashboard</h2>
-        <select id="targetSubject" class="admin-input"><option value="bio">Bio</option><option value="stats">Stats</option></select>
-        <input type="text" id="newVidTitle" class="admin-input" placeholder="Title (Day 08)">
-        <input type="text" id="newVidId" class="admin-input" placeholder="YouTube Video ID">
-        <button class="admin-btn" onclick="addNewVideo()">Add Now</button>
-        <p id="statusMsg" class="status">Added Successfully!</p>
+
+<div class="container">
+    <h1>Admin Panel</h1>
+    
+    <div class="card">
+        <h3>නව වීඩියෝවක් එක් කරන්න</h3>
+        <label>විෂය තෝරන්න</label>
+        <select id="subjectSelect">
+            <option value="bio">ජෛව රසායනය (Bio)</option>
+            <option value="stats">සංඛ්‍යානය (Stats)</option>
+        </select>
+        
+        <label>වීඩියෝ මාතෘකාව (Title)</label>
+        <input type="text" id="vidTitle" placeholder="උදා: Day 08 - Part 01">
+        
+        <label>YouTube Video ID</label>
+        <input type="text" id="vidId" placeholder="උදා: lMR_RtHbGcw">
+        
+        <button onclick="addVideo()">වීඩියෝව ඇතුළත් කරන්න</button>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <div class="video-list">
+        <h3>දැනට පවතින වීඩියෝ (Live Updates)</h3>
+        <div id="displayArea">Loading data...</div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
 <script>
+    // ඔබේ Firebase Config එක මෙතනටද ඇතුළත් කරන්න
     const firebaseConfig = {
         apiKey: "AIzaSyApozqbVy4DFupEKafsU_oeC9RUAq1ljuU",
         authDomain: "tech-590c8.firebaseapp.com",
@@ -38,23 +66,62 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    function addNewVideo() {
-        const sub = document.getElementById("targetSubject").value;
-        const title = document.getElementById("newVidTitle").value;
-        const id = document.getElementById("newVidId").value;
-        if (title && id) {
-            db.ref("studyData/" + sub).once("value").then((snapshot) => {
-                let list = snapshot.val() || [];
-                list.push({ id: id, title: title });
-                db.ref("studyData/" + sub).set(list).then(() => {
-                    document.getElementById("statusMsg").style.display = "block";
-                    setTimeout(() => { document.getElementById("statusMsg").style.display = "none"; }, 3000);
-                    document.getElementById("newVidTitle").value = "";
-                    document.getElementById("newVidId").value = "";
-                });
-            });
+    // වීඩියෝවක් Firebase වෙත එක් කිරීම
+    function addVideo() {
+        const sub = document.getElementById("subjectSelect").value;
+        const title = document.getElementById("vidTitle").value;
+        const id = document.getElementById("vidId").value;
+
+        if (title === "" || id === "") {
+            alert("කරුණාකර සියලු විස්තර පුරවන්න!");
+            return;
+        }
+
+        const newVideo = { id: id, title: title };
+        
+        // පවතින ලැයිස්තුවට අලුත් එක එකතු කිරීම
+        db.ref("studyData/" + sub).push(newVideo).then(() => {
+            alert("වීඩියෝව සාර්ථකව එක් කරන ලදී!");
+            document.getElementById("vidTitle").value = "";
+            document.getElementById("vidId").value = "";
+        });
+    }
+
+    // Firebase එකෙන් දත්ත කියවා පෙන්වීම
+    db.ref("studyData").on("value", (snapshot) => {
+        const data = snapshot.val();
+        const displayArea = document.getElementById("displayArea");
+        displayArea.innerHTML = "";
+
+        if (!data) {
+            displayArea.innerHTML = "<p>තවමත් වීඩියෝ එක් කර නැත.</p>";
+            return;
+        }
+
+        for (let sub in data) {
+            for (let key in data[sub]) {
+                const video = data[sub][key];
+                const item = document.createElement("div");
+                item.className = "video-item";
+                item.innerHTML = `
+                    <div>
+                        <span class="badge">${sub.toUpperCase()}</span>
+                        <strong>${video.title}</strong>
+                    </div>
+                    <button class="delete-btn" onclick="deleteVideo('${sub}', '${key}')">Delete</button>
+                `;
+                displayArea.appendChild(item);
+            }
+        }
+    });
+
+    // වීඩියෝවක් ඉවත් කිරීම
+    function deleteVideo(sub, key) {
+        if (confirm("මෙම වීඩියෝව ඉවත් කිරීමට අවශ්‍යද?")) {
+            db.ref(`studyData/${sub}/${key}`).remove();
         }
     }
 </script>
+
 </body>
 </html>
