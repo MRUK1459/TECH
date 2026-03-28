@@ -3,60 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Subject Manager (Two Button Layout)</title>
+    <title>Admin - Live Update</title>
     <style>
-        body { background: #000; color: white; font-family: 'Roboto', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
-        
-        /* ප්‍රධාන බටන් දෙකේ ස්ටයිල් */
-        .admin-main-btn { width: 90%; max-width: 400px; padding: 25px; margin: 15px 0; border: 2px solid #ff0000; border-radius: 20px; background: #111; color: white; font-size: 24px; font-weight: bold; cursor: pointer; transition: 0.3s; text-align: center; display: flex; align-items: center; justify-content: center; gap: 15px; }
-        .admin-main-btn:hover { background: #ff0000; color: white; transform: scale(1.02); }
-        .admin-main-btn .icon { font-size: 32px; }
-
-        /* සෙක්ෂන් (Sections) වල ස්ටයිල් */
-        .admin-section { display: none; background: #111; padding: 25px; border-radius: 15px; border: 1px dashed #444; width: 95%; max-width: 450px; text-align: center; margin-bottom: 20px; margin-top: 10px; }
-        .admin-section.active { display: block; }
+        body { background: #000; color: white; font-family: 'Roboto', sans-serif; display: flex; flex-direction: column; align-items: center; padding: 50px 10px; }
+        .admin-box { background: #111; padding: 30px; border-radius: 15px; border: 1px dashed #ff0000; width: 90%; max-width: 400px; text-align: center; }
         .admin-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: white; box-sizing: border-box; outline: none; }
-        .admin-action-btn { width: 100%; padding: 12px; background: #008cff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.2s; }
-        .admin-action-btn:active { transform: scale(0.98); }
-        .back-btn { background: none; border: none; color: #888; cursor: pointer; text-decoration: underline; margin-bottom: 20px; font-size: 14px; display: none; }
-        .back-btn.active { display: block; }
+        .admin-btn { width: 100%; padding: 12px; background: #008cff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.3s; }
+        .admin-btn:hover { background: #0056b3; }
+        .reset-btn { width: 100%; padding: 10px; background: #333; color: #ff4444; border: 1px solid #444; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; font-size: 13px; }
+        .reset-btn:hover { background: #ff4444; color: white; }
         .status { color: #00ff00; margin-top: 10px; display: none; font-size: 14px; }
-        .reset-btn { background: #333; color: #ff4444; border: 1px solid #444; width: 100%; padding: 10px; border-radius: 8px; cursor: pointer; margin-top: 20px; }
     </style>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-
-    <button class="back-btn" id="mainBackBtn" onclick="showHomeScreen()"><i class="Material-Icons" style="vertical-align: middle; font-size: inherit;">arrow_back</i> Home Screen එකට යන්න</button>
-
-    <div id="homeScreenButtons" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-        <button class="admin-main-btn" onclick="showSection('subjectSection')">
-            <span class="icon">Subject</span>
-        </button>
-        <button class="admin-main-btn" onclick="showSection('videoSection')">
-            <span class="icon">Video</span>
-        </button>
-        <button class="reset-btn" onclick="resetAll()">සියලු දත්ත මකන්න (Reset)</button>
-    </div>
-
-    <div class="admin-section" id="subjectSection">
-        <h3 style="color: #ff0000; margin-top: 0;">1. අලුත් විෂයක් එකතු කරන්න</h3>
-        <input type="text" id="newSubKey" class="admin-input" placeholder="විෂය සඳහා ඉංග්‍රීසි නමක් (උදා: physics)">
-        <input type="text" id="newSubName" class="admin-input" placeholder="විෂය සඳහා සිංහල නම (උදා: භෞතික විද්‍යාව)">
-        <button class="admin-action-btn" style="background: #ff0000;" onclick="addNewSubject()">Subject එක හදන්න</button>
-    </div>
-
-    <div class="admin-section" id="videoSection">
-        <h3 style="color: #ff0000; margin-top: 0;">2. වීඩියෝවක් ඇතුළත් කරන්න</h3>
-        <label style="display:block; text-align:left; font-size:12px; color:#888; margin-top: 5px;">විෂය තෝරන්න:</label>
+    <div class="admin-box">
+        <h2 style="color: #ff0000; margin-bottom: 20px;">Admin Dashboard</h2>
+        
+        <label style="display: block; text-align: left; font-size: 14px; color: #888;">විෂය තෝරන්න:</label>
         <select id="targetSubject" class="admin-input">
-            <option value="bio">ජෛව රසායනය</option>
-            <option value="stats">සංඛ්‍යානය</option>
-            </select>
+            <option value="bio">ජෛව රසායනය (Bio)</option>
+            <option value="stats">සංඛ්‍යානය (Stats)</option>
+        </select>
+
         <input type="text" id="newVidTitle" class="admin-input" placeholder="වීඩියෝවේ නම (උදා: Day 08)">
-        <input type="text" id="newVidId" class="admin-input" placeholder="YouTube Video ID">
-        <button class="admin-action-btn" onclick="addNewVideo()">Video එක දාන්න</button>
-        <p id="statusMsg" class="status">සාර්ථකයි! ✅</p>
+        <input type="text" id="newVidId" class="admin-input" placeholder="YouTube Video ID එක">
+        
+        <button class="admin-btn" onclick="addNewVideo()">වීඩියෝව ඇතුළත් කරන්න</button>
+        <p id="statusMsg" class="status">සාර්ථකව ඇතුළත් කළා! ✅</p>
+
+        <hr style="border: 0; border-top: 1px solid #222; margin: 20px 0;">
+        
+        <button class="reset-btn" onclick="resetDatabase()">දත්ත සියල්ල මකන්න (Reset)</button>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -75,76 +52,37 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // 1. අලුත් විෂයක් එකතු කිරීම
-    function addNewSubject() {
-        const key = document.getElementById("newSubKey").value.toLowerCase().replace(/\s/g, '');
-        const name = document.getElementById("newSubName").value;
-        if(key && name) {
-            db.ref("subjects/" + key).set(name).then(() => {
-                alert("අලුත් විෂය (" + name + ") එකතු කළා!");
-                document.getElementById("newSubKey").value = "";
-                document.getElementById("newSubName").value = "";
-                showHomeScreen(); // Home screen එකට යන්න
-            });
-        } else { alert("කරුණාකර ඉංග්‍රීසි නම සහ සිංහල නම දෙකම ඇතුළත් කරන්න!"); }
-    }
-
-    // 2. වීඩියෝවක් ඇතුළත් කිරීම
+    // වීඩියෝ එකක් ඇතුළත් කිරීම
     function addNewVideo() {
         const sub = document.getElementById("targetSubject").value;
         const title = document.getElementById("newVidTitle").value;
         const id = document.getElementById("newVidId").value;
-        if(title && id) {
+        
+        if (title && id) {
             db.ref("studyData/" + sub).once("value").then((snapshot) => {
                 let list = snapshot.val() || [];
                 list.push({ id: id, title: title });
                 db.ref("studyData/" + sub).set(list).then(() => {
-                    showStatus("වීඩියෝව සාර්ථකව එකතු කළා! ✅");
+                    document.getElementById("statusMsg").innerText = "සාර්ථකව ඇතුළත් කළා! ✅";
+                    document.getElementById("statusMsg").style.display = "block";
+                    setTimeout(() => { document.getElementById("statusMsg").style.display = "none"; }, 3000);
                     document.getElementById("newVidTitle").value = "";
                     document.getElementById("newVidId").value = "";
                 });
             });
-        } else { alert("කරුණාකර වීඩියෝවේ නම සහ YouTube ID එක ඇතුළත් කරන්න!"); }
-    }
-
-    // --- UI/Functions ---
-
-    // Section එකක් පෙන්වීම
-    function showSection(sectionId) {
-        document.getElementById("homeScreenButtons").style.display = "none";
-        document.getElementById("mainBackBtn").style.display = "block";
-        document.querySelectorAll(".admin-section").forEach(s => s.classList.remove("active"));
-        document.getElementById(sectionId).classList.add("active");
-    }
-
-    // Home Screen එකට යන්න
-    function showHomeScreen() {
-        document.getElementById("homeScreenButtons").style.display = "flex";
-        document.getElementById("mainBackBtn").style.display = "none";
-        document.querySelectorAll(".admin-section").forEach(s => s.classList.remove("active"));
-    }
-
-    // subjects Dropdown එක refresh කිරීම (සජීවීව)
-    db.ref("subjects").on("value", (snapshot) => {
-        const subjects = snapshot.val();
-        const select = document.getElementById("targetSubject");
-        select.innerHTML = '<option value="bio">ජෛව රසායනය</option><option value="stats">සංඛ්‍යානය</option>';
-        if(subjects) {
-            for(let key in subjects) {
-                select.innerHTML += `<option value="${key}">${subjects[key]}</option>`;
-            }
+        } else {
+            alert("කරුණාකර නම සහ ID එක ඇතුළත් කරන්න!");
         }
-    });
-
-    function showStatus(msg) {
-        const s = document.getElementById("statusMsg");
-        s.innerText = msg; s.style.display = "block";
-        setTimeout(() => s.style.display = "none", 3000);
     }
 
-    function resetAll() {
-        if(confirm("ඔබ සියලු දත්ත මකා දැමීමට සහතිකද? Default වීඩියෝ වලට මෙය බලපාන්නේ නැත.")) {
-            db.ref().remove().then(() => alert("දත්ත මැකුවා. default දත්ත පෙන්වයි."));
+    // දත්ත මකා දැමීම (Reset)
+    function resetDatabase() {
+        if (confirm("ඔබට විශ්වාසද? ඔබ ඇතුළත් කළ සියලුම වීඩියෝ මැකී යනු ඇත!")) {
+            db.ref("studyData").remove().then(() => {
+                document.getElementById("statusMsg").innerText = "සියලු දත්ත මැකුවා! 🗑️";
+                document.getElementById("statusMsg").style.display = "block";
+                setTimeout(() => { document.getElementById("statusMsg").style.display = "none"; }, 3000);
+            });
         }
     }
 </script>
