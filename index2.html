@@ -3,57 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Smart Study</title>
+    <title>Admin - Subject Manager (Two Button Layout)</title>
     <style>
-        body { background: #0b0b0b; color: #e0e0e0; font-family: 'Segoe UI', Roboto, sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
-        .container { background: #161616; width: 100%; max-width: 400px; padding: 20px; border-radius: 15px; border: 1px solid #222; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h2 { color: #ff0000; font-size: 20px; text-align: center; margin-bottom: 20px; }
-        .nav-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
-        .nav-btn { flex: 1; padding: 12px; border: 1px solid #333; border-radius: 10px; background: #1a1a1a; color: #fff; cursor: pointer; font-size: 14px; }
-        .nav-btn.active { background: #ff0000; border-color: #ff0000; }
-        .section { display: none; }
-        .section.active { display: block; }
-        input, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333; background: #222; color: #fff; box-sizing: border-box; outline: none; margin-bottom: 10px; }
-        .action-btn { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; }
-        .action-btn.red { background: #ff0000; }
-        .list-container { margin-top: 30px; border-top: 1px solid #333; padding-top: 20px; width: 100%; }
-        .list-title { font-size: 16px; color: #ff0000; margin-bottom: 15px; font-weight: bold; }
-        .item-card { background: #1a1a1a; padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #222; }
-        .item-info { font-size: 13px; }
-        .item-info span { display: block; color: #888; font-size: 11px; }
-        .delete-btn { background: none; border: none; color: #ff4444; cursor: pointer; font-size: 18px; padding: 5px; }
-        .status { color: #00ff00; font-size: 13px; text-align: center; margin-top: 10px; display: none; }
+        body { background: #000; color: white; font-family: 'Roboto', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        
+        /* ප්‍රධාන බටන් දෙකේ ස්ටයිල් */
+        .admin-main-btn { width: 90%; max-width: 400px; padding: 25px; margin: 15px 0; border: 2px solid #ff0000; border-radius: 20px; background: #111; color: white; font-size: 24px; font-weight: bold; cursor: pointer; transition: 0.3s; text-align: center; display: flex; align-items: center; justify-content: center; gap: 15px; }
+        .admin-main-btn:hover { background: #ff0000; color: white; transform: scale(1.02); }
+        .admin-main-btn .icon { font-size: 32px; }
+
+        /* සෙක්ෂන් (Sections) වල ස්ටයිල් */
+        .admin-section { display: none; background: #111; padding: 25px; border-radius: 15px; border: 1px dashed #444; width: 95%; max-width: 450px; text-align: center; margin-bottom: 20px; margin-top: 10px; }
+        .admin-section.active { display: block; }
+        .admin-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: white; box-sizing: border-box; outline: none; }
+        .admin-action-btn { width: 100%; padding: 12px; background: #008cff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.2s; }
+        .admin-action-btn:active { transform: scale(0.98); }
+        .back-btn { background: none; border: none; color: #888; cursor: pointer; text-decoration: underline; margin-bottom: 20px; font-size: 14px; display: none; }
+        .back-btn.active { display: block; }
+        .status { color: #00ff00; margin-top: 10px; display: none; font-size: 14px; }
+        .reset-btn { background: #333; color: #ff4444; border: 1px solid #444; width: 100%; padding: 10px; border-radius: 8px; cursor: pointer; margin-top: 20px; }
     </style>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 
-    <div class="container">
-        <h2>Admin Dashboard</h2>
-        <div class="nav-buttons">
-            <button class="nav-btn active" id="btnSub" onclick="toggleSection('subject')">Subject</button>
-            <button class="nav-btn" id="btnVid" onclick="toggleSection('video')">Video</button>
-        </div>
+    <button class="back-btn" id="mainBackBtn" onclick="showHomeScreen()"><i class="Material-Icons" style="vertical-align: middle; font-size: inherit;">arrow_back</i> Home Screen එකට යන්න</button>
 
-        <div id="subjectSection" class="section active">
-            <input type="text" id="newSubKey" placeholder="විෂයේ ID එක (උදා: ict)">
-            <input type="text" id="newSubName" placeholder="විෂයේ නම (සිංහල)">
-            <button class="action-btn red" onclick="addNewSubject()">Subject එක හදන්න</button>
-        </div>
+    <div id="homeScreenButtons" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+        <button class="admin-main-btn" onclick="showSection('subjectSection')">
+            <span class="icon">Subject</span>
+        </button>
+        <button class="admin-main-btn" onclick="showSection('videoSection')">
+            <span class="icon">Video</span>
+        </button>
+        <button class="reset-btn" onclick="resetAll()">සියලු දත්ත මකන්න (Reset)</button>
+    </div>
 
-        <div id="videoSection" class="section">
-            <select id="targetSubject" onchange="loadItems()"></select>
-            <input type="text" id="newVidTitle" placeholder="වීඩියෝවේ නම">
-            <input type="text" id="newVidId" placeholder="YouTube Video ID">
-            <button class="action-btn" onclick="addNewVideo()">Video එක දාන්න</button>
-        </div>
+    <div class="admin-section" id="subjectSection">
+        <h3 style="color: #ff0000; margin-top: 0;">1. අලුත් විෂයක් එකතු කරන්න</h3>
+        <input type="text" id="newSubKey" class="admin-input" placeholder="විෂය සඳහා ඉංග්‍රීසි නමක් (උදා: physics)">
+        <input type="text" id="newSubName" class="admin-input" placeholder="විෂය සඳහා සිංහල නම (උදා: භෞතික විද්‍යාව)">
+        <button class="admin-action-btn" style="background: #ff0000;" onclick="addNewSubject()">Subject එක හදන්න</button>
+    </div>
 
-        <p id="statusMsg" class="status"></p>
-
-        <div class="list-container">
-            <div class="list-title" id="listHeader">මතකයේ ඇති විෂයන්</div>
-            <div id="itemsDisplay"></div>
-        </div>
+    <div class="admin-section" id="videoSection">
+        <h3 style="color: #ff0000; margin-top: 0;">2. වීඩියෝවක් ඇතුළත් කරන්න</h3>
+        <label style="display:block; text-align:left; font-size:12px; color:#888; margin-top: 5px;">විෂය තෝරන්න:</label>
+        <select id="targetSubject" class="admin-input">
+            <option value="bio">ජෛව රසායනය</option>
+            <option value="stats">සංඛ්‍යානය</option>
+            </select>
+        <input type="text" id="newVidTitle" class="admin-input" placeholder="වීඩියෝවේ නම (උදා: Day 08)">
+        <input type="text" id="newVidId" class="admin-input" placeholder="YouTube Video ID">
+        <button class="admin-action-btn" onclick="addNewVideo()">Video එක දාන්න</button>
+        <p id="statusMsg" class="status">සාර්ථකයි! ✅</p>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -72,86 +75,66 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let currentMode = 'subject';
-
-    function toggleSection(type) {
-        currentMode = type;
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(type + 'Section').classList.add('active');
-        document.getElementById('btn' + (type === 'subject' ? 'Sub' : 'Vid')).classList.add('active');
-        loadItems();
-    }
-
-    function loadItems() {
-        const display = document.getElementById("itemsDisplay");
-        const header = document.getElementById("listHeader");
-        display.innerHTML = "";
-
-        if (currentMode === 'subject') {
-            header.innerText = "මතකයේ ඇති විෂයන්";
-            db.ref("subjects").once("value", (snapshot) => {
-                snapshot.forEach((child) => {
-                    createItemCard(child.val(), child.key, "subjects/" + child.key);
-                });
-            });
-        } else {
-            const sub = document.getElementById("targetSubject").value;
-            header.innerText = "මෙම විෂයේ වීඩියෝ";
-            db.ref("studyData/" + sub).once("value", (snapshot) => {
-                snapshot.forEach((child) => {
-                    createItemCard(child.val().title, child.val().id, "studyData/" + sub + "/" + child.key);
-                });
-            });
-        }
-    }
-
-    function createItemCard(title, extra, path) {
-        const display = document.getElementById("itemsDisplay");
-        const div = document.createElement("div");
-        div.className = "item-card";
-        div.innerHTML = `
-            <div class="item-info">${title}<span>${extra}</span></div>
-            <button class="delete-btn" onclick="deleteItem('${path}')"><i class="material-icons">delete</i></button>
-        `;
-        display.appendChild(div);
-    }
-
-    function deleteItem(path) {
-        if(confirm("මෙය මැකීමට ඔබට විශ්වාසද?")) {
-            db.ref(path).remove().then(() => {
-                showStatus("සාර්ථකව මැකුවා! 🗑️");
-                loadItems();
-            });
-        }
-    }
-
+    // 1. අලුත් විෂයක් එකතු කිරීම
     function addNewSubject() {
-        const key = document.getElementById("newSubKey").value.toLowerCase().trim();
-        const name = document.getElementById("newSubName").value.trim();
+        const key = document.getElementById("newSubKey").value.toLowerCase().replace(/\s/g, '');
+        const name = document.getElementById("newSubName").value;
         if(key && name) {
             db.ref("subjects/" + key).set(name).then(() => {
-                showStatus("Subject එක හැදුවා! ✅");
+                alert("අලුත් විෂය (" + name + ") එකතු කළා!");
                 document.getElementById("newSubKey").value = "";
                 document.getElementById("newSubName").value = "";
-                loadItems();
+                showHomeScreen(); // Home screen එකට යන්න
             });
-        }
+        } else { alert("කරුණාකර ඉංග්‍රීසි නම සහ සිංහල නම දෙකම ඇතුළත් කරන්න!"); }
     }
 
+    // 2. වීඩියෝවක් ඇතුළත් කිරීම
     function addNewVideo() {
         const sub = document.getElementById("targetSubject").value;
-        const title = document.getElementById("newVidTitle").value.trim();
-        const id = document.getElementById("newVidId").value.trim();
+        const title = document.getElementById("newVidTitle").value;
+        const id = document.getElementById("newVidId").value;
         if(title && id) {
-            db.ref("studyData/" + sub).push({ id: id, title: title }).then(() => {
-                showStatus("Video එක එකතු කළා! ✅");
-                document.getElementById("newVidTitle").value = "";
-                document.getElementById("newVidId").value = "";
-                loadItems();
+            db.ref("studyData/" + sub).once("value").then((snapshot) => {
+                let list = snapshot.val() || [];
+                list.push({ id: id, title: title });
+                db.ref("studyData/" + sub).set(list).then(() => {
+                    showStatus("වීඩියෝව සාර්ථකව එකතු කළා! ✅");
+                    document.getElementById("newVidTitle").value = "";
+                    document.getElementById("newVidId").value = "";
+                });
             });
-        }
+        } else { alert("කරුණාකර වීඩියෝවේ නම සහ YouTube ID එක ඇතුළත් කරන්න!"); }
     }
+
+    // --- UI/Functions ---
+
+    // Section එකක් පෙන්වීම
+    function showSection(sectionId) {
+        document.getElementById("homeScreenButtons").style.display = "none";
+        document.getElementById("mainBackBtn").style.display = "block";
+        document.querySelectorAll(".admin-section").forEach(s => s.classList.remove("active"));
+        document.getElementById(sectionId).classList.add("active");
+    }
+
+    // Home Screen එකට යන්න
+    function showHomeScreen() {
+        document.getElementById("homeScreenButtons").style.display = "flex";
+        document.getElementById("mainBackBtn").style.display = "none";
+        document.querySelectorAll(".admin-section").forEach(s => s.classList.remove("active"));
+    }
+
+    // subjects Dropdown එක refresh කිරීම (සජීවීව)
+    db.ref("subjects").on("value", (snapshot) => {
+        const subjects = snapshot.val();
+        const select = document.getElementById("targetSubject");
+        select.innerHTML = '<option value="bio">ජෛව රසායනය</option><option value="stats">සංඛ්‍යානය</option>';
+        if(subjects) {
+            for(let key in subjects) {
+                select.innerHTML += `<option value="${key}">${subjects[key]}</option>`;
+            }
+        }
+    });
 
     function showStatus(msg) {
         const s = document.getElementById("statusMsg");
@@ -159,17 +142,11 @@
         setTimeout(() => s.style.display = "none", 3000);
     }
 
-    db.ref("subjects").on("value", (snapshot) => {
-        const select = document.getElementById("targetSubject");
-        select.innerHTML = '<option value="bio">ජෛව රසායනය</option><option value="stats">සංඛ්‍යානය</option>';
-        snapshot.forEach((child) => {
-            if(child.key !== 'bio' && child.key !== 'stats') {
-                select.innerHTML += `<option value="${child.key}">${child.val()}</option>`;
-            }
-        });
-    });
-
-    window.onload = loadItems;
+    function resetAll() {
+        if(confirm("ඔබ සියලු දත්ත මකා දැමීමට සහතිකද? Default වීඩියෝ වලට මෙය බලපාන්නේ නැත.")) {
+            db.ref().remove().then(() => alert("දත්ත මැකුවා. default දත්ත පෙන්වයි."));
+        }
+    }
 </script>
 </body>
 </html>
