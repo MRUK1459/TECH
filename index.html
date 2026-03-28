@@ -1,62 +1,62 @@
-<script>
-    const VALID_USER = "Ulindu kawishka";
-    const VALID_PASS = "200704938Uk";
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bio & Stats Player</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body { background: #000; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; color: white; overflow-x: hidden; }
+        .material-Icons { font-family: 'Material Icons'; font-size: 32px; display: inline-block; line-height: 1; }
 
-    // 1. මුලින්ම තිබිය යුතු ස්ථිර වීඩියෝ ලැයිස්තුව
-    const defaultData = {
-        bio: [
-            { id: "lMR_RtHbGcw", title: "ජෛව රසායනය ( Day 01 )" }, { id: "SOi5karTuQU", title: "Day 02 [Part 01]" }, { id: "2iCOyz9fWME", title: "Day 02 [Part 02]" }, 
-            { id: "IcMmdsa3yw8", title: "ජෛව රසායනය - Day 03" }, { id: "pp49TELoPs0", title: "ජෛව රසායනය - Day 04" }, { id: "AdfjiYBNDTw", title: "Day 04 [Part 2]" }, 
-            { id: "XH3uO16T7A0", title: "ජෛව රසායනය - Day 05" }, { id: "hpdxRUjHJhU", title: "Day 05 [Part 2]" }, { id: "G36isU4cPhU", title: "ජෛව රසායනය - Day 06" }, 
-            { id: "ilScRAwcJmI", title: "Day 07 [Part 1]" }, { id: "9wKjkB0OUCA", title: "Day 07 [Part 2]" }
-        ],
-        stats: [
-            { id: "Gs2c3SgYk2o", title: "සංඛ්‍යානය - Day 01" }, { id: "s1WtwxKA8hQ", title: "සංඛ්‍යානය - Day 02" },
-            { id: "RL-MjG739qE", title: "සංඛ්‍යානය - Day 02 {Part 02}" }, { id: "AyFdasZua54", title: "සංඛ්‍යානය - Day 03" },
-            { id: "tvye27rdKQM", title: "සංඛ්‍යානය - Day 03 {Part 02}" }, { id: "1tMScxVcZOE", title: "සංඛ්‍යානය - Day 04" },
-            { id: "MDZ_JjdjijM", title: "සංඛ්‍යානය - Day 05" }, { id: "41lefx60PXk", title: "සංඛ්‍යානය - Day 05 {Part 02}" },
-            { id: "B_g_AnkOxQ8", title: "සංඛ්‍යානය - Day 06" }
-        ]
-    };
+        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0b0b; z-index: 999999; display: flex; align-items: center; justify-content: center; }
+        .login-box { background: #111; padding: 30px; border-radius: 15px; width: 85%; max-width: 350px; text-align: center; border: 1px solid #222; }
+        .login-box input { width: 100%; padding: 14px; margin: 10px 0; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; outline: none; }
+        .login-box button { width: 100%; padding: 14px; background: #ff0000; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-    // 2. Admin Panel එකෙන් ආපු අලුත් දත්ත සහ පරණ දත්ත එකතු කරන Function එක
-    function getUpdatedData() {
-        const adminData = JSON.parse(localStorage.getItem("studyData"));
-        if (!adminData) return defaultData;
+        #subjectMenu { display: none; height: 100vh; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
+        .menu-card { width: 85%; max-width: 350px; padding: 25px; text-align: center; background: #111; border: 2px solid #ff0000; border-radius: 15px; cursor: pointer; font-size: 20px; font-weight: bold; transition: 0.3s; }
+        .menu-card:hover { background: #ff0000; }
 
-        return {
-            bio: [...defaultData.bio, ...(adminData.bio || [])],
-            stats: [...defaultData.stats, ...(adminData.stats || [])]
-        };
-    }
+        #mainContent { display: none; padding: 10px; }
+        .back-btn { max-width: 854px; margin: 0 auto 10px; display: flex; align-items: center; color: #ff0000; cursor: pointer; background: none; border: none; font-size: 16px; gap: 5px; }
 
-    let allData = getUpdatedData();
-    let currentSubject = 'bio';
-    let player, hideTimeout;
-    const controlBar = document.getElementById("controlBar");
-
-    // --- (අනෙක් Player functions ඔබ සතු index කේතයේ ඇති ඒවාම භාවිතා කරන්න) ---
-
-    function startSubject(sub) {
-        currentSubject = sub;
-        allData = getUpdatedData(); // පිටුව මාරු කරන විට අලුත් දත්ත ඇත්නම් ලබා ගනී
-        document.getElementById("subjectMenu").style.display = "none";
-        document.getElementById("mainContent").style.display = "block";
-        if(!player) loadYouTubeAPI(); else { renderPlaylist(); loadVideo(0); }
-    }
-
-    function renderPlaylist() {
-        const listDiv = document.getElementById("playlist");
-        const videoData = allData[currentSubject];
-        listDiv.innerHTML = `<div style="font-size:18px; color:#ff0000; font-weight:bold; margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">${currentSubject === 'bio' ? 'ජෛව රසායනය' : 'සංඛ්‍යානය'}</div>`;
+        .video-box { position: relative; max-width: 854px; margin: 10px auto; background: #000; border-radius: 12px; overflow: hidden; aspect-ratio: 16 / 9; z-index: 10; }
+        #player { width: 100%; height: 100%; position: absolute; top: 0; left: 0; pointer-events: none; }
+        .click-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; cursor: pointer; background: transparent; }
         
-        videoData.forEach((vid, index) => {
-            const item = document.createElement("div");
-            item.className = "playlist-item" + (index === 0 ? " active" : "");
-            item.onclick = () => loadVideo(index);
-            item.innerHTML = `<span style="font-weight:bold; margin-right:15px; color:#666;">${index+1}</span><span>${vid.title}</span>`;
-            listDiv.appendChild(item);
-        });
-    }
-    // ... (ඉතිරි කේතය ඔබ සතු මුල් index ගොනුවට සමාන වේ) ...
-</script>
+        .custom-controls { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.95)); display: flex; flex-direction: column; padding: 20px 25px; transition: 0.4s; z-index: 99999 !important; }
+        .custom-controls.hidden { opacity: 0; transform: translateY(30px); pointer-events: none; }
+
+        .seek-bar-container { width: 100%; display: flex; align-items: center; margin-bottom: 15px; cursor: pointer; position: relative; height: 12px; }
+        .seek-bar-slider { width: 100%; height: 6px; background: rgba(255,255,255,0.25); border-radius: 3px; position: relative; }
+        .seek-bar-progress { height: 100%; background: #ff0000; width: 0%; border-radius: 3px; }
+        .seek-bar-knob { width: 18px; height: 18px; background: #ff0000; border-radius: 50%; position: absolute; top: 50%; transform: translate(-50%, -50%); left: 0%; }
+        
+        .time-row { display: flex; align-items: center; justify-content: space-between; }
+        .controls-left { display: flex; align-items: center; gap: 20px; }
+        .time-display { font-size: 15px; color: #fff; font-weight: 500; }
+        .now-playing { font-size: 14px; color: #ccc; max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .icon-btn { background: none; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; padding: 5px; }
+        .select-style { background: rgba(255,255,255,0.1); color: white; border: 1px solid #444; padding: 6px 10px; border-radius: 6px; font-size: 14px; }
+        
+        .playlist-container { max-width: 854px; margin: 20px auto; background: #111; border-radius: 12px; padding: 15px; border: 1px solid #222; }
+        .playlist-item { display: flex; align-items: center; padding: 16px; margin-bottom: 8px; background: #1a1a1a; border-radius: 10px; cursor: pointer; }
+        .playlist-item.active { border: 1px solid #ff0000; background: rgba(255, 0, 0, 0.05); }
+    </style>
+</head>
+<body>
+
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h2 style="color:#ff0000">Study Portal</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="checkLogin()">ඇතුල් වන්න</button>
+            <p id="error" style="color:red; display:none; margin-top:10px;">විස්තර වැරදියි!</p>
+        </div>
+    </div>
+
+    <div id="subjectMenu">
+        <h2 style
