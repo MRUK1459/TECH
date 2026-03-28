@@ -3,47 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bio Chemistry Player - 360p Focus</title>
+    <title>Bio Chemistry Player - Final Fix</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         body { background: #000; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; color: white; overflow-x: hidden; }
-        .material-Icons { font-family: 'Material Icons'; font-size: 32px; display: inline-block; line-height: 1; font-feature-settings: 'liga'; }
-        
-        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0b0b; z-index: 2000; display: flex; align-items: center; justify-content: center; }
+        .material-Icons { font-family: 'Material Icons'; font-size: 32px; display: inline-block; line-height: 1; }
+
+        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0b0b; z-index: 999999; display: flex; align-items: center; justify-content: center; }
         .login-box { background: #111; padding: 30px; border-radius: 15px; width: 85%; max-width: 350px; text-align: center; border: 1px solid #222; }
-        .login-box h2 { color: #ff0000; margin-bottom: 25px; }
-        .login-box input { width: 100%; padding: 14px; margin: 10px 0; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; outline: none; }
-        .login-box button { width: 100%; padding: 14px; background: #ff0000; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .login-box input { width: 100%; padding: 14px; margin: 10px 0; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; }
+        .login-box button { width: 100%; padding: 14px; background: #ff0000; color: white; border: none; border-radius: 8px; font-weight: bold; }
 
         #mainContent { display: none; padding: 10px; }
-        /* Player එක 360p පෙන්වීමට පොළඹවන ප්‍රමාණයකට සකස් කිරීම */
-        .video-box { position: relative; max-width: 854px; margin: 10px auto; background: #000; border-radius: 12px; overflow: hidden; aspect-ratio: 16 / 9; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
-        #player { width: 100%; height: 100%; position: absolute; top: 0; left: 0; pointer-events: none; }
-        .click-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; cursor: pointer; }
 
-        .custom-controls { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.95)); display: flex; flex-direction: column; padding: 20px 25px; transition: 0.4s; z-index: 150; }
-        .custom-controls.hidden { opacity: 0; transform: translateY(30px); pointer-events: none; }
+        /* ප්ලේයරය සහ කන්ට්‍රෝල්ස් එකට තබා ගන්නා ප්‍රධාන බහාලුම */
+        .video-box { 
+            position: relative; 
+            max-width: 854px; 
+            margin: 10px auto; 
+            background: #000; 
+            border-radius: 12px; 
+            overflow: hidden; 
+            aspect-ratio: 16 / 9; 
+            z-index: 10;
+        }
+
+        #player { width: 100%; height: 100%; position: absolute; top: 0; left: 0; pointer-events: none; }
         
+        /* මේ ලේයර් එක තමයි වීඩියෝව මත ස්පර්ශය හසුරවන්නේ */
+        .click-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; cursor: pointer; background: transparent; }
+
+        /* Fullscreen වලදීත් පෙනෙන ලෙස Z-index එක උපරිම කළා */
+        .custom-controls { 
+            position: absolute; bottom: 0; left: 0; right: 0; 
+            background: linear-gradient(transparent, rgba(0,0,0,0.95)); 
+            display: flex; flex-direction: column; 
+            padding: 20px 25px; 
+            transition: 0.4s; 
+            z-index: 99999 !important; /* වෙනත් ඕනෑම දෙයකට වඩා උඩින් */
+        }
+        .custom-controls.hidden { opacity: 0; transform: translateY(30px); pointer-events: none; }
+
+        /* Fullscreen වලදී සියලු අංග පෙනෙන බව තහවුරු කිරීමට */
+        .video-box:fullscreen .custom-controls,
+        .video-box:-webkit-full-screen .custom-controls { z-index: 2147483647 !important; }
+
         .seek-bar-container { width: 100%; display: flex; align-items: center; margin-bottom: 15px; cursor: pointer; position: relative; height: 12px; }
         .seek-bar-slider { width: 100%; height: 6px; background: rgba(255,255,255,0.25); border-radius: 3px; position: relative; }
         .seek-bar-progress { height: 100%; background: #ff0000; width: 0%; border-radius: 3px; }
         .seek-bar-knob { width: 18px; height: 18px; background: #ff0000; border-radius: 50%; position: absolute; top: 50%; transform: translate(-50%, -50%); left: 0%; }
 
         .time-row { display: flex; align-items: center; justify-content: space-between; }
-        .controls-left { display: flex; align-items: center; gap: 25px; }
+        .controls-left { display: flex; align-items: center; gap: 20px; }
         .time-display { font-size: 15px; color: #fff; font-weight: 500; }
-        .now-playing { font-size: 14px; color: #ccc; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .icon-btn { background: none; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; transition: 0.2s; }
-        .icon-btn:active { transform: scale(0.9); }
-        
-        .select-style { background: rgba(255,255,255,0.1); color: white; border: 1px solid #444; padding: 6px 12px; border-radius: 6px; font-size: 14px; outline: none; }
+        .now-playing { font-size: 14px; color: #ccc; max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .icon-btn { background: none; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; padding: 5px; }
+
+        .select-style { background: rgba(255,255,255,0.1); color: white; border: 1px solid #444; padding: 6px 10px; border-radius: 6px; font-size: 14px; }
 
         .playlist-container { max-width: 854px; margin: 20px auto; background: #111; border-radius: 12px; padding: 15px; border: 1px solid #222; }
-        .playlist-item { display: flex; align-items: center; padding: 16px; margin-bottom: 8px; background: #1a1a1a; border-radius: 10px; cursor: pointer; border: 1px solid transparent; }
+        .playlist-item { display: flex; align-items: center; padding: 16px; margin-bottom: 8px; background: #1a1a1a; border-radius: 10px; cursor: pointer; }
         .playlist-item.active { border-color: #ff0000; background: rgba(255, 0, 0, 0.05); }
-        
-        /* Fullscreen adjustment */
+
         .video-box:fullscreen { width: 100vw; height: 100vh; max-width: 100vw; margin: 0; border-radius: 0; }
     </style>
 </head>
@@ -51,9 +73,9 @@
 
     <div id="loginOverlay">
         <div class="login-box">
-            <h2>Bio Chemistry - Login</h2>
-            <input type="text" id="username" placeholder="පරිශීලක නාමය">
-            <input type="password" id="password" placeholder="මුරපදය">
+            <h2 style="color:#ff0000">Bio Chemistry</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
             <button onclick="checkLogin()">ඇතුල් වන්න</button>
             <p id="error" style="color:red; display:none; margin-top:10px;">වැරදියි!</p>
         </div>
@@ -62,7 +84,7 @@
     <div id="mainContent">
         <div class="video-box" id="videoContainer">
             <div id="player"></div>
-            <div class="click-layer" onclick="toggleControls()" ondblclick="skipForward(event)"></div>
+            <div class="click-layer" id="mainOverlay" onclick="handleTap(event)"></div>
             <div class="custom-controls" id="controlBar">
                 <div class="seek-bar-container" id="seekBarContainer" onclick="handleSeek(event)">
                     <div class="seek-bar-slider">
@@ -107,12 +129,10 @@
 
     var player, hideTimeout, currentVidIndex = 0;
     var controlBar = document.getElementById("controlBar");
-    var playPauseBtn = document.getElementById("playPauseBtn");
 
     function onYouTubeIframeAPIReady() {
         player = new YT.Player('player', {
             videoId: videoData[0].id,
-            // 360p වඩාත් හොඳින් වැඩ කිරීමට ප්ලේයරයේ ප්‍රමාණය ස්ථාවරව ලබා දීම
             width: '854', height: '480',
             playerVars: { 'autoplay': 0, 'controls': 0, 'modestbranding': 1, 'enablejsapi': 1, 'rel': 0, 'playsinline': 1 },
             events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
@@ -120,31 +140,22 @@
     }
 
     function onPlayerReady(event) {
-        // Quality එක 'medium' (360p) කිරීමට උත්සාහ කිරීම
         event.target.setPlaybackQuality('medium');
         renderPlaylist();
         document.getElementById("nowPlaying").innerText = videoData[0].title;
-        
-        // සෑම තත්පර 2කට වරක් quality එක පරීක්ෂා කර medium කිරීමට උත්සාහ කිරීම
-        setInterval(() => {
-            if (player && player.getPlayerState() === 1) { // 1 = Playing
-                player.setPlaybackQuality('medium');
-            }
-        }, 2000);
-
+        setInterval(() => { if (player && player.getPlayerState() === 1) player.setPlaybackQuality('medium'); }, 2000);
         setInterval(updateUI, 500);
     }
 
     function onPlayerStateChange(event) {
+        const btn = document.getElementById("playPauseBtn");
         if (event.data === YT.PlayerState.PLAYING) {
-            event.target.setPlaybackQuality('medium');
-            playPauseBtn.innerHTML = '<i class="material-Icons">pause</i>';
+            btn.innerHTML = '<i class="material-Icons">pause</i>';
             resetTimer();
         } else {
-            playPauseBtn.innerHTML = '<i class="material-Icons">play_arrow</i>';
+            btn.innerHTML = '<i class="material-Icons">play_arrow</i>';
             showControls();
         }
-        if (event.data === YT.PlayerState.ENDED && currentVidIndex < videoData.length - 1) loadVideo(currentVidIndex + 1);
     }
 
     function renderPlaylist() {
@@ -167,20 +178,30 @@
         showControls();
     }
 
-    function skipForward(e) { e.stopPropagation(); if (player) player.seekTo(player.getCurrentTime() + 10, true); }
-    function toggleControls() { controlBar.classList.contains("hidden") ? showControls() : hideControls(); }
+    // Tap handling to show/hide controls
+    function handleTap(e) {
+        e.preventDefault();
+        if (controlBar.classList.contains("hidden")) {
+            showControls();
+        } else {
+            hideControls();
+        }
+    }
+
     function showControls() { controlBar.classList.remove("hidden"); resetTimer(); }
     function hideControls() { if (player.getPlayerState() === 1) controlBar.classList.add("hidden"); }
     function resetTimer() { clearTimeout(hideTimeout); if (player.getPlayerState() === 1) hideTimeout = setTimeout(hideControls, 4000); }
+
     function togglePlay(e) { e.stopPropagation(); (player.getPlayerState() === 1) ? player.pauseVideo() : player.playVideo(); }
     function setSpeed(e) { e.stopPropagation(); player.setPlaybackRate(parseFloat(e.target.value)); }
     
     function toggleFullScreen(e) {
-        e.stopPropagation();
+        if(e) e.stopPropagation();
         var container = document.getElementById("videoContainer");
         if (!document.fullscreenElement) {
             if (container.requestFullscreen) container.requestFullscreen();
             else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
+            else if (container.msRequestFullscreen) container.msRequestFullscreen();
         } else {
             if (document.exitFullscreen) document.exitFullscreen();
         }
