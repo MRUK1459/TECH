@@ -3,37 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Live Update</title>
+    <title>Admin Panel - Smart Study</title>
     <style>
-        body { background: #000; color: white; font-family: 'Roboto', sans-serif; display: flex; flex-direction: column; align-items: center; padding: 50px 10px; }
-        .admin-box { background: #111; padding: 30px; border-radius: 15px; border: 1px dashed #ff0000; width: 90%; max-width: 400px; text-align: center; }
-        .admin-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: white; box-sizing: border-box; outline: none; }
-        .admin-btn { width: 100%; padding: 12px; background: #008cff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.3s; }
-        .admin-btn:hover { background: #0056b3; }
-        .reset-btn { width: 100%; padding: 10px; background: #333; color: #ff4444; border: 1px solid #444; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; font-size: 13px; }
-        .reset-btn:hover { background: #ff4444; color: white; }
-        .status { color: #00ff00; margin-top: 10px; display: none; font-size: 14px; }
+        body { background: #0b0b0b; color: #e0e0e0; font-family: 'Segoe UI', Roboto, sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .container { background: #161616; width: 100%; max-width: 400px; padding: 20px; border-radius: 15px; border: 1px solid #222; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h2 { color: #ff0000; font-size: 20px; text-align: center; margin-bottom: 20px; }
+        .nav-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
+        .nav-btn { flex: 1; padding: 12px; border: 1px solid #333; border-radius: 10px; background: #1a1a1a; color: #fff; cursor: pointer; font-size: 14px; }
+        .nav-btn.active { background: #ff0000; border-color: #ff0000; }
+        .section { display: none; }
+        .section.active { display: block; }
+        label { display: block; font-size: 12px; color: #888; margin: 10px 0 5px 2px; }
+        input, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333; background: #222; color: #fff; box-sizing: border-box; outline: none; margin-bottom: 10px; }
+        .action-btn { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; }
+        .action-btn.red { background: #ff0000; }
+        
+        /* List Styles */
+        .list-container { margin-top: 30px; border-top: 1px solid #333; padding-top: 20px; }
+        .list-title { font-size: 16px; color: #ff0000; margin-bottom: 15px; font-weight: bold; }
+        .item-card { background: #1a1a1a; padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #222; }
+        .item-info { font-size: 13px; }
+        .item-info span { display: block; color: #888; font-size: 11px; }
+        .delete-btn { background: none; border: none; color: #ff4444; cursor: pointer; font-size: 18px; padding: 5px; }
+        .status { color: #00ff00; font-size: 13px; text-align: center; margin-top: 10px; display: none; }
     </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <div class="admin-box">
-        <h2 style="color: #ff0000; margin-bottom: 20px;">Admin Dashboard</h2>
-        
-        <label style="display: block; text-align: left; font-size: 14px; color: #888;">විෂය තෝරන්න:</label>
-        <select id="targetSubject" class="admin-input">
-            <option value="bio">ජෛව රසායනය (Bio)</option>
-            <option value="stats">සංඛ්‍යානය (Stats)</option>
-        </select>
 
-        <input type="text" id="newVidTitle" class="admin-input" placeholder="වීඩියෝවේ නම (උදා: Day 08)">
-        <input type="text" id="newVidId" class="admin-input" placeholder="YouTube Video ID එක">
-        
-        <button class="admin-btn" onclick="addNewVideo()">වීඩියෝව ඇතුළත් කරන්න</button>
-        <p id="statusMsg" class="status">සාර්ථකව ඇතුළත් කළා! ✅</p>
+    <div class="container">
+        <h2>Admin Dashboard</h2>
 
-        <hr style="border: 0; border-top: 1px solid #222; margin: 20px 0;">
-        
-        <button class="reset-btn" onclick="resetDatabase()">දත්ත සියල්ල මකන්න (Reset)</button>
+        <div class="nav-buttons">
+            <button class="nav-btn active" id="btnSub" onclick="toggleSection('subject')">Subject</button>
+            <button class="nav-btn" id="btnVid" onclick="toggleSection('video')">Video</button>
+        </div>
+
+        <div id="subjectSection" class="section active">
+            <input type="text" id="newSubKey" placeholder="විෂයේ නම (English)">
+            <input type="text" id="newSubName" placeholder="විෂයේ නම (සිංහල)">
+            <button class="action-btn red" onclick="addNewSubject()">Subject එක හදන්න</button>
+        </div>
+
+        <div id="videoSection" class="section">
+            <select id="targetSubject" onchange="loadItems()"></select>
+            <input type="text" id="newVidTitle" placeholder="වීඩියෝවේ නම">
+            <input type="text" id="newVidId" placeholder="YouTube Video ID">
+            <button class="action-btn" onclick="addNewVideo()">Video එක දාන්න</button>
+        </div>
+
+        <p id="statusMsg" class="status"></p>
+
+        <div class="list-container">
+            <div class="list-title" id="listHeader">මතකයේ ඇති විෂයන්</div>
+            <div id="itemsDisplay">
+                </div>
+        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -52,39 +77,105 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // වීඩියෝ එකක් ඇතුළත් කිරීම
-    function addNewVideo() {
-        const sub = document.getElementById("targetSubject").value;
-        const title = document.getElementById("newVidTitle").value;
-        const id = document.getElementById("newVidId").value;
-        
-        if (title && id) {
-            db.ref("studyData/" + sub).once("value").then((snapshot) => {
-                let list = snapshot.val() || [];
-                list.push({ id: id, title: title });
-                db.ref("studyData/" + sub).set(list).then(() => {
-                    document.getElementById("statusMsg").innerText = "සාර්ථකව ඇතුළත් කළා! ✅";
-                    document.getElementById("statusMsg").style.display = "block";
-                    setTimeout(() => { document.getElementById("statusMsg").style.display = "none"; }, 3000);
-                    document.getElementById("newVidTitle").value = "";
-                    document.getElementById("newVidId").value = "";
+    let currentMode = 'subject';
+
+    function toggleSection(type) {
+        currentMode = type;
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(type + 'Section').classList.add('active');
+        document.getElementById('btn' + (type === 'subject' ? 'Sub' : 'Vid')).classList.add('active');
+        loadItems();
+    }
+
+    // දත්ත පෙන්වීම
+    function loadItems() {
+        const display = document.getElementById("itemsDisplay");
+        const header = document.getElementById("listHeader");
+        display.innerHTML = "";
+
+        if (currentMode === 'subject') {
+            header.innerText = "මතකයේ ඇති විෂයන්";
+            db.ref("subjects").once("value", (snapshot) => {
+                snapshot.forEach((child) => {
+                    createItemCard(child.val(), child.key, "subjects/" + child.key);
                 });
             });
         } else {
-            alert("කරුණාකර නම සහ ID එක ඇතුළත් කරන්න!");
-        }
-    }
-
-    // දත්ත මකා දැමීම (Reset)
-    function resetDatabase() {
-        if (confirm("ඔබට විශ්වාසද? ඔබ ඇතුළත් කළ සියලුම වීඩියෝ මැකී යනු ඇත!")) {
-            db.ref("studyData").remove().then(() => {
-                document.getElementById("statusMsg").innerText = "සියලු දත්ත මැකුවා! 🗑️";
-                document.getElementById("statusMsg").style.display = "block";
-                setTimeout(() => { document.getElementById("statusMsg").style.display = "none"; }, 3000);
+            const sub = document.getElementById("targetSubject").value;
+            header.innerText = "මෙම විෂයේ වීඩියෝ";
+            db.ref("studyData/" + sub).once("value", (snapshot) => {
+                snapshot.forEach((child) => {
+                    createItemCard(child.val().title, child.val().id, "studyData/" + sub + "/" + child.key);
+                });
             });
         }
     }
+
+    function createItemCard(title, extra, path) {
+        const display = document.getElementById("itemsDisplay");
+        const div = document.createElement("div");
+        div.className = "item-card";
+        div.innerHTML = `
+            <div class="item-info">${title}<span>${extra}</span></div>
+            <button class="delete-btn" onclick="deleteItem('${path}')"><i class="material-icons">delete</i></button>
+        `;
+        display.appendChild(div);
+    }
+
+    function deleteItem(path) {
+        if(confirm("මෙය මැකීමට ඔබට විශ්වාසද?")) {
+            db.ref(path).remove().then(() => {
+                showStatus("සාර්ථකව මැකුවා! 🗑️");
+                loadItems();
+            });
+        }
+    }
+
+    // Add Functions
+    function addNewSubject() {
+        const key = document.getElementById("newSubKey").value.toLowerCase().trim();
+        const name = document.getElementById("newSubName").value.trim();
+        if(key && name) {
+            db.ref("subjects/" + key).set(name).then(() => {
+                showStatus("Subject එක හැදුවා! ✅");
+                document.getElementById("newSubKey").value = "";
+                document.getElementById("newSubName").value = "";
+                loadItems();
+            });
+        }
+    }
+
+    function addNewVideo() {
+        const sub = document.getElementById("targetSubject").value;
+        const title = document.getElementById("newVidTitle").value.trim();
+        const id = document.getElementById("newVidId").value.trim();
+        if(title && id) {
+            db.ref("studyData/" + sub).push({ id: id, title: title }).then(() => {
+                showStatus("Video එක එකතු කළා! ✅");
+                document.getElementById("newVidTitle").value = "";
+                document.getElementById("newVidId").value = "";
+                loadItems();
+            });
+        }
+    }
+
+    function showStatus(msg) {
+        const s = document.getElementById("statusMsg");
+        s.innerText = msg; s.style.display = "block";
+        setTimeout(() => s.style.display = "none", 3000);
+    }
+
+    // සජීවීව Dropdown එක යාවත්කාලීන කිරීම
+    db.ref("subjects").on("value", (snapshot) => {
+        const select = document.getElementById("targetSubject");
+        select.innerHTML = '<option value="bio">ජෛව රසායනය</option><option value="stats">සංඛ්‍යානය</option>';
+        snapshot.forEach((child) => {
+            select.innerHTML += `<option value="${child.key}">${child.val()}</option>`;
+        });
+    });
+
+    window.onload = loadItems;
 </script>
 </body>
 </html>
