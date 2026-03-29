@@ -3,43 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Admin - Dynamic Access Control</title>
+    <title>Advanced Admin - Auto-Accordion</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        body { background: #f0f2f5; color: #333; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; }
+        :root { --primary: #1a73e8; --success: #34a853; --bg: #f0f2f5; --white: #ffffff; }
+        body { background: var(--bg); color: #333; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; }
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
-        header { background: #1a73e8; color: white; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        header { background: var(--primary); color: white; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 30px; }
         
-        #homeScreen { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; }
-        .nav-card { background: white; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); cursor: pointer; transition: 0.3s; border: 1px solid transparent; }
-        .nav-card:hover { transform: translateY(-5px); border-color: #1a73e8; box-shadow: 0 8px 25px rgba(26,115,232,0.15); }
-        .nav-card i { font-size: 50px; color: #1a73e8; margin-bottom: 15px; }
-
         .page { display: none; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .active-page { display: block; }
-        .card { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .nav-card { background: var(--white); padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); cursor: pointer; transition: 0.3s; }
+        .nav-card:hover { transform: translateY(-5px); border: 1px solid var(--primary); }
+        .nav-card i { font-size: 50px; color: var(--primary); margin-bottom: 15px; }
+
+        .card { background: var(--white); padding: 20px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        input, select, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px; outline: none; box-sizing: border-box; }
         
-        input, select, textarea { width: 100%; padding: 12px; margin-bottom: 15px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; outline: none; font-family: inherit; }
-        button { width: 100%; padding: 14px; background: #1a73e8; color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        button:hover { background: #1557b0; }
-        .back-btn { background: #5f6368; width: auto; padding: 10px 20px; margin-bottom: 20px; display: inline-flex; align-items: center; gap: 8px; color: white; border: none; border-radius: 10px; cursor: pointer; }
+        button { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
+        .back-btn { background: #5f6368; width: auto; padding: 8px 18px; margin-bottom: 20px; display: inline-flex; align-items: center; gap: 8px; color: white; border-radius: 10px; border: none; }
 
-        table { width: 100%; border-collapse: collapse; background: white; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: #f8f9fa; color: #555; }
-        .edit-access-btn { color: #1a73e8; cursor: pointer; font-weight: 600; text-decoration: underline; }
-        .del-icon { color: #d93025; cursor: pointer; }
+        .sub-nav { display: flex; gap: 15px; margin-bottom: 25px; }
+        .sub-btn { flex: 1; padding: 20px; background: white; border-radius: 15px; text-align: center; cursor: pointer; border: 2px solid transparent; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .sub-btn.active { border-color: var(--primary); background: #e8f0fe; }
 
+        /* Video List Styling */
+        .video-container { display: none; margin-top: 10px; background: #f8f9fa; padding: 10px; border-radius: 10px; border: 1px solid #eee; }
+        .lesson-row { display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 5px 0; }
+        
         /* Modal Styles */
-        #accessModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center; }
+        #accessModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center; }
         .modal-content { background: white; width: 90%; max-width: 500px; padding: 25px; border-radius: 20px; max-height: 85vh; overflow-y: auto; }
         .lesson-check-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid #f1f1f1; }
-        .lesson-check-item input { width: auto; margin: 0; transform: scale(1.2); }
-        .btn-small { padding: 6px 12px; font-size: 11px; background: #eee; color: #333; border: 1px solid #ddd; width: auto; margin-bottom: 10px; }
-        
-        .section-label { font-size: 13px; font-weight: 600; color: #1a73e8; margin-bottom: 8px; display: block; border-left: 3px solid #1a73e8; padding-left: 8px; }
+        #lessonCheckboxList { background: #fafafa; border: 1px solid #eee; border-radius: 12px; max-height: 200px; overflow-y: auto; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -49,96 +49,64 @@
 <div class="container">
     
     <div id="homeScreen" class="page active-page">
-        <div class="nav-card" onclick="showPage('addPage')">
-            <i class="material-icons">video_library</i>
-            <h3>පාඩම් සහ වීඩියෝ<br>ඇතුළත් කිරීම</h3>
-        </div>
-        <div class="nav-card" onclick="showPage('studentPage')">
-            <i class="material-icons">person_add</i>
-            <h3>ශිෂ්‍යයන්<br>කළමනාකරණය</h3>
-        </div>
-        <div class="nav-card" onclick="showPage('viewPage')">
-            <i class="material-icons">manage_search</i>
-            <h3>දත්ත පිරික්සුම සහ<br>මකා දැමීම</h3>
+        <div class="nav-grid">
+            <div class="nav-card" onclick="showPage('addPage')"><i class="material-icons">video_library</i><h3>පාඩම් සහ වීඩියෝ<br>ඇතුළත් කිරීම</h3></div>
+            <div class="nav-card" onclick="showPage('studentMainPage')"><i class="material-icons">groups</i><h3>ශිෂ්‍යයන්<br>කළමනාකරණය</h3></div>
+            <div class="nav-card" onclick="showPage('viewPage')"><i class="material-icons">manage_search</i><h3>දත්ත පිරික්සුම සහ<br>මකා දැමීම</h3></div>
         </div>
     </div>
 
-    <div id="addPage" class="page">
+    <div id="studentMainPage" class="page">
         <button class="back-btn" onclick="showPage('homeScreen')"><i class="material-icons">arrow_back</i> ආපසු</button>
-        <div class="card">
-            <h3>පාඩම් කළමනාකරණය</h3>
-            <select id="streamSelect" onchange="loadLessonsForSelect()">
-                <option value="et">Engineering Technology (ET)</option>
-                <option value="sft">Science for Technology (SFT)</option>
-            </select>
-            <div style="display:flex; gap:10px;">
-                <input type="text" id="newLessonName" placeholder="පාඩමේ නම">
-                <button style="width:120px;" onclick="createNewLesson()">සාදන්න</button>
-            </div>
-            <hr style="margin:20px 0; border:0; border-top:1px solid #eee;">
-            <select id="lessonSelect"><option value="">පාඩමක් තෝරන්න...</option></select>
-            <textarea id="bulkData" rows="4" placeholder="වීඩියෝ නම&#10;YouTube ලින්ක් එක"></textarea>
-            <button style="background:#34a853;" onclick="uploadVideos()">වීඩියෝ එක් කරන්න</button>
+        <div class="sub-nav">
+            <div class="sub-btn" id="btnNewStd" onclick="toggleStudentSection('add')"><i class="material-icons" style="display:block;">person_add</i>නව ශිෂ්‍යයෙක්</div>
+            <div class="sub-btn" id="btnManageStd" onclick="toggleStudentSection('manage')"><i class="material-icons" style="display:block;">settings</i>සිසුන් පාලනය</div>
         </div>
-    </div>
-
-    <div id="studentPage" class="page">
-        <button class="back-btn" onclick="showPage('homeScreen')"><i class="material-icons">arrow_back</i> ආපසු</button>
-        <div class="card">
-            <h3>නව ශිෂ්‍යයෙකු ඇතුළත් කිරීම</h3>
+        <div id="secAddStudent" style="display:none;" class="card">
             <input type="text" id="stdName" placeholder="ශිෂ්‍ය නාමය">
             <input type="text" id="stdPass" placeholder="මුරපදය">
-            <select id="stdAccess">
-                <option value="et">ET පමණක්</option>
-                <option value="sft">SFT පමණක්</option>
-                <option value="both">දෙකම (Both)</option>
-            </select>
+            <select id="stdAccess"><option value="et">ET</option><option value="sft">SFT</option><option value="both">Both</option></select>
             <button onclick="addStudent()">ලියාපදිංචි කරන්න</button>
         </div>
-        <div class="card" style="overflow-x: auto;">
-            <div id="studentTableContainer">පූරණය වේ...</div>
+        <div id="secManageStudent" style="display:none;">
+            <div class="card" style="padding: 10px;"><input type="text" id="studentSearchInput" placeholder="නම සොයන්න..." onkeyup="filterStudents()"></div>
+            <div id="studentTableContainer"></div>
         </div>
     </div>
 
     <div id="viewPage" class="page">
         <button class="back-btn" onclick="showPage('homeScreen')"><i class="material-icons">arrow_back</i> ආපසු</button>
         <div style="display:flex; gap:10px; margin-bottom:20px;">
-            <button onclick="refreshDataView('et')">ET බලන්න</button>
-            <button onclick="refreshDataView('sft')">SFT බලන්න</button>
+            <button onclick="refreshDataView('et')">ET දත්ත</button>
+            <button onclick="refreshDataView('sft')">SFT දත්ත</button>
         </div>
         <div id="dataDisplayArea">ප්‍රභේදයක් තෝරන්න...</div>
+    </div>
+
+    <div id="addPage" class="page">
+        <button class="back-btn" onclick="showPage('homeScreen')"><i class="material-icons">arrow_back</i> ආපසු</button>
+        <div class="card">
+            <h3>වීඩියෝ එක් කරන්න</h3>
+            <select id="streamSelect" onchange="loadLessonsForSelect()"><option value="et">ET</option><option value="sft">SFT</option></select>
+            <div style="display:flex; gap:10px;"><input type="text" id="newLessonName" placeholder="පාඩමේ නම"><button onclick="createNewLesson()">සාදන්න</button></div>
+            <hr>
+            <select id="lessonSelect"><option value="">තෝරන්න...</option></select>
+            <textarea id="bulkData" rows="4" placeholder="නම සහ ලින්ක්..."></textarea>
+            <button style="background:var(--success);" onclick="uploadVideos()">Upload</button>
+        </div>
     </div>
 
 </div>
 
 <div id="accessModal">
     <div class="modal-content">
-        <h3 id="modalStudentName">Access පාලනය</h3>
-        
-        <span class="section-label">ප්‍රධාන ප්‍රවේශය වෙනස් කරන්න:</span>
-        <select id="changeAccessType" onchange="updateUserAccessType()">
-            <option value="et">ET පමණක්</option>
-            <option value="sft">SFT පමණක්</option>
-            <option value="both">දෙකම (Both)</option>
-        </select>
-
-        <hr style="margin:15px 0; border:0; border-top:1px solid #eee;">
-
-        <span class="section-label">අවසර දිය යුතු පාඩම් තෝරන්න:</span>
-        <select id="modalStream" onchange="loadLessonsForModal()"></select>
-        
-        <div style="display:flex; gap:10px;">
-            <button class="btn-small" onclick="toggleAll(true)">සියල්ල තෝරන්න</button>
-            <button class="btn-small" onclick="toggleAll(false)">සියල්ල ඉවත් කරන්න</button>
-        </div>
-
-        <div id="lessonCheckboxList" style="border:1px solid #eee; border-radius:10px; padding:5px; background: #fafafa; max-height: 250px; overflow-y: auto; margin-bottom: 15px;">
-            </div>
-        
-        <div style="display:flex; gap:10px;">
-            <button onclick="saveAccess()">Access සුරකින්න (Save)</button>
-            <button style="background:#5f6368;" onclick="closeModal()">වසන්න</button>
-        </div>
+        <h3 id="modalStudentName">Access Control</h3>
+        <select id="changeAccessType" onchange="updateUserAccessType()"><option value="et">ET</option><option value="sft">SFT</option><option value="both">Both</option></select>
+        <select id="modalStream" onchange="loadLessonsForModal()" style="margin-top:10px;"></select>
+        <div style="display:flex; gap:5px; margin-bottom:10px;"><button style="padding:5px; font-size:11px;" onclick="toggleAll(true)">All</button><button style="padding:5px; font-size:11px; background:gray;" onclick="toggleAll(false)">None</button></div>
+        <div id="lessonCheckboxList"></div>
+        <button onclick="saveAccess()">සුරකින්න</button>
+        <button style="background:#5f6368; margin-top:10px;" onclick="closeModal()">වසන්න</button>
     </div>
 </div>
 
@@ -151,88 +119,72 @@
         authDomain: "tech-590c8.firebaseapp.com",
         databaseURL: "https://tech-590c8-default-rtdb.firebaseio.com",
         projectId: "tech-590c8",
-        storageBucket: "tech-590c8.firebasestorage.app",
-        messagingSenderId: "379663698743",
         appId: "1:379663698743:web:7fba89d9f7b231ca6828b2"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
+    let allStudents = {};
     let selectedUserKey = null;
 
     function showPage(id) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
         document.getElementById(id).classList.add('active-page');
-        if(id === 'studentPage') loadStudents();
     }
 
-    async function addStudent() {
-        const name = document.getElementById("stdName").value.trim();
-        const pass = document.getElementById("stdPass").value.trim();
-        const access = document.getElementById("stdAccess").value;
-        if(!name || !pass) return alert("තොරතුරු පුරවන්න!");
-        await db.ref('students').push({ name, password: pass, access, allowedLessons: { et: {}, sft: {} } });
-        alert("සාර්ථකයි!");
-        loadStudents();
+    // --- Student Management ---
+    function toggleStudentSection(type) {
+        document.getElementById('secAddStudent').style.display = (type === 'add' ? 'block' : 'none');
+        document.getElementById('secManageStudent').style.display = (type === 'manage' ? 'block' : 'none');
+        if(type === 'manage') loadStudents();
     }
 
     function loadStudents() {
         db.ref('students').on('value', snap => {
-            const data = snap.val();
-            const container = document.getElementById("studentTableContainer");
-            if(!data) { container.innerHTML = "සිසුන් නැත."; return; }
-            let html = `<table><tr><th>නම/මුරපදය</th><th>වර්ගය</th><th>පාලනය</th></tr>`;
-            for(let key in data) {
-                const user = data[key];
-                html += `<tr>
-                    <td><b>${user.name}</b><br><small>${user.password}</small></td>
-                    <td><span style="font-size:10px; background:#e8f0fe; padding:3px 6px; border-radius:10px; text-transform:uppercase;">${user.access}</span></td>
-                    <td><span class="edit-access-btn" onclick="openAccessModal('${key}', '${user.name}', '${user.access}')">සකසන්න</span> <i class="material-icons del-icon" style="font-size:18px; vertical-align:middle; margin-left:10px;" onclick="deleteStudent('${key}')">delete</i></td>
-                </tr>`;
-            }
-            container.innerHTML = html + `</table>`;
+            allStudents = snap.val() || {};
+            renderStudentTable(allStudents);
         });
     }
 
-    function openAccessModal(key, name, accessType) {
+    function renderStudentTable(data) {
+        const container = document.getElementById("studentTableContainer");
+        let html = `<table style="width:100%; background:white; border-radius:10px;">`;
+        for(let key in data) {
+            html += `<tr style="border-bottom:1px solid #eee;"><td style="padding:15px;"><b>${data[key].name}</b></td>
+            <td style="text-align:right; padding-right:15px;">
+                <span style="color:blue; cursor:pointer;" onclick="openAccessModal('${key}','${data[key].name}','${data[key].access}')">සකසන්න</span>
+                <i class="material-icons" style="color:red; cursor:pointer; vertical-align:middle; margin-left:10px;" onclick="deleteStudent('${key}')">delete</i>
+            </td></tr>`;
+        }
+        container.innerHTML = html + `</table>`;
+    }
+
+    // --- Access Modal Logic ---
+    function openAccessModal(key, name, access) {
         selectedUserKey = key;
-        document.getElementById("modalStudentName").innerText = name + " සඳහා අවසරයන්";
-        document.getElementById("changeAccessType").value = accessType;
-        updateModalStreamOptions(accessType);
+        document.getElementById("modalStudentName").innerText = name;
+        document.getElementById("changeAccessType").value = access;
+        updateModalStreamOptions(access);
         document.getElementById("accessModal").style.display = "flex";
         loadLessonsForModal();
     }
 
-    function updateModalStreamOptions(accessType) {
-        const streamSelect = document.getElementById("modalStream");
-        streamSelect.innerHTML = "";
-        if(accessType === 'et' || accessType === 'both') streamSelect.innerHTML += `<option value="et">Engineering Technology (ET)</option>`;
-        if(accessType === 'sft' || accessType === 'both') streamSelect.innerHTML += `<option value="sft">Science for Technology (SFT)</option>`;
-    }
-
-    // Modal එක ඇතුළේ ප්‍රවේශය වෙනස් කළ විට Firebase එකට සුරැකීම
-    async function updateUserAccessType() {
-        const newAccess = document.getElementById("changeAccessType").value;
-        await db.ref(`students/${selectedUserKey}`).update({ access: newAccess });
-        updateModalStreamOptions(newAccess); // Drop-down එක අලුත් කරන්න
-        loadLessonsForModal(); // පාඩම් ලැයිස්තුව අලුත් කරන්න
-        alert("ප්‍රධාන ප්‍රවේශය " + newAccess.toUpperCase() + " ලෙස වෙනස් කළා.");
+    function updateModalStreamOptions(type) {
+        const sel = document.getElementById("modalStream"); sel.innerHTML = "";
+        if(type === 'et' || type === 'both') sel.innerHTML += `<option value="et">ET</option>`;
+        if(type === 'sft' || type === 'both') sel.innerHTML += `<option value="sft">SFT</option>`;
     }
 
     async function loadLessonsForModal() {
         const stream = document.getElementById("modalStream").value;
-        if(!stream) return;
         const listDiv = document.getElementById("lessonCheckboxList");
-        listDiv.innerHTML = "පූරණය වේ...";
         const lessonsSnap = await db.ref(`studyData/${stream}`).once('value');
         const userSnap = await db.ref(`students/${selectedUserKey}/allowedLessons/${stream}`).once('value');
-        const lessons = lessonsSnap.val();
-        const allowed = userSnap.val() || {};
+        const lessons = lessonsSnap.val(); const allowed = userSnap.val() || {};
         listDiv.innerHTML = "";
-        if(!lessons) { listDiv.innerHTML = "පාඩම් නැත."; return; }
-        for(let lName in lessons) {
-            const checked = allowed[lName] ? 'checked' : '';
-            listDiv.innerHTML += `<div class="lesson-check-item"><input type="checkbox" class="l-check" value="${lName}" ${checked}> <span>${lName}</span></div>`;
+        for(let l in lessons) {
+            const chk = allowed[l] ? 'checked' : '';
+            listDiv.innerHTML += `<div class="lesson-check-item"><input type="checkbox" class="l-check" value="${l}" ${chk}> ${l}</div>`;
         }
     }
 
@@ -241,43 +193,93 @@
     async function saveAccess() {
         const stream = document.getElementById("modalStream").value;
         const checks = document.querySelectorAll('.l-check');
-        let data = {};
-        checks.forEach(c => { if(c.checked) data[c.value] = true; });
+        let data = {}; checks.forEach(c => { if(c.checked) data[c.value] = true; });
         await db.ref(`students/${selectedUserKey}/allowedLessons/${stream}`).set(data);
-        alert("සුරකින ලදී!");
+        alert("සුරැකුණා!");
     }
 
-    function closeModal() { document.getElementById("accessModal").style.display = "none"; }
-    function deleteStudent(key) { if(confirm("මකන්නද?")) db.ref(`students/${key}`).remove(); }
+    // --- Auto-Hide (Accordion) Logic ---
+    function refreshDataView(stream) {
+        db.ref(`studyData/${stream}`).once("value", snap => {
+            const data = snap.val();
+            const area = document.getElementById("dataDisplayArea");
+            area.innerHTML = `<h4>${stream.toUpperCase()} Data</h4>`;
+            if(!data) return;
+            for(let lName in data) {
+                let vHtml = "";
+                if(data[lName].videos) {
+                    for(let vK in data[lName].videos) {
+                        vHtml += `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #ddd;">
+                            <span>${data[lName].videos[vK].title}</span>
+                            <i class="material-icons" style="color:red; font-size:18px; cursor:pointer;" onclick="deleteVideo('${stream}','${lName}','${vK}')">delete</i>
+                        </div>`;
+                    }
+                }
+                const safeId = lName.replace(/\s/g, '_');
+                area.innerHTML += `<div class="card">
+                    <div class="lesson-row" onclick="toggleAccordion('${safeId}')">
+                        <b>${lName}</b> <i class="material-icons" id="icon-${safeId}">expand_more</i>
+                    </div>
+                    <div id="vid-${safeId}" class="video-container">
+                        ${vHtml || 'No Videos'}
+                        <button style="background:red; margin-top:10px; padding:5px; font-size:11px;" onclick="deleteLesson('${stream}','${lName}')">Delete Lesson</button>
+                    </div>
+                </div>`;
+            }
+        });
+    }
 
-    // --- Lesson & Video Management ---
+    // නවීකරණය කරන ලද Accordion ශ්‍රිතය
+    function toggleAccordion(selectedId) {
+        const allContainers = document.querySelectorAll('.video-container');
+        const currentTarget = document.getElementById('vid-' + selectedId);
+        const isAlreadyOpen = (currentTarget.style.display === 'block');
+
+        // මුලින්ම සියලුම Containers හයිඩ් කරන්න
+        allContainers.forEach(container => {
+            container.style.display = 'none';
+        });
+
+        // අයිකන සියල්ල reset කරන්න
+        document.querySelectorAll('.lesson-row i').forEach(icon => icon.innerText = 'expand_more');
+
+        // ඔබ ක්ලික් කළ එක කලින් වැසී තිබුනේ නම් පමණක් එය විවෘත කරන්න
+        if (!isAlreadyOpen) {
+            currentTarget.style.display = 'block';
+            document.getElementById('icon-' + selectedId).innerText = 'expand_less';
+        }
+    }
+
+    // --- Other Core Functions ---
+    async function addStudent() {
+        const name = document.getElementById("stdName").value;
+        const pass = document.getElementById("stdPass").value;
+        const access = document.getElementById("stdAccess").value;
+        if(name && pass) await db.ref('students').push({ name, password: pass, access });
+        alert("Added!");
+    }
+    function closeModal() { document.getElementById("accessModal").style.display = "none"; }
     async function createNewLesson() {
         const s = document.getElementById("streamSelect").value;
-        const n = document.getElementById("newLessonName").value.trim();
-        if(!n) return;
-        await db.ref(`studyData/${s}/${n}`).set({ created: Date.now() });
-        alert("පාඩම සෑදුවා!");
+        const n = document.getElementById("newLessonName").value;
+        if(n) await db.ref(`studyData/${s}/${n}`).set({ created: Date.now() });
     }
-
     function loadLessonsForSelect() {
         const s = document.getElementById("streamSelect").value;
         db.ref(`studyData/${s}`).on("value", snap => {
-            const data = snap.val();
-            const sel = document.getElementById("lessonSelect");
-            sel.innerHTML = '<option value="">පාඩමක් තෝරන්න...</option>';
+            const data = snap.val(); const sel = document.getElementById("lessonSelect");
+            sel.innerHTML = '<option value="">තෝරන්න...</option>';
             if(data) Object.keys(data).forEach(l => {
                 let o = document.createElement("option"); o.value = l; o.innerText = l; sel.appendChild(o);
             });
         });
     }
-
     async function uploadVideos() {
         const s = document.getElementById("streamSelect").value;
         const l = document.getElementById("lessonSelect").value;
         const raw = document.getElementById("bulkData").value;
         if(!l || !raw) return;
-        const lines = raw.split('\n');
-        let title = "";
+        const lines = raw.split('\n'); let title = "";
         for(let line of lines) {
             line = line.trim(); if(!line) continue;
             if(line.includes("http")) {
@@ -286,22 +288,11 @@
                 title = "";
             } else title = line;
         }
-        alert("වීඩියෝ එක් කළා!");
+        alert("Done!");
     }
-
-    function refreshDataView(stream) {
-        db.ref(`studyData/${stream}`).once("value", snap => {
-            const data = snap.val();
-            const area = document.getElementById("dataDisplayArea");
-            area.innerHTML = `<h4>${stream.toUpperCase()} දත්ත</h4>`;
-            if(!data) return;
-            for(let l in data) {
-                area.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center;"><span>${l}</span> <button onclick="deleteLesson('${stream}','${l}')" style="background:red; width:auto; padding:5px 10px;">මකන්න</button></div>`;
-            }
-        });
-    }
-
-    function deleteLesson(s, l) { if(confirm("මකන්නද?")) db.ref(`studyData/${s}/${l}`).remove().then(() => refreshDataView(s)); }
+    async function deleteVideo(s, l, vK) { if(confirm("මකන්නද?")) { await db.ref(`studyData/${s}/${l}/videos/${vK}`).remove(); refreshDataView(s); } }
+    async function deleteLesson(s, l) { if(confirm("පාඩම මකන්නද?")) { await db.ref(`studyData/${s}/${l}`).remove(); refreshDataView(s); } }
+    function deleteStudent(k) { if(confirm("සිසුවා මකන්නද?")) db.ref(`students/${k}`).remove(); }
     window.onload = loadLessonsForSelect;
 </script>
 </body>
