@@ -2,46 +2,124 @@
 <html lang="si">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Secure Study Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         :root { --primary: #1a73e8; --bg: #f0f2f5; }
-        body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; padding: 0; user-select: none; }
-        .screen { display: none; padding: 20px; animation: fadeIn 0.4s; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; padding: 0; user-select: none; -webkit-touch-callout: none; }
+        
+        .screen { display: none; padding: 15px; animation: fadeIn 0.4s; box-sizing: border-box; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         header { background: var(--primary); color: white; padding: 20px; text-align: center; border-radius: 0 0 20px 20px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .card { background: white; padding: 18px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 12px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; border: 1px solid #eee; }
 
-        /* --- Custom Secure Player Styles --- */
-        .player-outer { background: #000; border-radius: 15px; overflow: hidden; margin-bottom: 30px; position: relative; }
-        
-        .video-wrapper { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; }
-        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-        
-        /* ආරක්ෂිත ස්ථරය - මෙයින් වීඩියෝව මත ක්ලික් කිරීම වළක්වයි */
-        .video-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; cursor: default; }
+        /* --- Centered Secure Player Container --- */
+        #videoContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* සියල්ල මැදට ගනී */
+            width: 100%;
+        }
 
-        .custom-controls { background: #1a1a1a; padding: 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; border-top: 1px solid #333; }
-        .c-btn { background: #333; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-        .c-btn:hover { background: var(--primary); }
+        .player-outer { 
+            background: #000; 
+            border-radius: 15px; 
+            overflow: hidden; 
+            margin-bottom: 25px; 
+            position: relative; 
+            width: 100%; 
+            max-width: 600px; /* වීඩියෝ කොටුවේ උපරිම පළල සීමා කළා */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .video-wrapper { 
+            position: relative; 
+            width: 100%; 
+            padding-bottom: 56.25%; 
+            background: #000; 
+            height: 0;
+        }
+        
+        .video-wrapper iframe { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            border: 0; 
+            pointer-events: none; 
+        }
+        
+        .video-overlay { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: 10; 
+            background: rgba(0,0,0,0);
+        }
+
+        .custom-controls { 
+            background: #111; 
+            padding: 12px; 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 10px; 
+            align-items: center; 
+            justify-content: center; 
+            border-top: 1px solid #333; 
+        }
+        
+        .c-btn { 
+            background: #2a2a2a; 
+            color: white; 
+            border: none; 
+            width: 44px; 
+            height: 44px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
         .c-btn i { font-size: 24px; }
         
-        .speed-dropdown { background: #333; color: white; border: 1px solid #444; padding: 8px; border-radius: 8px; outline: none; cursor: pointer; font-size: 14px; }
+        .speed-dropdown { 
+            background: #2a2a2a; 
+            color: white; 
+            border: 1px solid #444; 
+            padding: 8px; 
+            border-radius: 8px; 
+            outline: none; 
+            font-size: 13px; 
+        }
 
+        .auth-box { max-width: 360px; margin: 40px auto; padding: 25px; background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; }
         input { width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
         button.login-btn { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div id="loginScreen" class="screen active">
-    <header><h1>Tech Study Portal</h1></header>
-    <div style="max-width: 380px; margin: auto; padding: 20px;">
-        <input type="text" id="loginName" placeholder="ශිෂ්‍ය නාමය">
+<div id="masterAuthScreen" class="screen">
+    <div class="auth-box">
+        <i class="material-icons" style="font-size: 50px; color: var(--primary);">lock</i>
+        <h2>App Authentication</h2>
+        <input type="text" id="mUser" placeholder="Username">
+        <input type="password" id="mPass" placeholder="Password">
+        <button class="login-btn" onclick="masterAuth()">ඇතුල් වන්න</button>
+    </div>
+</div>
+
+<div id="loginScreen" class="screen">
+    <header><h1>Student Login</h1></header>
+    <div style="max-width: 360px; margin: auto;">
+        <input type="text" id="loginName" placeholder="නම">
         <input type="password" id="loginPass" placeholder="මුරපදය">
         <button class="login-btn" onclick="login()">Log In</button>
     </div>
@@ -53,16 +131,16 @@
 </div>
 
 <div id="topicsScreen" class="screen">
-    <header style="display:flex; justify-content:space-between; align-items:center; padding: 15px 20px;">
+    <header style="display:flex; justify-content:space-between; align-items:center;">
         <i class="material-icons" onclick="showScreen('mainMenuScreen')" style="cursor:pointer;">arrow_back</i>
-        <span id="subTitle" style="font-weight:600;">පාඩම් මාලාව</span>
+        <span id="subTitle" style="font-weight:600;">පාඩම්</span>
         <div style="width:24px;"></div>
     </header>
     <div id="topicsList"></div>
 </div>
 
-<div id="playerScreen" class="screen" style="padding: 10px;">
-    <header style="background:none; color:#333; box-shadow:none; padding:10px; display:flex; align-items:center;">
+<div id="playerScreen" class="screen">
+    <header style="background:none; color:#333; box-shadow:none; display:flex; align-items:center; padding:10px 0;">
         <i class="material-icons" onclick="stopAndBack()" style="cursor:pointer; margin-right:15px;">arrow_back</i>
         <span id="lessonTitle" style="font-size:18px; font-weight:600;">වීඩියෝව</span>
     </header>
@@ -89,16 +167,26 @@
     let currentUser = null;
     let activePlayers = {};
 
-    // 1. YouTube API Ready
-    function onYouTubeIframeAPIReady() { console.log("YT API Ready"); }
+    window.onload = () => {
+        const isVerified = localStorage.getItem('isAppVerified');
+        const savedUser = localStorage.getItem('studyUser');
+        if (!isVerified) showScreen('masterAuthScreen');
+        else if (!savedUser) showScreen('loginScreen');
+        else { currentUser = JSON.parse(savedUser); loadDashboard(); }
+    };
 
     function showScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        window.scrollTo(0,0);
     }
 
-    // 2. Login
+    function masterAuth() {
+        if (document.getElementById("mUser").value === "ulindu" && document.getElementById("mPass").value === "2007") {
+            localStorage.setItem('isAppVerified', 'true');
+            showScreen('loginScreen');
+        } else alert("දත්ත වැරදියි!");
+    }
+
     function login() {
         const u = document.getElementById("loginName").value.trim();
         const p = document.getElementById("loginPass").value.trim();
@@ -108,28 +196,21 @@
                 if(data[key].name === u && data[key].password === p) {
                     currentUser = {id: key, ...data[key]};
                     localStorage.setItem('studyUser', JSON.stringify(currentUser));
-                    loadDashboard();
-                    return;
+                    loadDashboard(); return;
                 }
             }
-            alert("වැරදි දත්ත!");
+            alert("Login Failed!");
         });
     }
-
-    window.onload = () => {
-        const saved = localStorage.getItem('studyUser');
-        if(saved) { currentUser = JSON.parse(saved); loadDashboard(); }
-    };
 
     function loadDashboard() {
         document.getElementById("welcomeMsg").innerText = "ආයුබෝවන්, " + currentUser.name;
         showScreen('mainMenuScreen');
         const list = document.getElementById("subjectList");
         db.ref(`students/${currentUser.id}/access`).on('value', s => {
-            const acc = s.val();
-            list.innerHTML = "";
-            if(acc === 'et' || acc === 'both') list.innerHTML += `<div class="card" onclick="openStream('et')">ET (Engineering Tech) <i class="material-icons">chevron_right</i></div>`;
-            if(acc === 'sft' || acc === 'both') list.innerHTML += `<div class="card" onclick="openStream('sft')">SFT (Science for Tech) <i class="material-icons">chevron_right</i></div>`;
+            const acc = s.val(); list.innerHTML = "";
+            if(acc === 'et' || acc === 'both') list.innerHTML += `<div class="card" onclick="openStream('et')">Engineering Tech (ET) <i class="material-icons">chevron_right</i></div>`;
+            if(acc === 'sft' || acc === 'both') list.innerHTML += `<div class="card" onclick="openStream('sft')">Science for Tech (SFT) <i class="material-icons">chevron_right</i></div>`;
         });
     }
 
@@ -154,56 +235,48 @@
         });
     }
 
-    // 3. Start Secure Player
     function startLessons(title, videos) {
         document.getElementById("lessonTitle").innerText = title;
         const container = document.getElementById("videoContainer");
-        container.innerHTML = "";
-        activePlayers = {};
+        container.innerHTML = ""; activePlayers = {};
         showScreen('playerScreen');
 
         for(let key in videos) {
-            const v = videos[key];
-            const pid = "p_" + key;
-            const wrap = document.createElement("div");
-            wrap.className = "player-outer";
+            const v = videos[key]; const pid = "p_" + key;
+            const wrap = document.createElement("div"); wrap.className = "player-outer";
             wrap.innerHTML = `
-                <div style="padding:12px; color:white; font-size:14px; background:#222;">${v.title}</div>
+                <div style="padding:12px; color:white; font-size:14px; background:#111; text-align:center;">${v.title}</div>
                 <div class="video-wrapper">
                     <div id="${pid}"></div>
-                    <div class="video-overlay"></div> </div>
+                    <div class="video-overlay"></div>
+                </div>
                 <div class="custom-controls">
                     <button class="c-btn" onclick="ctrl('play','${pid}')"><i class="material-icons">play_arrow</i></button>
                     <button class="c-btn" onclick="ctrl('pause','${pid}')"><i class="material-icons">pause</i></button>
-                    <button class="c-btn" onclick="ctrl('rewind','${pid}')"><i class="material-icons">replay_10</i></button>
-                    <button class="c-btn" onclick="ctrl('forward','${pid}')"><i class="material-icons">forward_10</i></button>
+                    <button class="c-btn" onclick="ctrl('rw','${pid}')"><i class="material-icons">replay_10</i></button>
+                    <button class="c-btn" onclick="ctrl('ff','${pid}')"><i class="material-icons">forward_10</i></button>
                     <select class="speed-dropdown" onchange="ctrl('speed','${pid}', this.value)">
-                        <option value="1">1.0x (සාමාන්‍ය)</option>
+                        <option value="1">1.0x</option>
                         <option value="1.25">1.25x</option>
                         <option value="1.5">1.5x</option>
                         <option value="2">2.0x</option>
                     </select>
                     <button class="c-btn" onclick="ctrl('full','${pid}')"><i class="material-icons">fullscreen</i></button>
-                </div>
-            `;
+                </div>`;
             container.appendChild(wrap);
-
             activePlayers[pid] = new YT.Player(pid, {
                 videoId: v.id,
-                playerVars: { 'controls': 0, 'disablekb': 1, 'rel': 0, 'modestbranding': 1, 'fs': 0, 'iv_load_policy': 3 },
-                events: { 'onReady': () => {} }
+                playerVars: { 'controls': 0, 'disablekb': 1, 'rel': 0, 'modestbranding': 1, 'fs': 0, 'iv_load_policy': 3 }
             });
         }
     }
 
-    // 4. Custom Control Logic
     function ctrl(action, id, val) {
-        const p = activePlayers[id];
-        if(!p) return;
+        const p = activePlayers[id]; if(!p) return;
         if(action === 'play') p.playVideo();
         if(action === 'pause') p.pauseVideo();
-        if(action === 'forward') p.seekTo(p.getCurrentTime() + 10, true);
-        if(action === 'rewind') p.seekTo(p.getCurrentTime() - 10, true);
+        if(action === 'ff') p.seekTo(p.getCurrentTime() + 10, true);
+        if(action === 'rw') p.seekTo(p.getCurrentTime() - 10, true);
         if(action === 'speed') p.setPlaybackRate(parseFloat(val));
         if(action === 'full') {
             const el = document.getElementById(id).parentElement;
@@ -213,7 +286,7 @@
     }
 
     function stopAndBack() {
-        for(let k in activePlayers) activePlayers[k].stopVideo();
+        for(let k in activePlayers) { if(activePlayers[k].stopVideo) activePlayers[k].stopVideo(); }
         showScreen('topicsScreen');
     }
 </script>
