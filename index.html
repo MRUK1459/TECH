@@ -3,283 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech Study Portal - No Flicker Version</title>
+    <title>Student Learning Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        :root {
-            --primary-bg: #f0f4f8;
-            --card-blue: #0A1FFF;
-            --highlight-green: #37FF00;
-            --text-dark: #1a1a1a;
-            --font-main: 'Poppins', sans-serif;
-        }
+        :root { --primary: #1a73e8; --accent: #ff6d00; --bg: #f0f4f8; }
+        body { background: var(--bg); font-family: 'Poppins', sans-serif; margin: 0; -webkit-user-select: none; }
 
-        body { 
-            background: var(--primary-bg); 
-            margin: 0; padding: 0; 
-            font-family: var(--font-main); 
-            color: var(--text-dark); 
-            overflow-x: hidden;
-            /* Reload එකේදී flicker වීම වැලැක්වීමට මුලින්ම සඟවා තබයි */
-            visibility: hidden; 
+        /* Login Screen */
+        #loginOverlay {
+            position: fixed; inset: 0; background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+            display: flex; align-items: center; justify-content: center; z-index: 9999;
         }
-
-        /* --- Login Overlay --- */
-        #loginOverlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: #fff; z-index: 999999; 
-            display: none; align-items: center; justify-content: center; 
-        }
-        .login-box { 
-            background: #fff; padding: 30px; border-radius: 30px; width: 85%; max-width: 380px; 
-            text-align: center; box-shadow: 0 15px 40px rgba(10,31,255,0.1); border: 1px solid #eee;
-        }
-        .login-box input { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 10px; border: 1px solid #ddd; outline: none; box-sizing: border-box; }
-        .login-box button { width: 100%; padding: 16px; background: var(--card-blue); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; }
-
-        /* --- Page Layouts --- */
-        .page-section { display: none; width: 100%; box-sizing: border-box; }
-
-        /* --- Subject Menu --- */
-        #subjectMenu { 
-            height: 100vh; flex-direction: column; align-items: center; justify-content: center; 
-            background: var(--card-blue); position: relative; padding: 20px;
-        }
-        #subjectMenu::before { 
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 60%; 
-            background-color: var(--primary-bg); border-radius: 0 0 50% 50% / 0 0 10% 10%; 
-        }
-        #subjectMenu h2 { position: relative; z-index: 2; color: #0022ff; font-weight: 700; margin-bottom: 30px; text-align: center; font-size: clamp(20px, 5vw, 26px); }
+        .login-card { background: white; width: 85%; max-width: 380px; padding: 40px 30px; border-radius: 30px; text-align: center; }
         
-        .menu-card { 
-            width: 100%; max-width: 400px; padding: clamp(15px, 4vw, 22px); 
-            background: #ffffff; border-radius: 20px; 
-            cursor: pointer; margin-bottom: 20px; position: relative; z-index: 2; 
-            display: flex; align-items: center; gap: 15px; 
-            color: #0022ff; font-weight: 600; font-size: clamp(16px, 4vw, 18px);
-            transition: 0.3s; box-shadow: 0 8px 20px rgba(0,0,0,0.1); border: 2px solid transparent;
-            box-sizing: border-box;
+        input { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 15px; box-sizing: border-box; outline: none; background: #f9f9f9; }
+        .login-btn { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 15px; font-weight: 600; cursor: pointer; }
+
+        /* Main App */
+        #mainApp { display: none; }
+        header { 
+            background: white; padding: 15px 20px; display: flex; justify-content: space-between; 
+            align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100;
         }
-        .menu-card:hover { background: var(--highlight-green); color: #000; transform: translateY(-5px); }
-        .menu-card i { font-size: clamp(28px, 6vw, 35px); background: rgba(10, 31, 255, 0.05); padding: 8px; border-radius: 12px; }
+        
+        .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
 
-        /* --- Lesson Menu --- */
-        #lessonMenu { min-height: 100vh; padding: 40px 20px; flex-direction: column; align-items: center; }
-        .lesson-card { 
-            width: 100%; max-width: 550px; background: #fff; padding: 18px; margin-bottom: 12px; 
-            border-radius: 15px; border-left: 6px solid var(--card-blue); cursor: pointer; 
-            display: flex; align-items: center; justify-content: space-between; transition: 0.3s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03); box-sizing: border-box;
+        /* Video Section - Controls Enabled */
+        #videoSection { 
+            background: #000; border-radius: 20px; overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin-bottom: 25px; display: none;
+            position: relative;
         }
-
-        /* --- Player Section --- */
-        #mainContent { padding: 15px; max-width: 900px; margin: 0 auto; }
-        #videoContainer { 
-            position: relative; width: 100%; background: #000; 
-            border-radius: 15px; overflow: hidden; aspect-ratio: 16 / 9; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin-bottom: 20px; 
+        #closeVideoBtn {
+            position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.5);
+            color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; z-index: 10;
         }
-        #player { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
-        .click-layer { position: absolute; top: 0; left: 0; width: 100%; height: 80%; z-index: 10; cursor: pointer; }
+        iframe { width: 100%; aspect-ratio: 16/9; border: none; }
 
-        .custom-controls { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.9)); padding: 15px; display: flex; flex-direction: column; z-index: 999; transition: 0.4s; }
-        .custom-controls.hidden { opacity: 0; pointer-events: none; }
-        .seek-bar-container { width: 100%; height: 12px; display: flex; align-items: center; cursor: pointer; margin-bottom: 10px; }
-        .seek-bar-slider { width: 100%; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px; position: relative; }
-        .seek-bar-progress { height: 100%; background: var(--highlight-green); width: 0%; border-radius: 2px; }
-        .seek-bar-knob { width: 14px; height: 14px; background: #fff; border-radius: 50%; position: absolute; top: 50%; transform: translate(-50%, -50%); left: 0%; }
+        /* Lessons */
+        .lesson-box { background: white; border-radius: 18px; margin-bottom: 12px; border: 1px solid #e0e6ed; overflow: hidden; }
+        .lesson-title { padding: 18px 20px; cursor: pointer; display: flex; justify-content: space-between; font-weight: 600; }
+        .lesson-body { display: none; padding: 10px; background: #fafafa; border-top: 1px solid #f0f0f0; }
+        .lesson-body.open { display: block; }
 
-        .time-row { display: flex; align-items: center; justify-content: space-between; color: #fff; flex-wrap: wrap; gap: 10px; }
-        .controls-left { display: flex; align-items: center; gap: 15px; }
-        .icon-btn .material-icons { font-size: clamp(30px, 8vw, 38px); }
-        .icon-btn { background: none; border: none; color: #fff; cursor: pointer; padding: 5px; }
-        .select-style { background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 5px; border-radius: 5px; font-size: 12px; }
-
-        .playlist-container { background: #fff; border-radius: 15px; padding: 15px; margin-top: 10px; }
-        .playlist-item { padding: 12px; margin-bottom: 8px; background: #f9f9f9; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 12px; font-size: 14px; }
-        .playlist-item.active { border: 2px solid var(--card-blue); background: #eef3ff; color: var(--card-blue); font-weight: 600; }
-        .item-index { background: var(--card-blue); color: #fff; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 11px; flex-shrink: 0; }
+        .video-row {
+            display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px;
+            margin-bottom: 6px; border: 1px solid #f0f0f0; background: white; border-radius: 12px;
+            cursor: pointer; text-align: left; font-size: 13px;
+        }
+        .video-row i { color: #d93025; }
     </style>
 </head>
 <body>
 
-    <div id="loginOverlay">
-        <div class="login-box">
-            <h2 style="color:var(--card-blue)">Study Portal</h2>
-            <input type="text" id="username" placeholder="Username">
-            <input type="password" id="password" placeholder="Password">
-            <button onclick="checkLogin()">ඇතුල් වන්න</button>
+<div id="loginOverlay">
+    <div class="login-card">
+        <i class="material-icons" style="font-size:60px; color:var(--primary)">school</i>
+        <h2>ඇතුළු වන්න</h2>
+        <input type="text" id="stdUser" placeholder="ශිෂ්‍ය නාමය (Username)">
+        <input type="password" id="stdPass" placeholder="මුරපදය (Password)">
+        <button class="login-btn" onclick="handleLogin()">Login</button>
+    </div>
+</div>
+
+<div id="mainApp">
+    <header>
+        <div style="display:flex; align-items:center; gap:10px; font-weight:600;">
+            <i class="material-icons" style="color: var(--primary);">account_circle</i>
+            <span id="studentDisplayName">Student Name</span>
+        </div>
+        <button onclick="location.reload()" style="border:none; background:none;"><i class="material-icons">logout</i></button>
+    </header>
+
+    <div class="container">
+        <div id="videoSection">
+            <button id="closeVideoBtn" onclick="closeVideo()"><i class="material-icons">close</i></button>
+            <iframe id="youtubePlayer" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+
+        <div id="studentContent">
+            <h3 id="subjectDisplay" style="color:var(--accent); margin-bottom:5px;">SUBJECT</h3>
+            <h2 style="margin: 0 0 20px 0;">මගේ පාඩම් මාලාව</h2>
+            <div id="lessonsContainer">පූරණය වේ...</div>
         </div>
     </div>
+</div>
 
-    <div id="subjectMenu" class="page-section">
-        <h2>විෂය ධාරාව තෝරන්න</h2>
-        <div class="menu-card" onclick="navigateTo('lessons', 'et')">
-            <i class="material-icons">engineering</i> <span>Engineering Tech (ET)</span>
-        </div>
-        <div class="menu-card" onclick="navigateTo('lessons', 'sft')">
-            <i class="material-icons">science</i> <span>Science for Tech (SFT)</span>
-        </div>
-    </div>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
-    <div id="lessonMenu" class="page-section">
-        <h2 id="lessonMenuTitle" style="color:var(--card-blue); text-align: center; margin-bottom: 20px;">පාඩම් මාලාව</h2>
-        <div id="lessonListContainer" style="width:100%"></div>
-    </div>
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyApozqbVy4DFupEKafsU_oeC9RUAq1ljuU",
+        authDomain: "tech-590c8.firebaseapp.com",
+        databaseURL: "https://tech-590c8-default-rtdb.firebaseio.com",
+        projectId: "tech-590c8",
+        storageBucket: "tech-590c8.firebasestorage.app",
+        messagingSenderId: "379663698743",
+        appId: "1:379663698743:web:7fba89d9f7b231ca6828b2"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-    <div id="mainContent" class="page-section">
-        <div id="videoContainer">
-            <div id="player"></div>
-            <div class="click-layer" onclick="handleTap()"></div>
-            <div class="custom-controls" id="controlBar">
-                <div class="seek-bar-container" onclick="handleSeek(event)">
-                    <div class="seek-bar-slider"><div class="seek-bar-progress" id="seekBarProgress"></div><div class="seek-bar-knob" id="seekBarKnob"></div></div>
-                </div>
-                <div class="time-row">
-                    <div class="controls-left">
-                        <button class="icon-btn" onclick="togglePlay(event)"><i class="material-icons" id="playIcon">play_arrow</i></button>
-                        <div style="font-size:12px;"><span id="currentTime">00:00</span> / <span id="duration">00:00</span></div>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <select class="select-style" id="speed" onchange="setSpeed(event)">
-                            <option value="0.5">0.5x</option><option value="1" selected>1.0x</option><option value="1.5">1.5x</option><option value="2.0">2.0x</option>
-                        </select>
-                        <button class="icon-btn" onclick="toggleFullScreen(event)"><i class="material-icons">fullscreen</i></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="playlist-container">
-            <h3 style="color:var(--card-blue); margin-top:0; font-size:16px;">වීඩියෝ පටුන</h3>
-            <div id="playlist"></div>
-        </div>
-    </div>
+    function handleLogin() {
+        const user = document.getElementById("stdUser").value.trim();
+        const pass = document.getElementById("stdPass").value.trim();
 
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyApozqbVy4DFupEKafsU_oeC9RUAq1ljuU",
-            authDomain: "tech-590c8.firebaseapp.com",
-            databaseURL: "https://tech-590c8-default-rtdb.firebaseio.com",
-            projectId: "tech-590c8",
-            storageBucket: "tech-590c8.firebasestorage.app",
-            messagingSenderId: "379663698743",
-            appId: "1:379663698743:web:7fba89d9f7b231ca6828b2"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        let allData = {}, videoData = [], player, hideTimeout;
-
-        // --- වැදගත්ම කොටස: Flickering වැලැක්වීම ---
-        function initApp() {
-            const loggedIn = localStorage.getItem("isLoggedIn");
-            if (loggedIn === "true") {
-                document.getElementById("loginOverlay").style.display = "none";
-                // History එක අනුව පිටුව පෙන්වන්න
-                if (history.state) renderPage(history.state);
-                else renderPage({page: 'subjects'});
-            } else {
-                document.getElementById("loginOverlay").style.display = "flex";
-            }
-            // දැන් මුළු Body එකම පෙන්වන්න
-            document.body.style.visibility = "visible";
-        }
-
-        db.ref("studyData").on("value", s => { 
-            allData = s.val() || {}; 
-            // පළමු වරට දත්ත ලැබුණු විට App එක ආරම්භ කරන්න
-            initApp();
-        });
-
-        window.onpopstate = (event) => {
-            stopVideo();
-            if (event.state) renderPage(event.state);
-            else renderPage({page: 'subjects'});
-        };
-
-        function stopVideo() {
-            if (player && player.stopVideo) player.stopVideo();
-        }
-
-        function navigateTo(page, param1 = '', param2 = '', push = true) {
-            stopVideo();
-            const state = { page, param1, param2 };
-            if(push) history.pushState(state, '', '');
-            renderPage(state);
-        }
-
-        function renderPage(state) {
-            if(localStorage.getItem("isLoggedIn") !== "true") return;
-            document.querySelectorAll('.page-section').forEach(s => s.style.display = 'none');
-
-            if(state.page === 'subjects') document.getElementById("subjectMenu").style.display = "flex";
-            else if(state.page === 'lessons') showLessonsUI(state.param1);
-            else if(state.page === 'player') startPlayerUI(state.param1, state.param2);
-        }
-
-        function showLessonsUI(stream) {
-            document.getElementById("lessonMenu").style.display = "flex";
-            const cont = document.getElementById("lessonListContainer");
-            cont.innerHTML = "";
-            if(allData[stream]) {
-                Object.keys(allData[stream]).forEach(l => {
-                    let div = document.createElement("div"); div.className = "lesson-card";
-                    div.innerHTML = `<span>${l}</span><i class="material-icons">arrow_forward_ios</i>`;
-                    div.onclick = () => navigateTo('player', stream, l);
-                    cont.appendChild(div);
-                });
-            }
-        }
-
-        function startPlayerUI(stream, lesson) {
-            const lessonData = allData[stream] && allData[stream][lesson];
-            videoData = lessonData && lessonData.videos ? Object.values(lessonData.videos) : [];
-            document.getElementById("mainContent").style.display = "block";
-            document.getElementById("videoContainer").style.display = "none";
-            renderPlaylist();
-        }
-
-        function renderPlaylist() {
-            const pl = document.getElementById("playlist"); pl.innerHTML = "";
-            videoData.forEach((v, i) => {
-                let div = document.createElement("div"); div.className = "playlist-item"; div.id = `vid-${i}`;
-                div.innerHTML = `<div class="item-index">${i+1}</div> <span>${v.title}</span>`;
-                div.onclick = () => loadVideo(i); pl.appendChild(div);
+        db.ref('students').once('value', snapshot => {
+            let found = false;
+            snapshot.forEach(child => {
+                const data = child.val();
+                if(data.name === user && data.password === pass) {
+                    found = true;
+                    showApp(data);
+                }
             });
-        }
+            if(!found) alert("තොරතුරු වැරදියි!");
+        });
+    }
 
-        function loadVideo(i) {
-            document.getElementById("videoContainer").style.display = "block";
-            const vidId = videoData[i].id;
-            if(!player) {
-                let tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
-                document.body.appendChild(tag);
-                window.onYouTubeIframeAPIReady = () => {
-                    player = new YT.Player('player', { videoId: vidId, playerVars: { 'autoplay': 1, 'controls': 0 }, events: { 'onReady': onPlayerReady, 'onStateChange': onStateChange } });
-                };
-            } else player.loadVideoById(vidId);
-            document.querySelectorAll('.playlist-item').forEach(el => el.classList.remove('active'));
-            document.getElementById(`vid-${i}`).classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+    function showApp(student) {
+        document.getElementById("loginOverlay").style.display = "none";
+        document.getElementById("mainApp").style.display = "block";
+        document.getElementById("studentDisplayName").innerText = student.name;
+        document.getElementById("subjectDisplay").innerText = student.access.toUpperCase();
+        loadStudentLessons(student.access);
+    }
 
-        function onPlayerReady() { setInterval(updateUI, 500); showControls(); }
-        function onStateChange(e) { document.getElementById("playIcon").innerText = e.data === 1 ? "pause" : "play_arrow"; if(e.data === 1) resetTimer(); else showControls(); }
-        function handleTap() { const cb = document.getElementById("controlBar"); cb.classList.contains("hidden") ? showControls() : hideControls(); }
-        function showControls() { document.getElementById("controlBar").classList.remove("hidden"); resetTimer(); }
-        function hideControls() { if(player && player.getPlayerState() === 1) document.getElementById("controlBar").classList.add("hidden"); }
-        function resetTimer() { clearTimeout(hideTimeout); if(player && player.getPlayerState() === 1) hideTimeout = setTimeout(hideControls, 4000); }
-        function togglePlay(e) { e.stopPropagation(); if(player.getPlayerState() === 1) player.pauseVideo(); else player.playVideo(); }
-        function setSpeed(e) { e.stopPropagation(); player.setPlaybackRate(parseFloat(e.target.value)); }
-        function toggleFullScreen(e) { e.stopPropagation(); var container = document.getElementById("videoContainer"); if(!document.fullscreenElement) container.requestFullscreen(); else document.exitFullscreen(); }
-        function handleSeek(e) { e.stopPropagation(); var rect = e.currentTarget.getBoundingClientRect(); player.seekTo(player.getDuration() * ((e.clientX - rect.left) / rect.width), true); }
-        function updateUI() { if(player && player.getCurrentTime) { let curr = player.getCurrentTime(), dur = player.getDuration(); document.getElementById("currentTime").innerText = formatTime(curr); document.getElementById("duration").innerText = formatTime(dur); if(dur > 0) { let p = (curr / dur) * 100; document.getElementById("seekBarProgress").style.width = p + "%"; document.getElementById("seekBarKnob").style.left = p + "%"; } } }
-        function formatTime(t) { t = Math.round(t); var m = Math.floor(t / 60); var s = t % 60; return (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s); }
-        function checkLogin() { if(document.getElementById("username").value === "Ulindu" && document.getElementById("password").value === "2007") { localStorage.setItem("isLoggedIn", "true"); initApp(); } }
-    </script>
+    function loadStudentLessons(stream) {
+        db.ref(`studyData/${stream}`).on("value", snapshot => {
+            const data = snapshot.val();
+            const container = document.getElementById("lessonsContainer");
+            container.innerHTML = "";
+            for(let lessonName in data) {
+                const id = `l-${Math.random().toString(36).substr(2, 9)}`;
+                const card = document.createElement("div");
+                card.className = "lesson-box";
+                card.innerHTML = `<div class="lesson-title" onclick="toggleL('${id}')"><span>${lessonName}</span><i class="material-icons">add</i></div><div class="lesson-body" id="${id}"></div>`;
+                container.appendChild(card);
+                const body = document.getElementById(id);
+                if(data[lessonName].videos) {
+                    for(let vKey in data[lessonName].videos) {
+                        const vid = data[lessonName].videos[vKey];
+                        body.innerHTML += `<button class="video-row" onclick="playLesson('${vid.id}')"><i class="material-icons">play_circle</i>${vid.title}</button>`;
+                    }
+                }
+            }
+        });
+    }
+
+    function toggleL(id) {
+        const el = document.getElementById(id);
+        const isOpen = el.classList.contains('open');
+        document.querySelectorAll('.lesson-body').forEach(b => b.classList.remove('open'));
+        if(!isOpen) el.classList.add('open');
+    }
+
+    // වීඩියෝව ප්ලේ කිරීම සහ Back Button එක සක්‍රිය කිරීම
+    function playLesson(id) {
+        const section = document.getElementById("videoSection");
+        const player = document.getElementById("youtubePlayer");
+        
+        // controls=1 මගින් YouTube Controls ලබා දේ
+        player.src = `https://www.youtube.com/embed/${id}?rel=0&autoplay=1&controls=1&modestbranding=0`;
+        section.style.display = "block";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // History එකට අලුත් State එකක් එක් කරයි (Back Button එක එබූ විට වීඩියෝව වසා දැමීමට)
+        history.pushState({ videoOpen: true }, "");
+    }
+
+    function closeVideo() {
+        const section = document.getElementById("videoSection");
+        const player = document.getElementById("youtubePlayer");
+        player.src = "";
+        section.style.display = "none";
+    }
+
+    // Phone Back Button එක එබූ විට සිදුවන දේ
+    window.onpopstate = function(event) {
+        const section = document.getElementById("videoSection");
+        if (section.style.display === "block") {
+            closeVideo();
+        }
+    };
+
+    function toggleL(id) {
+        const el = document.getElementById(id);
+        el.classList.toggle('open');
+    }
+
+    document.addEventListener('contextmenu', e => e.preventDefault());
+</script>
 </body>
 </html>
