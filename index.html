@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech Study Portal - Final Pro Version</title>
+    <title>Tech Study Portal - No Flicker Version</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
@@ -20,105 +20,86 @@
             margin: 0; padding: 0; 
             font-family: var(--font-main); 
             color: var(--text-dark); 
-            overflow-x: hidden; 
+            overflow-x: hidden;
+            /* Reload එකේදී flicker වීම වැලැක්වීමට මුලින්ම සඟවා තබයි */
+            visibility: hidden; 
         }
 
         /* --- Login Overlay --- */
         #loginOverlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: #fff; z-index: 999999; 
-            display: flex; align-items: center; justify-content: center; 
+            display: none; align-items: center; justify-content: center; 
         }
         .login-box { 
-            background: #fff; padding: 40px; border-radius: 30px; width: 85%; max-width: 380px; 
+            background: #fff; padding: 30px; border-radius: 30px; width: 85%; max-width: 380px; 
             text-align: center; box-shadow: 0 15px 40px rgba(10,31,255,0.1); border: 1px solid #eee;
         }
-        .login-box input { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 10px; border: 1px solid #ddd; outline: none; }
+        .login-box input { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 10px; border: 1px solid #ddd; outline: none; box-sizing: border-box; }
         .login-box button { width: 100%; padding: 16px; background: var(--card-blue); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; }
 
-        /* --- Page: Subject Menu (ලස්සන කරන ලද බටන්) --- */
+        /* --- Page Layouts --- */
+        .page-section { display: none; width: 100%; box-sizing: border-box; }
+
+        /* --- Subject Menu --- */
         #subjectMenu { 
-            display: none; height: 100vh; flex-direction: column; align-items: center; justify-content: center; 
-            background: var(--card-blue); position: relative; 
+            height: 100vh; flex-direction: column; align-items: center; justify-content: center; 
+            background: var(--card-blue); position: relative; padding: 20px;
         }
         #subjectMenu::before { 
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 65%; 
-            background-color: var(--primary-bg); border-radius: 0 0 50% 50% / 0 0 15% 15%; 
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 60%; 
+            background-color: var(--primary-bg); border-radius: 0 0 50% 50% / 0 0 10% 10%; 
         }
-        #subjectMenu h2 {
-            position: relative; z-index: 2; color: #0022ff; 
-            font-weight: 700; margin-bottom: 30px; letter-spacing: 1px; font-size: 24px;
-        }
+        #subjectMenu h2 { position: relative; z-index: 2; color: #0022ff; font-weight: 700; margin-bottom: 30px; text-align: center; font-size: clamp(20px, 5vw, 26px); }
+        
         .menu-card { 
-            width: 85%; max-width: 400px; padding: 22px 30px; 
-            background: #ffffff; border-radius: 24px; 
-            cursor: pointer; margin-bottom: 25px; position: relative; z-index: 2; 
-            display: flex; align-items: center; gap: 20px; 
-            color: #0022ff; font-weight: 600; font-size: 18px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 2px solid transparent;
+            width: 100%; max-width: 400px; padding: clamp(15px, 4vw, 22px); 
+            background: #ffffff; border-radius: 20px; 
+            cursor: pointer; margin-bottom: 20px; position: relative; z-index: 2; 
+            display: flex; align-items: center; gap: 15px; 
+            color: #0022ff; font-weight: 600; font-size: clamp(16px, 4vw, 18px);
+            transition: 0.3s; box-shadow: 0 8px 20px rgba(0,0,0,0.1); border: 2px solid transparent;
+            box-sizing: border-box;
         }
-        .menu-card:hover { 
-            background: var(--highlight-green); color: #000; 
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 35px rgba(0,0,0,0.2); border-color: #fff;
-        }
-        .menu-card:active { transform: scale(0.95); }
-        .menu-card i {
-            font-size: 35px; background: rgba(10, 31, 255, 0.1);
-            padding: 10px; border-radius: 15px;
-        }
-        .menu-card:hover i { background: rgba(0, 0, 0, 0.1); }
+        .menu-card:hover { background: var(--highlight-green); color: #000; transform: translateY(-5px); }
+        .menu-card i { font-size: clamp(28px, 6vw, 35px); background: rgba(10, 31, 255, 0.05); padding: 8px; border-radius: 12px; }
 
-        /* --- Page: Lesson Menu --- */
-        #lessonMenu { display: none; min-height: 100vh; padding: 40px 20px; flex-direction: column; align-items: center; }
+        /* --- Lesson Menu --- */
+        #lessonMenu { min-height: 100vh; padding: 40px 20px; flex-direction: column; align-items: center; }
         .lesson-card { 
-            width: 100%; max-width: 550px; background: #fff; padding: 20px; margin-bottom: 15px; 
-            border-radius: 15px; border-left: 8px solid var(--card-blue); cursor: pointer; 
-            display: flex; align-items: center; justify-content: space-between; transition: 0.3s; 
+            width: 100%; max-width: 550px; background: #fff; padding: 18px; margin-bottom: 12px; 
+            border-radius: 15px; border-left: 6px solid var(--card-blue); cursor: pointer; 
+            display: flex; align-items: center; justify-content: space-between; transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03); box-sizing: border-box;
         }
-        .lesson-card:hover { transform: translateX(10px); border-left-color: var(--highlight-green); }
 
-        /* --- Page: Player Content --- */
-        #mainContent { display: none; padding: 20px; max-width: 900px; margin: 0 auto; }
+        /* --- Player Section --- */
+        #mainContent { padding: 15px; max-width: 900px; margin: 0 auto; }
         #videoContainer { 
-            display: none; position: relative; width: 100%; background: #000; 
-            border-radius: 20px; overflow: hidden; aspect-ratio: 16 / 9; 
-            box-shadow: 0 15px 45px rgba(10,31,255,0.15); margin-bottom: 25px; 
+            position: relative; width: 100%; background: #000; 
+            border-radius: 15px; overflow: hidden; aspect-ratio: 16 / 9; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin-bottom: 20px; 
         }
         #player { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
-        .click-layer { position: absolute; top: 0; left: 0; width: 100%; height: 80%; z-index: 10; cursor: pointer; background: transparent; }
+        .click-layer { position: absolute; top: 0; left: 0; width: 100%; height: 80%; z-index: 10; cursor: pointer; }
 
-        /* Custom Video Controls */
-        .custom-controls { 
-            position: absolute; bottom: 0; left: 0; right: 0; 
-            background: linear-gradient(transparent, rgba(0,0,0,0.95)); 
-            padding: 20px 25px; display: flex; flex-direction: column; z-index: 999; transition: 0.4s; 
-        }
-        .custom-controls.hidden { opacity: 0; transform: translateY(15px); pointer-events: none; }
+        .custom-controls { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.9)); padding: 15px; display: flex; flex-direction: column; z-index: 999; transition: 0.4s; }
+        .custom-controls.hidden { opacity: 0; pointer-events: none; }
+        .seek-bar-container { width: 100%; height: 12px; display: flex; align-items: center; cursor: pointer; margin-bottom: 10px; }
+        .seek-bar-slider { width: 100%; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px; position: relative; }
+        .seek-bar-progress { height: 100%; background: var(--highlight-green); width: 0%; border-radius: 2px; }
+        .seek-bar-knob { width: 14px; height: 14px; background: #fff; border-radius: 50%; position: absolute; top: 50%; transform: translate(-50%, -50%); left: 0%; }
 
-        .seek-bar-container { width: 100%; display: flex; align-items: center; margin-bottom: 20px; cursor: pointer; height: 15px; }
-        .seek-bar-slider { width: 100%; height: 6px; background: rgba(255,255,255,0.3); border-radius: 4px; position: relative; }
-        .seek-bar-progress { height: 100%; background: var(--highlight-green); width: 0%; border-radius: 4px; }
-        .seek-bar-knob { width: 18px; height: 18px; background: #fff; border-radius: 50%; position: absolute; top: 50%; transform: translate(-50%, -50%); left: 0%; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        .time-row { display: flex; align-items: center; justify-content: space-between; color: #fff; flex-wrap: wrap; gap: 10px; }
+        .controls-left { display: flex; align-items: center; gap: 15px; }
+        .icon-btn .material-icons { font-size: clamp(30px, 8vw, 38px); }
+        .icon-btn { background: none; border: none; color: #fff; cursor: pointer; padding: 5px; }
+        .select-style { background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 5px; border-radius: 5px; font-size: 12px; }
 
-        .time-row { display: flex; align-items: center; justify-content: space-between; color: #fff; }
-        .controls-left { display: flex; align-items: center; gap: 20px; }
-        
-        .icon-btn .material-icons { font-size: 38px; }
-        .icon-btn { background: none; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; padding: 5px; transition: 0.2s; }
-        .icon-btn:hover { color: var(--highlight-green); }
-
-        .select-style { 
-            background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); 
-            padding: 6px 12px; border-radius: 8px; font-size: 14px; outline: none; cursor: pointer;
-        }
-
-        /* Playlist */
-        .playlist-container { background: #fff; border-radius: 20px; padding: 20px; margin-top: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
-        .playlist-item { padding: 15px; margin-bottom: 10px; background: #f9f9f9; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.2s; border: 2px solid transparent; }
-        .playlist-item.active { border-color: var(--card-blue); background: #eef3ff; color: var(--card-blue); font-weight: 600; }
-        .item-index { background: var(--card-blue); color: #fff; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 13px; font-weight: bold; flex-shrink: 0; }
+        .playlist-container { background: #fff; border-radius: 15px; padding: 15px; margin-top: 10px; }
+        .playlist-item { padding: 12px; margin-bottom: 8px; background: #f9f9f9; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 12px; font-size: 14px; }
+        .playlist-item.active { border: 2px solid var(--card-blue); background: #eef3ff; color: var(--card-blue); font-weight: 600; }
+        .item-index { background: var(--card-blue); color: #fff; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 11px; flex-shrink: 0; }
     </style>
 </head>
 <body>
@@ -135,17 +116,15 @@
     <div id="subjectMenu" class="page-section">
         <h2>විෂය ධාරාව තෝරන්න</h2>
         <div class="menu-card" onclick="navigateTo('lessons', 'et')">
-            <i class="material-icons">engineering</i> 
-            <span>Engineering Tech (ET)</span>
+            <i class="material-icons">engineering</i> <span>Engineering Tech (ET)</span>
         </div>
         <div class="menu-card" onclick="navigateTo('lessons', 'sft')">
-            <i class="material-icons">science</i> 
-            <span>Science for Tech (SFT)</span>
+            <i class="material-icons">science</i> <span>Science for Tech (SFT)</span>
         </div>
     </div>
 
     <div id="lessonMenu" class="page-section">
-        <h2 id="lessonMenuTitle" style="color:var(--card-blue); margin-bottom: 25px; text-align: center;">පාඩම් මාලාව</h2>
+        <h2 id="lessonMenuTitle" style="color:var(--card-blue); text-align: center; margin-bottom: 20px;">පාඩම් මාලාව</h2>
         <div id="lessonListContainer" style="width:100%"></div>
     </div>
 
@@ -160,9 +139,9 @@
                 <div class="time-row">
                     <div class="controls-left">
                         <button class="icon-btn" onclick="togglePlay(event)"><i class="material-icons" id="playIcon">play_arrow</i></button>
-                        <div style="font-size:14px; font-family:monospace;"><span id="currentTime">00:00:00</span> / <span id="duration">00:00:00</span></div>
+                        <div style="font-size:12px;"><span id="currentTime">00:00</span> / <span id="duration">00:00</span></div>
                     </div>
-                    <div style="display:flex; align-items:center; gap:15px;">
+                    <div style="display:flex; align-items:center; gap:10px;">
                         <select class="select-style" id="speed" onchange="setSpeed(event)">
                             <option value="0.5">0.5x</option><option value="1" selected>1.0x</option><option value="1.5">1.5x</option><option value="2.0">2.0x</option>
                         </select>
@@ -172,7 +151,7 @@
             </div>
         </div>
         <div class="playlist-container">
-            <h3 style="color:var(--card-blue); margin-top:0;">වීඩියෝ පටුන</h3>
+            <h3 style="color:var(--card-blue); margin-top:0; font-size:16px;">වීඩියෝ පටුන</h3>
             <div id="playlist"></div>
         </div>
     </div>
@@ -195,22 +174,39 @@
 
         let allData = {}, videoData = [], player, hideTimeout;
 
-        // Firebase Sync & Navigation Handle
+        // --- වැදගත්ම කොටස: Flickering වැලැක්වීම ---
+        function initApp() {
+            const loggedIn = localStorage.getItem("isLoggedIn");
+            if (loggedIn === "true") {
+                document.getElementById("loginOverlay").style.display = "none";
+                // History එක අනුව පිටුව පෙන්වන්න
+                if (history.state) renderPage(history.state);
+                else renderPage({page: 'subjects'});
+            } else {
+                document.getElementById("loginOverlay").style.display = "flex";
+            }
+            // දැන් මුළු Body එකම පෙන්වන්න
+            document.body.style.visibility = "visible";
+        }
+
         db.ref("studyData").on("value", s => { 
             allData = s.val() || {}; 
-            if(localStorage.getItem("isLoggedIn") === "true") {
-                if(!history.state) navigateTo('subjects', '', '', false);
-                else renderPage(history.state);
-            }
+            // පළමු වරට දත්ත ලැබුණු විට App එක ආරම්භ කරන්න
+            initApp();
         });
 
-        // NATIVE BACK BUTTON LOGIC
         window.onpopstate = (event) => {
+            stopVideo();
             if (event.state) renderPage(event.state);
             else renderPage({page: 'subjects'});
         };
 
+        function stopVideo() {
+            if (player && player.stopVideo) player.stopVideo();
+        }
+
         function navigateTo(page, param1 = '', param2 = '', push = true) {
+            stopVideo();
             const state = { page, param1, param2 };
             if(push) history.pushState(state, '', '');
             renderPage(state);
@@ -218,7 +214,7 @@
 
         function renderPage(state) {
             if(localStorage.getItem("isLoggedIn") !== "true") return;
-            document.querySelectorAll('.page-section, #loginOverlay').forEach(s => s.style.display = 'none');
+            document.querySelectorAll('.page-section').forEach(s => s.style.display = 'none');
 
             if(state.page === 'subjects') document.getElementById("subjectMenu").style.display = "flex";
             else if(state.page === 'lessons') showLessonsUI(state.param1);
@@ -282,8 +278,8 @@
         function toggleFullScreen(e) { e.stopPropagation(); var container = document.getElementById("videoContainer"); if(!document.fullscreenElement) container.requestFullscreen(); else document.exitFullscreen(); }
         function handleSeek(e) { e.stopPropagation(); var rect = e.currentTarget.getBoundingClientRect(); player.seekTo(player.getDuration() * ((e.clientX - rect.left) / rect.width), true); }
         function updateUI() { if(player && player.getCurrentTime) { let curr = player.getCurrentTime(), dur = player.getDuration(); document.getElementById("currentTime").innerText = formatTime(curr); document.getElementById("duration").innerText = formatTime(dur); if(dur > 0) { let p = (curr / dur) * 100; document.getElementById("seekBarProgress").style.width = p + "%"; document.getElementById("seekBarKnob").style.left = p + "%"; } } }
-        function formatTime(t) { t = Math.round(t); var h = Math.floor(t / 3600); var m = Math.floor((t % 3600) / 60); var s = t % 60; return (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s); }
-        function checkLogin() { if(document.getElementById("username").value === "Ulindu" && document.getElementById("password").value === "2007") { localStorage.setItem("isLoggedIn", "true"); navigateTo('subjects'); } }
+        function formatTime(t) { t = Math.round(t); var m = Math.floor(t / 60); var s = t % 60; return (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s); }
+        function checkLogin() { if(document.getElementById("username").value === "Ulindu" && document.getElementById("password").value === "2007") { localStorage.setItem("isLoggedIn", "true"); initApp(); } }
     </script>
 </body>
 </html>
