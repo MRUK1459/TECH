@@ -8,84 +8,111 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         :root { --primary: #1a73e8; --accent: #ff6d00; --bg: #f0f4f8; }
-        body { background: var(--bg); font-family: 'Poppins', sans-serif; margin: 0; -webkit-user-select: none; }
+        body { background: var(--bg); font-family: 'Poppins', sans-serif; margin: 0; -webkit-user-select: none; color: #333; }
 
-        /* Login Screen */
-        #loginOverlay {
-            position: fixed; inset: 0; background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
-            display: flex; align-items: center; justify-content: center; z-index: 9999;
-        }
-        .login-card { background: white; width: 85%; max-width: 380px; padding: 40px 30px; border-radius: 30px; text-align: center; }
-        
+        /* Screen Toggle Logic */
+        .screen { display: none; min-height: 100vh; width: 100%; }
+        .active-screen { display: flex !important; flex-direction: column; }
+        #loginScreen.active-screen { display: flex !important; align-items: center; justify-content: center; }
+
+        /* Login Screen Styles */
+        #loginScreen { background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%); }
+        .login-card { background: white; width: 85%; max-width: 380px; padding: 40px 30px; border-radius: 30px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
         input { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 15px; box-sizing: border-box; outline: none; background: #f9f9f9; }
         .login-btn { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 15px; font-weight: 600; cursor: pointer; }
 
-        /* Main App */
-        #mainApp { display: none; }
-        header { 
-            background: white; padding: 15px 20px; display: flex; justify-content: space-between; 
-            align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100;
-        }
+        /* Header & Navigation */
+        header { background: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        .back-nav { display: flex; align-items: center; gap: 10px; color: var(--primary); cursor: pointer; font-weight: 600; }
+
+        .container { max-width: 800px; margin: 20px auto; padding: 0 15px; width: 100%; box-sizing: border-box; }
+
+        /* UI Cards */
+        .topic-card { background: white; padding: 20px; border-radius: 15px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; border: 1px solid #e0e6ed; transition: 0.2s; }
+        .topic-card:hover { border-color: var(--primary); background: #f8fbff; }
+        .video-item { background: white; padding: 18px; border-radius: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; cursor: pointer; border: 1px solid #e0e6ed; }
+        .video-item i { color: #d93025; }
+
+        /* Video Player Area */
+        #videoPlayerArea { background: #000; position: fixed; inset: 0; z-index: 1000; display: none; flex-direction: column; }
+        .player-container { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; margin: auto; }
+        #player { width: 100%; height: 100%; position: absolute; pointer-events: none; }
+        .click-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; cursor: pointer; }
         
-        .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
-
-        /* Video Section - Controls Enabled */
-        #videoSection { 
-            background: #000; border-radius: 20px; overflow: hidden; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin-bottom: 25px; display: none;
-            position: relative;
-        }
-        #closeVideoBtn {
-            position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.5);
-            color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; z-index: 10;
-        }
-        iframe { width: 100%; aspect-ratio: 16/9; border: none; }
-
-        /* Lessons */
-        .lesson-box { background: white; border-radius: 18px; margin-bottom: 12px; border: 1px solid #e0e6ed; overflow: hidden; }
-        .lesson-title { padding: 18px 20px; cursor: pointer; display: flex; justify-content: space-between; font-weight: 600; }
-        .lesson-body { display: none; padding: 10px; background: #fafafa; border-top: 1px solid #f0f0f0; }
-        .lesson-body.open { display: block; }
-
-        .video-row {
-            display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px;
-            margin-bottom: 6px; border: 1px solid #f0f0f0; background: white; border-radius: 12px;
-            cursor: pointer; text-align: left; font-size: 13px;
-        }
-        .video-row i { color: #d93025; }
+        .custom-controls { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.9)); padding: 15px 20px; transition: 0.4s; z-index: 20; }
+        .custom-controls.hidden { opacity: 0; transform: translateY(20px); pointer-events: none; }
+        .seek-bar-container { width: 100%; height: 10px; display: flex; align-items: center; cursor: pointer; margin-bottom: 10px; }
+        .seek-bar-slider { width: 100%; height: 5px; background: rgba(255,255,255,0.2); border-radius: 3px; position: relative; }
+        .seek-bar-progress { height: 100%; background: #ff0000; width: 0%; border-radius: 3px; }
+        .seek-bar-knob { width: 14px; height: 14px; background: #ff0000; border-radius: 50%; position: absolute; top: 50%; transform: translate(-50%, -50%); left: 0%; }
+        .time-row { display: flex; align-items: center; justify-content: space-between; color: white; }
     </style>
 </head>
 <body>
 
-<div id="loginOverlay">
+<div id="loginScreen" class="screen">
     <div class="login-card">
         <i class="material-icons" style="font-size:60px; color:var(--primary)">school</i>
-        <h2>ඇතුළු වන්න</h2>
-        <input type="text" id="stdUser" placeholder="ශිෂ්‍ය නාමය (Username)">
-        <input type="password" id="stdPass" placeholder="මුරපදය (Password)">
+        <h2 style="margin: 10px 0 25px;">ඇතුළු වන්න</h2>
+        <input type="text" id="stdUser" placeholder="ශිෂ්‍ය නාමය">
+        <input type="password" id="stdPass" placeholder="මුරපදය">
         <button class="login-btn" onclick="handleLogin()">Login</button>
     </div>
 </div>
 
-<div id="mainApp">
+<div id="subjectScreen" class="screen">
     <header>
-        <div style="display:flex; align-items:center; gap:10px; font-weight:600;">
-            <i class="material-icons" style="color: var(--primary);">account_circle</i>
-            <span id="studentDisplayName">Student Name</span>
+        <div style="font-weight:700;">මගේ විෂයන්</div>
+        </header>
+    <div class="container" id="subjectList"></div>
+</div>
+
+<div id="topicsMenuScreen" class="screen">
+    <header>
+        <div class="back-nav" onclick="showScreen('subjectScreen')">
+            <i class="material-icons">arrow_back</i> <span>අනුමාතෘකා තෝරන්න</span>
         </div>
-        <button onclick="location.reload()" style="border:none; background:none;"><i class="material-icons">logout</i></button>
     </header>
+    <div class="container" id="topicsContainer"></div>
+</div>
 
-    <div class="container">
-        <div id="videoSection">
-            <button id="closeVideoBtn" onclick="closeVideo()"><i class="material-icons">close</i></button>
-            <iframe id="youtubePlayer" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<div id="videosListScreen" class="screen">
+    <header>
+        <div class="back-nav" onclick="showScreen('topicsMenuScreen')">
+            <i class="material-icons">arrow_back</i> <span id="currentTopicName">පාඩම් මාලාව</span>
         </div>
+    </header>
+    <div class="container" id="videosContainer"></div>
+</div>
 
-        <div id="studentContent">
-            <h3 id="subjectDisplay" style="color:var(--accent); margin-bottom:5px;">SUBJECT</h3>
-            <h2 style="margin: 0 0 20px 0;">මගේ පාඩම් මාලාව</h2>
-            <div id="lessonsContainer">පූරණය වේ...</div>
+<div id="videoPlayerArea">
+    <div style="padding:15px; display:flex; align-items:center; color:white;">
+        <i class="material-icons" style="cursor:pointer;" onclick="closePlayer()">arrow_back</i>
+        <span id="playingVideoTitle" style="margin-left:15px; font-size:14px; opacity:0.8;">වීඩියෝව</span>
+    </div>
+    <div class="player-container">
+        <div id="player"></div>
+        <div class="click-layer" onclick="handleTap()"></div>
+        <div class="custom-controls" id="controlBar">
+            <div class="seek-bar-container" onclick="handleSeek(event)">
+                <div class="seek-bar-slider">
+                    <div class="seek-bar-progress" id="seekBarProgress"></div>
+                    <div class="seek-bar-knob" id="seekBarKnob"></div>
+                </div>
+            </div>
+            <div class="time-row">
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <button class="icon-btn" style="background:none; border:none; color:white;" onclick="togglePlay(event)" id="playPauseBtn"><i class="material-icons">play_arrow</i></button>
+                    <span style="font-size:12px;"><span id="currentTime">0:00</span> / <span id="duration">0:00</span></span>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <select id="speed" onchange="setSpeed(event)" style="background:none; color:white; border:1px solid #444; border-radius:4px; font-size:12px;">
+                        <option value="0.5">0.5x</option><option value="1" selected>1.0x</option>
+                        <option value="1.5">1.5x</option><option value="2.0">2.0x</option>
+                    </select>
+                    <button class="icon-btn" style="background:none; border:none; color:white;" onclick="toggleFullScreen()"><i class="material-icons">fullscreen</i></button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -106,94 +133,122 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
+    let player, hideTimeout, currentUserData = null, allStudyData = null;
+
+    window.onload = function() {
+        const savedUser = localStorage.getItem("studentUser");
+        if (savedUser) {
+            currentUserData = JSON.parse(savedUser);
+            showScreen('subjectScreen');
+            renderSubjects();
+            loadYouTubeAPI();
+        } else {
+            showScreen('loginScreen');
+        }
+    };
+
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+        document.getElementById(id).classList.add('active-screen');
+    }
+
     function handleLogin() {
         const user = document.getElementById("stdUser").value.trim();
         const pass = document.getElementById("stdPass").value.trim();
-
-        db.ref('students').once('value', snapshot => {
+        db.ref('students').once('value', snap => {
             let found = false;
-            snapshot.forEach(child => {
+            snap.forEach(child => {
                 const data = child.val();
                 if(data.name === user && data.password === pass) {
                     found = true;
-                    showApp(data);
+                    currentUserData = data;
+                    localStorage.setItem("studentUser", JSON.stringify(data));
+                    showScreen('subjectScreen');
+                    renderSubjects();
+                    loadYouTubeAPI();
                 }
             });
             if(!found) alert("තොරතුරු වැරදියි!");
         });
     }
 
-    function showApp(student) {
-        document.getElementById("loginOverlay").style.display = "none";
-        document.getElementById("mainApp").style.display = "block";
-        document.getElementById("studentDisplayName").innerText = student.name;
-        document.getElementById("subjectDisplay").innerText = student.access.toUpperCase();
-        loadStudentLessons(student.access);
+    function renderSubjects() {
+        const container = document.getElementById("subjectList");
+        container.innerHTML = `
+            <div class="topic-card" onclick="fetchTopics('${currentUserData.access}')">
+                <div>
+                    <h3 style="margin:0; color:var(--primary);">${currentUserData.access.toUpperCase()}</h3>
+                    <p style="margin:5px 0 0; font-size:12px; color:#666;">අනුමාතෘකා බැලීමට මෙතැන ක්ලික් කරන්න</p>
+                </div>
+                <i class="material-icons" style="color:var(--primary)">arrow_forward</i>
+            </div>
+        `;
     }
 
-    function loadStudentLessons(stream) {
+    function fetchTopics(stream) {
+        showScreen('topicsMenuScreen');
+        const container = document.getElementById("topicsContainer");
+        container.innerHTML = "පූරණය වේ...";
         db.ref(`studyData/${stream}`).on("value", snapshot => {
-            const data = snapshot.val();
-            const container = document.getElementById("lessonsContainer");
+            allStudyData = snapshot.val();
             container.innerHTML = "";
-            for(let lessonName in data) {
-                const id = `l-${Math.random().toString(36).substr(2, 9)}`;
-                const card = document.createElement("div");
-                card.className = "lesson-box";
-                card.innerHTML = `<div class="lesson-title" onclick="toggleL('${id}')"><span>${lessonName}</span><i class="material-icons">add</i></div><div class="lesson-body" id="${id}"></div>`;
-                container.appendChild(card);
-                const body = document.getElementById(id);
-                if(data[lessonName].videos) {
-                    for(let vKey in data[lessonName].videos) {
-                        const vid = data[lessonName].videos[vKey];
-                        body.innerHTML += `<button class="video-row" onclick="playLesson('${vid.id}')"><i class="material-icons">play_circle</i>${vid.title}</button>`;
-                    }
-                }
+            if(!allStudyData) return;
+            for(let topicName in allStudyData) {
+                const div = document.createElement("div");
+                div.className = "topic-card";
+                div.onclick = () => renderVideos(topicName);
+                div.innerHTML = `<span>${topicName}</span> <i class="material-icons" style="font-size:20px; color:#999;">chevron_right</i>`;
+                container.appendChild(div);
             }
         });
     }
 
-    function toggleL(id) {
-        const el = document.getElementById(id);
-        const isOpen = el.classList.contains('open');
-        document.querySelectorAll('.lesson-body').forEach(b => b.classList.remove('open'));
-        if(!isOpen) el.classList.add('open');
-    }
-
-    // වීඩියෝව ප්ලේ කිරීම සහ Back Button එක සක්‍රිය කිරීම
-    function playLesson(id) {
-        const section = document.getElementById("videoSection");
-        const player = document.getElementById("youtubePlayer");
-        
-        // controls=1 මගින් YouTube Controls ලබා දේ
-        player.src = `https://www.youtube.com/embed/${id}?rel=0&autoplay=1&controls=1&modestbranding=0`;
-        section.style.display = "block";
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-
-        // History එකට අලුත් State එකක් එක් කරයි (Back Button එක එබූ විට වීඩියෝව වසා දැමීමට)
-        history.pushState({ videoOpen: true }, "");
-    }
-
-    function closeVideo() {
-        const section = document.getElementById("videoSection");
-        const player = document.getElementById("youtubePlayer");
-        player.src = "";
-        section.style.display = "none";
-    }
-
-    // Phone Back Button එක එබූ විට සිදුවන දේ
-    window.onpopstate = function(event) {
-        const section = document.getElementById("videoSection");
-        if (section.style.display === "block") {
-            closeVideo();
+    function renderVideos(topicName) {
+        document.getElementById("currentTopicName").innerText = topicName;
+        showScreen('videosListScreen');
+        const container = document.getElementById("videosContainer");
+        container.innerHTML = "";
+        const topicObj = allStudyData[topicName];
+        if(topicObj && topicObj.videos) {
+            for(let vKey in topicObj.videos) {
+                const vid = topicObj.videos[vKey];
+                const div = document.createElement("div");
+                div.className = "video-item";
+                div.onclick = () => playVideo(vid.id, vid.title);
+                div.innerHTML = `<i class="material-icons">play_circle</i> <span>${vid.title}</span>`;
+                container.appendChild(div);
+            }
         }
-    };
-
-    function toggleL(id) {
-        const el = document.getElementById(id);
-        el.classList.toggle('open');
     }
 
+    function loadYouTubeAPI() { if(!window.YT) { const tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api"; document.body.appendChild(tag); } }
+    function playVideo(id, title) {
+        document.getElementById("playingVideoTitle").innerText = title;
+        document.getElementById("videoPlayerArea").style.display = "flex";
+        if (!player) {
+            player = new YT.Player('player', {
+                videoId: id,
+                playerVars: { 'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0, 'playsinline': 1 },
+                events: { 'onReady': () => setInterval(updateUI, 500), 'onStateChange': onPlayerStateChange }
+            });
+        } else { player.loadVideoById(id); }
+    }
+    function onPlayerStateChange(e) {
+        const btn = document.getElementById("playPauseBtn");
+        if (e.data === YT.PlayerState.PLAYING) { btn.innerHTML = '<i class="material-icons">pause</i>'; resetTimer(); } 
+        else { btn.innerHTML = '<i class="material-icons">play_arrow</i>'; document.getElementById("controlBar").classList.remove("hidden"); }
+    }
+    function closePlayer() { if(player) player.pauseVideo(); document.getElementById("videoPlayerArea").style.display = "none"; }
+    function handleTap() { const cb = document.getElementById("controlBar"); cb.classList.contains("hidden") ? (cb.classList.remove("hidden"), resetTimer()) : cb.classList.add("hidden"); }
+    function resetTimer() { clearTimeout(hideTimeout); if (player && player.getPlayerState() === 1) hideTimeout = setTimeout(() => document.getElementById("controlBar").classList.add("hidden"), 4000); }
+    function togglePlay(e) { e.stopPropagation(); (player.getPlayerState() === 1) ? player.pauseVideo() : player.playVideo(); }
+    function setSpeed(e) { e.stopPropagation(); player.setPlaybackRate(parseFloat(e.target.value)); }
+    function toggleFullScreen() { const v = document.querySelector(".player-container"); if (!document.fullscreenElement) v.requestFullscreen(); else document.exitFullscreen(); }
+    function handleSeek(e) { e.stopPropagation(); const rect = document.querySelector(".seek-bar-container").getBoundingClientRect(); player.seekTo(player.getDuration() * ((e.clientX - rect.left) / rect.width), true); }
+    function updateUI() { if (player && player.getCurrentTime) { const curr = player.getCurrentTime(), dur = player.getDuration(); document.getElementById("currentTime").innerText = formatTime(curr); document.getElementById("duration").innerText = formatTime(dur); if (dur > 0) { const p = (curr / dur) * 100; document.getElementById("seekBarProgress").style.width = p + "%"; document.getElementById("seekBarKnob").style.left = p + "%"; } } }
+    function formatTime(t) { t = Math.round(t); const m = Math.floor(t / 60), s = t % 60; return m + ":" + (s < 10 ? "0" : "") + s; }
+    
+    // Logout function එක ඉවත් කරන ලදී
     document.addEventListener('contextmenu', e => e.preventDefault());
 </script>
 </body>
