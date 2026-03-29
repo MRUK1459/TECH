@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        :root { --primary: #1a73e8; --bg: #f0f2f5; }
+        :root { --primary: #1a73e8; --bg: #f0f2f5; --yt-red: #ff0000; }
         body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; padding: 0; user-select: none; -webkit-touch-callout: none; }
         
         .screen { display: none; padding: 15px; animation: fadeIn 0.4s; box-sizing: border-box; }
@@ -17,87 +17,39 @@
         header { background: var(--primary); color: white; padding: 20px; text-align: center; border-radius: 0 0 20px 20px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .card { background: white; padding: 18px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 12px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; border: 1px solid #eee; }
 
-        /* --- Centered Secure Player Container --- */
-        #videoContainer {
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* සියල්ල මැදට ගනී */
-            width: 100%;
-        }
+        /* --- Compact Player Styles --- */
+        #playerSection { display: none; margin-top: 10px; animation: slideUp 0.3s; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        .player-outer { 
-            background: #000; 
-            border-radius: 15px; 
-            overflow: hidden; 
-            margin-bottom: 25px; 
-            position: relative; 
-            width: 100%; 
-            max-width: 600px; /* වීඩියෝ කොටුවේ උපරිම පළල සීමා කළා */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        .video-box { 
+            position: relative; width: 100%; max-width: 854px; margin: 0 auto; 
+            background: #000; border-radius: 12px; overflow: hidden; aspect-ratio: 16 / 9; 
+            z-index: 10; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         
-        .video-wrapper { 
-            position: relative; 
-            width: 100%; 
-            padding-bottom: 56.25%; 
-            background: #000; 
-            height: 0;
-        }
+        #player { width: 100%; height: 100%; position: absolute; top: 0; left: 0; pointer-events: none; }
+        .click-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; cursor: pointer; background: transparent; }
         
-        .video-wrapper iframe { 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            border: 0; 
-            pointer-events: none; 
-        }
-        
-        .video-overlay { 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            z-index: 10; 
-            background: rgba(0,0,0,0);
-        }
-
         .custom-controls { 
-            background: #111; 
-            padding: 12px; 
-            display: flex; 
-            flex-wrap: wrap; 
-            gap: 10px; 
-            align-items: center; 
-            justify-content: center; 
-            border-top: 1px solid #333; 
+            position: absolute; bottom: 0; left: 0; right: 0; 
+            background: linear-gradient(transparent, rgba(0,0,0,0.95)); 
+            display: flex; flex-direction: column; padding: 15px 20px; 
+            transition: 0.4s; z-index: 99999 !important; 
         }
+        .custom-controls.hidden { opacity: 0; transform: translateY(20px); pointer-events: none; }
         
-        .c-btn { 
-            background: #2a2a2a; 
-            color: white; 
-            border: none; 
-            width: 44px; 
-            height: 44px; 
-            border-radius: 50%; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-        }
-        .c-btn i { font-size: 24px; }
+        .seek-bar-container { width: 100%; display: flex; align-items: center; margin-bottom: 12px; cursor: pointer; position: relative; height: 10px; }
+        .seek-bar-slider { width: 100%; height: 4px; background: rgba(255,255,255,0.25); border-radius: 2px; position: relative; }
+        .seek-bar-progress { height: 100%; background: var(--yt-red); width: 0%; border-radius: 2px; }
+        .seek-bar-knob { width: 14px; height: 14px; background: var(--yt-red); border-radius: 50%; position: absolute; top: 50%; transform: translate(-50%, -50%); left: 0%; }
         
-        .speed-dropdown { 
-            background: #2a2a2a; 
-            color: white; 
-            border: 1px solid #444; 
-            padding: 8px; 
-            border-radius: 8px; 
-            outline: none; 
-            font-size: 13px; 
-        }
+        .time-row { display: flex; align-items: center; justify-content: space-between; }
+        .controls-left { display: flex; align-items: center; gap: 15px; }
+        .time-display { font-size: 13px; color: #fff; font-weight: 500; }
+        
+        .icon-btn { background: none; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; padding: 5px; }
+        .icon-btn i { font-size: 28px; }
+        .select-style { background: rgba(255,255,255,0.1); color: white; border: 1px solid #444; padding: 4px 8px; border-radius: 6px; font-size: 12px; outline: none; }
 
         .auth-box { max-width: 360px; margin: 40px auto; padding: 25px; background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; }
         input { width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
@@ -140,11 +92,39 @@
 </div>
 
 <div id="playerScreen" class="screen">
-    <header style="background:none; color:#333; box-shadow:none; display:flex; align-items:center; padding:10px 0;">
-        <i class="material-icons" onclick="stopAndBack()" style="cursor:pointer; margin-right:15px;">arrow_back</i>
-        <span id="lessonTitle" style="font-size:18px; font-weight:600;">වීඩියෝව</span>
-    </header>
-    <div id="videoContainer"></div>
+    <div id="videoListContainer">
+        <header style="background:none; color:#333; box-shadow:none; display:flex; align-items:center; padding:10px 0;">
+            <i class="material-icons" onclick="showScreen('topicsScreen')" style="cursor:pointer; margin-right:15px;">arrow_back</i>
+            <span id="lessonTitle" style="font-size:18px; font-weight:600;">වීඩියෝ තෝරන්න</span>
+        </header>
+        <div id="multiVideoList"></div>
+    </div>
+
+    <div id="playerSection">
+        <header style="background:none; color:#333; box-shadow:none; display:flex; align-items:center; padding:10px 0;">
+            <i class="material-icons" onclick="hidePlayer()" style="cursor:pointer; margin-right:15px;">arrow_back</i>
+            <span id="activeVideoTitle" style="font-size:16px; font-weight:600;">වීඩියෝව ප්ලේ වේ...</span>
+        </header>
+        <div class="video-box" id="videoContainer">
+            <div id="player"></div>
+            <div class="click-layer" onclick="handleTap()"></div>
+            <div class="custom-controls" id="controlBar">
+                <div class="seek-bar-container" onclick="handleSeek(event)">
+                    <div class="seek-bar-slider"><div class="seek-bar-progress" id="seekBarProgress"></div><div class="seek-bar-knob" id="seekBarKnob"></div></div>
+                </div>
+                <div class="time-row">
+                    <div class="controls-left">
+                        <button class="icon-btn" onclick="togglePlay(event)" id="playPauseBtn"><i class="material-icons">play_arrow</i></button>
+                        <div class="time-display"><span id="currentTime">0:00</span> / <span id="duration">0:00</span></div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <select class="select-style" id="speed" onchange="setSpeed(event)"><option value="0.5">0.5x</option><option value="1" selected>1.0x</option><option value="1.5">1.5x</option><option value="2">2.0x</option></select>
+                        <button class="icon-btn" onclick="toggleFullScreen(event)"><i class="material-icons">fullscreen</i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://www.youtube.com/iframe_api"></script>
@@ -165,15 +145,37 @@
     const db = firebase.database();
 
     let currentUser = null;
-    let activePlayers = {};
+    let player, hideTimeout;
+    let currentVideos = [];
 
+    // --- පද්ධතිය ආරම්භයේදී පරීක්ෂා කිරීම ---
     window.onload = () => {
         const isVerified = localStorage.getItem('isAppVerified');
         const savedUser = localStorage.getItem('studyUser');
-        if (!isVerified) showScreen('masterAuthScreen');
-        else if (!savedUser) showScreen('loginScreen');
-        else { currentUser = JSON.parse(savedUser); loadDashboard(); }
+
+        if (!isVerified) {
+            showScreen('masterAuthScreen');
+        } else if (!savedUser) {
+            showScreen('loginScreen');
+        } else {
+            currentUser = JSON.parse(savedUser);
+            checkUserStatus(currentUser.id); // ශිෂ්‍යයා තවමත් සිටීදැයි DB එකෙන් බලයි
+        }
     };
+
+    function checkUserStatus(userId) {
+        db.ref(`students/${userId}`).once('value', snap => {
+            if (snap.exists()) {
+                loadDashboard();
+            } else {
+                // ඇඩ්මින් විසින් Delete කර ඇත්නම් දත්ත මකා Login එක පෙන්වයි
+                localStorage.removeItem('studyUser');
+                currentUser = null;
+                alert("ඔබගේ ගිණුම අවලංගු කර ඇත.");
+                showScreen('loginScreen');
+            }
+        }).catch(() => loadDashboard()); // Internet නැත්නම් Dashboard එක පෙන්වයි
+    }
 
     function showScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -184,7 +186,7 @@
         if (document.getElementById("mUser").value === "ulindu" && document.getElementById("mPass").value === "2007") {
             localStorage.setItem('isAppVerified', 'true');
             showScreen('loginScreen');
-        } else alert("දත්ත වැරදියි!");
+        } else alert("වැරදියි!");
     }
 
     function login() {
@@ -199,7 +201,7 @@
                     loadDashboard(); return;
                 }
             }
-            alert("Login Failed!");
+            alert("ලොගින් අසාර්ථකයි!");
         });
     }
 
@@ -226,8 +228,8 @@
                 for(let name in lessons) {
                     if(allowed[name]) {
                         const d = document.createElement("div"); d.className = "card";
-                        d.onclick = () => startLessons(name, lessons[name].videos);
-                        d.innerHTML = `<span>${name}</span> <i class="material-icons">play_circle_filled</i>`;
+                        d.onclick = () => showVideoList(name, lessons[name].videos);
+                        d.innerHTML = `<span>${name}</span> <i class="material-icons">chevron_right</i>`;
                         container.appendChild(d);
                     }
                 }
@@ -235,60 +237,54 @@
         });
     }
 
-    function startLessons(title, videos) {
+    function showVideoList(title, videos) {
         document.getElementById("lessonTitle").innerText = title;
-        const container = document.getElementById("videoContainer");
-        container.innerHTML = ""; activePlayers = {};
+        currentVideos = Object.values(videos);
         showScreen('playerScreen');
+        document.getElementById("videoListContainer").style.display = "block";
+        document.getElementById("playerSection").style.display = "none";
+        const listContainer = document.getElementById("multiVideoList");
+        listContainer.innerHTML = "";
+        currentVideos.forEach((v, index) => {
+            const d = document.createElement("div"); d.className = "card";
+            d.onclick = () => playThisVideo(index);
+            d.innerHTML = `<span>${v.title}</span> <i class="material-icons">play_circle_outline</i>`;
+            listContainer.appendChild(d);
+        });
+    }
 
-        for(let key in videos) {
-            const v = videos[key]; const pid = "p_" + key;
-            const wrap = document.createElement("div"); wrap.className = "player-outer";
-            wrap.innerHTML = `
-                <div style="padding:12px; color:white; font-size:14px; background:#111; text-align:center;">${v.title}</div>
-                <div class="video-wrapper">
-                    <div id="${pid}"></div>
-                    <div class="video-overlay"></div>
-                </div>
-                <div class="custom-controls">
-                    <button class="c-btn" onclick="ctrl('play','${pid}')"><i class="material-icons">play_arrow</i></button>
-                    <button class="c-btn" onclick="ctrl('pause','${pid}')"><i class="material-icons">pause</i></button>
-                    <button class="c-btn" onclick="ctrl('rw','${pid}')"><i class="material-icons">replay_10</i></button>
-                    <button class="c-btn" onclick="ctrl('ff','${pid}')"><i class="material-icons">forward_10</i></button>
-                    <select class="speed-dropdown" onchange="ctrl('speed','${pid}', this.value)">
-                        <option value="1">1.0x</option>
-                        <option value="1.25">1.25x</option>
-                        <option value="1.5">1.5x</option>
-                        <option value="2">2.0x</option>
-                    </select>
-                    <button class="c-btn" onclick="ctrl('full','${pid}')"><i class="material-icons">fullscreen</i></button>
-                </div>`;
-            container.appendChild(wrap);
-            activePlayers[pid] = new YT.Player(pid, {
-                videoId: v.id,
-                playerVars: { 'controls': 0, 'disablekb': 1, 'rel': 0, 'modestbranding': 1, 'fs': 0, 'iv_load_policy': 3 }
+    function playThisVideo(index) {
+        const vid = currentVideos[index];
+        document.getElementById("activeVideoTitle").innerText = vid.title;
+        document.getElementById("videoListContainer").style.display = "none";
+        document.getElementById("playerSection").style.display = "block";
+        if (!player) {
+            player = new YT.Player('player', {
+                videoId: vid.id,
+                playerVars: { 'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0, 'playsinline': 1 },
+                events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
             });
-        }
+        } else { player.loadVideoById(vid.id); }
     }
 
-    function ctrl(action, id, val) {
-        const p = activePlayers[id]; if(!p) return;
-        if(action === 'play') p.playVideo();
-        if(action === 'pause') p.pauseVideo();
-        if(action === 'ff') p.seekTo(p.getCurrentTime() + 10, true);
-        if(action === 'rw') p.seekTo(p.getCurrentTime() - 10, true);
-        if(action === 'speed') p.setPlaybackRate(parseFloat(val));
-        if(action === 'full') {
-            const el = document.getElementById(id).parentElement;
-            if(el.requestFullscreen) el.requestFullscreen();
-            else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-        }
+    function hidePlayer() { if(player) player.pauseVideo(); document.getElementById("playerSection").style.display = "none"; document.getElementById("videoListContainer").style.display = "block"; }
+    function onPlayerReady() { setInterval(updateUI, 500); }
+    function onPlayerStateChange(e) {
+        const btn = document.getElementById("playPauseBtn");
+        if (e.data === YT.PlayerState.PLAYING) { btn.innerHTML = '<i class="material-icons">pause</i>'; resetTimer(); }
+        else { btn.innerHTML = '<i class="material-icons">play_arrow</i>'; showControls(); }
     }
 
-    function stopAndBack() {
-        for(let k in activePlayers) { if(activePlayers[k].stopVideo) activePlayers[k].stopVideo(); }
-        showScreen('topicsScreen');
-    }
+    function handleTap() { const cb = document.getElementById("controlBar"); cb.classList.contains("hidden") ? showControls() : hideControls(); }
+    function showControls() { document.getElementById("controlBar").classList.remove("hidden"); resetTimer(); }
+    function hideControls() { if (player && player.getPlayerState() === 1) document.getElementById("controlBar").classList.add("hidden"); }
+    function resetTimer() { clearTimeout(hideTimeout); if (player && player.getPlayerState() === 1) hideTimeout = setTimeout(hideControls, 4000); }
+    function togglePlay(e) { e.stopPropagation(); if(player) (player.getPlayerState() === 1) ? player.pauseVideo() : player.playVideo(); }
+    function setSpeed(e) { e.stopPropagation(); if(player) player.setPlaybackRate(parseFloat(e.target.value)); }
+    function toggleFullScreen(e) { e.stopPropagation(); var container = document.getElementById("videoContainer"); if (!document.fullscreenElement) container.requestFullscreen(); else document.exitFullscreen(); }
+    function handleSeek(e) { e.stopPropagation(); if(player) { var rect = e.currentTarget.getBoundingClientRect(); var pos = (e.clientX - rect.left) / rect.width; player.seekTo(player.getDuration() * pos, true); } }
+    function updateUI() { if (player && player.getCurrentTime) { var curr = player.getCurrentTime(), dur = player.getDuration(); document.getElementById("currentTime").innerText = formatTime(curr); document.getElementById("duration").innerText = formatTime(dur); if (dur > 0) { var p = (curr / dur) * 100; document.getElementById("seekBarProgress").style.width = p + "%"; document.getElementById("seekBarKnob").style.left = p + "%"; } } }
+    function formatTime(t) { t = Math.round(t); var m = Math.floor(t / 60), s = t % 60; return m + ":" + (s < 10 ? "0" : "") + s; }
 </script>
 </body>
 </html>
