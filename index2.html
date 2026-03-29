@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Tech Admin - Smart Dashboard</title>
+    <title>Advanced Tech Admin - Professional</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
@@ -12,6 +12,7 @@
             color: #333; 
             font-family: 'Poppins', sans-serif; 
             margin: 0; padding: 0; 
+            -webkit-user-select: none; user-select: none;
         }
         .container { max-width: 900px; margin: 0 auto; padding: 20px; }
         
@@ -19,23 +20,31 @@
             background: #1a73e8; color: white; padding: 20px; text-align: center;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 30px;
         }
-        header h1 { margin: 0; font-size: 24px; }
+        header h1 { margin: 0; font-size: 22px; }
 
-        /* Home Screen */
-        #homeScreen { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 50px; }
+        /* Navigation Buttons */
+        .nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
         .nav-card {
-            background: white; padding: 40px 20px; border-radius: 20px; text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); cursor: pointer; transition: 0.3s;
+            background: white; padding: 30px 15px; border-radius: 15px; text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); cursor: pointer; transition: 0.3s;
             border: 2px solid transparent;
         }
-        .nav-card:hover { transform: translateY(-10px); border-color: #1a73e8; }
-        .nav-card i { font-size: 60px; color: #1a73e8; margin-bottom: 15px; }
-        .nav-card h3 { margin: 0; color: #333; font-size: 16px; }
+        .nav-card:hover { transform: translateY(-5px); border-color: #1a73e8; }
+        .nav-card i { font-size: 50px; color: #1a73e8; margin-bottom: 10px; }
+        .nav-card h3 { margin: 0; font-size: 15px; color: #444; }
 
         .page { display: none; }
         .active-page { display: block; }
 
-        .card { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        /* Specific Stream Buttons inside View Page */
+        .stream-btn-container { display: flex; gap: 10px; margin-bottom: 25px; }
+        .stream-btn { 
+            flex: 1; padding: 15px; border-radius: 12px; border: 2px solid #1a73e8;
+            background: white; color: #1a73e8; font-weight: 600; cursor: pointer; transition: 0.3s;
+        }
+        .stream-btn.active-stream { background: #1a73e8; color: white; }
+
+        .card { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 20px; }
         label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 13px; color: #555; }
         
         input, select, textarea { 
@@ -49,27 +58,20 @@
         }
 
         .back-btn { 
-            background: #5f6368; width: auto; padding: 10px 20px; margin-bottom: 20px; 
-            display: inline-flex; align-items: center; gap: 8px;
+            background: #5f6368; width: auto; padding: 10px 15px; margin-bottom: 20px; 
+            display: inline-flex; align-items: center; gap: 8px; font-size: 13px;
         }
 
         /* Accordion Style */
-        .lesson-accordion {
-            background: white; border-radius: 12px; margin-bottom: 10px;
-            border: 1px solid #e0e0e0; overflow: hidden;
-        }
+        .lesson-accordion { background: white; border-radius: 12px; margin-bottom: 8px; border: 1px solid #e0e0e0; overflow: hidden; }
         .lesson-header {
-            padding: 15px 20px; background: #fff; cursor: pointer;
+            padding: 12px 18px; background: #fff; cursor: pointer;
             display: flex; justify-content: space-between; align-items: center;
-            transition: 0.2s; border-left: 5px solid #1a73e8;
+            border-left: 5px solid #1a73e8;
         }
-        .lesson-header:hover { background: #f8f9fa; }
-        .lesson-header strong { font-size: 15px; color: #1a73e8; }
+        .lesson-header strong { font-size: 14px; color: #333; }
 
-        .lesson-content {
-            display: none; padding: 15px; background: #fafafa;
-            border-top: 1px solid #eee;
-        }
+        .lesson-content { display: none; padding: 15px; background: #fafafa; border-top: 1px solid #eee; }
         .lesson-content.open { display: block; }
 
         .video-item {
@@ -78,37 +80,33 @@
             margin-bottom: 5px; border-radius: 8px; font-size: 13px;
         }
 
-        .delete-btn-sm {
-            background: rgba(217,48,37,0.1); color: #d93025; border: none;
-            padding: 6px 12px; border-radius: 6px; font-size: 12px; width: auto;
-        }
+        .delete-btn-sm { background: rgba(217,48,37,0.1); color: #d93025; border: none; padding: 6px 10px; border-radius: 6px; font-size: 11px; width: auto; }
 
-        @media (max-width: 600px) { #homeScreen { grid-template-columns: 1fr; } }
+        @media (max-width: 600px) { .nav-grid { grid-template-columns: 1fr; } }
+        @media print { body { display: none !important; } }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>Admin Control Panel</h1>
-</header>
+<header><h1>Admin Control Panel</h1></header>
 
 <div class="container">
     
     <div id="homeScreen" class="page active-page">
-        <div class="nav-card" onclick="showPage('addPage')">
-            <i class="material-icons">add_circle</i>
-            <h3>පාඩම් සහ වීඩියෝ<br>ඇතුළත් කිරීම</h3>
-        </div>
-        <div class="nav-card" onclick="showPage('viewPage')">
-            <i class="material-icons">manage_search</i>
-            <h3>දත්ත පිරික්සුම සහ<br>කළමනාකරණය</h3>
+        <div class="nav-grid">
+            <div class="nav-card" onclick="showPage('addPage')">
+                <i class="material-icons">add_circle</i>
+                <h3>නව දත්ත ඇතුළත් කිරීම</h3>
+            </div>
+            <div class="nav-card" onclick="showPage('viewPage')">
+                <i class="material-icons">manage_search</i>
+                <h3>දත්ත කළමනාකරණය</h3>
+            </div>
         </div>
     </div>
 
     <div id="addPage" class="page">
-        <button class="back-btn" onclick="showPage('homeScreen')">
-            <i class="material-icons">arrow_back</i> ආපසු
-        </button>
+        <button class="back-btn" onclick="showPage('homeScreen')"><i class="material-icons">arrow_back</i> ආපසු</button>
         <div class="card">
             <label>විෂය ධාරාව</label>
             <select id="streamSelect" onchange="loadLessons()">
@@ -118,22 +116,26 @@
             <label>නව පාඩමක් සාදන්න</label>
             <div style="display:flex; gap:10px;">
                 <input type="text" id="newLessonName" placeholder="පාඩමේ නම">
-                <button style="width:120px;" onclick="createNewLesson()">සාදන්න</button>
+                <button style="width:100px;" onclick="createNewLesson()">සාදන්න</button>
             </div>
-            <hr style="border: 0.5px solid #eee; margin: 20px 0;">
+            <hr style="border:0.5px solid #eee; margin:20px 0;">
             <label>පාඩම තෝරන්න</label>
             <select id="lessonSelect"><option value="">පළමුව විෂය තෝරන්න...</option></select>
-            <label>වීඩියෝ දත්ත (Title & Link)</label>
-            <textarea id="bulkData" rows="6" placeholder="නම&#10;ලින්ක් එක"></textarea>
-            <button style="background:#34a853;" onclick="uploadVideos()">වීඩියෝ ඇතුළත් කරන්න</button>
+            <label>වීඩියෝ (නම සහ ලින්ක් එක)</label>
+            <textarea id="bulkData" rows="5" placeholder="නම&#10;ලින්ක් එක"></textarea>
+            <button style="background:#34a853;" onclick="uploadVideos()">වීඩියෝ එක් කරන්න</button>
         </div>
     </div>
 
     <div id="viewPage" class="page">
-        <button class="back-btn" onclick="showPage('homeScreen')">
-            <i class="material-icons">arrow_back</i> ආපසු
-        </button>
-        <div id="displayArea">පූරණය වේ...</div>
+        <button class="back-btn" onclick="showPage('homeScreen')"><i class="material-icons">arrow_back</i> ආපසු</button>
+        
+        <div class="stream-btn-container">
+            <button id="btn-et" class="stream-btn" onclick="switchStreamView('et')">ET පාඩම් බලන්න</button>
+            <button id="btn-sft" class="stream-btn" onclick="switchStreamView('sft')">SFT පාඩම් බලන්න</button>
+        </div>
+
+        <div id="displayArea">විෂයයක් තෝරන්න...</div>
     </div>
 
 </div>
@@ -154,124 +156,104 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
+    let currentVisibleStream = 'et'; 
+
     function showPage(pageId) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
         document.getElementById(pageId).classList.add('active-page');
     }
 
-    // --- වැදගත්ම කොටස: එකක් විවෘත වන විට අනෙක්වා වසන ආකාරය ---
+    function switchStreamView(stream) {
+        currentVisibleStream = stream;
+        document.querySelectorAll('.stream-btn').forEach(b => b.classList.remove('active-stream'));
+        document.getElementById(`btn-${stream}`).classList.add('active-stream');
+        refreshDisplay();
+    }
+
     function toggleLesson(contentId) {
-        const targetContent = document.getElementById(contentId);
-        const isOpen = targetContent.classList.contains('open');
-
-        // කලින් විවෘත වී ඇති සියලුම 'lesson-content' වසා දමයි
-        document.querySelectorAll('.lesson-content').forEach(content => {
-            content.classList.remove('open');
-        });
-
-        // ක්ලික් කළ එක කලින් වැසී තිබුනේ නම් පමණක් එය විවෘත කරයි
-        if (!isOpen) {
-            targetContent.classList.add('open');
-        }
+        const target = document.getElementById(contentId);
+        const isOpen = target.classList.contains('open');
+        document.querySelectorAll('.lesson-content').forEach(c => c.classList.remove('open'));
+        if (!isOpen) target.classList.add('open');
     }
 
     async function createNewLesson() {
-        const stream = document.getElementById("streamSelect").value;
-        const lessonName = document.getElementById("newLessonName").value.trim();
-        if (!lessonName) return alert("පාඩමේ නම ඇතුළත් කරන්න!");
-        await db.ref(`studyData/${stream}/${lessonName}`).set({ created: Date.now() });
+        const s = document.getElementById("streamSelect").value;
+        const n = document.getElementById("newLessonName").value.trim();
+        if (!n) return alert("නම ඇතුළත් කරන්න!");
+        await db.ref(`studyData/${s}/${n}`).set({ created: Date.now() });
         alert("සාර්ථකයි!");
         document.getElementById("newLessonName").value = "";
     }
 
     function loadLessons() {
-        const stream = document.getElementById("streamSelect").value;
-        db.ref(`studyData/${stream}`).on("value", (snapshot) => {
-            const lessons = snapshot.val();
-            const select = document.getElementById("lessonSelect");
-            select.innerHTML = '<option value="">පාඩමක් තෝරන්න...</option>';
-            if (lessons) {
-                Object.keys(lessons).forEach(lesson => {
-                    let opt = document.createElement("option");
-                    opt.value = lesson; opt.innerText = lesson;
-                    select.appendChild(opt);
-                });
+        const s = document.getElementById("streamSelect").value;
+        db.ref(`studyData/${s}`).on("value", (snap) => {
+            const lessons = snap.val();
+            const sel = document.getElementById("lessonSelect");
+            sel.innerHTML = '<option value="">පාඩමක් තෝරන්න...</option>';
+            if (lessons) Object.keys(lessons).forEach(l => {
+                let o = document.createElement("option"); o.value = l; o.innerText = l; sel.appendChild(o);
+            });
+        });
+    }
+
+    async function uploadVideos() {
+        const s = document.getElementById("streamSelect").value;
+        const l = document.getElementById("lessonSelect").value;
+        const t = document.getElementById("bulkData").value;
+        if (!l || !t) return alert("විස්තර පුරවන්න!");
+        const lines = t.split('\n');
+        let title = "";
+        for (let line of lines) {
+            line = line.trim(); if (!line) continue;
+            if (line.includes("http")) {
+                const id = line.match(/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/user\/\S+|\/ytscreeningroom\?v=))([\w\-]{11})/);
+                if (id && title) { await db.ref(`studyData/${s}/${l}/videos`).push({ id: id[1], title: title }); title = ""; }
+            } else title = line;
+        }
+        alert("සාර්ථකයි!"); document.getElementById("bulkData").value = "";
+    }
+
+    function refreshDisplay() {
+        db.ref(`studyData/${currentVisibleStream}`).once("value", (snap) => {
+            const data = snap.val();
+            const area = document.getElementById("displayArea");
+            area.innerHTML = "";
+            if (!data) return area.innerHTML = "දත්ත නැත.";
+            
+            let i = 0;
+            for (let lesson in data) {
+                i++;
+                const cId = `c-${i}`;
+                const acc = document.createElement("div");
+                acc.className = "lesson-accordion";
+                acc.innerHTML = `
+                <div class="lesson-header" onclick="toggleLesson('${cId}')">
+                    <strong>${lesson}</strong>
+                    <i class="material-icons">expand_more</i>
+                </div>
+                <div class="lesson-content" id="${cId}">
+                    <button class="delete-btn-sm" style="width:100%; margin-bottom:10px;" onclick="deleteLesson('${currentVisibleStream}','${lesson}')">මුළු පාඩමම මකන්න</button>
+                    <div id="vlist-${cId}"></div>
+                </div>`;
+                area.appendChild(acc);
+                const vdiv = document.getElementById(`vlist-${cId}`);
+                if (data[lesson].videos) {
+                    for (let vk in data[lesson].videos) {
+                        const v = data[lesson].videos[vk];
+                        vdiv.innerHTML += `<div class="video-item"><span>${v.title}</span><i class="material-icons" style="color:red; cursor:pointer;" onclick="deleteVideo('${currentVisibleStream}','${lesson}','${vk}')">delete</i></div>`;
+                    }
+                }
             }
         });
     }
 
-    function extractVideoID(url) {
-        const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-        const match = url.trim().match(regExp);
-        return (match && match[7].length === 11) ? match[7] : null;
-    }
-
-    async function uploadVideos() {
-        const stream = document.getElementById("streamSelect").value;
-        const lesson = document.getElementById("lessonSelect").value;
-        const rawText = document.getElementById("bulkData").value;
-        if (!lesson || !rawText) return alert("විස්තර ඇතුළත් කරන්න!");
-        const lines = rawText.split('\n');
-        let currentTitle = "";
-        for (let line of lines) {
-            line = line.trim();
-            if (line === "") continue;
-            if (line.includes("http")) {
-                const vidId = extractVideoID(line);
-                if (vidId && currentTitle) {
-                    await db.ref(`studyData/${stream}/${lesson}/videos`).push({ id: vidId, title: currentTitle });
-                    currentTitle = "";
-                }
-            } else { currentTitle = line; }
-        }
-        alert("වීඩියෝ එක් කළා!");
-        document.getElementById("bulkData").value = "";
-    }
-
-    db.ref("studyData").on("value", (snapshot) => {
-        const data = snapshot.val();
-        const display = document.getElementById("displayArea");
-        display.innerHTML = "";
-        if (!data) return display.innerHTML = "දත්ත නැත.";
-        
-        let counter = 0;
-        for (let stream in data) {
-            for (let lesson in data[stream]) {
-                counter++;
-                const contentId = `content-${counter}`;
-                const lessonAccordion = document.createElement("div");
-                lessonAccordion.className = "lesson-accordion";
-                
-                lessonAccordion.innerHTML = `
-                <div class="lesson-header" onclick="toggleLesson('${contentId}')">
-                    <strong>[${stream.toUpperCase()}] ${lesson}</strong>
-                    <i class="material-icons">expand_more</i>
-                </div>
-                <div class="lesson-content" id="${contentId}">
-                    <button class="delete-btn-sm" style="margin-bottom:15px; width:100%" onclick="deleteLesson('${stream}','${lesson}')">Delete Entire Lesson</button>
-                    <div id="video-list-${contentId}"></div>
-                </div>`;
-                
-                display.appendChild(lessonAccordion);
-                
-                const videoListDiv = document.getElementById(`video-list-${contentId}`);
-                const videos = data[stream][lesson].videos;
-                if (videos) {
-                    for (let vidKey in videos) {
-                        const v = videos[vidKey];
-                        const vidItem = document.createElement("div");
-                        vidItem.className = "video-item";
-                        vidItem.innerHTML = `<span>${v.title}</span> 
-                        <i class="material-icons" style="color:#d93025; cursor:pointer; font-size:18px;" onclick="deleteVideo('${stream}','${lesson}','${vidKey}')">delete</i>`;
-                        videoListDiv.appendChild(vidItem);
-                    }
-                }
-            }
-        }
-    });
-
-    function deleteLesson(s, l) { if(confirm("මකන්නද?")) db.ref(`studyData/${s}/${l}`).remove(); }
-    function deleteVideo(s, l, v) { if(confirm("මකන්නද?")) db.ref(`studyData/${s}/${l}/videos/${v}`).remove(); }
+    function deleteLesson(s, l) { if(confirm("මකන්නද?")) db.ref(`studyData/${s}/${l}`).remove().then(refreshDisplay); }
+    function deleteVideo(s, l, v) { if(confirm("මකන්නද?")) db.ref(`studyData/${s}/${l}/videos/${v}`).remove().then(refreshDisplay); }
+    
+    // ආරම්භයේදී ET පෙන්වන්න
+    switchStreamView('et');
     window.onload = loadLessons;
 </script>
 </body>
