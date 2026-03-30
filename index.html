@@ -3,33 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Secure Study Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>Secure Study Portal | Smart Learner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        :root { --primary: #1a73e8; --bg: #f0f2f5; --yt-red: #ff0000; }
-        body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; padding: 0; user-select: none; -webkit-touch-callout: none; }
-        
-        .screen { display: none; padding: 15px; animation: fadeIn 0.4s; box-sizing: border-box; }
-        .active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        header { background: var(--primary); color: white; padding: 20px; text-align: center; border-radius: 0 0 20px 20px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .card { background: white; padding: 18px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 12px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; border: 1px solid #eee; }
-
-        /* --- Compact Player Styles --- */
-        #playerSection { display: none; margin-top: 10px; animation: slideUp 0.3s; }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        .video-box { 
-            position: relative; width: 100%; max-width: 854px; margin: 0 auto; 
-            background: #000; border-radius: 12px; overflow: hidden; aspect-ratio: 16 / 9; 
-            z-index: 10; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        :root { 
+            --primary: #4361ee; 
+            --primary-light: #4895ef;
+            --success: #4cc9f0;
+            --bg: #f8f9fc; 
+            --yt-red: #ff0000; 
+            --glass: rgba(255, 255, 255, 0.9);
+            --shadow: 0 10px 25px rgba(0,0,0,0.08);
         }
         
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            padding: 0; 
+            user-select: none; 
+            -webkit-touch-callout: none; 
+            color: #2b2d42;
+        }
+        
+        .screen { display: none; padding: 20px; animation: slideUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); box-sizing: border-box; min-height: 100vh; }
+        .active { display: block; }
+        
+        @keyframes slideUp { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        header { 
+            background: linear-gradient(135deg, var(--primary), var(--primary-light)); 
+            color: white; 
+            padding: 35px 20px; 
+            text-align: center; 
+            border-radius: 0 0 35px 35px; 
+            margin-bottom: 25px; 
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.2); 
+        }
+
+        header h1, header h2 { margin: 0; font-weight: 700; font-size: 24px; letter-spacing: -0.5px; }
+
+        /* --- Cards & Buttons --- */
+        .card { 
+            background: var(--glass); 
+            padding: 22px; 
+            border-radius: 18px; 
+            box-shadow: var(--shadow); 
+            margin-bottom: 15px; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            border: 1px solid rgba(255,255,255,0.7);
+            transition: 0.3s;
+        }
+        .card:active { transform: scale(0.97); background: #fff; }
+        .card span { font-weight: 600; font-size: 16px; color: #3f37c9; }
+        .card i { color: var(--primary); font-size: 28px; }
+
+        /* --- Authentication UI --- */
+        .auth-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+
+        .auth-box { 
+            width: 100%;
+            max-width: 400px; 
+            padding: 40px 30px; 
+            background: white; 
+            border-radius: 30px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1); 
+            text-align: center; 
+            border: 1px solid #f1f3f9;
+        }
+
+        .auth-box i.main-icon { 
+            font-size: 70px; 
+            background: linear-gradient(135deg, var(--primary), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .auth-box h2 { margin-bottom: 25px; font-weight: 700; color: #2b2d42; }
+
+        input { 
+            width: 100%; 
+            padding: 18px; 
+            margin-bottom: 20px; 
+            border: 2px solid #f1f3f9; 
+            border-radius: 15px; 
+            box-sizing: border-box; 
+            font-family: inherit;
+            font-size: 16px;
+            transition: 0.3s;
+            background: #f8f9fc;
+        }
+        input:focus { border-color: var(--primary); outline: none; background: #fff; box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1); }
+
+        button.login-btn { 
+            width: 100%; 
+            padding: 18px; 
+            background: linear-gradient(135deg, var(--primary), var(--primary-light)); 
+            color: white; 
+            border: none; 
+            border-radius: 15px; 
+            font-weight: 700; 
+            font-size: 18px;
+            cursor: pointer; 
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.3);
+            transition: 0.3s;
+        }
+        button.login-btn:active { transform: scale(0.96); }
+
+        /* --- Back Button Style --- */
+        .back-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 5px;
+            margin-bottom: 15px;
+        }
+        .back-nav i { 
+            background: white; 
+            padding: 10px; 
+            border-radius: 12px; 
+            box-shadow: var(--shadow);
+            color: var(--primary);
+        }
+
+        /* --- Player Section (Original Logic Maintained) --- */
+        #playerSection { display: none; margin-top: 10px; animation: slideUp 0.3s; }
+        .video-box { 
+            position: relative; width: 100%; max-width: 854px; margin: 0 auto; 
+            background: #000; border-radius: 20px; overflow: hidden; aspect-ratio: 16 / 9; 
+            z-index: 10; box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
         #player { width: 100%; height: 100%; position: absolute; top: 0; left: 0; pointer-events: none; }
         .click-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; cursor: pointer; background: transparent; }
-        
         .custom-controls { 
             position: absolute; bottom: 0; left: 0; right: 0; 
             background: linear-gradient(transparent, rgba(0,0,0,0.95)); 
@@ -37,74 +156,75 @@
             transition: 0.4s; z-index: 99999 !important; 
         }
         .custom-controls.hidden { opacity: 0; transform: translateY(20px); pointer-events: none; }
-        
         .seek-bar-container { width: 100%; display: flex; align-items: center; margin-bottom: 12px; cursor: pointer; position: relative; height: 10px; }
         .seek-bar-slider { width: 100%; height: 4px; background: rgba(255,255,255,0.25); border-radius: 2px; position: relative; }
         .seek-bar-progress { height: 100%; background: var(--yt-red); width: 0%; border-radius: 2px; }
         .seek-bar-knob { width: 14px; height: 14px; background: var(--yt-red); border-radius: 50%; position: absolute; top: 50%; transform: translate(-50%, -50%); left: 0%; }
-        
         .time-row { display: flex; align-items: center; justify-content: space-between; }
         .controls-left { display: flex; align-items: center; gap: 15px; }
         .time-display { font-size: 13px; color: #fff; font-weight: 500; }
-        
         .icon-btn { background: none; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; padding: 5px; }
-        .icon-btn i { font-size: 28px; }
-        .select-style { background: rgba(255,255,255,0.1); color: white; border: 1px solid #444; padding: 4px 8px; border-radius: 6px; font-size: 12px; outline: none; }
-
-        .auth-box { max-width: 360px; margin: 40px auto; padding: 25px; background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; }
-        input { width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
-        button.login-btn { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
+        .icon-btn i { font-size: 32px; }
+        .select-style { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 6px 10px; border-radius: 8px; font-size: 12px; outline: none; }
     </style>
 </head>
 <body>
 
 <div id="masterAuthScreen" class="screen">
-    <div class="auth-box">
-        <i class="material-icons" style="font-size: 50px; color: var(--primary);">lock</i>
-        <h2>App Authentication</h2>
-        <input type="text" id="mUser" placeholder="Username">
-        <input type="password" id="mPass" placeholder="Password">
-        <button class="login-btn" onclick="masterAuth()">ඇතුල් වන්න</button>
+    <div class="auth-container">
+        <div class="auth-box">
+            <i class="material-icons main-icon">security</i>
+            <h2>App Verification</h2>
+            <input type="text" id="mUser" placeholder="Username">
+            <input type="password" id="mPass" placeholder="Password">
+            <button class="login-btn" onclick="masterAuth()">තහවුරු කරන්න</button>
+        </div>
     </div>
 </div>
 
 <div id="loginScreen" class="screen">
-    <header><h1>Student Login</h1></header>
-    <div style="max-width: 360px; margin: auto;">
-        <input type="text" id="loginName" placeholder="නම">
-        <input type="password" id="loginPass" placeholder="මුරපදය">
-        <button class="login-btn" onclick="login()">Log In</button>
+    <div class="auth-container">
+        <div class="auth-box">
+            <i class="material-icons main-icon">account_circle</i>
+            <h2>Student Login</h2>
+            <input type="text" id="loginName" placeholder="ඔබේ නම">
+            <input type="password" id="loginPass" placeholder="මුරපදය">
+            <button class="login-btn" onclick="login()">ඇතුල් වන්න</button>
+            <p style="margin-top: 20px; font-size: 13px; color: #888;">පන්ති යාමට කරුණාකර ලොගින් වන්න</p>
+        </div>
     </div>
 </div>
 
 <div id="mainMenuScreen" class="screen">
     <header><h2 id="welcomeMsg">ආයුබෝවන්</h2></header>
-    <div id="subjectList"></div>
+    <div style="padding: 10px 0;">
+        <p style="font-weight: 600; color: #666; margin-left: 5px;">ඔබේ විෂය ධාරාව තෝරන්න:</p>
+        <div id="subjectList"></div>
+    </div>
 </div>
 
 <div id="topicsScreen" class="screen">
-    <header style="display:flex; justify-content:space-between; align-items:center;">
-        <i class="material-icons" onclick="showScreen('mainMenuScreen')" style="cursor:pointer;">arrow_back</i>
-        <span id="subTitle" style="font-weight:600;">පාඩම්</span>
-        <div style="width:24px;"></div>
-    </header>
+    <div class="back-nav" onclick="showScreen('mainMenuScreen')">
+        <i class="material-icons">arrow_back</i>
+        <span id="subTitle" style="font-weight:700; font-size: 18px;">පාඩම් මාලාව</span>
+    </div>
     <div id="topicsList"></div>
 </div>
 
 <div id="playerScreen" class="screen">
     <div id="videoListContainer">
-        <header style="background:none; color:#333; box-shadow:none; display:flex; align-items:center; padding:10px 0;">
-            <i class="material-icons" onclick="showScreen('topicsScreen')" style="cursor:pointer; margin-right:15px;">arrow_back</i>
-            <span id="lessonTitle" style="font-size:18px; font-weight:600;">වීඩියෝ තෝරන්න</span>
-        </header>
+        <div class="back-nav" onclick="showScreen('topicsScreen')">
+            <i class="material-icons">arrow_back</i>
+            <span id="lessonTitle" style="font-weight:700; font-size: 18px;">වීඩියෝ පාඩම්</span>
+        </div>
         <div id="multiVideoList"></div>
     </div>
 
     <div id="playerSection">
-        <header style="background:none; color:#333; box-shadow:none; display:flex; align-items:center; padding:10px 0;">
-            <i class="material-icons" onclick="hidePlayer()" style="cursor:pointer; margin-right:15px;">arrow_back</i>
-            <span id="activeVideoTitle" style="font-size:16px; font-weight:600;">වීඩියෝව ප්ලේ වේ...</span>
-        </header>
+        <div class="back-nav" onclick="hidePlayer()">
+            <i class="material-icons">arrow_back</i>
+            <span id="activeVideoTitle" style="font-weight:700; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">වීඩියෝව ප්ලේ වේ...</span>
+        </div>
         <div class="video-box" id="videoContainer">
             <div id="player"></div>
             <div class="click-layer" onclick="handleTap()"></div>
@@ -148,38 +268,25 @@
     let player, hideTimeout;
     let currentVideos = [];
 
-    // --- පද්ධතිය ආරම්භයේදී පරීක්ෂා කිරීම ---
     window.onload = () => {
         const isVerified = localStorage.getItem('isAppVerified');
         const savedUser = localStorage.getItem('studyUser');
-
-        if (!isVerified) {
-            showScreen('masterAuthScreen');
-        } else if (!savedUser) {
-            showScreen('loginScreen');
-        } else {
-            currentUser = JSON.parse(savedUser);
-            checkUserStatus(currentUser.id); // ශිෂ්‍යයා තවමත් සිටීදැයි DB එකෙන් බලයි
-        }
+        if (!isVerified) { showScreen('masterAuthScreen'); } 
+        else if (!savedUser) { showScreen('loginScreen'); } 
+        else { currentUser = JSON.parse(savedUser); checkUserStatus(currentUser.id); }
     };
 
     function checkUserStatus(userId) {
         db.ref(`students/${userId}`).once('value', snap => {
-            if (snap.exists()) {
-                loadDashboard();
-            } else {
-                // ඇඩ්මින් විසින් Delete කර ඇත්නම් දත්ත මකා Login එක පෙන්වයි
-                localStorage.removeItem('studyUser');
-                currentUser = null;
-                alert("ඔබගේ ගිණුම අවලංගු කර ඇත.");
-                showScreen('loginScreen');
-            }
-        }).catch(() => loadDashboard()); // Internet නැත්නම් Dashboard එක පෙන්වයි
+            if (snap.exists()) { loadDashboard(); } 
+            else { localStorage.removeItem('studyUser'); currentUser = null; alert("ඔබගේ ගිණුම අවලංගු කර ඇත."); showScreen('loginScreen'); }
+        }).catch(() => loadDashboard());
     }
 
     function showScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
+        window.scrollTo(0,0);
     }
 
     function masterAuth() {
@@ -201,7 +308,7 @@
                     loadDashboard(); return;
                 }
             }
-            alert("ලොගින් අසාර්ථකයි!");
+            alert("නම හෝ මුරපදය වැරදියි!");
         });
     }
 
@@ -211,8 +318,8 @@
         const list = document.getElementById("subjectList");
         db.ref(`students/${currentUser.id}/access`).on('value', s => {
             const acc = s.val(); list.innerHTML = "";
-            if(acc === 'et' || acc === 'both') list.innerHTML += `<div class="card" onclick="openStream('et')">Engineering Tech (ET) <i class="material-icons">chevron_right</i></div>`;
-            if(acc === 'sft' || acc === 'both') list.innerHTML += `<div class="card" onclick="openStream('sft')">Science for Tech (SFT) <i class="material-icons">chevron_right</i></div>`;
+            if(acc === 'et' || acc === 'both') list.innerHTML += `<div class="card" onclick="openStream('et')"><span>Engineering Tech (ET)</span> <i class="material-icons">arrow_forward_ios</i></div>`;
+            if(acc === 'sft' || acc === 'both') list.innerHTML += `<div class="card" onclick="openStream('sft')"><span>Science for Tech (SFT)</span> <i class="material-icons">arrow_forward_ios</i></div>`;
         });
     }
 
@@ -229,7 +336,7 @@
                     if(allowed[name]) {
                         const d = document.createElement("div"); d.className = "card";
                         d.onclick = () => showVideoList(name, lessons[name].videos);
-                        d.innerHTML = `<span>${name}</span> <i class="material-icons">chevron_right</i>`;
+                        d.innerHTML = `<span>${name}</span> <i class="material-icons">play_arrow</i>`;
                         container.appendChild(d);
                     }
                 }
@@ -248,7 +355,7 @@
         currentVideos.forEach((v, index) => {
             const d = document.createElement("div"); d.className = "card";
             d.onclick = () => playThisVideo(index);
-            d.innerHTML = `<span>${v.title}</span> <i class="material-icons">play_circle_outline</i>`;
+            d.innerHTML = `<span>${v.title}</span> <i class="material-icons">video_library</i>`;
             listContainer.appendChild(d);
         });
     }
