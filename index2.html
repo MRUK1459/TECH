@@ -194,9 +194,9 @@
                 <input type="text" id="pdf-url" placeholder="PDF Link එක (Drive Link)">
                 <input type="text" id="pdf-label" placeholder="පේපර් එකේ නම (eg: Unit 01)">
                 <button onclick="processPdfAndQr()">Generate & Download PDF</button>
-                <div id="status" style="margin-top: 15px; font-weight: 500;"></div>
+                <div id="status" style="margin-top: 15px; font-weight: 500; color: var(--primary);"></div>
                 <div id="spgSaveDb" style="display:none; margin-top:25px; padding-top:25px; border-top:1px dashed #ccc;">
-                    <input type="text" id="final-pdf-link" placeholder="Final PDF URL">
+                    <input type="text" id="final-pdf-link" placeholder="Final PDF URL (Hosting Link)">
                     <button style="background:var(--success);" onclick="saveSpgToFirebase()">පද්ධතියට ඇතුළත් කරන්න</button>
                 </div>
             </div>
@@ -214,14 +214,11 @@
         </select>
         <label>විෂය ධාරාව:</label>
         <select id="modalStream" onchange="loadLessonCheckboxes()"></select>
-        
         <div class="control-btns">
             <button class="btn-sm" style="background:#34a853;" onclick="toggleAll(true)">සියල්ල</button>
             <button class="btn-sm" style="background:#5f6368;" onclick="toggleAll(false)">ඉවත් කරන්න</button>
         </div>
-        
         <div id="checkboxArea"></div>
-        
         <button onclick="saveStudentAccess()" style="margin-top:25px;">වෙනස්කම් සුරකින්න</button>
         <button onclick="closeModal()" style="background:#666; margin-top:10px;">වසන්න</button>
     </div>
@@ -234,6 +231,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
 <script>
+    // Firebase Configuration
     const firebaseConfig = {
         apiKey: "AIzaSyApozqbVy4DFupEKafsU_oeC9RUAq1ljuU",
         databaseURL: "https://tech-590c8-default-rtdb.firebaseio.com",
@@ -262,7 +260,7 @@
         const name = document.getElementById('stdName').value;
         const pass = document.getElementById('stdPass').value;
         const acc = document.getElementById('stdAccess').value;
-        if(!name || !pass) return alert("සියල්ල ඇතුළත් කරන්න!");
+        if(!name || !pass) return alert("Fill all fields!");
         await db.ref('students').push({ name, password: pass, access: acc });
         alert("සාර්ථකයි!");
         toggleStudentSec('manage');
@@ -310,7 +308,6 @@
             const chk = allowed[l] ? 'checked' : '';
             listDiv.innerHTML += `<div class="lesson-check-item"><input type="checkbox" class="l-chk" value="${l}" ${chk}> <span>${l}</span></div>`;
         }
-        if(listDiv.innerHTML === "") listDiv.innerHTML = "පාඩම් නැත.";
     }
 
     async function saveStudentAccess() {
@@ -364,7 +361,7 @@
                 title = "";
             } else title = line;
         }
-        alert("වීඩියෝ ඇතුළත් විය!");
+        alert("Upload සාර්ථකයි!");
     }
 
     function viewStorage(s) {
@@ -379,7 +376,7 @@
                     for(let vk in data[l].videos) {
                         vHtml += `<div class="video-item">
                             <span>${data[l].videos[vk].title}</span>
-                            <i class="material-icons" style="color:red; cursor:pointer; font-size:24px;" onclick="deleteVideo(event, '${s}','${l}','${vk}')">delete</i>
+                            <i class="material-icons" style="color:red; cursor:pointer;" onclick="deleteVideo(event, '${s}','${l}','${vk}')">delete</i>
                         </div>`;
                     }
                 }
@@ -387,12 +384,11 @@
                 area.innerHTML += `
                 <div class="card" style="padding: 0; overflow: hidden; margin-bottom: 20px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; padding: 25px; cursor: pointer; background: #fff;" onclick="toggleAccordion('${safeId}')">
-                        <b style="font-size:20px;">${l}</b>
-                        <i class="material-icons" style="font-size:30px;" id="icon-${safeId}">expand_more</i>
+                        <b>${l}</b><i class="material-icons" id="icon-${safeId}">expand_more</i>
                     </div>
-                    <div id="content-${safeId}" class="accordion-content" style="display:none; padding: 0 25px 25px 25px; background: #fff;">
-                        <button style="width:auto; padding:10px 20px; background:var(--danger); margin-bottom: 20px; font-size: 14px;" onclick="deleteLesson('${s}','${l}')">සම්පූර්ණ පාඩම මකන්න</button>
-                        ${vHtml || '<p style="font-size:15px; color:#666;">වීඩියෝ නැත</p>'}
+                    <div id="content-${safeId}" class="accordion-content" style="display:none; padding: 25px;">
+                        <button style="width:auto; padding:10px; background:var(--danger); margin-bottom:15px;" onclick="deleteLesson('${s}','${l}')">පාඩම මකන්න</button>
+                        ${vHtml || 'වීඩියෝ නැත'}
                     </div>
                 </div>`;
             }
@@ -404,81 +400,105 @@
         const icon = document.getElementById('icon-' + id);
         const isOpen = content.style.display === 'block';
         document.querySelectorAll('.accordion-content').forEach(el => el.style.display = 'none');
-        document.querySelectorAll('.card i.material-icons').forEach(i => { if(i.id.startsWith('icon-')) i.innerText = 'expand_more'; });
-        if (!isOpen) { content.style.display = 'block'; icon.innerText = 'expand_less'; }
+        if (!isOpen) { content.style.display = 'block'; icon.innerText = 'expand_less'; } else { icon.innerText = 'expand_more'; }
     }
 
     async function deleteVideo(event, s, l, vk) { event.stopPropagation(); if(confirm("මකන්නද?")) await db.ref(`studyData/${s}/${l}/videos/${vk}`).remove(); }
-    async function deleteLesson(s, l) { if(confirm("මෙම පාඩම මකන්නද?")) await db.ref(`studyData/${s}/${l}`).remove(); }
+    async function deleteLesson(s, l) { if(confirm("සම්පූර්ණ පාඩම මකන්නද?")) await db.ref(`studyData/${s}/${l}`).remove(); }
 
-    // --- SPG SECTION (FIXED QR GENERATOR) ---
+    // --- SPG SECTION (MOBILE FIXED) ---
     function openSpgMain() { showPage('spgPage'); document.getElementById('spgTypeSelect').style.display = 'grid'; document.getElementById('spgEditor').style.display = 'none'; }
     function startSpg(type) { activeSpgType = type; document.getElementById('spgTitle').innerText = type; document.getElementById('spgTypeSelect').style.display = 'none'; document.getElementById('spgEditor').style.display = 'block'; toggleSpgSub('gen'); }
     function toggleSpgSub(v) { document.getElementById('spgGenView').style.display = v==='gen'?'block':'none'; document.getElementById('spgListView').style.display = v==='list'?'block':'none'; document.getElementById('btnSpgGen').classList.toggle('active', v==='gen'); document.getElementById('btnSpgList').classList.toggle('active', v==='list'); if(v==='list') loadPapers(); }
 
     async function processPdfAndQr() {
-        const file = document.getElementById('pdf-file').files[0];
+        const fileInput = document.getElementById('pdf-file');
         const url = document.getElementById('pdf-url').value;
         const name = document.getElementById('pdf-label').value;
-        if(!file || !url || !name) return alert("සියල්ල ඇතුළත් කරන්න!");
         
-        document.getElementById('status').innerText = "Processing...";
-        const qrHidden = document.getElementById('qr-hidden');
-        qrHidden.innerHTML = ""; 
-
-        // QR එක නිර්මාණය කිරීම
-        new QRCode(qrHidden, { text: url, width: 400, height: 400, correctLevel: QRCode.CorrectLevel.H });
-
-        // QR Image එක නිපදවන තෙක් රැඳී සිටීම
-        const waitForQr = () => new Promise(resolve => {
-            const check = setInterval(() => {
-                const img = qrHidden.querySelector('img');
-                if (img && img.src) { clearInterval(check); resolve(img); }
-            }, 100);
-        });
-
-        const qrImg = await waitForQr();
-
-        // Canvas එකට අඳින්න
-        const canvas = document.getElementById('qr-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = 400; canvas.height = 400;
-        ctx.drawImage(qrImg, 0, 0, 400, 400);
-
-        // මැද සුදු කොටුව සහ ලේබලය
-        ctx.fillStyle = "white"; ctx.fillRect(100, 175, 200, 50);
-        ctx.fillStyle = "black"; ctx.textAlign = "center";
-        ctx.font = "bold 28px Arial";
-        ctx.fillText(name, 200, 210);
-
-        const qrBase64 = canvas.toDataURL('image/png');
-
-        // PDF එකට ඇතුළත් කිරීම
-        const pdfDoc = await PDFLib.PDFDocument.load(await file.arrayBuffer());
-        const firstPage = pdfDoc.getPages()[0];
-        const qrEmbed = await pdfDoc.embedPng(qrBase64);
-        firstPage.drawImage(qrEmbed, { x: 20, y: firstPage.getSize().height - 90, width: 70, height: 70 });
-
-        const pdfBytes = await pdfDoc.save();
-        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-        const dUrl = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = dUrl; a.download = `${name}_Smart_Paper.pdf`; a.click();
+        if(!fileInput.files[0] || !url || !name) return alert("Fill all fields!");
         
-        document.getElementById('status').innerText = "සාර්ථකයි!";
-        document.getElementById('spgSaveDb').style.display = "block";
+        const statusEl = document.getElementById('status');
+        statusEl.innerText = "සකසමින්... (මඳක් රැඳී සිටින්න)";
+        
+        try {
+            const qrHidden = document.getElementById('qr-hidden');
+            qrHidden.innerHTML = ""; 
+
+            // QR Generation
+            new QRCode(qrHidden, { text: url, width: 400, height: 400, correctLevel: QRCode.CorrectLevel.H });
+
+            // Wait and Decode Image (Mobile Friendly)
+            const qrImg = await new Promise((resolve, reject) => {
+                let attempts = 0;
+                const check = setInterval(async () => {
+                    const img = qrHidden.querySelector('img');
+                    attempts++;
+                    if (img && img.src && img.complete) {
+                        clearInterval(check);
+                        try { await img.decode(); resolve(img); } catch (e) { resolve(img); }
+                    }
+                    if (attempts > 60) { clearInterval(check); reject("ප්‍රමාද වැඩියි."); }
+                }, 100);
+            });
+
+            const canvas = document.getElementById('qr-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 400; canvas.height = 400;
+            ctx.drawImage(qrImg, 0, 0, 400, 400);
+
+            ctx.fillStyle = "white"; ctx.fillRect(100, 175, 200, 50);
+            ctx.fillStyle = "black"; ctx.textAlign = "center";
+            ctx.font = "bold 28px Arial";
+            ctx.fillText(name, 200, 210);
+
+            const qrBase64 = canvas.toDataURL('image/png');
+
+            // PDF Lib Processing
+            statusEl.innerText = "PDF පත සකසමින්...";
+            const pdfDoc = await PDFLib.PDFDocument.load(await fileInput.files[0].arrayBuffer());
+            const firstPage = pdfDoc.getPages()[0];
+            const qrEmbed = await pdfDoc.embedPng(qrBase64);
+            
+            firstPage.drawImage(qrEmbed, {
+                x: 20,
+                y: firstPage.getSize().height - 90,
+                width: 70,
+                height: 70
+            });
+
+            const pdfBytes = await pdfDoc.save();
+            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+            const dUrl = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = dUrl;
+            a.download = `${name.replace(/\s+/g, '_')}_SmartPaper.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            statusEl.innerText = "සාර්ථකයි!";
+            document.getElementById('spgSaveDb').style.display = "block";
+            setTimeout(() => URL.revokeObjectURL(dUrl), 2000);
+
+        } catch (error) {
+            console.error(error);
+            statusEl.innerText = "දෝෂයකි: " + error.message;
+        }
     }
 
     async function saveSpgToFirebase() {
         const link = document.getElementById('final-pdf-link').value;
         if(link) await db.ref(`papers/${activeSpgType}`).push({ label: document.getElementById('pdf-label').value, url: link });
-        alert("පද්ධතියට ඇතුළත් විය!");
+        alert("Saved to Database!");
     }
 
     function loadPapers() {
         db.ref(`papers/${activeSpgType}`).on('value', snap => {
             const data = snap.val();
             let h = `<table>`;
-            for(let id in data) h += `<tr><td style="font-size:18px;">${data[id].label}</td><td style="text-align:right"><i class="material-icons" style="font-size:28px; color:red; cursor:pointer;" onclick="deletePaper('${id}')">delete</i></td></tr>`;
+            for(let id in data) h += `<tr><td>${data[id].label}</td><td style="text-align:right"><i class="material-icons" style="color:red; cursor:pointer;" onclick="deletePaper('${id}')">delete</i></td></tr>`;
             document.getElementById('paperTableArea').innerHTML = h + `</table>`;
         });
     }
