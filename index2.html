@@ -32,7 +32,6 @@
             box-shadow: 0 4px 20px rgba(67, 97, 238, 0.3); margin-bottom: 40px;
         }
 
-        /* Header අකුරු ලොකු කිරීම */
         header h1 { font-size: 32px; margin-bottom: 10px; }
         header p { font-size: 18px; opacity: 0.9; }
 
@@ -44,7 +43,6 @@
 
         .nav-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; }
         
-        /* Navigation Cards විශාල කිරීම */
         .nav-card {
             background: white; padding: 50px 25px; border-radius: 24px; text-align: center;
             box-shadow: var(--shadow); cursor: pointer; transition: 0.4s; border: 1px solid transparent;
@@ -55,14 +53,12 @@
 
         .card { background: white; padding: 35px; border-radius: 24px; box-shadow: var(--shadow); margin-bottom: 25px; }
         
-        /* Inputs සහ Selects විශාල කිරීම */
         input, select, textarea {
             width: 100%; padding: 16px; margin-bottom: 18px; border: 2px solid #f1f3f9;
             border-radius: 14px; font-family: inherit; box-sizing: border-box; background: #f8f9fc; 
             outline: none; font-size: 16px;
         }
         
-        /* Buttons විශාල කිරීම */
         button {
             width: 100%; padding: 18px; border: none; border-radius: 14px; font-weight: 600;
             cursor: pointer; transition: 0.3s; background: var(--primary); color: white;
@@ -73,10 +69,9 @@
         .back-btn { 
             width: auto; background: white; color: var(--text-main); padding: 12px 24px; 
             margin-bottom: 30px; display: inline-flex; align-items: center; gap: 10px; 
-            box-shadow: var(--shadow); font-size: 16px;
+            box-shadow: var(--shadow); font-size: 16px; border: none; border-radius: 10px;
         }
 
-        /* Sub Navigation Bars විශාල කිරීම */
         .sub-nav { display: flex; gap: 15px; margin-bottom: 30px; }
         .sub-btn { 
             flex: 1; padding: 18px; background: white; border-radius: 18px; text-align: center; 
@@ -102,12 +97,16 @@
             backdrop-filter: blur(5px); z-index: 2000; align-items: center; justify-content: center;
         }
         .modal-content { background: white; width: 90%; max-width: 550px; padding: 40px; border-radius: 25px; max-height: 85vh; overflow-y: auto; }
-        .modal-content h3 { font-size: 22px; margin-bottom: 20px; }
+        
+        /* Checkbox List Styling */
+        #checkboxArea { background: #fafafa; border: 1px solid #eee; border-radius: 15px; max-height: 250px; overflow-y: auto; margin-top: 15px; padding: 10px; }
         .lesson-check-item { 
-            background: #f8f9fc; padding: 15px; margin-bottom: 8px; border-radius: 12px; 
+            padding: 12px; border-bottom: 1px solid #f1f1f1; 
             display: flex; align-items: center; gap: 12px; font-size: 16px;
         }
-        .lesson-check-item input[type="checkbox"] { width: 20px; height: 20px; margin: 0; }
+        .lesson-check-item input[type="checkbox"] { width: 22px; height: 22px; margin: 0; cursor: pointer; }
+        .control-btns { display: flex; gap: 10px; margin: 15px 0; }
+        .btn-sm { padding: 10px !important; font-size: 13px !important; width: auto !important; flex: 1; }
     </style>
 </head>
 <body>
@@ -210,11 +209,20 @@
 <div id="accessModal">
     <div class="modal-content">
         <h3 id="modalUser">Access Control</h3>
+        <label>ප්‍රධාන ප්‍රවේශය:</label>
         <select id="modalAccessType" onchange="updateUserType()">
             <option value="et">ET</option><option value="sft">SFT</option><option value="both">Both</option>
         </select>
+        <label>විෂය ධාරාව:</label>
         <select id="modalStream" onchange="loadLessonCheckboxes()"></select>
+        
+        <div class="control-btns">
+            <button class="btn-sm" style="background:#34a853;" onclick="toggleAll(true)">සියල්ල</button>
+            <button class="btn-sm" style="background:#5f6368;" onclick="toggleAll(false)">ඉවත් කරන්න</button>
+        </div>
+        
         <div id="checkboxArea"></div>
+        
         <button onclick="saveStudentAccess()" style="margin-top:25px;">වෙනස්කම් සුරකින්න</button>
         <button onclick="closeModal()" style="background:#666; margin-top:10px;">වසන්න</button>
     </div>
@@ -242,6 +250,7 @@
         document.getElementById(id).classList.add('active-page');
     }
 
+    // --- STUDENT MANAGEMENT ---
     function toggleStudentSec(t) {
         document.getElementById('secStdAdd').style.display = t==='add'?'block':'none';
         document.getElementById('secStdManage').style.display = t==='manage'?'block':'none';
@@ -273,6 +282,7 @@
         });
     }
 
+    // Modal Logic (පළමු කේතයේ ක්‍රියාකාරිත්වය)
     function openAccessModal(key, name, acc) {
         editingUserKey = key;
         document.getElementById('modalUser').innerText = name;
@@ -292,28 +302,40 @@
     async function loadLessonCheckboxes() {
         const stream = document.getElementById('modalStream').value;
         if(!stream) return;
+        const listDiv = document.getElementById("checkboxArea");
         const lSnap = await db.ref(`studyData/${stream}`).once('value');
-        const uSnap = await db.ref(`students/${editingUserKey}/allowed/${stream}`).once('value');
+        // පළමු කේතයේ path එක: allowedLessons
+        const uSnap = await db.ref(`students/${editingUserKey}/allowedLessons/${stream}`).once('value');
         const lessons = lSnap.val() || {};
         const allowed = uSnap.val() || {};
-        let h = "";
+        listDiv.innerHTML = "";
         for(let l in lessons) {
-            h += `<div class="lesson-check-item"><input type="checkbox" class="l-chk" value="${l}" ${allowed[l]?'checked':''}> ${l}</div>`;
+            const chk = allowed[l] ? 'checked' : '';
+            listDiv.innerHTML += `<div class="lesson-check-item"><input type="checkbox" class="l-chk" value="${l}" ${chk}> <span>${l}</span></div>`;
         }
-        document.getElementById('checkboxArea').innerHTML = h || "පාඩම් නැත.";
+        if(listDiv.innerHTML === "") listDiv.innerHTML = "පාඩම් නැත.";
     }
 
     async function saveStudentAccess() {
         const stream = document.getElementById('modalStream').value;
         let obj = {};
         document.querySelectorAll('.l-chk').forEach(c => { if(c.checked) obj[c.value] = true; });
-        await db.ref(`students/${editingUserKey}/allowed/${stream}`).set(obj);
-        alert("සුරැකුණා!");
+        await db.ref(`students/${editingUserKey}/allowedLessons/${stream}`).set(obj);
+        alert("සාර්ථකව සුරැකුණා!");
     }
 
-    function closeModal() { document.getElementById('accessModal').style.display='none'; }
-    function deleteStudent(k) { if(confirm("Sure?")) db.ref(`students/${k}`).remove(); }
+    async function updateUserType() {
+        const v = document.getElementById('modalAccessType').value;
+        await db.ref(`students/${editingUserKey}`).update({ access: v });
+        updateModalStreamOptions(v);
+        loadLessonCheckboxes();
+    }
 
+    function toggleAll(st) { document.querySelectorAll('.l-chk').forEach(c => c.checked = st); }
+    function closeModal() { document.getElementById('accessModal').style.display='none'; }
+    function deleteStudent(k) { if(confirm("මෙම ශිෂ්‍යයා පද්ධතියෙන් ඉවත් කරන්නද?")) db.ref(`students/${k}`).remove(); }
+
+    // --- VIDEO & LESSON MGMT ---
     async function createNewLesson() {
         const s = document.getElementById('streamSelect').value;
         const n = document.getElementById('newLessonInput').value.trim();
@@ -354,7 +376,6 @@
             const area = document.getElementById('storageArea');
             area.innerHTML = `<h3 style="margin-bottom:20px;">${s.toUpperCase()} ගබඩාව</h3>`;
             if(!data) { area.innerHTML += "දත්ත නැත."; return; }
-            
             for(let l in data) {
                 let vHtml = "";
                 if(data[l].videos) {
@@ -365,9 +386,7 @@
                         </div>`;
                     }
                 }
-                
                 const safeId = l.replace(/\s+/g, '_');
-                
                 area.innerHTML += `
                 <div class="card" style="padding: 0; overflow: hidden; margin-bottom: 20px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; padding: 25px; cursor: pointer; background: #fff;" onclick="toggleAccordion('${safeId}')">
@@ -387,48 +406,18 @@
         const content = document.getElementById('content-' + id);
         const icon = document.getElementById('icon-' + id);
         const isOpen = content.style.display === 'block';
-
         document.querySelectorAll('.accordion-content').forEach(el => el.style.display = 'none');
-        document.querySelectorAll('.card i.material-icons').forEach(i => {
-            if(i.id.startsWith('icon-')) i.innerText = 'expand_more';
-        });
-
-        if (!isOpen) {
-            content.style.display = 'block';
-            icon.innerText = 'expand_less';
-        }
+        document.querySelectorAll('.card i.material-icons').forEach(i => { if(i.id.startsWith('icon-')) i.innerText = 'expand_more'; });
+        if (!isOpen) { content.style.display = 'block'; icon.innerText = 'expand_less'; }
     }
 
-    async function deleteVideo(event, s, l, vk) { 
-        event.stopPropagation();
-        if(confirm("මෙම වීඩියෝව මකන්නද?")) await db.ref(`studyData/${s}/${l}/videos/${vk}`).remove();
-    }
+    async function deleteVideo(event, s, l, vk) { event.stopPropagation(); if(confirm("මෙම වීඩියෝව මකන්නද?")) await db.ref(`studyData/${s}/${l}/videos/${vk}`).remove(); }
+    async function deleteLesson(s, l) { if(confirm("මෙම පාඩම සහ එහි සියලු වීඩියෝ මකන්නද?")) await db.ref(`studyData/${s}/${l}`).remove(); }
 
-    async function deleteLesson(s, l) {
-        if(confirm("මෙම පාඩම සහ එහි සියලු වීඩියෝ මකන්නද?")) await db.ref(`studyData/${s}/${l}`).remove();
-    }
-
-    function openSpgMain() {
-        showPage('spgPage');
-        document.getElementById('spgTypeSelect').style.display = 'grid';
-        document.getElementById('spgEditor').style.display = 'none';
-    }
-
-    function startSpg(type) {
-        activeSpgType = type;
-        document.getElementById('spgTitle').innerText = type;
-        document.getElementById('spgTypeSelect').style.display = 'none';
-        document.getElementById('spgEditor').style.display = 'block';
-        toggleSpgSub('gen');
-    }
-
-    function toggleSpgSub(v) {
-        document.getElementById('spgGenView').style.display = v==='gen'?'block':'none';
-        document.getElementById('spgListView').style.display = v==='list'?'block':'none';
-        document.getElementById('btnSpgGen').classList.toggle('active', v==='gen');
-        document.getElementById('btnSpgList').classList.toggle('active', v==='list');
-        if(v==='list') loadPapers();
-    }
+    // --- SPG SECTION ---
+    function openSpgMain() { showPage('spgPage'); document.getElementById('spgTypeSelect').style.display = 'grid'; document.getElementById('spgEditor').style.display = 'none'; }
+    function startSpg(type) { activeSpgType = type; document.getElementById('spgTitle').innerText = type; document.getElementById('spgTypeSelect').style.display = 'none'; document.getElementById('spgEditor').style.display = 'block'; toggleSpgSub('gen'); }
+    function toggleSpgSub(v) { document.getElementById('spgGenView').style.display = v==='gen'?'block':'none'; document.getElementById('spgListView').style.display = v==='list'?'block':'none'; document.getElementById('btnSpgGen').classList.toggle('active', v==='gen'); document.getElementById('btnSpgList').classList.toggle('active', v==='list'); if(v==='list') loadPapers(); }
 
     async function processPdfAndQr() {
         const file = document.getElementById('pdf-file').files[0];
