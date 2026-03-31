@@ -11,13 +11,12 @@
             --primary: #6b21a8; 
             --primary-light: #a855f7; 
             --accent: #d8b4fe;
-            --bg: #ffffff; 
+            --bg: #f8fafc; 
             --card-bg: #ffffff; 
             --text-main: #0f172a; 
             --text-sub: #64748b; 
             --yt-red: #ff0000; 
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.05); 
-            --border: rgba(107, 33, 168, 0.1); 
+            --shadow: 0 10px 25px rgba(107, 33, 168, 0.1); 
         }
         
         body { 
@@ -30,16 +29,15 @@
         .screen { display: none; padding: 20px; box-sizing: border-box; min-height: 100vh; }
         .active { display: block; }
 
-        /* --- GREETING SECTION --- */
+        /* --- ANIMATED AVATAR HEADER --- */
         .greeting-container {
-            padding: 40px 10px 25px 10px;
+            padding: 30px 10px 20px 10px;
             display: flex;
             align-items: center;
-            gap: 18px;
+            gap: 15px;
             animation: fadeIn 0.8s ease-out;
         }
 
-        /* --- UPDATED COLOR-CHANGING AVATAR (PURPLE THEME ONLY) --- */
         .user-avatar {
             width: 65px;
             height: 65px;
@@ -52,129 +50,125 @@
             font-weight: 800;
             position: relative;
             z-index: 1;
-            /* Animated Gradient Background - Purple & Blue only */
             background: linear-gradient(135deg, #4c1d95, #a855f7, #1e40af, #4c1d95);
             background-size: 300% 300%;
-            animation: 
-                avatarColorShift 8s infinite ease-in-out, /* Continual color change */
-                avatarPulse 2s infinite ease-in-out;    /* Constant breathing pulse */
-            
-            /* Primary Purple Glow */
-            box-shadow: 0 0 20px rgba(107, 33, 168, 0.5); 
+            animation: avatarColorShift 8s infinite ease-in-out, avatarPulse 2s infinite ease-in-out;
+            box-shadow: 0 0 20px rgba(107, 33, 168, 0.4);
         }
 
-        /* Avatar glow animation - Purple & Blue hue only */
         .user-avatar::after {
             content: '';
             position: absolute;
-            top: -5px;
-            left: -5px;
-            right: -5px;
-            bottom: -5px;
+            top: -5px; left: -5px; right: -5px; bottom: -5px;
             border-radius: 50%;
             background: inherit;
             filter: blur(10px);
-            opacity: 0.7;
+            opacity: 0.6;
             z-index: -1;
-            animation: avatarGlowShift 8s infinite ease-in-out;
+        }
+
+        @keyframes avatarColorShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes avatarPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .greeting-text h2 {
             margin: 0;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 800;
             color: var(--text-main);
-            letter-spacing: -1px;
         }
 
-        /* KEYFRAMES FOR AVATAR ANIMATIONS */
-        
-        /* 1. Continual Background Color Shift (Deep Purple -> Blue -> Magenta) */
-        @keyframes avatarColorShift {
-            0% { background-position: 0% 50%; }
-            25% { background-position: 50% 50%; } /* Blues appear */
-            50% { background-position: 100% 50%; } /* Magenta/Violets appear */
-            75% { background-position: 50% 50%; }
-            100% { background-position: 0% 50%; } /* Back to Purple */
-        }
-
-        /* 2. Color-Changing Glow Animation - Restrict Hue for Purple/Blue */
-        @keyframes avatarGlowShift {
-            0% { filter: blur(10px) hue-rotate(0deg); opacity: 0.7; }
-            50% { filter: blur(12px) hue-rotate(20deg); opacity: 0.8; } /* Slight shift within purple/blue range */
-            100% { filter: blur(10px) hue-rotate(0deg); opacity: 0.7; }
-        }
-
-        /* 3. Constant Breathing Pulse Animation (Untouched) */
-        @keyframes avatarPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.03); }
-        }
-
-        /* --- Fade-In for Greeting --- */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- Rest of the UI elements --- */
-        .section-title {
-            padding: 10px;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-sub);
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            margin-top: 5px;
-            margin-bottom: 5px;
+        /* --- BUTTONS & CARDS --- */
+        .login-btn { 
+            width: 100%; padding: 18px; 
+            background: linear-gradient(135deg, var(--primary), var(--primary-light)); 
+            color: white; border: none; border-radius: 18px; 
+            font-weight: 700; font-size: 16px; cursor: pointer;
+            box-shadow: 0 10px 20px rgba(107, 33, 168, 0.2);
         }
 
         .subject-card { 
-            background-color: var(--card-bg); border-radius: 24px; overflow: hidden;
-            box-shadow: var(--shadow); margin-bottom: 20px; cursor: pointer;
-            transition: 0.3s; border: 1px solid #f1f5f9; display: flex; flex-direction: column;
+            background: var(--card-bg); border-radius: 28px; overflow: hidden;
+            box-shadow: var(--shadow); margin-bottom: 25px; border: 1px solid rgba(107,33,168,0.05);
         }
-        .subject-card:active { transform: scale(0.98); }
-        .banner-box { width: 100%; height: 150px; background: #f8fafc; overflow: hidden; }
+        .banner-box { width: 100%; height: 160px; background: #eee; }
         .banner-box img { width: 100%; height: 100%; object-fit: cover; }
         .info-box { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .info-box h3 { margin: 0; font-size: 17px; color: var(--text-main); font-weight: 700; }
 
         .card { 
-            background-color: var(--card-bg); padding: 20px; border-radius: 20px; 
-            box-shadow: var(--shadow); margin-bottom: 15px; cursor: pointer; 
+            background: var(--card-bg); padding: 22px; border-radius: 20px; 
+            box-shadow: var(--shadow); margin-bottom: 15px; 
             display: flex; align-items: center; justify-content: space-between; 
-            border: 1px solid #f1f5f9; transition: 0.3s;
+            border: 1px solid rgba(107,33,168,0.05);
         }
-        .card:active { transform: scale(0.97); }
 
-        .back-nav { display: flex; align-items: center; gap: 12px; padding: 15px 5px; cursor: pointer; color: var(--primary); font-weight: 700; }
+        /* --- VIDEO PLAYER & SPEED CONTROLS --- */
+        .video-box { 
+            position: relative; width: 100%; aspect-ratio: 16/9; 
+            background: #000; border-radius: 25px; overflow: hidden; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        #player { width: 100%; height: 100%; position: absolute; }
+        .click-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
+        
+        .custom-controls { 
+            position: absolute; bottom: 0; left: 0; right: 0; 
+            background: linear-gradient(transparent, rgba(0,0,0,0.9)); 
+            padding: 25px 20px 15px; z-index: 20; transition: 0.4s;
+        }
+        .custom-controls.hidden { opacity: 0; pointer-events: none; transform: translateY(10px); }
 
-        /* Auth/Login */
-        .auth-container { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 80vh; }
-        .auth-box { width: 90%; max-width: 400px; padding: 40px 30px; background: #fff; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); text-align: center; border: 1px solid #f1f5f9; }
-        input { width: 100%; padding: 18px; margin-bottom: 15px; border: 2px solid #f1f5f9; border-radius: 15px; box-sizing: border-box; font-size: 16px; }
-        button.login-btn { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border: none; border-radius: 15px; font-weight: 700; font-size: 18px; cursor: pointer; }
+        .seek-bar-container { width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 10px; margin-bottom: 15px; cursor: pointer; position: relative; }
+        .seek-bar-progress { height: 100%; background: var(--primary-light); border-radius: 10px; width: 0%; position: relative; }
+        .seek-bar-knob { width: 14px; height: 14px; background: white; border-radius: 50%; position: absolute; right: -7px; top: -4px; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
 
-        /* Player */
-        .video-box { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; border-radius: 24px; overflow: hidden; }
-        #player { width: 100%; height: 100%; position: absolute; top: 0; left: 0; pointer-events: none; }
-        .click-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; cursor: pointer; }
-        .custom-controls { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.9)); padding: 20px; z-index: 999; }
-        .custom-controls.hidden { opacity: 0; pointer-events: none; }
-        .seek-bar-container { width: 100%; height: 5px; background: rgba(255,255,255,0.2); border-radius: 3px; margin-bottom: 15px; cursor: pointer; }
-        .seek-bar-progress { height: 100%; background: var(--yt-red); width: 0%; border-radius: 3px; position: relative; }
-        .seek-bar-knob { width: 12px; height: 12px; background: var(--yt-red); border-radius: 50%; position: absolute; right: -6px; top: -3.5px; }
+        .time-row { display: flex; align-items: center; justify-content: space-between; color: white; }
+        .control-btn { background: none; border: none; color: white; cursor: pointer; display: flex; align-items: center; }
+
+        /* Speed Dropdown UI */
+        .speed-control-container { position: relative; display: flex; align-items: center; }
+        .speed-dropdown {
+            position: absolute; bottom: 45px; right: 0; background: rgba(15, 23, 42, 0.95);
+            border-radius: 15px; display: none; flex-direction: column; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1); width: 100px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .speed-dropdown.show { display: flex; }
+        .speed-opt { padding: 12px 15px; font-size: 14px; color: white; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center; font-weight: 600; }
+        .speed-opt:hover { background: var(--primary); }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        input { width: 100%; padding: 18px; margin-bottom: 15px; border: 2px solid #e2e8f0; border-radius: 15px; box-sizing: border-box; font-size: 16px; outline: none; }
     </style>
 </head>
 <body>
 
 <div id="masterAuthScreen" class="screen">
-    <div class="auth-container"><div class="auth-box"><h2>App Verification</h2><input type="text" id="mUser" placeholder="Username"><input type="password" id="mPass" placeholder="Password"><button class="login-btn" onclick="masterAuth()">තහවුරු කරන්න</button></div></div>
+    <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:80vh;">
+        <div style="width:90%; max-width:380px; text-align:center;">
+            <h2 style="color:var(--primary)">App Verification</h2>
+            <input type="text" id="mUser" placeholder="Username">
+            <input type="password" id="mPass" placeholder="Password">
+            <button class="login-btn" onclick="masterAuth()">තහවුරු කරන්න</button>
+        </div>
+    </div>
 </div>
 
 <div id="loginScreen" class="screen">
-    <div class="auth-container"><div class="auth-box"><h2>Student Login</h2><input type="text" id="loginName" placeholder="ඔබේ නම"><input type="password" id="loginPass" placeholder="මුරපදය"><button class="login-btn" onclick="login()">ඇතුල් වන්න</button></div></div>
+    <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:80vh;">
+        <div style="width:90%; max-width:380px; text-align:center;">
+            <h2 style="color:var(--primary)">Student Login</h2>
+            <input type="text" id="loginName" placeholder="ඔබේ නම">
+            <input type="password" id="loginPass" placeholder="මුරපදය">
+            <button class="login-btn" onclick="login()">ඇතුල් වන්න</button>
+        </div>
+    </div>
 </div>
 
 <div id="mainMenuScreen" class="screen">
@@ -184,32 +178,54 @@
             <h2 id="helloMsg">Hello!</h2>
         </div>
     </div>
-    <div class="section-title">විෂයයන්</div>
+    <p style="padding-left:10px; font-weight:700; color:var(--text-sub); font-size:12px; text-transform:uppercase; letter-spacing:1px;">විෂයයන් තෝරන්න</p>
     <div id="subjectList"></div>
 </div>
 
 <div id="topicsScreen" class="screen">
-    <div class="back-nav" onclick="showScreen('mainMenuScreen')"><i class="material-icons">arrow_back</i><span id="subTitle">පාඩම්</span></div>
+    <div onclick="showScreen('mainMenuScreen')" style="display:flex; align-items:center; gap:10px; padding:15px 0; color:var(--primary); font-weight:700; cursor:pointer;">
+        <i class="material-icons">arrow_back</i> <span id="subTitle">Back</span>
+    </div>
     <div id="topicsList"></div>
 </div>
 
 <div id="playerScreen" class="screen">
     <div id="videoListContainer">
-        <div class="back-nav" onclick="showScreen('topicsScreen')"><i class="material-icons">arrow_back</i><span id="lessonTitle">වීඩියෝ</span></div>
+        <div onclick="showScreen('topicsScreen')" style="display:flex; align-items:center; gap:10px; padding:15px 0; color:var(--primary); font-weight:700; cursor:pointer;">
+            <i class="material-icons">arrow_back</i> <span id="lessonTitle">වීඩියෝ ලැයිස්තුව</span>
+        </div>
         <div id="multiVideoList"></div>
     </div>
+
     <div id="playerSection" style="display:none;">
-        <div class="back-nav" onclick="hidePlayer()"><i class="material-icons">arrow_back</i><span id="activeVideoTitle">Playing</span></div>
+        <div onclick="hidePlayer()" style="display:flex; align-items:center; gap:10px; padding:15px 0; color:var(--primary); font-weight:700; cursor:pointer;">
+            <i class="material-icons">arrow_back</i> <span id="activeVideoTitle">නැවතීමට</span>
+        </div>
         <div class="video-box" id="videoContainer">
-            <div id="player"></div><div class="click-layer" onclick="handleTap()"></div>
+            <div id="player"></div>
+            <div class="click-layer" onclick="handleTap()"></div>
             <div class="custom-controls" id="controlBar">
-                <div class="seek-bar-container" onclick="handleSeek(event)"><div class="seek-bar-progress" id="seekBarProgress"><div class="seek-bar-knob" id="seekBarKnob"></div></div></div>
-                <div class="time-row" style="display:flex; justify-content:space-between; color:white;">
+                <div class="seek-bar-container" onclick="handleSeek(event)">
+                    <div class="seek-bar-progress" id="seekBarProgress"><div class="seek-bar-knob"></div></div>
+                </div>
+                <div class="time-row">
                     <div style="display:flex; align-items:center; gap:15px;">
-                        <button style="background:none; border:none; color:white;" onclick="togglePlay(event)" id="playPauseBtn"><i class="material-icons">play_arrow</i></button>
-                        <span id="currentTime" style="font-size:12px;">0:00</span>
+                        <button class="control-btn" onclick="togglePlay(event)" id="playPauseBtn"><i class="material-icons">play_arrow</i></button>
+                        <span id="currentTime" style="font-size:13px; font-weight:600;">0:00</span>
                     </div>
-                    <button style="background:none; border:none; color:white;" onclick="toggleFullScreen(event)"><i class="material-icons">fullscreen</i></button>
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <div class="speed-control-container">
+                            <button class="control-btn" onclick="toggleSpeedDropdown(event)"><i class="material-icons">speed</i></button>
+                            <div class="speed-dropdown" id="speedMenu">
+                                <div class="speed-opt" onclick="setSpeed(0.5)">0.5x</div>
+                                <div class="speed-opt" onclick="setSpeed(1)">Normal</div>
+                                <div class="speed-opt" onclick="setSpeed(1.25)">1.25x</div>
+                                <div class="speed-opt" onclick="setSpeed(1.5)">1.5x</div>
+                                <div class="speed-opt" onclick="setSpeed(2)">2.0x</div>
+                            </div>
+                        </div>
+                        <button class="control-btn" onclick="toggleFullScreen(event)"><i class="material-icons">fullscreen</i></button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -221,7 +237,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
 <script>
-    // YouTube Player & Firebase Logic (Original, untouched)
     const firebaseConfig = {
         apiKey: "AIzaSyApozqbVy4DFupEKafsU_oeC9RUAq1ljuU",
         authDomain: "tech-590c8.firebaseapp.com",
@@ -289,11 +304,7 @@
             ];
             subData.forEach(sub => {
                 if(sub.tag.includes(acc)) {
-                    list.innerHTML += `
-                        <div class="subject-card" onclick="openStream('${sub.id}')">
-                            <div class="banner-box"><img src="${sub.img}" onerror="this.src='https://via.placeholder.com/400x150?text=${sub.name}'"></div>
-                            <div class="info-box"><h3>${sub.name}</h3><i class="material-icons" style="color:var(--primary)">arrow_forward</i></div>
-                        </div>`;
+                    list.innerHTML += `<div class="subject-card" onclick="openStream('${sub.id}')"><div class="banner-box"><img src="${sub.img}" onerror="this.src='https://via.placeholder.com/400x150?text=${sub.name}'"></div><div class="info-box"><h3 style="margin:0">${sub.name}</h3><i class="material-icons" style="color:var(--primary)">arrow_forward</i></div></div>`;
                 }
             });
         });
@@ -310,7 +321,7 @@
                 container.innerHTML = "";
                 for(let name in lessons) {
                     if(allowed[name]) {
-                        container.innerHTML += `<div class="card" onclick="showVideoList('${name}', ${JSON.stringify(lessons[name].videos).replace(/"/g, '&quot;')})"><span>${name}</span> <i class="material-icons">play_circle_filled</i></div>`;
+                        container.innerHTML += `<div class="card" onclick="showVideoList('${name}', ${JSON.stringify(lessons[name].videos).replace(/"/g, '&quot;')})"><span>${name}</span> <i class="material-icons" style="color:var(--primary)">play_circle_filled</i></div>`;
                     }
                 }
             });
@@ -326,7 +337,7 @@
         const list = document.getElementById("multiVideoList");
         list.innerHTML = "";
         currentVideos.forEach((v, index) => {
-            list.innerHTML += `<div class="card" onclick="playThisVideo(${index})"><span>${v.title}</span> <i class="material-icons">videocam</i></div>`;
+            list.innerHTML += `<div class="card" onclick="playThisVideo(${index})"><span>${v.title}</span> <i class="material-icons" style="color:var(--primary)">videocam</i></div>`;
         });
     }
 
@@ -347,12 +358,22 @@
         if (e.data === YT.PlayerState.PLAYING) { btn.innerHTML = '<i class="material-icons">pause</i>'; resetTimer(); }
         else { btn.innerHTML = '<i class="material-icons">play_arrow</i>'; showControls(); }
     }
-    function handleTap() { const cb = document.getElementById("controlBar"); cb.classList.contains("hidden") ? showControls() : hideControls(); }
+
+    function handleTap() { 
+        const cb = document.getElementById("controlBar"); 
+        const sm = document.getElementById("speedMenu");
+        sm.classList.remove("show");
+        cb.classList.contains("hidden") ? showControls() : hideControls(); 
+    }
     function showControls() { document.getElementById("controlBar").classList.remove("hidden"); resetTimer(); }
     function hideControls() { if (player && player.getPlayerState() === 1) document.getElementById("controlBar").classList.add("hidden"); }
     function resetTimer() { clearTimeout(hideTimeout); if (player && player.getPlayerState() === 1) hideTimeout = setTimeout(hideControls, 4000); }
     function togglePlay(e) { e.stopPropagation(); if(player) (player.getPlayerState() === 1) ? player.pauseVideo() : player.playVideo(); }
     function toggleFullScreen(e) { e.stopPropagation(); var container = document.getElementById("videoContainer"); if (!document.fullscreenElement) container.requestFullscreen(); else document.exitFullscreen(); }
+    
+    function toggleSpeedDropdown(e) { e.stopPropagation(); document.getElementById("speedMenu").classList.toggle("show"); }
+    function setSpeed(rate) { if(player && player.setPlaybackRate) { player.setPlaybackRate(rate); document.getElementById("speedMenu").classList.remove("show"); } }
+
     function handleSeek(e) { e.stopPropagation(); if(player) { var rect = e.currentTarget.getBoundingClientRect(); var pos = (e.clientX - rect.left) / rect.width; player.seekTo(player.getDuration() * pos, true); } }
     function updateUI() { if (player && player.getCurrentTime) { var curr = player.getCurrentTime(), dur = player.getDuration(); document.getElementById("currentTime").innerText = formatTime(curr); if (dur > 0) { var p = (curr / dur) * 100; document.getElementById("seekBarProgress").style.width = p + "%"; } } }
     function formatTime(t) { t = Math.round(t); var m = Math.floor(t / 60), s = t % 60; return m + ":" + (s < 10 ? "0" : "") + s; }
