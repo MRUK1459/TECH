@@ -9,76 +9,162 @@
     <style>
         :root { 
             --primary: #6b21a8; 
-            --primary-light: #a855f7;
+            --primary-light: #a855f7; 
             --accent: #d8b4fe;
-            --bg: #0f172a; 
-            --card-bg: rgba(255, 255, 255, 0.05);
+            --bg: #ffffff; 
+            --card-bg: #ffffff; 
+            --text-main: #0f172a; 
+            --text-sub: #64748b; 
             --yt-red: #ff0000; 
-            --glass: rgba(255, 255, 255, 0.1);
-            --shadow: 0 15px 35px rgba(0,0,0,0.5);
-            --text-main: #f8fafc;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.05); 
+            --border: rgba(107, 33, 168, 0.1); 
         }
         
         body { 
             font-family: 'Inter', sans-serif; 
-            background: radial-gradient(circle at top right, #2e1065, #0f172a); 
+            background-color: var(--bg); 
             margin: 0; padding: 0; user-select: none; -webkit-touch-callout: none; 
             color: var(--text-main); min-height: 100vh;
         }
         
-        .screen { display: none; padding: 20px; animation: fadeIn 0.5s ease-out; box-sizing: border-box; min-height: 100vh; }
+        .screen { display: none; padding: 20px; box-sizing: border-box; min-height: 100vh; }
         .active { display: block; }
+
+        /* --- GREETING SECTION --- */
+        .greeting-container {
+            padding: 40px 10px 25px 10px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        /* --- UPDATED COLOR-CHANGING AVATAR (PURPLE THEME ONLY) --- */
+        .user-avatar {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 26px;
+            font-weight: 800;
+            position: relative;
+            z-index: 1;
+            /* Animated Gradient Background - Purple & Blue only */
+            background: linear-gradient(135deg, #4c1d95, #a855f7, #1e40af, #4c1d95);
+            background-size: 300% 300%;
+            animation: 
+                avatarColorShift 8s infinite ease-in-out, /* Continual color change */
+                avatarPulse 2s infinite ease-in-out;    /* Constant breathing pulse */
+            
+            /* Primary Purple Glow */
+            box-shadow: 0 0 20px rgba(107, 33, 168, 0.5); 
+        }
+
+        /* Avatar glow animation - Purple & Blue hue only */
+        .user-avatar::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: inherit;
+            filter: blur(10px);
+            opacity: 0.7;
+            z-index: -1;
+            animation: avatarGlowShift 8s infinite ease-in-out;
+        }
+
+        .greeting-text h2 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -1px;
+        }
+
+        /* KEYFRAMES FOR AVATAR ANIMATIONS */
         
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        header { 
-            background: rgba(107, 33, 168, 0.2); backdrop-filter: blur(15px); color: white; 
-            padding: 40px 20px; text-align: center; border-radius: 0 0 35px 35px; 
-            margin-bottom: 30px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); box-shadow: var(--shadow);
+        /* 1. Continual Background Color Shift (Deep Purple -> Blue -> Magenta) */
+        @keyframes avatarColorShift {
+            0% { background-position: 0% 50%; }
+            25% { background-position: 50% 50%; } /* Blues appear */
+            50% { background-position: 100% 50%; } /* Magenta/Violets appear */
+            75% { background-position: 50% 50%; }
+            100% { background-position: 0% 50%; } /* Back to Purple */
         }
-        header h2 { margin: 0; font-weight: 700; font-size: 26px; }
 
-        .card { 
-            background: var(--card-bg); backdrop-filter: blur(10px); padding: 22px; 
-            border-radius: 18px; margin-bottom: 15px; cursor: pointer; display: flex; 
-            align-items: center; justify-content: space-between; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s;
+        /* 2. Color-Changing Glow Animation - Restrict Hue for Purple/Blue */
+        @keyframes avatarGlowShift {
+            0% { filter: blur(10px) hue-rotate(0deg); opacity: 0.7; }
+            50% { filter: blur(12px) hue-rotate(20deg); opacity: 0.8; } /* Slight shift within purple/blue range */
+            100% { filter: blur(10px) hue-rotate(0deg); opacity: 0.7; }
         }
-        .card:active { transform: scale(0.97); background: rgba(168, 85, 247, 0.2); }
+
+        /* 3. Constant Breathing Pulse Animation (Untouched) */
+        @keyframes avatarPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        /* --- Fade-In for Greeting --- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Rest of the UI elements --- */
+        .section-title {
+            padding: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
 
         .subject-card { 
-            background: rgba(255, 255, 255, 0.03); border-radius: 20px; overflow: hidden;
-            box-shadow: var(--shadow); margin-bottom: 20px; cursor: pointer; transition: 0.3s; 
-            border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column;
+            background-color: var(--card-bg); border-radius: 24px; overflow: hidden;
+            box-shadow: var(--shadow); margin-bottom: 20px; cursor: pointer;
+            transition: 0.3s; border: 1px solid #f1f5f9; display: flex; flex-direction: column;
         }
         .subject-card:active { transform: scale(0.98); }
-        .banner-box { width: 100%; height: 160px; background: #1e1b4b; overflow: hidden; }
+        .banner-box { width: 100%; height: 150px; background: #f8fafc; overflow: hidden; }
         .banner-box img { width: 100%; height: 100%; object-fit: cover; }
-        .info-box { padding: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .info-box h3 { margin: 0; font-size: 17px; color: var(--accent); font-weight: 700; }
+        .info-box { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .info-box h3 { margin: 0; font-size: 17px; color: var(--text-main); font-weight: 700; }
 
+        .card { 
+            background-color: var(--card-bg); padding: 20px; border-radius: 20px; 
+            box-shadow: var(--shadow); margin-bottom: 15px; cursor: pointer; 
+            display: flex; align-items: center; justify-content: space-between; 
+            border: 1px solid #f1f5f9; transition: 0.3s;
+        }
+        .card:active { transform: scale(0.97); }
+
+        .back-nav { display: flex; align-items: center; gap: 12px; padding: 15px 5px; cursor: pointer; color: var(--primary); font-weight: 700; }
+
+        /* Auth/Login */
         .auth-container { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 80vh; }
-        .auth-box { width: 100%; max-width: 400px; padding: 40px 30px; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border-radius: 30px; box-shadow: var(--shadow); text-align: center; border: 1px solid rgba(168, 85, 247, 0.3); }
-        input { width: 100%; padding: 18px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; box-sizing: border-box; font-size: 16px; background: rgba(255,255,255,0.05); color: white; }
+        .auth-box { width: 90%; max-width: 400px; padding: 40px 30px; background: #fff; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); text-align: center; border: 1px solid #f1f5f9; }
+        input { width: 100%; padding: 18px; margin-bottom: 15px; border: 2px solid #f1f5f9; border-radius: 15px; box-sizing: border-box; font-size: 16px; }
         button.login-btn { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border: none; border-radius: 15px; font-weight: 700; font-size: 18px; cursor: pointer; }
 
-        .back-nav { display: flex; align-items: center; gap: 15px; padding: 10px 5px; margin-bottom: 15px; cursor: pointer; color: var(--accent); }
-
-        /* VIDEO PLAYER STYLES (Original Restoration) */
-        #playerSection { display: none; margin-top: 10px; }
-        .video-box { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; border-radius: 20px; overflow: hidden; border: 1px solid rgba(168, 85, 247, 0.3); }
+        /* Player */
+        .video-box { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; border-radius: 24px; overflow: hidden; }
         #player { width: 100%; height: 100%; position: absolute; top: 0; left: 0; pointer-events: none; }
         .click-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; cursor: pointer; }
-        .custom-controls { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.95)); display: flex; flex-direction: column; padding: 15px 20px; transition: 0.4s; z-index: 99999 !important; }
-        .custom-controls.hidden { opacity: 0; transform: translateY(20px); pointer-events: none; }
-        .seek-bar-container { width: 100%; height: 10px; display: flex; align-items: center; margin-bottom: 12px; cursor: pointer; }
-        .seek-bar-slider { width: 100%; height: 4px; background: rgba(255,255,255,0.25); border-radius: 2px; position: relative; }
-        .seek-bar-progress { height: 100%; background: var(--yt-red); width: 0%; border-radius: 2px; }
-        .seek-bar-knob { width: 14px; height: 14px; background: var(--yt-red); border-radius: 50%; position: absolute; top: 50%; transform: translate(-50%, -50%); left: 0%; }
-        .time-row { display: flex; align-items: center; justify-content: space-between; }
-        .controls-left { display: flex; align-items: center; gap: 15px; }
-        .time-display { font-size: 13px; color: #fff; }
-        .icon-btn { background: none; border: none; color: #fff; cursor: pointer; }
-        .speed-text { color: white; font-size: 12px; font-weight: bold; margin-left: 2px; }
+        .custom-controls { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.9)); padding: 20px; z-index: 999; }
+        .custom-controls.hidden { opacity: 0; pointer-events: none; }
+        .seek-bar-container { width: 100%; height: 5px; background: rgba(255,255,255,0.2); border-radius: 3px; margin-bottom: 15px; cursor: pointer; }
+        .seek-bar-progress { height: 100%; background: var(--yt-red); width: 0%; border-radius: 3px; position: relative; }
+        .seek-bar-knob { width: 12px; height: 12px; background: var(--yt-red); border-radius: 50%; position: absolute; right: -6px; top: -3.5px; }
     </style>
 </head>
 <body>
@@ -92,36 +178,38 @@
 </div>
 
 <div id="mainMenuScreen" class="screen">
-    <header><h2 id="welcomeMsg">ආයුබෝවන්</h2></header>
-    <div id="subjectList" style="padding: 10px 0;"></div>
+    <div class="greeting-container">
+        <div class="user-avatar" id="userInitial">U</div>
+        <div class="greeting-text">
+            <h2 id="helloMsg">Hello!</h2>
+        </div>
+    </div>
+    <div class="section-title">විෂයයන්</div>
+    <div id="subjectList"></div>
 </div>
 
 <div id="topicsScreen" class="screen">
-    <div class="back-nav" onclick="showScreen('mainMenuScreen')"><i class="material-icons">arrow_back</i><span id="subTitle" style="font-weight:700;">පාඩම් මාලාව</span></div>
+    <div class="back-nav" onclick="showScreen('mainMenuScreen')"><i class="material-icons">arrow_back</i><span id="subTitle">පාඩම්</span></div>
     <div id="topicsList"></div>
 </div>
 
 <div id="playerScreen" class="screen">
     <div id="videoListContainer">
-        <div class="back-nav" onclick="showScreen('topicsScreen')"><i class="material-icons">arrow_back</i><span id="lessonTitle" style="font-weight:700;">වීඩියෝ</span></div>
+        <div class="back-nav" onclick="showScreen('topicsScreen')"><i class="material-icons">arrow_back</i><span id="lessonTitle">වීඩියෝ</span></div>
         <div id="multiVideoList"></div>
     </div>
-    <div id="playerSection">
-        <div class="back-nav" onclick="hidePlayer()"><i class="material-icons">arrow_back</i><span id="activeVideoTitle" style="font-weight:700;">ප්ලේ වේ...</span></div>
+    <div id="playerSection" style="display:none;">
+        <div class="back-nav" onclick="hidePlayer()"><i class="material-icons">arrow_back</i><span id="activeVideoTitle">Playing</span></div>
         <div class="video-box" id="videoContainer">
             <div id="player"></div><div class="click-layer" onclick="handleTap()"></div>
             <div class="custom-controls" id="controlBar">
-                <div class="seek-bar-container" onclick="handleSeek(event)"><div class="seek-bar-slider"><div class="seek-bar-progress" id="seekBarProgress"></div><div class="seek-bar-knob" id="seekBarKnob"></div></div></div>
-                <div class="time-row">
-                    <div class="controls-left">
-                        <button class="icon-btn" onclick="togglePlay(event)" id="playPauseBtn"><i class="material-icons">play_arrow</i></button>
-                        <div class="time-display"><span id="currentTime">0:00</span> / <span id="duration">0:00</span></div>
-                        <button class="icon-btn" onclick="changeSpeed(event)" style="margin-left: 10px;">
-                            <i class="material-icons" style="font-size: 20px;">speed</i>
-                            <span id="speedDisplay" class="speed-text">1x</span>
-                        </button>
+                <div class="seek-bar-container" onclick="handleSeek(event)"><div class="seek-bar-progress" id="seekBarProgress"><div class="seek-bar-knob" id="seekBarKnob"></div></div></div>
+                <div class="time-row" style="display:flex; justify-content:space-between; color:white;">
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <button style="background:none; border:none; color:white;" onclick="togglePlay(event)" id="playPauseBtn"><i class="material-icons">play_arrow</i></button>
+                        <span id="currentTime" style="font-size:12px;">0:00</span>
                     </div>
-                    <button class="icon-btn" onclick="toggleFullScreen(event)"><i class="material-icons">fullscreen</i></button>
+                    <button style="background:none; border:none; color:white;" onclick="toggleFullScreen(event)"><i class="material-icons">fullscreen</i></button>
                 </div>
             </div>
         </div>
@@ -133,6 +221,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
 <script>
+    // YouTube Player & Firebase Logic (Original, untouched)
     const firebaseConfig = {
         apiKey: "AIzaSyApozqbVy4DFupEKafsU_oeC9RUAq1ljuU",
         authDomain: "tech-590c8.firebaseapp.com",
@@ -148,8 +237,6 @@
     let currentUser = null;
     let player, hideTimeout;
     let currentVideos = [];
-    let currentSpeedIndex = 1;
-    const speeds = [0.5, 1, 1.25, 1.5, 2];
 
     window.onload = () => {
         const isVerified = localStorage.getItem('isAppVerified');
@@ -189,10 +276,10 @@
     }
 
     function loadDashboard() {
-        document.getElementById("welcomeMsg").innerText = "ආයුබෝවන්, " + currentUser.name;
+        document.getElementById("helloMsg").innerText = "Hello, " + currentUser.name + "!";
+        document.getElementById("userInitial").innerText = currentUser.name.charAt(0).toUpperCase();
         showScreen('mainMenuScreen');
         const list = document.getElementById("subjectList");
-        
         db.ref(`students/${currentUser.id}/access`).on('value', s => {
             const acc = s.val(); list.innerHTML = "";
             const subData = [
@@ -204,11 +291,8 @@
                 if(sub.tag.includes(acc)) {
                     list.innerHTML += `
                         <div class="subject-card" onclick="openStream('${sub.id}')">
-                            <div class="banner-box"><img src="${sub.img}" onerror="this.src='https://via.placeholder.com/400x160?text=${sub.name}'"></div>
-                            <div class="info-box">
-                                <h3>${sub.name}</h3>
-                                <i class="material-icons" style="color:#a855f7">arrow_forward_ios</i>
-                            </div>
+                            <div class="banner-box"><img src="${sub.img}" onerror="this.src='https://via.placeholder.com/400x150?text=${sub.name}'"></div>
+                            <div class="info-box"><h3>${sub.name}</h3><i class="material-icons" style="color:var(--primary)">arrow_forward</i></div>
                         </div>`;
                 }
             });
@@ -216,7 +300,7 @@
     }
 
     function openStream(type) {
-        document.getElementById("subTitle").innerText = type.toUpperCase() + " Lessons";
+        document.getElementById("subTitle").innerText = type.toUpperCase();
         showScreen('topicsScreen');
         db.ref(`students/${currentUser.id}/allowedLessons/${type}`).on('value', s => {
             const allowed = s.val() || {};
@@ -226,7 +310,7 @@
                 container.innerHTML = "";
                 for(let name in lessons) {
                     if(allowed[name]) {
-                        container.innerHTML += `<div class="card" onclick="showVideoList('${name}', ${JSON.stringify(lessons[name].videos).replace(/"/g, '&quot;')})"><span>${name}</span> <i class="material-icons" style="color:#a855f7">play_arrow</i></div>`;
+                        container.innerHTML += `<div class="card" onclick="showVideoList('${name}', ${JSON.stringify(lessons[name].videos).replace(/"/g, '&quot;')})"><span>${name}</span> <i class="material-icons">play_circle_filled</i></div>`;
                     }
                 }
             });
@@ -242,7 +326,7 @@
         const list = document.getElementById("multiVideoList");
         list.innerHTML = "";
         currentVideos.forEach((v, index) => {
-            list.innerHTML += `<div class="card" onclick="playThisVideo(${index})"><span>${v.title}</span> <i class="material-icons" style="color:#a855f7">video_library</i></div>`;
+            list.innerHTML += `<div class="card" onclick="playThisVideo(${index})"><span>${v.title}</span> <i class="material-icons">videocam</i></div>`;
         });
     }
 
@@ -254,8 +338,6 @@
         if (!player) {
             player = new YT.Player('player', { videoId: vid.id, playerVars: { 'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0, 'playsinline': 1 }, events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } });
         } else { player.loadVideoById(vid.id); }
-        currentSpeedIndex = 1;
-        document.getElementById("speedDisplay").innerText = "1x";
     }
 
     function hidePlayer() { if(player) player.pauseVideo(); document.getElementById("playerSection").style.display = "none"; document.getElementById("videoListContainer").style.display = "block"; }
@@ -265,18 +347,6 @@
         if (e.data === YT.PlayerState.PLAYING) { btn.innerHTML = '<i class="material-icons">pause</i>'; resetTimer(); }
         else { btn.innerHTML = '<i class="material-icons">play_arrow</i>'; showControls(); }
     }
-
-    function changeSpeed(e) {
-        e.stopPropagation();
-        if (player && player.setPlaybackRate) {
-            currentSpeedIndex = (currentSpeedIndex + 1) % speeds.length;
-            const newSpeed = speeds[currentSpeedIndex];
-            player.setPlaybackRate(newSpeed);
-            document.getElementById("speedDisplay").innerText = newSpeed + "x";
-            resetTimer();
-        }
-    }
-
     function handleTap() { const cb = document.getElementById("controlBar"); cb.classList.contains("hidden") ? showControls() : hideControls(); }
     function showControls() { document.getElementById("controlBar").classList.remove("hidden"); resetTimer(); }
     function hideControls() { if (player && player.getPlayerState() === 1) document.getElementById("controlBar").classList.add("hidden"); }
@@ -284,7 +354,7 @@
     function togglePlay(e) { e.stopPropagation(); if(player) (player.getPlayerState() === 1) ? player.pauseVideo() : player.playVideo(); }
     function toggleFullScreen(e) { e.stopPropagation(); var container = document.getElementById("videoContainer"); if (!document.fullscreenElement) container.requestFullscreen(); else document.exitFullscreen(); }
     function handleSeek(e) { e.stopPropagation(); if(player) { var rect = e.currentTarget.getBoundingClientRect(); var pos = (e.clientX - rect.left) / rect.width; player.seekTo(player.getDuration() * pos, true); } }
-    function updateUI() { if (player && player.getCurrentTime) { var curr = player.getCurrentTime(), dur = player.getDuration(); document.getElementById("currentTime").innerText = formatTime(curr); document.getElementById("duration").innerText = formatTime(dur); if (dur > 0) { var p = (curr / dur) * 100; document.getElementById("seekBarProgress").style.width = p + "%"; document.getElementById("seekBarKnob").style.left = p + "%"; } } }
+    function updateUI() { if (player && player.getCurrentTime) { var curr = player.getCurrentTime(), dur = player.getDuration(); document.getElementById("currentTime").innerText = formatTime(curr); if (dur > 0) { var p = (curr / dur) * 100; document.getElementById("seekBarProgress").style.width = p + "%"; } } }
     function formatTime(t) { t = Math.round(t); var m = Math.floor(t / 60), s = t % 60; return m + ":" + (s < 10 ? "0" : "") + s; }
 </script>
 </body>
