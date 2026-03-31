@@ -62,7 +62,6 @@
         }
         .card:active { transform: scale(0.97); background: #fff; }
 
-        /* Subject Card with Banner Styling */
         .subject-card { 
             background: white; border-radius: 20px; overflow: hidden;
             box-shadow: var(--shadow); margin-bottom: 20px; cursor: pointer;
@@ -81,7 +80,6 @@
 
         .back-nav { display: flex; align-items: center; gap: 15px; padding: 10px 5px; margin-bottom: 15px; cursor: pointer; }
 
-        /* VIDEO PLAYER STYLES (Original) */
         #playerSection { display: none; margin-top: 10px; }
         .video-box { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; border-radius: 20px; overflow: hidden; }
         #player { width: 100%; height: 100%; position: absolute; top: 0; left: 0; pointer-events: none; }
@@ -93,9 +91,10 @@
         .seek-bar-progress { height: 100%; background: var(--yt-red); width: 0%; border-radius: 2px; }
         .seek-bar-knob { width: 14px; height: 14px; background: var(--yt-red); border-radius: 50%; position: absolute; top: 50%; transform: translate(-50%, -50%); left: 0%; }
         .time-row { display: flex; align-items: center; justify-content: space-between; }
-        .controls-left { display: flex; align-items: center; gap: 15px; }
-        .time-display { font-size: 13px; color: #fff; }
-        .icon-btn { background: none; border: none; color: #fff; cursor: pointer; }
+        .controls-left { display: flex; align-items: center; gap: 12px; }
+        .time-display { font-size: 12px; color: #fff; }
+        .icon-btn { background: none; border: none; color: #fff; cursor: pointer; padding: 5px; display: flex; align-items: center; }
+        .speed-text { color: white; font-size: 12px; font-weight: bold; margin-left: 2px; }
     </style>
 </head>
 <body>
@@ -130,7 +129,14 @@
             <div class="custom-controls" id="controlBar">
                 <div class="seek-bar-container" onclick="handleSeek(event)"><div class="seek-bar-slider"><div class="seek-bar-progress" id="seekBarProgress"></div><div class="seek-bar-knob" id="seekBarKnob"></div></div></div>
                 <div class="time-row">
-                    <div class="controls-left"><button class="icon-btn" onclick="togglePlay(event)" id="playPauseBtn"><i class="material-icons">play_arrow</i></button><div class="time-display"><span id="currentTime">0:00</span> / <span id="duration">0:00</span></div></div>
+                    <div class="controls-left">
+                        <button class="icon-btn" onclick="togglePlay(event)" id="playPauseBtn"><i class="material-icons">play_arrow</i></button>
+                        <div class="time-display"><span id="currentTime">0:00</span> / <span id="duration">0:00</span></div>
+                        <button class="icon-btn" onclick="changeSpeed(event)" style="margin-left: 10px;">
+                            <i class="material-icons" style="font-size: 20px;">speed</i>
+                            <span id="speedDisplay" class="speed-text">1x</span>
+                        </button>
+                    </div>
                     <button class="icon-btn" onclick="toggleFullScreen(event)"><i class="material-icons">fullscreen</i></button>
                 </div>
             </div>
@@ -158,6 +164,8 @@
     let currentUser = null;
     let player, hideTimeout;
     let currentVideos = [];
+    let currentSpeedIndex = 1;
+    const speeds = [0.5, 1, 1.25, 1.5, 2];
 
     window.onload = () => {
         const isVerified = localStorage.getItem('isAppVerified');
@@ -205,16 +213,16 @@
             const acc = s.val(); list.innerHTML = "";
             
             const subData = [
-                {id: 'et', name: 'Engineering Technology', img: 'https://googleusercontent.com/image_generation_content/0', tag: ['et', 'both', 'all']},
-                {id: 'sft', name: 'Science for Technology', img: 'https://googleusercontent.com/image_generation_content/1', tag: ['sft', 'both', 'all']},
-                {id: 'ict', name: 'Information Technology', img: 'https://googleusercontent.com/image_generation_content/6', tag: ['ict', 'all']}
+                {id: 'et', name: 'Engineering Technology', img: 'et.jpeg', tag: ['et', 'both', 'all']},
+                {id: 'sft', name: 'Science for Technology', img: 'sft.jpeg', tag: ['sft', 'both', 'all']},
+                {id: 'ict', name: 'Information Technology', img: 'ict.jpeg', tag: ['ict', 'all']}
             ];
 
             subData.forEach(sub => {
                 if(sub.tag.includes(acc)) {
                     list.innerHTML += `
                         <div class="subject-card" onclick="openStream('${sub.id}')">
-                            <div class="banner-box"><img src="${sub.img}"></div>
+                            <div class="banner-box"><img src="${sub.img}" onerror="this.src='https://via.placeholder.com/400x160?text=${sub.name}'"></div>
                             <div class="info-box">
                                 <h3>${sub.name}</h3>
                                 <i class="material-icons" style="color:#ddd">arrow_forward_ios</i>
@@ -264,6 +272,8 @@
         if (!player) {
             player = new YT.Player('player', { videoId: vid.id, playerVars: { 'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0, 'playsinline': 1 }, events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } });
         } else { player.loadVideoById(vid.id); }
+        currentSpeedIndex = 1;
+        document.getElementById("speedDisplay").innerText = "1x";
     }
 
     function hidePlayer() { if(player) player.pauseVideo(); document.getElementById("playerSection").style.display = "none"; document.getElementById("videoListContainer").style.display = "block"; }
@@ -273,6 +283,18 @@
         if (e.data === YT.PlayerState.PLAYING) { btn.innerHTML = '<i class="material-icons">pause</i>'; resetTimer(); }
         else { btn.innerHTML = '<i class="material-icons">play_arrow</i>'; showControls(); }
     }
+
+    function changeSpeed(e) {
+        e.stopPropagation();
+        if (player && player.setPlaybackRate) {
+            currentSpeedIndex = (currentSpeedIndex + 1) % speeds.length;
+            const newSpeed = speeds[currentSpeedIndex];
+            player.setPlaybackRate(newSpeed);
+            document.getElementById("speedDisplay").innerText = newSpeed + "x";
+            resetTimer();
+        }
+    }
+
     function handleTap() { const cb = document.getElementById("controlBar"); cb.classList.contains("hidden") ? showControls() : hideControls(); }
     function showControls() { document.getElementById("controlBar").classList.remove("hidden"); resetTimer(); }
     function hideControls() { if (player && player.getPlayerState() === 1) document.getElementById("controlBar").classList.add("hidden"); }
