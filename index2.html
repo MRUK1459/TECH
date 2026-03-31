@@ -138,7 +138,9 @@
             <select id="stdAccess">
                 <option value="et">ET පමණි</option>
                 <option value="sft">SFT පමණි</option>
+                <option value="ict">ICT පමණි</option>
                 <option value="both">ET සහ SFT දෙකම</option>
+                <option value="all">සියල්ල (ET, SFT, ICT)</option>
             </select>
             <button onclick="addStudent()">ලියාපදිංචි කරන්න</button>
         </div>
@@ -154,6 +156,7 @@
             <select id="streamSelect" onchange="loadLessonsList()">
                 <option value="et">ET Stream</option>
                 <option value="sft">SFT Stream</option>
+                <option value="ict">ICT Stream</option>
             </select>
             <div style="display:flex; gap:10px;">
                 <input type="text" id="newLessonInput" placeholder="නව පාඩමේ නම">
@@ -171,6 +174,7 @@
         <div style="display:flex; gap:15px; margin-bottom:25px;">
             <button onclick="viewStorage('et')">ET දත්ත බලන්න</button>
             <button onclick="viewStorage('sft')" style="background:var(--success)">SFT දත්ත බලන්න</button>
+            <button onclick="viewStorage('ict')" style="background:var(--primary)">ICT දත්ත බලන්න</button>
         </div>
         <div id="storageArea" style="font-size: 18px;">ප්‍රභේදයක් තෝරන්න...</div>
     </div>
@@ -210,7 +214,7 @@
         <h3 id="modalUser">Access Control</h3>
         <label>ප්‍රධාන ප්‍රවේශය:</label>
         <select id="modalAccessType" onchange="updateUserType()">
-            <option value="et">ET</option><option value="sft">SFT</option><option value="both">Both</option>
+            <option value="et">ET</option><option value="sft">SFT</option><option value="ict">ICT</option><option value="both">Both</option><option value="all">All</option>
         </select>
         <label>විෂය ධාරාව:</label>
         <select id="modalStream" onchange="loadLessonCheckboxes()"></select>
@@ -291,8 +295,9 @@
     function updateModalStreamOptions(type) {
         const s = document.getElementById('modalStream');
         s.innerHTML = "";
-        if(type==='et'||type==='both') s.innerHTML += `<option value="et">ET</option>`;
-        if(type==='sft'||type==='both') s.innerHTML += `<option value="sft">SFT</option>`;
+        if(type==='et'||type==='both'||type==='all') s.innerHTML += `<option value="et">ET</option>`;
+        if(type==='sft'||type==='both'||type==='all') s.innerHTML += `<option value="sft">SFT</option>`;
+        if(type==='ict'||type==='all') s.innerHTML += `<option value="ict">ICT</option>`;
     }
 
     async function loadLessonCheckboxes() {
