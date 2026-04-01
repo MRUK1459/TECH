@@ -29,7 +29,6 @@
         .screen { display: none; padding: 20px; box-sizing: border-box; min-height: 100vh; }
         .active { display: block; }
 
-        /* --- ANIMATED AVATAR HEADER --- */
         .greeting-container {
             padding: 30px 10px 20px 10px;
             display: flex;
@@ -84,7 +83,6 @@
             color: var(--text-main);
         }
 
-        /* --- BUTTONS & CARDS --- */
         .login-btn { 
             width: 100%; padding: 18px; 
             background: linear-gradient(135deg, var(--primary), var(--primary-light)); 
@@ -108,7 +106,6 @@
             border: 1px solid rgba(107,33,168,0.05);
         }
 
-        /* --- VIDEO PLAYER & SPEED CONTROLS --- */
         .video-box { 
             position: relative; width: 100%; aspect-ratio: 16/9; 
             background: #000; border-radius: 25px; overflow: hidden; 
@@ -131,7 +128,6 @@
         .time-row { display: flex; align-items: center; justify-content: space-between; color: white; }
         .control-btn { background: none; border: none; color: white; cursor: pointer; display: flex; align-items: center; }
 
-        /* Speed Dropdown UI */
         .speed-control-container { position: relative; display: flex; align-items: center; }
         .speed-dropdown {
             position: absolute; bottom: 45px; right: 0; background: rgba(15, 23, 42, 0.95);
@@ -267,11 +263,24 @@
         window.scrollTo(0,0);
     }
 
+    // --- UPDATED MASTER AUTH WITH FIREBASE ---
     function masterAuth() {
-        if (document.getElementById("mUser").value === "ulindu" && document.getElementById("mPass").value === "2008") {
-            localStorage.setItem('isAppVerified', 'true');
-            showScreen('loginScreen');
-        } else alert("වැරදියි!");
+        const enteredUser = document.getElementById("mUser").value.trim();
+        const enteredPass = document.getElementById("mPass").value.trim();
+
+        db.ref('master_settings').once('value', snap => {
+            const data = snap.val();
+            // Default Values if not set in DB
+            const validUser = data ? data.username : "ulindu";
+            const validPass = data ? data.password : "2007";
+
+            if (enteredUser === validUser && enteredPass === validPass) {
+                localStorage.setItem('isAppVerified', 'true');
+                showScreen('loginScreen');
+            } else {
+                alert("වැරදියි! කරුණාකර නිවැරදි තොරතුරු ලබා දෙන්න.");
+            }
+        });
     }
 
     function login() {
