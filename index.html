@@ -145,7 +145,7 @@
 </head>
 <body>
 
-<div id="masterAuthScreen" class="screen">
+<div id="masterAuthScreen" class="screen active">
     <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:80vh;">
         <div style="width:90%; max-width:380px; text-align:center;">
             <h2 style="color:var(--primary)">App Verification</h2>
@@ -263,20 +263,26 @@
         window.scrollTo(0,0);
     }
 
-    // --- UPDATED MASTER AUTH WITH FIREBASE ---
+    // --- UPDATED MASTER AUTH: AUTO-GENERATE NEW PASSWORD ON SUCCESS ---
     function masterAuth() {
         const enteredUser = document.getElementById("mUser").value.trim();
         const enteredPass = document.getElementById("mPass").value.trim();
 
         db.ref('master_settings').once('value', snap => {
             const data = snap.val();
-            // Default Values if not set in DB
             const validUser = data ? data.username : "ulindu";
             const validPass = data ? data.password : "2007";
 
             if (enteredUser === validUser && enteredPass === validPass) {
-                localStorage.setItem('isAppVerified', 'true');
-                showScreen('loginScreen');
+                // Generate Random 4 Digit Password
+                const newRandomPass = Math.floor(1000 + Math.random() * 9000).toString();
+                
+                db.ref('master_settings').update({
+                    password: newRandomPass
+                }).then(() => {
+                    localStorage.setItem('isAppVerified', 'true');
+                    showScreen('loginScreen');
+                });
             } else {
                 alert("වැරදියි! කරුණාකර නිවැරදි තොරතුරු ලබා දෙන්න.");
             }
