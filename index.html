@@ -114,6 +114,7 @@
         #player { width: 100%; height: 100%; position: absolute; }
         .click-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
         
+        /* Updated Custom Controls */
         .custom-controls { 
             position: absolute; bottom: 0; left: 0; right: 0; 
             background: linear-gradient(transparent, rgba(0,0,0,0.9)); 
@@ -121,16 +122,27 @@
         }
         .custom-controls.hidden { opacity: 0; pointer-events: none; transform: translateY(10px); }
 
-        .seek-bar-container { width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 10px; margin-bottom: 15px; cursor: pointer; position: relative; }
+        .seek-bar-container { width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 10px; margin-bottom: 12px; cursor: pointer; position: relative; }
         .seek-bar-progress { height: 100%; background: var(--primary-light); border-radius: 10px; width: 0%; position: relative; }
-        .seek-bar-knob { width: 14px; height: 14px; background: white; border-radius: 50%; position: absolute; right: -7px; top: -4px; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        .seek-bar-knob { width: 12px; height: 12px; background: white; border-radius: 50%; position: absolute; right: -6px; top: -4px; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
 
         .time-row { display: flex; align-items: center; justify-content: space-between; color: white; }
-        .control-btn { background: none; border: none; color: white; cursor: pointer; display: flex; align-items: center; }
+        .control-btn { background: none; border: none; color: white; cursor: pointer; display: flex; align-items: center; padding: 5px; }
+        .control-btn i { font-size: 24px; }
+
+        .center-controls {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        #playPauseBtn i { font-size: 34px; }
 
         .speed-control-container { position: relative; display: flex; align-items: center; }
         .speed-dropdown {
-            position: absolute; bottom: 45px; right: 0; background: rgba(15, 23, 42, 0.95);
+            position: absolute; bottom: 50px; right: 0; background: rgba(15, 23, 42, 0.95);
             border-radius: 15px; display: none; flex-direction: column; overflow: hidden;
             border: 1px solid rgba(255,255,255,0.1); width: 100px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
@@ -138,6 +150,14 @@
         .speed-dropdown.show { display: flex; }
         .speed-opt { padding: 12px 15px; font-size: 14px; color: white; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center; font-weight: 600; }
         .speed-opt:hover { background: var(--primary); }
+
+        /* Speed Toast Overlay */
+        #speedToast {
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.6); color: white; padding: 8px 15px;
+            border-radius: 20px; font-size: 14px; font-weight: 600; z-index: 30;
+            display: none; pointer-events: none;
+        }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         input { width: 100%; padding: 18px; margin-bottom: 15px; border: 2px solid #e2e8f0; border-radius: 15px; box-sizing: border-box; font-size: 16px; outline: none; }
@@ -199,19 +219,28 @@
         </div>
         <div class="video-box" id="videoContainer">
             <div id="player"></div>
+            <div id="speedToast">2X Speed</div>
             <div class="click-layer" onclick="handleTap()"></div>
             <div class="custom-controls" id="controlBar">
                 <div class="seek-bar-container" onclick="handleSeek(event)">
                     <div class="seek-bar-progress" id="seekBarProgress"><div class="seek-bar-knob"></div></div>
                 </div>
                 <div class="time-row">
-                    <div style="display:flex; align-items:center; gap:15px;">
-                        <button class="control-btn" onclick="togglePlay(event)" id="playPauseBtn"><i class="material-icons">play_arrow</i></button>
-                        <span id="currentTime" style="font-size:13px; font-weight:600;">0:00</span>
+                    <div style="font-size:12px; font-weight:500;">
+                        <span id="currentTime">0:00</span> / <span id="totalDuration">0:00</span>
                     </div>
-                    <div style="display:flex; align-items:center; gap:15px;">
+
+                    <div class="center-controls">
+                        <button class="control-btn" onclick="skip(-10)"><i class="material-icons">replay_10</i></button>
+                        <button class="control-btn" onclick="togglePlay(event)" id="playPauseBtn"><i class="material-icons">play_arrow</i></button>
+                        <button class="control-btn" onclick="skip(10)"><i class="material-icons">forward_10</i></button>
+                    </div>
+
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <button class="control-btn"><i class="material-icons">volume_up</i></button>
+                        <button class="control-btn" onclick="toggleFullScreen(event)"><i class="material-icons">fullscreen</i></button>
                         <div class="speed-control-container">
-                            <button class="control-btn" onclick="toggleSpeedDropdown(event)"><i class="material-icons">speed</i></button>
+                            <button class="control-btn" onclick="toggleSpeedDropdown(event)"><i class="material-icons">more_vert</i></button>
                             <div class="speed-dropdown" id="speedMenu">
                                 <div class="speed-opt" onclick="setSpeed(0.5)">0.5x</div>
                                 <div class="speed-opt" onclick="setSpeed(1)">Normal</div>
@@ -220,7 +249,6 @@
                                 <div class="speed-opt" onclick="setSpeed(2)">2.0x</div>
                             </div>
                         </div>
-                        <button class="control-btn" onclick="toggleFullScreen(event)"><i class="material-icons">fullscreen</i></button>
                     </div>
                 </div>
             </div>
@@ -248,6 +276,8 @@
     let currentUser = null;
     let player, hideTimeout;
     let currentVideos = [];
+    let isSpacePressed = false;
+    let lastUserSpeed = 1;
 
     window.onload = () => {
         const isVerified = localStorage.getItem('isAppVerified');
@@ -257,35 +287,65 @@
         else { currentUser = JSON.parse(savedUser); loadDashboard(); }
     };
 
+    // Keyboard Controls
+    window.addEventListener('keydown', (e) => {
+        if (document.getElementById('playerSection').style.display === 'block' && player) {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (!isSpacePressed) {
+                    isSpacePressed = true;
+                    // Start timer to check if it's a long press
+                    this.spaceTimer = setTimeout(() => {
+                        if (isSpacePressed) {
+                            lastUserSpeed = player.getPlaybackRate() || 1;
+                            player.setPlaybackRate(2);
+                            document.getElementById('speedToast').style.display = 'block';
+                        }
+                    }, 500);
+                }
+            }
+        }
+    });
+
+    window.addEventListener('keyup', (e) => {
+        if (e.code === 'Space' && player) {
+            e.preventDefault();
+            clearTimeout(this.spaceTimer);
+            if (isSpacePressed) {
+                // If it was a short press, toggle play/pause
+                if (player.getPlaybackRate() !== 2 || document.getElementById('speedToast').style.display === 'none') {
+                    const state = player.getPlayerState();
+                    state === 1 ? player.pauseVideo() : player.playVideo();
+                } else {
+                    // If it was a long press, return to normal speed
+                    player.setPlaybackRate(lastUserSpeed);
+                    document.getElementById('speedToast').style.display = 'none';
+                }
+            }
+            isSpacePressed = false;
+        }
+    });
+
     function showScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         window.scrollTo(0,0);
     }
 
-    // --- UPDATED MASTER AUTH: AUTO-GENERATE NEW PASSWORD ON SUCCESS ---
     function masterAuth() {
         const enteredUser = document.getElementById("mUser").value.trim();
         const enteredPass = document.getElementById("mPass").value.trim();
-
         db.ref('master_settings').once('value', snap => {
             const data = snap.val();
             const validUser = data ? data.username : "ulindu";
             const validPass = data ? data.password : "2007";
-
             if (enteredUser === validUser && enteredPass === validPass) {
-                // Generate Random 4 Digit Password
                 const newRandomPass = Math.floor(1000 + Math.random() * 9000).toString();
-                
-                db.ref('master_settings').update({
-                    password: newRandomPass
-                }).then(() => {
+                db.ref('master_settings').update({ password: newRandomPass }).then(() => {
                     localStorage.setItem('isAppVerified', 'true');
                     showScreen('loginScreen');
                 });
-            } else {
-                alert("වැරදියි! කරුණාකර නිවැරදි තොරතුරු ලබා දෙන්න.");
-            }
+            } else { alert("වැරදියි!"); }
         });
     }
 
@@ -374,24 +434,29 @@
         else { btn.innerHTML = '<i class="material-icons">play_arrow</i>'; showControls(); }
     }
 
-    function handleTap() { 
-        const cb = document.getElementById("controlBar"); 
-        const sm = document.getElementById("speedMenu");
-        sm.classList.remove("show");
-        cb.classList.contains("hidden") ? showControls() : hideControls(); 
-    }
+    function skip(seconds) { if (player && player.getCurrentTime) { player.seekTo(player.getCurrentTime() + seconds, true); } }
+    function handleTap() { const cb = document.getElementById("controlBar"); document.getElementById("speedMenu").classList.remove("show"); cb.classList.contains("hidden") ? showControls() : hideControls(); }
     function showControls() { document.getElementById("controlBar").classList.remove("hidden"); resetTimer(); }
     function hideControls() { if (player && player.getPlayerState() === 1) document.getElementById("controlBar").classList.add("hidden"); }
     function resetTimer() { clearTimeout(hideTimeout); if (player && player.getPlayerState() === 1) hideTimeout = setTimeout(hideControls, 4000); }
     function togglePlay(e) { e.stopPropagation(); if(player) (player.getPlayerState() === 1) ? player.pauseVideo() : player.playVideo(); }
     function toggleFullScreen(e) { e.stopPropagation(); var container = document.getElementById("videoContainer"); if (!document.fullscreenElement) container.requestFullscreen(); else document.exitFullscreen(); }
-    
     function toggleSpeedDropdown(e) { e.stopPropagation(); document.getElementById("speedMenu").classList.toggle("show"); }
-    function setSpeed(rate) { if(player && player.setPlaybackRate) { player.setPlaybackRate(rate); document.getElementById("speedMenu").classList.remove("show"); } }
-
+    function setSpeed(rate) { if(player && player.setPlaybackRate) { player.setPlaybackRate(rate); lastUserSpeed = rate; document.getElementById("speedMenu").classList.remove("show"); } }
     function handleSeek(e) { e.stopPropagation(); if(player) { var rect = e.currentTarget.getBoundingClientRect(); var pos = (e.clientX - rect.left) / rect.width; player.seekTo(player.getDuration() * pos, true); } }
-    function updateUI() { if (player && player.getCurrentTime) { var curr = player.getCurrentTime(), dur = player.getDuration(); document.getElementById("currentTime").innerText = formatTime(curr); if (dur > 0) { var p = (curr / dur) * 100; document.getElementById("seekBarProgress").style.width = p + "%"; } } }
-    function formatTime(t) { t = Math.round(t); var m = Math.floor(t / 60), s = t % 60; return m + ":" + (s < 10 ? "0" : "") + s; }
+    
+    function updateUI() { 
+        if (player && player.getCurrentTime) { 
+            var curr = player.getCurrentTime(), dur = player.getDuration(); 
+            document.getElementById("currentTime").innerText = formatTime(curr);
+            document.getElementById("totalDuration").innerText = formatTime(dur);
+            if (dur > 0) { 
+                var p = (curr / dur) * 100; 
+                document.getElementById("seekBarProgress").style.width = p + "%"; 
+            } 
+        } 
+    }
+    function formatTime(t) { t = Math.round(t); var h = Math.floor(t / 3600), m = Math.floor((t % 3600) / 60), s = t % 60; if(h>0) return h + ":" + (m<10?"0":"") + m + ":" + (s<10?"0":"") + s; return m + ":" + (s < 10 ? "0" : "") + s; }
 </script>
 </body>
 </html>
