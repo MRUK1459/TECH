@@ -114,7 +114,6 @@
         #player { width: 100%; height: 100%; position: absolute; }
         .click-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
         
-        /* Updated Custom Controls */
         .custom-controls { 
             position: absolute; bottom: 0; left: 0; right: 0; 
             background: linear-gradient(transparent, rgba(0,0,0,0.9)); 
@@ -151,7 +150,6 @@
         .speed-opt { padding: 12px 15px; font-size: 14px; color: white; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center; font-weight: 600; }
         .speed-opt:hover { background: var(--primary); }
 
-        /* Speed Toast Overlay */
         #speedToast {
             position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
             background: rgba(0,0,0,0.6); color: white; padding: 8px 15px;
@@ -287,14 +285,12 @@
         else { currentUser = JSON.parse(savedUser); loadDashboard(); }
     };
 
-    // Keyboard Controls
     window.addEventListener('keydown', (e) => {
         if (document.getElementById('playerSection').style.display === 'block' && player) {
             if (e.code === 'Space') {
                 e.preventDefault();
                 if (!isSpacePressed) {
                     isSpacePressed = true;
-                    // Start timer to check if it's a long press
                     this.spaceTimer = setTimeout(() => {
                         if (isSpacePressed) {
                             lastUserSpeed = player.getPlaybackRate() || 1;
@@ -312,12 +308,10 @@
             e.preventDefault();
             clearTimeout(this.spaceTimer);
             if (isSpacePressed) {
-                // If it was a short press, toggle play/pause
                 if (player.getPlaybackRate() !== 2 || document.getElementById('speedToast').style.display === 'none') {
                     const state = player.getPlayerState();
                     state === 1 ? player.pauseVideo() : player.playVideo();
                 } else {
-                    // If it was a long press, return to normal speed
                     player.setPlaybackRate(lastUserSpeed);
                     document.getElementById('speedToast').style.display = 'none';
                 }
@@ -366,12 +360,28 @@
     }
 
     function loadDashboard() {
+        if (!currentUser) return;
+
+        // 1. Check for deletion in real-time
+        db.ref(`students/${currentUser.id}`).on('value', snap => {
+            if (!snap.exists()) {
+                // If user is deleted from database, logout immediately
+                alert("ඔබේ ගිණුම අක්‍රීය කර ඇත!");
+                localStorage.removeItem('studyUser');
+                currentUser = null;
+                location.reload(); // Refresh to go back to login screen
+            }
+        });
+
         document.getElementById("helloMsg").innerText = "Hello, " + currentUser.name + "!";
         document.getElementById("userInitial").innerText = currentUser.name.charAt(0).toUpperCase();
         showScreen('mainMenuScreen');
+        
         const list = document.getElementById("subjectList");
         db.ref(`students/${currentUser.id}/access`).on('value', s => {
-            const acc = s.val(); list.innerHTML = "";
+            const acc = s.val(); 
+            if(!acc) return;
+            list.innerHTML = "";
             const subData = [
                 {id: 'et', name: 'Engineering Technology', img: 'et.jpeg', tag: ['et', 'both', 'all']},
                 {id: 'sft', name: 'Science for Technology', img: 'sft.jpeg', tag: ['sft', 'both', 'all']},
