@@ -287,6 +287,7 @@
 
     window.addEventListener('keydown', (e) => {
         if (document.getElementById('playerSection').style.display === 'block' && player) {
+            // Space bar functionality (2X Speed)
             if (e.code === 'Space') {
                 e.preventDefault();
                 if (!isSpacePressed) {
@@ -299,6 +300,32 @@
                         }
                     }, 500);
                 }
+            }
+            
+            // Arrow Keys functionality
+            switch(e.code) {
+                case 'ArrowRight':
+                    e.preventDefault();
+                    skip(10);
+                    showControls();
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    skip(-10);
+                    showControls();
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    let currentVolUp = player.getVolume();
+                    if (currentVolUp < 100) player.setVolume(currentVolUp + 5);
+                    showControls();
+                    break;
+                case 'ArrowDown':
+                    e.preventDefault();
+                    let currentVolDown = player.getVolume();
+                    if (currentVolDown > 0) player.setVolume(currentVolDown - 5);
+                    showControls();
+                    break;
             }
         }
     });
@@ -362,14 +389,12 @@
     function loadDashboard() {
         if (!currentUser) return;
 
-        // 1. Check for deletion in real-time
         db.ref(`students/${currentUser.id}`).on('value', snap => {
             if (!snap.exists()) {
-                // If user is deleted from database, logout immediately
                 alert("ඔබේ ගිණුම අක්‍රීය කර ඇත!");
                 localStorage.removeItem('studyUser');
                 currentUser = null;
-                location.reload(); // Refresh to go back to login screen
+                location.reload();
             }
         });
 
