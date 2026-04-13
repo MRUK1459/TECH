@@ -29,58 +29,11 @@
         .screen { display: none; padding: 20px; box-sizing: border-box; min-height: 100vh; }
         .active { display: block; }
 
-        .greeting-container {
-            padding: 30px 10px 20px 10px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            animation: fadeIn 0.8s ease-out;
-        }
-
+        .greeting-container { padding: 30px 10px 20px 10px; display: flex; align-items: center; gap: 15px; }
         .user-avatar {
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 26px;
-            font-weight: 800;
-            position: relative;
-            z-index: 1;
-            background: linear-gradient(135deg, #4c1d95, #a855f7, #1e40af, #4c1d95);
-            background-size: 300% 300%;
-            animation: avatarColorShift 8s infinite ease-in-out, avatarPulse 2s infinite ease-in-out;
+            width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 26px; font-weight: 800; background: linear-gradient(135deg, #4c1d95, #a855f7);
             box-shadow: 0 0 20px rgba(107, 33, 168, 0.4);
-        }
-
-        .user-avatar::after {
-            content: '';
-            position: absolute;
-            top: -5px; left: -5px; right: -5px; bottom: -5px;
-            border-radius: 50%;
-            background: inherit;
-            filter: blur(10px);
-            opacity: 0.6;
-            z-index: -1;
-        }
-
-        @keyframes avatarColorShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        @keyframes avatarPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .greeting-text h2 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--text-main);
         }
 
         .login-btn { 
@@ -88,24 +41,21 @@
             background: linear-gradient(135deg, var(--primary), var(--primary-light)); 
             color: white; border: none; border-radius: 18px; 
             font-weight: 700; font-size: 16px; cursor: pointer;
-            box-shadow: 0 10px 20px rgba(107, 33, 168, 0.2);
         }
 
         .subject-card { 
             background: var(--card-bg); border-radius: 28px; overflow: hidden;
-            box-shadow: var(--shadow); margin-bottom: 25px; border: 1px solid rgba(107,33,168,0.05);
+            box-shadow: var(--shadow); margin-bottom: 25px;
         }
-        .banner-box { width: 100%; height: 160px; background: #eee; }
-        .banner-box img { width: 100%; height: 100%; object-fit: cover; }
         .info-box { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
 
         .card { 
             background: var(--card-bg); padding: 22px; border-radius: 20px; 
             box-shadow: var(--shadow); margin-bottom: 15px; 
             display: flex; align-items: center; justify-content: space-between; 
-            border: 1px solid rgba(107,33,168,0.05);
         }
 
+        /* --- නව දියුණු වීඩියෝ ප්ලේයර් එකේ මෝස්තර (Styles) --- */
         .video-box { 
             position: relative; width: 100%; aspect-ratio: 16/9; 
             background: #000; border-radius: 25px; overflow: hidden; 
@@ -130,29 +80,16 @@
         .control-btn i { font-size: 24px; }
 
         .center-controls {
-            display: flex;
-            align-items: center;
-            gap: 25px;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+            display: flex; align-items: center; gap: 25px;
+            position: absolute; left: 50%; transform: translateX(-50%);
         }
         #playPauseBtn i { font-size: 34px; }
 
-        /* YT Style Indicators */
         #playerOverlayInfo {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: rgba(0,0,0,0.6); color: white; padding: 15px 25px;
             border-radius: 10px; font-size: 18px; font-weight: 700; z-index: 35;
             display: none; pointer-events: none; text-align: center;
-            animation: popFade 0.5s ease-out;
-        }
-
-        @keyframes popFade {
-            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-            20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-            80% { opacity: 1; }
-            100% { opacity: 0; }
         }
 
         .speed-control-container { position: relative; display: flex; align-items: center; }
@@ -163,7 +100,7 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
         .speed-dropdown.show { display: flex; }
-        .speed-opt { padding: 12px 15px; font-size: 14px; color: white; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center; font-weight: 600; }
+        .speed-opt { padding: 12px 15px; font-size: 14px; color: white; cursor: pointer; text-align: center; font-weight: 600; }
         .speed-opt:hover { background: var(--primary); }
 
         #speedToast {
@@ -173,8 +110,7 @@
             display: none; pointer-events: none;
         }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        input { width: 100%; padding: 18px; margin-bottom: 15px; border: 2px solid #e2e8f0; border-radius: 15px; box-sizing: border-box; font-size: 16px; outline: none; }
+        input { width: 100%; padding: 18px; margin-bottom: 15px; border: 2px solid #e2e8f0; border-radius: 15px; box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -204,16 +140,30 @@
 <div id="mainMenuScreen" class="screen">
     <div class="greeting-container">
         <div class="user-avatar" id="userInitial">U</div>
-        <div class="greeting-text">
-            <h2 id="helloMsg">Hello!</h2>
-        </div>
+        <div class="greeting-text"><h2 id="helloMsg">Hello!</h2></div>
     </div>
-    <p style="padding-left:10px; font-weight:700; color:var(--text-sub); font-size:12px; text-transform:uppercase; letter-spacing:1px;">විෂයයන් තෝරන්න</p>
     <div id="subjectList"></div>
 </div>
 
-<div id="topicsScreen" class="screen">
+<div id="categoriesScreen" class="screen">
     <div onclick="showScreen('mainMenuScreen')" style="display:flex; align-items:center; gap:10px; padding:15px 0; color:var(--primary); font-weight:700; cursor:pointer;">
+        <i class="material-icons">arrow_back</i> <span id="catSubTitle">Back</span>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr; gap:15px; margin-top:10px;">
+        <div class="card" onclick="openCategory('Monthly')" style="background:#fdf2f8; justify-content:center; cursor:pointer;">
+            <i class="material-icons" style="margin-right:10px; color:#db2777;">calendar_month</i> <b>Monthly</b>
+        </div>
+        <div class="card" onclick="openCategory('Papers')" style="background:#f0fdf4; justify-content:center; cursor:pointer;">
+            <i class="material-icons" style="margin-right:10px; color:#16a34a;">description</i> <b>Papers</b>
+        </div>
+        <div class="card" onclick="openCategory('Lessons')" style="background:#eff6ff; justify-content:center; cursor:pointer;">
+            <i class="material-icons" style="margin-right:10px; color:#2563eb;">menu_book</i> <b>Lessons</b>
+        </div>
+    </div>
+</div>
+
+<div id="topicsScreen" class="screen">
+    <div onclick="showScreen('categoriesScreen')" style="display:flex; align-items:center; gap:10px; padding:15px 0; color:var(--primary); font-weight:700; cursor:pointer;">
         <i class="material-icons">arrow_back</i> <span id="subTitle">Back</span>
     </div>
     <div id="topicsList"></div>
@@ -236,6 +186,7 @@
             <div id="speedToast">2X Speed</div>
             <div id="playerOverlayInfo"></div>
             <div class="click-layer" onclick="handleTap()"></div>
+            
             <div class="custom-controls" id="controlBar">
                 <div class="seek-bar-container" onclick="handleSeek(event)">
                     <div class="seek-bar-progress" id="seekBarProgress"><div class="seek-bar-knob"></div></div>
@@ -278,21 +229,13 @@
 <script>
     const firebaseConfig = {
         apiKey: "AIzaSyApozqbVy4DFupEKafsU_oeC9RUAq1ljuU",
-        authDomain: "tech-590c8.firebaseapp.com",
         databaseURL: "https://tech-590c8-default-rtdb.firebaseio.com",
-        projectId: "tech-590c8",
-        storageBucket: "tech-590c8.firebasestorage.app",
-        messagingSenderId: "379663698743",
-        appId: "1:379663698743:web:7fba89d9f7b231ca6828b2"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let currentUser = null;
-    let player, hideTimeout, infoTimeout;
-    let currentVideos = [];
-    let isSpacePressed = false;
-    let lastUserSpeed = 1;
+    let currentUser = null, player, hideTimeout, infoTimeout;
+    let currentVideos = [], isSpacePressed = false, lastUserSpeed = 1, activeStream = "";
 
     window.onload = () => {
         const isVerified = localStorage.getItem('isAppVerified');
@@ -302,14 +245,12 @@
         else { currentUser = JSON.parse(savedUser); loadDashboard(); }
     };
 
-    function showOverlayInfo(text) {
-        const el = document.getElementById('playerOverlayInfo');
-        el.innerText = text;
-        el.style.display = 'block';
-        clearTimeout(infoTimeout);
-        infoTimeout = setTimeout(() => { el.style.display = 'none'; }, 500);
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
     }
 
+    /* --- Keyboard Controls (Space 2X Speed / Arrow Seek) --- */
     window.addEventListener('keydown', (e) => {
         if (document.getElementById('playerSection').style.display === 'block' && player) {
             if (e.code === 'Space') {
@@ -327,20 +268,6 @@
             }
             if(e.code === 'ArrowRight') { e.preventDefault(); skip(5); showOverlayInfo('5s »'); showControls(); }
             if(e.code === 'ArrowLeft') { e.preventDefault(); skip(-5); showOverlayInfo('« 5s'); showControls(); }
-            if(e.code === 'ArrowUp') { 
-                e.preventDefault(); 
-                let v = Math.min(player.getVolume() + 5, 100);
-                player.setVolume(v);
-                showOverlayInfo(v + '%');
-                showControls();
-            }
-            if(e.code === 'ArrowDown') { 
-                e.preventDefault(); 
-                let v = Math.max(player.getVolume() - 5, 0);
-                player.setVolume(v);
-                showOverlayInfo(v + '%');
-                showControls();
-            }
         }
     });
 
@@ -350,8 +277,7 @@
             clearTimeout(this.spaceTimer);
             if (isSpacePressed) {
                 if (player.getPlaybackRate() !== 2 || document.getElementById('speedToast').style.display === 'none') {
-                    const state = player.getPlayerState();
-                    state === 1 ? player.pauseVideo() : player.playVideo();
+                    togglePlay(e);
                 } else {
                     player.setPlaybackRate(lastUserSpeed);
                     document.getElementById('speedToast').style.display = 'none';
@@ -361,20 +287,20 @@
         }
     });
 
-    function showScreen(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        window.scrollTo(0,0);
+    function showOverlayInfo(text) {
+        const el = document.getElementById('playerOverlayInfo');
+        el.innerText = text; el.style.display = 'block';
+        clearTimeout(infoTimeout);
+        infoTimeout = setTimeout(() => { el.style.display = 'none'; }, 500);
     }
 
+    /* --- Firebase Logic --- */
     function masterAuth() {
-        const enteredUser = document.getElementById("mUser").value.trim();
-        const enteredPass = document.getElementById("mPass").value.trim();
+        const u = document.getElementById("mUser").value.trim();
+        const p = document.getElementById("mPass").value.trim();
         db.ref('master_settings').once('value', snap => {
             const data = snap.val();
-            const validUser = data ? data.username : "ulindu";
-            const validPass = data ? data.password : "2007";
-            if (enteredUser === validUser && enteredPass === validPass) {
+            if (u === data.username && p === data.password) {
                 const newRandomPass = Math.floor(1000 + Math.random() * 9000).toString();
                 db.ref('master_settings').update({ password: newRandomPass }).then(() => {
                     localStorage.setItem('isAppVerified', 'true');
@@ -396,63 +322,56 @@
                     loadDashboard(); return;
                 }
             }
-            alert("නම හෝ මුරපදය වැරදියි!");
+            alert("වැරදියි!");
         });
     }
 
     function loadDashboard() {
-        if (!currentUser) return;
-        db.ref(`students/${currentUser.id}`).on('value', snap => {
-            if (!snap.exists()) {
-                alert("ඔබේ ගිණුම අක්‍රීය කර ඇත!");
-                localStorage.removeItem('studyUser');
-                currentUser = null;
-                location.reload();
-            }
-        });
         document.getElementById("helloMsg").innerText = "Hello, " + currentUser.name + "!";
         document.getElementById("userInitial").innerText = currentUser.name.charAt(0).toUpperCase();
         showScreen('mainMenuScreen');
-        const list = document.getElementById("subjectList");
         db.ref(`students/${currentUser.id}/access`).on('value', s => {
             const acc = s.val(); 
-            if(!acc) return;
+            const list = document.getElementById("subjectList");
             list.innerHTML = "";
             const subData = [
-                {id: 'et', name: 'Engineering Technology', img: 'et.jpeg', tag: ['et', 'both', 'all']},
-                {id: 'sft', name: 'Science for Technology', img: 'sft.jpeg', tag: ['sft', 'both', 'all']},
-                {id: 'ict', name: 'Information Technology', img: 'ict.jpeg', tag: ['ict', 'all']}
+                {id: 'et', name: 'Engineering Technology', tag: ['et', 'both', 'all']},
+                {id: 'sft', name: 'Science for Technology', tag: ['sft', 'both', 'all']},
+                {id: 'ict', name: 'Information Technology', tag: ['ict', 'all']}
             ];
             subData.forEach(sub => {
                 if(sub.tag.includes(acc)) {
-                    list.innerHTML += `<div class="subject-card" onclick="openStream('${sub.id}')"><div class="banner-box"><img src="${sub.img}" onerror="this.src='https://via.placeholder.com/400x150?text=${sub.name}'"></div><div class="info-box"><h3 style="margin:0">${sub.name}</h3><i class="material-icons" style="color:var(--primary)">arrow_forward</i></div></div>`;
+                    list.innerHTML += `<div class="subject-card" onclick="openStream('${sub.id}')"><div class="info-box"><h3>${sub.name}</h3><i class="material-icons">arrow_forward</i></div></div>`;
                 }
             });
         });
     }
 
-    // --- යාවත්කාලීන කරන ලද openStream ශ්‍රිතය ---
     function openStream(type) {
-        document.getElementById("subTitle").innerText = type.toUpperCase();
+        activeStream = type;
+        document.getElementById("catSubTitle").innerText = type.toUpperCase();
+        showScreen('categoriesScreen');
+    }
+
+    function openCategory(catName) {
+        document.getElementById("subTitle").innerText = `${activeStream.toUpperCase()} - ${catName}`;
         showScreen('topicsScreen');
-        db.ref(`students/${currentUser.id}/allowedLessons/${type}`).on('value', s => {
+        db.ref(`students/${currentUser.id}/allowedLessons/${activeStream}`).on('value', s => {
             const allowed = s.val() || {};
-            db.ref(`studyData/${type}`).once('value', ds => {
+            db.ref(`studyData/${activeStream}/${catName}`).once('value', ds => {
                 const lessons = ds.val() || {};
                 const container = document.getElementById("topicsList");
                 container.innerHTML = "";
                 for(let name in lessons) {
                     if(allowed[name]) {
-                        // වීඩියෝ තිබුණත් නැතත් පාඩම පෙන්වයි. JSON දත්ත පහසුවෙන් යැවීමට Stringify කර ඇත.
                         const videoData = lessons[name].videos ? JSON.stringify(lessons[name].videos).replace(/"/g, '&quot;') : "null";
-                        container.innerHTML += `<div class="card" onclick="showVideoList('${name}', ${videoData})"><span>${name}</span> <i class="material-icons" style="color:var(--primary)">play_circle_filled</i></div>`;
+                        container.innerHTML += `<div class="card" onclick="showVideoList('${name}', ${videoData})"><span>${name}</span> <i class="material-icons">play_circle_filled</i></div>`;
                     }
                 }
             });
         });
     }
 
-    // --- යාවත්කාලීන කරන ලද showVideoList ශ්‍රිතය ---
     function showVideoList(title, videos) {
         document.getElementById("lessonTitle").innerText = title;
         showScreen('playerScreen');
@@ -460,21 +379,11 @@
         document.getElementById("playerSection").style.display = "none";
         const list = document.getElementById("multiVideoList");
         list.innerHTML = "";
-
-        // වීඩියෝ තිබේදැයි පරීක්ෂා කරයි
-        if (videos && Object.keys(videos).length > 0) {
+        if (videos) {
             currentVideos = Object.values(videos);
             currentVideos.forEach((v, index) => {
-                list.innerHTML += `<div class="card" onclick="playThisVideo(${index})"><span>${v.title}</span> <i class="material-icons" style="color:var(--primary)">videocam</i></div>`;
+                list.innerHTML += `<div class="card" onclick="playThisVideo(${index})"><span>${v.title}</span> <i class="material-icons">videocam</i></div>`;
             });
-        } else {
-            // වීඩියෝ නොමැති නම් මෙම පණිවිඩය පෙන්වයි
-            currentVideos = [];
-            list.innerHTML = `
-                <div style="text-align:center; padding:40px 20px; color:#f72585; font-weight:600;">
-                    <i class="material-icons" style="font-size:48px; margin-bottom:10px;">info</i><br>
-                    මෙම ෆෝල්ඩරය සඳහා දැනට Recording ඇතුළත් කර නොමැත.
-                </div>`;
         }
     }
 
@@ -489,6 +398,8 @@
     }
 
     function hidePlayer() { if(player) player.pauseVideo(); document.getElementById("playerSection").style.display = "none"; document.getElementById("videoListContainer").style.display = "block"; }
+
+    /* --- Player Logic (The Advanced Controls) --- */
     function onPlayerReady() { setInterval(updateUI, 500); }
     function onPlayerStateChange(e) {
         const btn = document.getElementById("playPauseBtn");
@@ -496,30 +407,27 @@
         else { btn.innerHTML = '<i class="material-icons">play_arrow</i>'; showControls(); }
     }
 
-    function skip(seconds) { if (player && player.getCurrentTime) { player.seekTo(player.getCurrentTime() + seconds, true); } }
-    function toggleVolume(e) { e.stopPropagation(); if(player) { if(player.isMuted()) { player.unMute(); document.getElementById('volIcon').innerText = 'volume_up'; showOverlayInfo(player.getVolume() + '%'); } else { player.mute(); document.getElementById('volIcon').innerText = 'volume_off'; showOverlayInfo('Muted'); } } }
+    function skip(seconds) { if (player) player.seekTo(player.getCurrentTime() + seconds, true); }
+    function togglePlay(e) { if(e) e.stopPropagation(); if(player) (player.getPlayerState() === 1) ? player.pauseVideo() : player.playVideo(); }
     function handleTap() { const cb = document.getElementById("controlBar"); document.getElementById("speedMenu").classList.remove("show"); cb.classList.contains("hidden") ? showControls() : hideControls(); }
     function showControls() { document.getElementById("controlBar").classList.remove("hidden"); resetTimer(); }
     function hideControls() { if (player && player.getPlayerState() === 1) document.getElementById("controlBar").classList.add("hidden"); }
     function resetTimer() { clearTimeout(hideTimeout); if (player && player.getPlayerState() === 1) hideTimeout = setTimeout(hideControls, 4000); }
-    function togglePlay(e) { e.stopPropagation(); if(player) (player.getPlayerState() === 1) ? player.pauseVideo() : player.playVideo(); }
-    function toggleFullScreen(e) { e.stopPropagation(); var container = document.getElementById("videoContainer"); if (!document.fullscreenElement) container.requestFullscreen(); else document.exitFullscreen(); }
+    function toggleVolume(e) { e.stopPropagation(); if(player.isMuted()) { player.unMute(); document.getElementById('volIcon').innerText = 'volume_up'; } else { player.mute(); document.getElementById('volIcon').innerText = 'volume_off'; } }
+    function toggleFullScreen(e) { e.stopPropagation(); var el = document.getElementById("videoContainer"); if (!document.fullscreenElement) el.requestFullscreen(); else document.exitFullscreen(); }
     function toggleSpeedDropdown(e) { e.stopPropagation(); document.getElementById("speedMenu").classList.toggle("show"); }
-    function setSpeed(rate) { if(player && player.setPlaybackRate) { player.setPlaybackRate(rate); lastUserSpeed = rate; document.getElementById("speedMenu").classList.remove("show"); } }
-    function handleSeek(e) { e.stopPropagation(); if(player) { var rect = e.currentTarget.getBoundingClientRect(); var pos = (e.clientX - rect.left) / rect.width; player.seekTo(player.getDuration() * pos, true); } }
+    function setSpeed(rate) { player.setPlaybackRate(rate); lastUserSpeed = rate; document.getElementById("speedMenu").classList.remove("show"); }
+    function handleSeek(e) { e.stopPropagation(); var rect = e.currentTarget.getBoundingClientRect(); var pos = (e.clientX - rect.left) / rect.width; player.seekTo(player.getDuration() * pos, true); }
     
     function updateUI() { 
         if (player && player.getCurrentTime) { 
             var curr = player.getCurrentTime(), dur = player.getDuration(); 
             document.getElementById("currentTime").innerText = formatTime(curr);
             document.getElementById("totalDuration").innerText = formatTime(dur);
-            if (dur > 0) { 
-                var p = (curr / dur) * 100; 
-                document.getElementById("seekBarProgress").style.width = p + "%"; 
-            } 
+            if (dur > 0) document.getElementById("seekBarProgress").style.width = (curr / dur) * 100 + "%"; 
         } 
     }
-    function formatTime(t) { t = Math.round(t); var h = Math.floor(t / 3600), m = Math.floor((t % 3600) / 60), s = t % 60; if(h>0) return h + ":" + (m<10?"0":"") + m + ":" + (s<10?"0":"") + s; return m + ":" + (s < 10 ? "0" : "") + s; }
+    function formatTime(t) { var m = Math.floor(t / 60), s = Math.floor(t % 60); return m + ":" + (s < 10 ? "0" : "") + s; }
 </script>
 </body>
 </html>
