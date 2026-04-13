@@ -302,19 +302,16 @@
         else { currentUser = JSON.parse(savedUser); loadDashboard(); }
     };
 
-    // --- YT Visual Overlay Function ---
     function showOverlayInfo(text) {
         const el = document.getElementById('playerOverlayInfo');
         el.innerText = text;
         el.style.display = 'block';
         clearTimeout(infoTimeout);
-        // Remove element after animation ends
         infoTimeout = setTimeout(() => { el.style.display = 'none'; }, 500);
     }
 
     window.addEventListener('keydown', (e) => {
         if (document.getElementById('playerSection').style.display === 'block' && player) {
-            // Space Bar
             if (e.code === 'Space') {
                 e.preventDefault();
                 if (!isSpacePressed) {
@@ -328,8 +325,6 @@
                     }, 500);
                 }
             }
-            
-            // Arrows
             if(e.code === 'ArrowRight') { e.preventDefault(); skip(5); showOverlayInfo('5s »'); showControls(); }
             if(e.code === 'ArrowLeft') { e.preventDefault(); skip(-5); showOverlayInfo('« 5s'); showControls(); }
             if(e.code === 'ArrowUp') { 
@@ -436,35 +431,51 @@
         });
     }
 
+    // --- යාවත්කාලීන කරන ලද openStream ශ්‍රිතය ---
     function openStream(type) {
         document.getElementById("subTitle").innerText = type.toUpperCase();
         showScreen('topicsScreen');
         db.ref(`students/${currentUser.id}/allowedLessons/${type}`).on('value', s => {
             const allowed = s.val() || {};
             db.ref(`studyData/${type}`).once('value', ds => {
-                const lessons = ds.val();
+                const lessons = ds.val() || {};
                 const container = document.getElementById("topicsList");
                 container.innerHTML = "";
                 for(let name in lessons) {
                     if(allowed[name]) {
-                        container.innerHTML += `<div class="card" onclick="showVideoList('${name}', ${JSON.stringify(lessons[name].videos).replace(/"/g, '&quot;')})"><span>${name}</span> <i class="material-icons" style="color:var(--primary)">play_circle_filled</i></div>`;
+                        // වීඩියෝ තිබුණත් නැතත් පාඩම පෙන්වයි. JSON දත්ත පහසුවෙන් යැවීමට Stringify කර ඇත.
+                        const videoData = lessons[name].videos ? JSON.stringify(lessons[name].videos).replace(/"/g, '&quot;') : "null";
+                        container.innerHTML += `<div class="card" onclick="showVideoList('${name}', ${videoData})"><span>${name}</span> <i class="material-icons" style="color:var(--primary)">play_circle_filled</i></div>`;
                     }
                 }
             });
         });
     }
 
+    // --- යාවත්කාලීන කරන ලද showVideoList ශ්‍රිතය ---
     function showVideoList(title, videos) {
         document.getElementById("lessonTitle").innerText = title;
-        currentVideos = Object.values(videos);
         showScreen('playerScreen');
         document.getElementById("videoListContainer").style.display = "block";
         document.getElementById("playerSection").style.display = "none";
         const list = document.getElementById("multiVideoList");
         list.innerHTML = "";
-        currentVideos.forEach((v, index) => {
-            list.innerHTML += `<div class="card" onclick="playThisVideo(${index})"><span>${v.title}</span> <i class="material-icons" style="color:var(--primary)">videocam</i></div>`;
-        });
+
+        // වීඩියෝ තිබේදැයි පරීක්ෂා කරයි
+        if (videos && Object.keys(videos).length > 0) {
+            currentVideos = Object.values(videos);
+            currentVideos.forEach((v, index) => {
+                list.innerHTML += `<div class="card" onclick="playThisVideo(${index})"><span>${v.title}</span> <i class="material-icons" style="color:var(--primary)">videocam</i></div>`;
+            });
+        } else {
+            // වීඩියෝ නොමැති නම් මෙම පණිවිඩය පෙන්වයි
+            currentVideos = [];
+            list.innerHTML = `
+                <div style="text-align:center; padding:40px 20px; color:#f72585; font-weight:600;">
+                    <i class="material-icons" style="font-size:48px; margin-bottom:10px;">info</i><br>
+                    මෙම ෆෝල්ඩරය සඳහා දැනට Recording ඇතුළත් කර නොමැත.
+                </div>`;
+        }
     }
 
     function playThisVideo(index) {
@@ -485,28 +496,8 @@
         else { btn.innerHTML = '<i class="material-icons">play_arrow</i>'; showControls(); }
     }
 
-    // --- Control Functions ---
-    function skip(seconds) { 
-        if (player && player.getCurrentTime) { 
-            player.seekTo(player.getCurrentTime() + seconds, true); 
-        } 
-    }
-
-    function toggleVolume(e) {
-        e.stopPropagation();
-        if(player) {
-            if(player.isMuted()) {
-                player.unMute();
-                document.getElementById('volIcon').innerText = 'volume_up';
-                showOverlayInfo(player.getVolume() + '%');
-            } else {
-                player.mute();
-                document.getElementById('volIcon').innerText = 'volume_off';
-                showOverlayInfo('Muted');
-            }
-        }
-    }
-
+    function skip(seconds) { if (player && player.getCurrentTime) { player.seekTo(player.getCurrentTime() + seconds, true); } }
+    function toggleVolume(e) { e.stopPropagation(); if(player) { if(player.isMuted()) { player.unMute(); document.getElementById('volIcon').innerText = 'volume_up'; showOverlayInfo(player.getVolume() + '%'); } else { player.mute(); document.getElementById('volIcon').innerText = 'volume_off'; showOverlayInfo('Muted'); } } }
     function handleTap() { const cb = document.getElementById("controlBar"); document.getElementById("speedMenu").classList.remove("show"); cb.classList.contains("hidden") ? showControls() : hideControls(); }
     function showControls() { document.getElementById("controlBar").classList.remove("hidden"); resetTimer(); }
     function hideControls() { if (player && player.getPlayerState() === 1) document.getElementById("controlBar").classList.add("hidden"); }
