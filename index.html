@@ -55,7 +55,6 @@
             display: flex; align-items: center; justify-content: space-between; 
         }
 
-        /* --- නව දියුණු වීඩියෝ ප්ලේයර් එකේ මෝස්තර (Styles) --- */
         .video-box { 
             position: relative; width: 100%; aspect-ratio: 16/9; 
             background: #000; border-radius: 25px; overflow: hidden; 
@@ -250,7 +249,6 @@
         document.getElementById(id).classList.add('active');
     }
 
-    /* --- Keyboard Controls (Space 2X Speed / Arrow Seek) --- */
     window.addEventListener('keydown', (e) => {
         if (document.getElementById('playerSection').style.display === 'block' && player) {
             if (e.code === 'Space') {
@@ -294,7 +292,6 @@
         infoTimeout = setTimeout(() => { el.style.display = 'none'; }, 500);
     }
 
-    /* --- Firebase Logic --- */
     function masterAuth() {
         const u = document.getElementById("mUser").value.trim();
         const p = document.getElementById("mPass").value.trim();
@@ -399,7 +396,6 @@
 
     function hidePlayer() { if(player) player.pauseVideo(); document.getElementById("playerSection").style.display = "none"; document.getElementById("videoListContainer").style.display = "block"; }
 
-    /* --- Player Logic (The Advanced Controls) --- */
     function onPlayerReady() { setInterval(updateUI, 500); }
     function onPlayerStateChange(e) {
         const btn = document.getElementById("playPauseBtn");
@@ -427,7 +423,14 @@
             if (dur > 0) document.getElementById("seekBarProgress").style.width = (curr / dur) * 100 + "%"; 
         } 
     }
-    function formatTime(t) { var m = Math.floor(t / 60), s = Math.floor(t % 60); return m + ":" + (s < 10 ? "0" : "") + s; }
+
+    // පැය පෙන්වන ආකාරයට සකස් කරන ලද ශ්‍රිතය
+    function formatTime(t) { 
+        t = Math.round(t); 
+        var h = Math.floor(t / 3600), m = Math.floor((t % 3600) / 60), s = t % 60; 
+        if(h > 0) return h + ":" + (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s; 
+        return m + ":" + (s < 10 ? "0" : "") + s; 
+    }
 </script>
 </body>
 </html>
