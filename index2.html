@@ -271,13 +271,11 @@
         document.getElementById(id).classList.add('active-page');
     }
 
-    // --- UPDATED MASTER ACCESS FUNCTIONS ---
     function loadMasterAccessData() {
         db.ref('master_settings').on('value', snap => {
             const data = snap.val();
             const displayDiv = document.getElementById('currentMasterData');
             if(data) {
-                // වත්මන් පාස්වර්ඩ් එක කැපී පෙනෙන ලෙස පෙන්වීම
                 displayDiv.innerHTML = `USER: <span style="color:#4361ee">${data.username}</span> | PASS: <span style="color:#f72585">${data.password}</span>`;
                 document.getElementById('newMasterUser').value = data.username;
                 document.getElementById('newMasterPass').value = data.password;
@@ -287,7 +285,6 @@
         });
     }
 
-    // අහඹු ලෙස අංකයක් ජෙනරේට් කිරීම
     function generateAdminPass() {
         const rand = Math.floor(1000 + Math.random() * 9000).toString();
         document.getElementById('newMasterPass').value = rand;
@@ -303,7 +300,6 @@
         }
     }
 
-    // --- පවතින අනෙකුත් සියලුම ශ්‍රිත (JavaScript Functions) එලෙසම පවතී ---
     function toggleStudentSec(t) {
         document.getElementById('secStdAdd').style.display = t==='add'?'block':'none';
         document.getElementById('secStdManage').style.display = t==='manage'?'block':'none';
@@ -420,6 +416,7 @@
         alert("Upload සාර්ථකයි!");
     }
 
+    // --- ඔබ ඉල්ලා සිටි වෙනස්කම පමනක් සිදුකරන ලද ශ්‍රිතයන් ---
     function viewStorage(s) {
         db.ref(`studyData/${s}`).on('value', snap => {
             const data = snap.val();
@@ -435,8 +432,14 @@
                             <i class="material-icons" style="color:red; cursor:pointer;" onclick="deleteVideo(event, '${s}','${l}','${vk}')">delete</i>
                         </div>`;
                     }
+                } else {
+                    // වීඩියෝ නැති විට පෙන්වන පණිවිඩය
+                    vHtml = `<p style="color:#f72585;">මෙම ෆෝල්ඩරය සදහා දැනට Recording ඇතුලත් කර නොමැත.</p>`;
                 }
-                const safeId = l.replace(/\s+/g, '_').replace(/[^\w]/g, '');
+                
+                // සිංහල මාතෘකා වලදී ID එක පටලවා නොගැනීමට Base64 ID එකක් භාවිතා කිරීම
+                const safeId = "lesson_" + btoa(unescape(encodeURIComponent(l))).replace(/=/g, "");
+
                 area.innerHTML += `
                 <div class="card" style="padding: 0; overflow: hidden; margin-bottom: 20px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; padding: 25px; cursor: pointer; background: #fff;" onclick="toggleAccordion('${safeId}')">
@@ -444,7 +447,7 @@
                     </div>
                     <div id="content-${safeId}" class="accordion-content" style="display:none; padding: 25px; background:#fafafa;">
                         <button style="width:auto; padding:10px; background:var(--danger); margin-bottom:15px;" onclick="deleteLesson('${s}','${l}')">පාඩම මකන්න</button>
-                        ${vHtml || 'වීඩියෝ නැත'}
+                        ${vHtml}
                     </div>
                 </div>`;
             }
@@ -454,9 +457,17 @@
     function toggleAccordion(id) {
         const content = document.getElementById('content-' + id);
         const icon = document.getElementById('icon-' + id);
+        const allContents = document.querySelectorAll('.accordion-content');
+        const allIcons = document.querySelectorAll('.material-icons[id^="icon-"]');
         const isOpen = content.style.display === 'block';
-        document.querySelectorAll('.accordion-content').forEach(el => el.style.display = 'none');
-        if (!isOpen) { content.style.display = 'block'; icon.innerText = 'expand_less'; } else { icon.innerText = 'expand_more'; }
+
+        allContents.forEach(el => el.style.display = 'none');
+        allIcons.forEach(ic => ic.innerText = 'expand_more');
+
+        if (!isOpen) { 
+            content.style.display = 'block'; 
+            icon.innerText = 'expand_less'; 
+        }
     }
 
     async function deleteVideo(event, s, l, vk) { event.stopPropagation(); if(confirm("මකන්නද?")) await db.ref(`studyData/${s}/${l}/videos/${vk}`).remove(); }
