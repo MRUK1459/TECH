@@ -30,7 +30,6 @@
 
         .greeting-container { padding: 30px 10px 20px 10px; display: flex; align-items: center; gap: 15px; }
 
-        /* RGB Heartbeat Avatar */
         @keyframes rgb-pulse {
             0% { box-shadow: 0 0 15px #dc2626; transform: scale(1); background: #dc2626; }
             33% { box-shadow: 0 0 25px #991b1b; transform: scale(1.08); background: #991b1b; }
@@ -53,7 +52,6 @@
         }
         .login-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(220, 38, 38, 0.4); }
 
-        /* Subject Cards */
         #subjectList { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
 
         .subject-card { 
@@ -65,14 +63,11 @@
 
         .subject-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 20px 35px rgba(220, 38, 38, 0.25); border: 1px solid var(--primary-light); }
         .subject-image { width: 100%; aspect-ratio: 16 / 7; object-fit: cover; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.5s; }
-        .subject-card:hover .subject-image { transform: scale(1.05); }
 
         .info-box { padding: 20px; display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); }
         .info-box h3 { margin: 0; font-size: 18px; color: var(--text-main); }
         .info-box i { transition: 0.3s; color: var(--primary); }
-        .subject-card:hover .info-box i { transform: translateX(5px); color: var(--primary-light); }
 
-        /* List Cards */
         .card { 
             background: var(--card-bg); padding: 22px; border-radius: 20px; 
             box-shadow: var(--shadow); margin-bottom: 15px; 
@@ -81,7 +76,6 @@
         }
         .card:hover { transform: scale(1.02); background: #262626; border-color: var(--primary); }
 
-        /* VIDEO PLAYER FIX */
         .video-box { 
             position: relative; width: 100%; aspect-ratio: 16/9; 
             background: #000; border-radius: 25px; overflow: hidden; 
@@ -200,7 +194,7 @@
                     <div class="seek-bar-progress" id="seekBarProgress"><div class="seek-bar-knob"></div></div>
                 </div>
                 <div class="time-row">
-                    <div style="font-size:12px;"><span id="currentTime">0:00</span> / <span id="totalDuration">0:00</span></div>
+                    <div style="font-size:12px;"><span id="currentTime">0:00:00</span> / <span id="totalDuration">0:00:00</span></div>
                     <div class="center-controls">
                         <button class="control-btn" onclick="skip(-5)"><i class="material-icons">replay_5</i></button>
                         <button class="control-btn" onclick="togglePlay(event)" id="playPauseBtn"><i class="material-icons">play_arrow</i></button>
@@ -214,6 +208,7 @@
                             <div class="speed-dropdown" id="speedMenu">
                                 <div class="speed-opt" onclick="setSpeed(0.5)">0.5x</div>
                                 <div class="speed-opt" onclick="setSpeed(1)">Normal</div>
+                                <div class="speed-opt" onclick="setSpeed(1.25)">1.25x</div>
                                 <div class="speed-opt" onclick="setSpeed(1.5)">1.5x</div>
                                 <div class="speed-opt" onclick="setSpeed(2)">2.0x</div>
                             </div>
@@ -249,7 +244,6 @@
         document.getElementById(id).classList.add('active');
     }
 
-    // --- ORIGINAL LOGIC RETAINED ---
     window.addEventListener('keydown', (e) => {
         if (document.getElementById('playerSection').style.display === 'block' && player) {
             if (e.code === 'Space') {
@@ -404,6 +398,7 @@
     function toggleSpeedDropdown(e) { e.stopPropagation(); document.getElementById("speedMenu").classList.toggle("show"); }
     function setSpeed(rate) { player.setPlaybackRate(rate); document.getElementById("speedMenu").classList.remove("show"); }
     function handleSeek(e) { e.stopPropagation(); var rect = e.currentTarget.getBoundingClientRect(); var pos = (e.clientX - rect.left) / rect.width; player.seekTo(player.getDuration() * pos, true); }
+    
     function updateUI() { 
         if (player && player.getCurrentTime) { 
             var curr = player.getCurrentTime(), dur = player.getDuration(); 
@@ -412,11 +407,16 @@
             if (dur > 0) document.getElementById("seekBarProgress").style.width = (curr / dur) * 100 + "%"; 
         } 
     }
+
+    // UPDATED FORMAT TIME TO HH:MM:SS
     function formatTime(t) { 
         t = Math.round(t); 
-        var m = Math.floor(t / 60), s = t % 60; 
-        return m + ":" + (s < 10 ? "0" : "") + s; 
+        var h = Math.floor(t / 3600);
+        var m = Math.floor((t % 3600) / 60);
+        var s = t % 60; 
+        return (h > 0 ? h + ":" : "") + (m < 10 && h > 0 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s; 
     }
+
     function hidePlayer() { if(player) player.pauseVideo(); document.getElementById("playerSection").style.display = "none"; document.getElementById("videoListContainer").style.display = "block"; }
 </script>
 </body>
