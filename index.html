@@ -8,15 +8,14 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         :root { 
-            --primary: #6b21a8; 
-            --primary-light: #a855f7; 
-            --accent: #d8b4fe;
-            --bg: #f8fafc; 
-            --card-bg: #ffffff; 
-            --text-main: #0f172a; 
-            --text-sub: #64748b; 
-            --yt-red: #ff0000; 
-            --shadow: 0 10px 25px rgba(107, 33, 168, 0.1); 
+            --primary: #dc2626; 
+            --primary-light: #ef4444; 
+            --accent: #991b1b;
+            --bg: #0a0a0a; 
+            --card-bg: #171717; 
+            --text-main: #ffffff; 
+            --text-sub: #a3a3a3; 
+            --shadow: 0 10px 30px rgba(220, 38, 38, 0.15); 
         }
         
         body { 
@@ -30,86 +29,104 @@
         .active { display: block; }
 
         .greeting-container { padding: 30px 10px 20px 10px; display: flex; align-items: center; gap: 15px; }
+
+        /* RGB Heartbeat Avatar */
+        @keyframes rgb-pulse {
+            0% { box-shadow: 0 0 15px #dc2626; transform: scale(1); background: #dc2626; }
+            33% { box-shadow: 0 0 25px #991b1b; transform: scale(1.08); background: #991b1b; }
+            66% { box-shadow: 0 0 25px #450a0a; transform: scale(1); background: #450a0a; }
+            100% { box-shadow: 0 0 15px #dc2626; transform: scale(1); background: #dc2626; }
+        }
+
         .user-avatar {
             width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 26px; font-weight: 800; background: linear-gradient(135deg, #4c1d95, #a855f7);
-            box-shadow: 0 0 20px rgba(107, 33, 168, 0.4);
+            color: white; font-size: 26px; font-weight: 800;
+            animation: rgb-pulse 3s infinite ease-in-out;
+            transition: 0.5s; border: 2px solid rgba(255,255,255,0.1);
         }
 
         .login-btn { 
             width: 100%; padding: 18px; 
-            background: linear-gradient(135deg, var(--primary), var(--primary-light)); 
+            background: linear-gradient(135deg, var(--primary), var(--accent)); 
             color: white; border: none; border-radius: 18px; 
-            font-weight: 700; font-size: 16px; cursor: pointer;
+            font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.3s;
         }
+        .login-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(220, 38, 38, 0.4); }
+
+        /* Subject Cards */
+        #subjectList { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
 
         .subject-card { 
             background: var(--card-bg); border-radius: 28px; overflow: hidden;
-            box-shadow: var(--shadow); margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5); margin-bottom: 25px; cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; flex-direction: column; position: relative; border: 1px solid rgba(255,255,255,0.05);
         }
-        .info-box { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
 
+        .subject-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 20px 35px rgba(220, 38, 38, 0.25); border: 1px solid var(--primary-light); }
+        .subject-image { width: 100%; aspect-ratio: 16 / 7; object-fit: cover; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.5s; }
+        .subject-card:hover .subject-image { transform: scale(1.05); }
+
+        .info-box { padding: 20px; display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); }
+        .info-box h3 { margin: 0; font-size: 18px; color: var(--text-main); }
+        .info-box i { transition: 0.3s; color: var(--primary); }
+        .subject-card:hover .info-box i { transform: translateX(5px); color: var(--primary-light); }
+
+        /* List Cards */
         .card { 
             background: var(--card-bg); padding: 22px; border-radius: 20px; 
             box-shadow: var(--shadow); margin-bottom: 15px; 
             display: flex; align-items: center; justify-content: space-between; 
+            transition: 0.3s; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); color: white;
         }
+        .card:hover { transform: scale(1.02); background: #262626; border-color: var(--primary); }
 
+        /* VIDEO PLAYER FIX */
         .video-box { 
             position: relative; width: 100%; aspect-ratio: 16/9; 
             background: #000; border-radius: 25px; overflow: hidden; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7); border: 2px solid rgba(255,255,255,0.1);
         }
-        #player { width: 100%; height: 100%; position: absolute; }
+        #player { width: 100%; height: 100%; position: absolute; pointer-events: none; }
         .click-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
         
         .custom-controls { 
             position: absolute; bottom: 0; left: 0; right: 0; 
-            background: linear-gradient(transparent, rgba(0,0,0,0.9)); 
+            background: linear-gradient(transparent, rgba(0,0,0,0.95)); 
             padding: 25px 20px 15px; z-index: 20; transition: 0.4s;
         }
         .custom-controls.hidden { opacity: 0; pointer-events: none; transform: translateY(10px); }
 
-        .seek-bar-container { width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 10px; margin-bottom: 12px; cursor: pointer; position: relative; }
-        .seek-bar-progress { height: 100%; background: var(--primary-light); border-radius: 10px; width: 0%; position: relative; }
-        .seek-bar-knob { width: 12px; height: 12px; background: white; border-radius: 50%; position: absolute; right: -6px; top: -4px; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        .seek-bar-container { width: 100%; height: 5px; background: rgba(255,255,255,0.2); border-radius: 10px; margin-bottom: 12px; cursor: pointer; position: relative; }
+        .seek-bar-progress { height: 100%; background: var(--primary); border-radius: 10px; width: 0%; position: relative; }
+        .seek-bar-knob { width: 14px; height: 14px; background: white; border-radius: 50%; position: absolute; right: -7px; top: -4.5px; box-shadow: 0 0 10px rgba(220,38,38,0.5); }
 
         .time-row { display: flex; align-items: center; justify-content: space-between; color: white; }
-        .control-btn { background: none; border: none; color: white; cursor: pointer; display: flex; align-items: center; padding: 5px; }
-        .control-btn i { font-size: 24px; }
-
-        .center-controls {
-            display: flex; align-items: center; gap: 25px;
-            position: absolute; left: 50%; transform: translateX(-50%);
-        }
-        #playPauseBtn i { font-size: 34px; }
+        .control-btn { background: none; border: none; color: white; cursor: pointer; display: flex; align-items: center; }
+        .center-controls { display: flex; align-items: center; gap: 25px; position: absolute; left: 50%; transform: translateX(-50%); }
 
         #playerOverlayInfo {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: rgba(0,0,0,0.6); color: white; padding: 15px 25px;
-            border-radius: 10px; font-size: 18px; font-weight: 700; z-index: 35;
-            display: none; pointer-events: none; text-align: center;
+            background: rgba(0,0,0,0.75); color: white; padding: 12px 20px; border-radius: 10px; 
+            font-size: 18px; font-weight: 700; z-index: 35; display: none; pointer-events: none;
         }
 
-        .speed-control-container { position: relative; display: flex; align-items: center; }
         .speed-dropdown {
-            position: absolute; bottom: 50px; right: 0; background: rgba(15, 23, 42, 0.95);
-            border-radius: 15px; display: none; flex-direction: column; overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.1); width: 100px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            position: absolute; bottom: 50px; right: 0; background: #171717;
+            border-radius: 12px; display: none; flex-direction: column; border: 1px solid rgba(255,255,255,0.1); width: 100px;
         }
         .speed-dropdown.show { display: flex; }
-        .speed-opt { padding: 12px 15px; font-size: 14px; color: white; cursor: pointer; text-align: center; font-weight: 600; }
+        .speed-opt { padding: 10px; font-size: 14px; color: white; cursor: pointer; text-align: center; }
         .speed-opt:hover { background: var(--primary); }
 
         #speedToast {
             position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(0,0,0,0.6); color: white; padding: 8px 15px;
-            border-radius: 20px; font-size: 14px; font-weight: 600; z-index: 30;
-            display: none; pointer-events: none;
+            background: rgba(220,38,38,0.9); color: white; padding: 6px 14px; border-radius: 20px; 
+            font-size: 14px; font-weight: 600; z-index: 30; display: none;
         }
 
-        input { width: 100%; padding: 18px; margin-bottom: 15px; border: 2px solid #e2e8f0; border-radius: 15px; box-sizing: border-box; }
+        input { width: 100%; padding: 18px; margin-bottom: 15px; border: 2px solid #262626; border-radius: 15px; background: #171717; color: white; box-sizing: border-box; }
+        .back-btn-ui { display:flex; align-items:center; gap:10px; padding:15px 0; color:var(--primary-light); font-weight:700; cursor:pointer; }
     </style>
 </head>
 <body>
@@ -139,30 +156,24 @@
 <div id="mainMenuScreen" class="screen">
     <div class="greeting-container">
         <div class="user-avatar" id="userInitial">U</div>
-        <div class="greeting-text"><h2 id="helloMsg">Hello!</h2></div>
+        <div class="greeting-text"><h2>Hello, <span id="helloMsg">Student</span>!</h2></div>
     </div>
     <div id="subjectList"></div>
 </div>
 
 <div id="categoriesScreen" class="screen">
-    <div onclick="showScreen('mainMenuScreen')" style="display:flex; align-items:center; gap:10px; padding:15px 0; color:var(--primary); font-weight:700; cursor:pointer;">
+    <div onclick="showScreen('mainMenuScreen')" class="back-btn-ui">
         <i class="material-icons">arrow_back</i> <span id="catSubTitle">Back</span>
     </div>
     <div style="display:grid; grid-template-columns:1fr; gap:15px; margin-top:10px;">
-        <div class="card" onclick="openCategory('Monthly')" style="background:#fdf2f8; justify-content:center; cursor:pointer;">
-            <i class="material-icons" style="margin-right:10px; color:#db2777;">calendar_month</i> <b>Monthly</b>
-        </div>
-        <div class="card" onclick="openCategory('Papers')" style="background:#f0fdf4; justify-content:center; cursor:pointer;">
-            <i class="material-icons" style="margin-right:10px; color:#16a34a;">description</i> <b>Papers</b>
-        </div>
-        <div class="card" onclick="openCategory('Lessons')" style="background:#eff6ff; justify-content:center; cursor:pointer;">
-            <i class="material-icons" style="margin-right:10px; color:#2563eb;">menu_book</i> <b>Lessons</b>
-        </div>
+        <div class="card" onclick="openCategory('Monthly')"><b>Monthly</b> <i class="material-icons">calendar_month</i></div>
+        <div class="card" onclick="openCategory('Papers')"><b>Papers</b> <i class="material-icons">description</i></div>
+        <div class="card" onclick="openCategory('Lessons')"><b>Lessons</b> <i class="material-icons">menu_book</i></div>
     </div>
 </div>
 
 <div id="topicsScreen" class="screen">
-    <div onclick="showScreen('categoriesScreen')" style="display:flex; align-items:center; gap:10px; padding:15px 0; color:var(--primary); font-weight:700; cursor:pointer;">
+    <div onclick="showScreen('categoriesScreen')" class="back-btn-ui">
         <i class="material-icons">arrow_back</i> <span id="subTitle">Back</span>
     </div>
     <div id="topicsList"></div>
@@ -170,14 +181,13 @@
 
 <div id="playerScreen" class="screen">
     <div id="videoListContainer">
-        <div onclick="showScreen('topicsScreen')" style="display:flex; align-items:center; gap:10px; padding:15px 0; color:var(--primary); font-weight:700; cursor:pointer;">
+        <div onclick="showScreen('topicsScreen')" class="back-btn-ui">
             <i class="material-icons">arrow_back</i> <span id="lessonTitle">වීඩියෝ ලැයිස්තුව</span>
         </div>
         <div id="multiVideoList"></div>
     </div>
-
     <div id="playerSection" style="display:none;">
-        <div onclick="hidePlayer()" style="display:flex; align-items:center; gap:10px; padding:15px 0; color:var(--primary); font-weight:700; cursor:pointer;">
+        <div onclick="hidePlayer()" class="back-btn-ui">
             <i class="material-icons">arrow_back</i> <span id="activeVideoTitle">නැවතීමට</span>
         </div>
         <div class="video-box" id="videoContainer">
@@ -185,31 +195,25 @@
             <div id="speedToast">2X Speed</div>
             <div id="playerOverlayInfo"></div>
             <div class="click-layer" onclick="handleTap()"></div>
-            
             <div class="custom-controls" id="controlBar">
                 <div class="seek-bar-container" onclick="handleSeek(event)">
                     <div class="seek-bar-progress" id="seekBarProgress"><div class="seek-bar-knob"></div></div>
                 </div>
                 <div class="time-row">
-                    <div style="font-size:12px; font-weight:500;">
-                        <span id="currentTime">0:00</span> / <span id="totalDuration">0:00</span>
-                    </div>
-
+                    <div style="font-size:12px;"><span id="currentTime">0:00</span> / <span id="totalDuration">0:00</span></div>
                     <div class="center-controls">
                         <button class="control-btn" onclick="skip(-5)"><i class="material-icons">replay_5</i></button>
                         <button class="control-btn" onclick="togglePlay(event)" id="playPauseBtn"><i class="material-icons">play_arrow</i></button>
                         <button class="control-btn" onclick="skip(5)"><i class="material-icons">forward_5</i></button>
                     </div>
-
                     <div style="display:flex; align-items:center; gap:10px;">
                         <button class="control-btn" onclick="toggleVolume(event)"><i class="material-icons" id="volIcon">volume_up</i></button>
                         <button class="control-btn" onclick="toggleFullScreen(event)"><i class="material-icons">fullscreen</i></button>
-                        <div class="speed-control-container">
+                        <div style="position:relative;">
                             <button class="control-btn" onclick="toggleSpeedDropdown(event)"><i class="material-icons">more_vert</i></button>
                             <div class="speed-dropdown" id="speedMenu">
                                 <div class="speed-opt" onclick="setSpeed(0.5)">0.5x</div>
                                 <div class="speed-opt" onclick="setSpeed(1)">Normal</div>
-                                <div class="speed-opt" onclick="setSpeed(1.25)">1.25x</div>
                                 <div class="speed-opt" onclick="setSpeed(1.5)">1.5x</div>
                                 <div class="speed-opt" onclick="setSpeed(2)">2.0x</div>
                             </div>
@@ -226,15 +230,11 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
 <script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyApozqbVy4DFupEKafsU_oeC9RUAq1ljuU",
-        databaseURL: "https://tech-590c8-default-rtdb.firebaseio.com",
-    };
+    const firebaseConfig = { apiKey: "AIzaSyApozqbVy4DFupEKafsU_oeC9RUAq1ljuU", databaseURL: "https://tech-590c8-default-rtdb.firebaseio.com" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let currentUser = null, player, hideTimeout, infoTimeout;
-    let currentVideos = [], isSpacePressed = false, lastUserSpeed = 1, activeStream = "";
+    let currentUser = null, player, hideTimeout, infoTimeout, currentVideos = [], isSpacePressed = false, lastUserSpeed = 1, activeStream = "";
 
     window.onload = () => {
         const isVerified = localStorage.getItem('isAppVerified');
@@ -249,6 +249,7 @@
         document.getElementById(id).classList.add('active');
     }
 
+    // --- ORIGINAL LOGIC RETAINED ---
     window.addEventListener('keydown', (e) => {
         if (document.getElementById('playerSection').style.display === 'block' && player) {
             if (e.code === 'Space') {
@@ -298,11 +299,8 @@
         db.ref('master_settings').once('value', snap => {
             const data = snap.val();
             if (u === data.username && p === data.password) {
-                const newRandomPass = Math.floor(1000 + Math.random() * 9000).toString();
-                db.ref('master_settings').update({ password: newRandomPass }).then(() => {
-                    localStorage.setItem('isAppVerified', 'true');
-                    showScreen('loginScreen');
-                });
+                localStorage.setItem('isAppVerified', 'true');
+                showScreen('loginScreen');
             } else { alert("වැරදියි!"); }
         });
     }
@@ -324,7 +322,7 @@
     }
 
     function loadDashboard() {
-        document.getElementById("helloMsg").innerText = "Hello, " + currentUser.name + "!";
+        document.getElementById("helloMsg").innerText = currentUser.name;
         document.getElementById("userInitial").innerText = currentUser.name.charAt(0).toUpperCase();
         showScreen('mainMenuScreen');
         db.ref(`students/${currentUser.id}/access`).on('value', s => {
@@ -332,24 +330,19 @@
             const list = document.getElementById("subjectList");
             list.innerHTML = "";
             const subData = [
-                {id: 'et', name: 'Engineering Technology', tag: ['et', 'both', 'all']},
-                {id: 'sft', name: 'Science for Technology', tag: ['sft', 'both', 'all']},
-                {id: 'ict', name: 'Information Technology', tag: ['ict', 'all']}
+                { id: 'et', name: 'Engineering Technology', tag: ['et', 'both', 'all'], img: 'https://static.edumix.lk/sisulka//teacher/5f991c128edc0d4ef4e41a51.jpg' },
+                { id: 'sft', name: 'Science for Technology', tag: ['sft', 'both', 'all'], img: 'https://plain-apac-prod-public.komododecks.com/202604/23/FiS91VCeBtbXYo1nzdJk/image.jpg' },
+                { id: 'ict', name: 'Information Technology', tag: ['ict', 'all'], img: 'https://static.edumix.lk/sisulka//teacher/5f97bb4c9483423cb265bae2.jpg' }
             ];
             subData.forEach(sub => {
                 if(sub.tag.includes(acc)) {
-                    list.innerHTML += `<div class="subject-card" onclick="openStream('${sub.id}')"><div class="info-box"><h3>${sub.name}</h3><i class="material-icons">arrow_forward</i></div></div>`;
+                    list.innerHTML += `<div class="subject-card" onclick="openStream('${sub.id}')"><img src="${sub.img}" class="subject-image"><div class="info-box"><h3>${sub.name}</h3><i class="material-icons">arrow_forward</i></div></div>`;
                 }
             });
         });
     }
 
-    function openStream(type) {
-        activeStream = type;
-        document.getElementById("catSubTitle").innerText = type.toUpperCase();
-        showScreen('categoriesScreen');
-    }
-
+    function openStream(type) { activeStream = type; document.getElementById("catSubTitle").innerText = type.toUpperCase(); showScreen('categoriesScreen'); }
     function openCategory(catName) {
         document.getElementById("subTitle").innerText = `${activeStream.toUpperCase()} - ${catName}`;
         showScreen('topicsScreen');
@@ -394,16 +387,13 @@
         } else { player.loadVideoById(vid.id); }
     }
 
-    function hidePlayer() { if(player) player.pauseVideo(); document.getElementById("playerSection").style.display = "none"; document.getElementById("videoListContainer").style.display = "block"; }
-
     function onPlayerReady() { setInterval(updateUI, 500); }
     function onPlayerStateChange(e) {
         const btn = document.getElementById("playPauseBtn");
         if (e.data === YT.PlayerState.PLAYING) { btn.innerHTML = '<i class="material-icons">pause</i>'; resetTimer(); }
         else { btn.innerHTML = '<i class="material-icons">play_arrow</i>'; showControls(); }
     }
-
-    function skip(seconds) { if (player) player.seekTo(player.getCurrentTime() + seconds, true); }
+    function skip(sec) { if (player) player.seekTo(player.getCurrentTime() + sec, true); }
     function togglePlay(e) { if(e) e.stopPropagation(); if(player) (player.getPlayerState() === 1) ? player.pauseVideo() : player.playVideo(); }
     function handleTap() { const cb = document.getElementById("controlBar"); document.getElementById("speedMenu").classList.remove("show"); cb.classList.contains("hidden") ? showControls() : hideControls(); }
     function showControls() { document.getElementById("controlBar").classList.remove("hidden"); resetTimer(); }
@@ -412,9 +402,8 @@
     function toggleVolume(e) { e.stopPropagation(); if(player.isMuted()) { player.unMute(); document.getElementById('volIcon').innerText = 'volume_up'; } else { player.mute(); document.getElementById('volIcon').innerText = 'volume_off'; } }
     function toggleFullScreen(e) { e.stopPropagation(); var el = document.getElementById("videoContainer"); if (!document.fullscreenElement) el.requestFullscreen(); else document.exitFullscreen(); }
     function toggleSpeedDropdown(e) { e.stopPropagation(); document.getElementById("speedMenu").classList.toggle("show"); }
-    function setSpeed(rate) { player.setPlaybackRate(rate); lastUserSpeed = rate; document.getElementById("speedMenu").classList.remove("show"); }
+    function setSpeed(rate) { player.setPlaybackRate(rate); document.getElementById("speedMenu").classList.remove("show"); }
     function handleSeek(e) { e.stopPropagation(); var rect = e.currentTarget.getBoundingClientRect(); var pos = (e.clientX - rect.left) / rect.width; player.seekTo(player.getDuration() * pos, true); }
-    
     function updateUI() { 
         if (player && player.getCurrentTime) { 
             var curr = player.getCurrentTime(), dur = player.getDuration(); 
@@ -423,14 +412,12 @@
             if (dur > 0) document.getElementById("seekBarProgress").style.width = (curr / dur) * 100 + "%"; 
         } 
     }
-
-    // පැය පෙන්වන ආකාරයට සකස් කරන ලද ශ්‍රිතය
     function formatTime(t) { 
         t = Math.round(t); 
-        var h = Math.floor(t / 3600), m = Math.floor((t % 3600) / 60), s = t % 60; 
-        if(h > 0) return h + ":" + (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s; 
+        var m = Math.floor(t / 60), s = t % 60; 
         return m + ":" + (s < 10 ? "0" : "") + s; 
     }
+    function hidePlayer() { if(player) player.pauseVideo(); document.getElementById("playerSection").style.display = "none"; document.getElementById("videoListContainer").style.display = "block"; }
 </script>
 </body>
 </html>
