@@ -123,9 +123,7 @@
         .back-btn-ui { display:flex; align-items:center; gap:10px; padding:15px 0; color:var(--primary-light); font-weight:700; cursor:pointer; }
     </style>
 </head>
-<body>
-
-<div id="masterAuthScreen" class="screen active">
+<body oncontextmenu="return false;"> <div id="masterAuthScreen" class="screen active">
     <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:80vh;">
         <div style="width:90%; max-width:380px; text-align:center;">
             <h2 style="color:var(--primary)">App Verification</h2>
@@ -243,6 +241,13 @@
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
     }
+
+    // Security Overrides: This part disables shortcuts at the top level
+    document.onkeydown = function(e) {
+        if (e.keyCode == 123) return false; // F12
+        if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) return false;
+        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; // View Source
+    };
 
     window.addEventListener('keydown', (e) => {
         if (document.getElementById('playerSection').style.display === 'block' && player) {
@@ -408,7 +413,6 @@
         } 
     }
 
-    // UPDATED FORMAT TIME TO HH:MM:SS
     function formatTime(t) { 
         t = Math.round(t); 
         var h = Math.floor(t / 3600);
@@ -418,6 +422,9 @@
     }
 
     function hidePlayer() { if(player) player.pauseVideo(); document.getElementById("playerSection").style.display = "none"; document.getElementById("videoListContainer").style.display = "block"; }
+
+    // Hardcore event blocker
+    window.addEventListener('contextmenu', function (e) { e.preventDefault(); }, false);
 </script>
 </body>
 </html>
