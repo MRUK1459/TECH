@@ -115,6 +115,10 @@
             <div class="nav-card" onclick="showPage('studentPage')"><i class="material-icons">groups</i><h3>ශිෂ්‍යයන්<br>කළමනාකරණය</h3></div>
             <div class="nav-card" onclick="showPage('viewPage')"><i class="material-icons">analytics</i><h3>දත්ත පිරික්සුම සහ<br>මකා දැමීම</h3></div>
             <div class="nav-card" onclick="openSpgMain()"><i class="material-icons">psychology</i><h3>Smart Paper<br>(SPG කොටස)</h3></div>
+            <div class="nav-card" onclick="showPage('linkTrackPage')" style="border: 2px dashed var(--danger);">
+                <i class="material-icons" style="color:var(--danger)">track_changes</i>
+                <h3>Link Track<br>(Live Sync)</h3>
+            </div>
         </div>
 
         <div class="card" style="border-top: 5px solid var(--danger); margin-top: 40px;">
@@ -142,6 +146,23 @@
             <div style="display:flex; gap:10px;">
                 <button style="background:#5f6368; flex: 1;" onclick="generateAdminPass()">අහඹු ලෙස සාදන්න</button>
                 <button style="flex: 2;" onclick="updateMasterAccess()">දත්ත සුරකින්න</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="linkTrackPage" class="page">
+        <button class="back-btn" onclick="showPage('homeScreen')"><i class="material-icons">arrow_back</i> ආපසු</button>
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3>Live Link Tracker</h3>
+                <button class="btn-sm" style="background:var(--danger)" onclick="clearTracks()">Clear All</button>
+            </div>
+            <p style="font-size:14px; color:#666;">Python App එක මගින් Grab කරගන්නා වීඩියෝ මෙහි සජීවීව දිස්වේ.</p>
+            <div style="overflow-x:auto;">
+                <table>
+                    <thead><tr style="color:var(--primary)"><th>Video Name & Link</th><th style="text-align:right">Action</th></tr></thead>
+                    <tbody id="trackTableBody"></tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -290,11 +311,41 @@
     let editingUserKey = "";
     let activeSpgType = "";
 
+    // --- NAVIGATION ---
     function showPage(id) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
         document.getElementById(id).classList.add('active-page');
+        if(id === 'linkTrackPage') loadLiveTracks();
     }
 
+    // --- LINK TRACK LOGIC (NEW) ---
+    function loadLiveTracks() {
+        db.ref('link_tracks').on('value', snap => {
+            const data = snap.val();
+            const container = document.getElementById('trackTableBody');
+            container.innerHTML = "";
+            if(!data) { container.innerHTML = "<tr><td colspan='2'>දත්ත කිසිවක් නැත.</td></tr>"; return; }
+            
+            Object.keys(data).reverse().forEach(k => {
+                const item = data[k];
+                container.innerHTML += `
+                    <tr>
+                        <td>
+                            <b style="color:var(--text-main)">${item.title}</b><br>
+                            <small style="color:blue; word-break:break-all;">${item.url}</small>
+                        </td>
+                        <td style="text-align:right">
+                            <button class="btn-sm" style="width:auto !important; padding:8px 15px !important;" onclick="navigator.clipboard.writeText('${item.url}'); alert('ලින්ක් එක කොපි විය!')">Copy</button>
+                            <button class="btn-sm" style="width:auto !important; background:red; padding:8px 15px !important;" onclick="db.ref('link_tracks/${k}').remove()">Delete</button>
+                        </td>
+                    </tr>`;
+            });
+        });
+    }
+
+    async function clearTracks() { if(confirm("සියලුම දත්ත මකන්නද?")) db.ref('link_tracks').remove(); }
+
+    // --- MASTER ACCESS ---
     function loadMasterAccessData() {
         db.ref('master_settings').on('value', snap => {
             const data = snap.val();
@@ -322,6 +373,7 @@
         }
     }
 
+    // --- STUDENT MANAGEMENT ---
     function toggleStudentSec(t) {
         document.getElementById('secStdAdd').style.display = t==='add'?'block':'none';
         document.getElementById('secStdManage').style.display = t==='manage'?'block':'none';
@@ -353,6 +405,7 @@
         });
     }
 
+    // --- ACCESS MODAL ---
     function openAccessModal(key, name, acc) {
         editingUserKey = key;
         document.getElementById('modalUser').innerText = name;
@@ -375,11 +428,9 @@
         if(!stream) return;
         const listDiv = document.getElementById("checkboxArea");
         listDiv.innerHTML = "පෙරමින්...";
-        
         const cats = ['Monthly', 'Papers', 'Lessons'];
         const uSnap = await db.ref(`students/${editingUserKey}/allowedLessons/${stream}`).once('value');
         const allowed = uSnap.val() || {};
-        
         let html = "";
         for(let cat of cats) {
             const lSnap = await db.ref(`studyData/${stream}/${cat}`).once('value');
@@ -411,6 +462,7 @@
     function closeModal() { document.getElementById('accessModal').style.display='none'; }
     function deleteStudent(k) { if(confirm("මෙම ශිෂ්‍යයා ඉවත් කරන්නද?")) db.ref(`students/${k}`).remove(); }
 
+    // --- CONTENT UPLOAD ---
     async function createNewFolder(cat) {
         const s = document.getElementById('streamSelect').value;
         const inputId = cat === 'Monthly' ? 'newMonthlyInput' : (cat === 'Papers' ? 'newPapersInput' : 'newLessonInput');
@@ -442,7 +494,6 @@
         const l = document.getElementById('lessonSelect').value;
         const lines = document.getElementById('bulkData').value.split('\n');
         if(!l) return alert("කරුණාකර ෆෝල්ඩරයක් තෝරන්න!");
-        
         let title = "";
         for(let line of lines) {
             line = line.trim(); if(!line) continue;
@@ -455,6 +506,7 @@
         alert("Upload සාර්ථකයි!");
     }
 
+    // --- STORAGE VIEW ---
     function viewStorage(s) {
         const area = document.getElementById('storageArea');
         area.innerHTML = `
@@ -508,6 +560,7 @@
     function toggleAccordion(id) {
         const content = document.getElementById('content-' + id);
         const icon = document.getElementById('icon-' + id);
+        if(!content) return;
         const isOpen = content.style.display === 'block';
         content.style.display = isOpen ? 'none' : 'block';
         icon.innerText = isOpen ? 'expand_more' : 'expand_less';
@@ -516,6 +569,7 @@
     async function deleteVideo(event, s, c, l, vk) { event.stopPropagation(); if(confirm("මකන්නද?")) await db.ref(`studyData/${s}/${c}/${l}/videos/${vk}`).remove(); }
     async function deleteFolder(s, c, l) { if(confirm("සම්පූර්ණ පාඩම මකන්නද?")) await db.ref(`studyData/${s}/${c}/${l}`).remove(); }
 
+    // --- SMART PAPER (SPG) ---
     function openSpgMain() { showPage('spgPage'); document.getElementById('spgTypeSelect').style.display = 'grid'; document.getElementById('spgEditor').style.display = 'none'; }
     function startSpg(type) { activeSpgType = type; document.getElementById('spgTitle').innerText = type; document.getElementById('spgTypeSelect').style.display = 'none'; document.getElementById('spgEditor').style.display = 'block'; toggleSpgSub('gen'); }
     function toggleSpgSub(v) { document.getElementById('spgGenView').style.display = v==='gen'?'block':'none'; document.getElementById('spgListView').style.display = v==='list'?'block':'none'; document.getElementById('btnSpgGen').classList.toggle('active', v==='gen'); document.getElementById('btnSpgList').classList.toggle('active', v==='list'); if(v==='list') loadPapers(); }
@@ -579,7 +633,10 @@
 
     async function deletePaper(id) { if(confirm("මකන්නද?")) await db.ref(`papers/${activeSpgType}/${id}`).remove(); }
 
-    window.onload = () => { loadLessonsList(); loadMasterAccessData(); };
+    window.onload = () => { 
+        loadLessonsList(); 
+        loadMasterAccessData(); 
+    };
 </script>
 </body>
 </html>
