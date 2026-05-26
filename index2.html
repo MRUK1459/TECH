@@ -155,7 +155,10 @@
         <div class="card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h3>Live Link Tracker</h3>
-                <button class="btn-sm" style="background:var(--danger)" onclick="clearTracks()">Clear All</button>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-sm" style="background:var(--primary)" onclick="copyAllTracks()">Copy All Links</button>
+                    <button class="btn-sm" style="background:var(--danger)" onclick="clearTracks()">Clear All</button>
+                </div>
             </div>
             <p style="font-size:14px; color:#666;">Python App එක මගින් Grab කරගන්නා වීඩියෝ මෙහි සජීවීව දිස්වේ.</p>
             <div style="overflow-x:auto;">
@@ -339,6 +342,28 @@
                             <button class="btn-sm" style="width:auto !important; background:red; padding:8px 15px !important;" onclick="db.ref('link_tracks/${k}').remove()">Delete</button>
                         </td>
                     </tr>`;
+            });
+        });
+    }
+
+    async function copyAllTracks() {
+        db.ref('link_tracks').once('value', snap => {
+            const data = snap.val();
+            if(!data) return alert("කොපි කිරීමට දත්ත කිසිවක් නැත!");
+            
+            let formattedArray = [];
+            Object.keys(data).reverse().forEach(k => {
+                const item = data[k];
+                if(item.title && item.url) {
+                    formattedArray.push(`${item.title}\n${item.url}`);
+                }
+            });
+            
+            const allTracksText = formattedArray.join('\n\n');
+            navigator.clipboard.writeText(allTracksText).then(() => {
+                alert(`සියලුම මාතෘකා සහ ලින්ක්ස් (${formattedArray.length}) සාර්ථකව එකවර කොපි විය!`);
+            }).catch(err => {
+                alert("දත්ත කොපි කිරීමට නොහැකි විය: " + err);
             });
         });
     }
