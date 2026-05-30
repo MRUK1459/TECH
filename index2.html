@@ -15,152 +15,166 @@
         :root {
             --primary: #4361ee;
             --primary-light: #4895ef;
-            --success: #4cc9f0;
-            --danger: #f72585;
+            --success: #10b981;
+            --danger: #ef4444;
             --bg: #f8f9fc;
             --card-bg: #ffffff;
-            --text-main: #2b2d42;
+            --text-main: #1e293b;
             --shadow: 0 10px 30px rgba(0,0,0,0.05);
+            --shadow-hover: 0 20px 40px rgba(67, 97, 238, 0.15);
         }
 
         body { background: var(--bg); color: var(--text-main); font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
         
-        header {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white; padding: 50px 20px; text-align: center;
-            border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;
-            box-shadow: 0 4px 20px rgba(67, 97, 238, 0.3); margin-bottom: 40px;
-        }
-
-        header h1 { font-size: 32px; margin-bottom: 10px; }
-        header p { font-size: 18px; opacity: 0.9; }
-
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px 50px; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px 50px; }
         
-        .page { display: none; animation: slideUp 0.5s ease-out; }
+        .page { display: none; animation: slideUp 0.4s ease-out; }
         .active-page { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .nav-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; }
-        
+        .section-heading { font-size: 18px; color: #64748b; margin: 25px 0 15px; padding-left: 10px; border-left: 4px solid var(--primary); }
+
+        /* Nav Cards */
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
         .nav-card {
-            background: white; padding: 50px 25px; border-radius: 24px; text-align: center;
-            box-shadow: var(--shadow); cursor: pointer; transition: 0.4s; border: 1px solid transparent;
+            background: white; padding: 30px 20px; border-radius: 20px; text-align: center;
+            box-shadow: var(--shadow); cursor: pointer; transition: all 0.3s ease; 
+            border: 2px solid transparent; position: relative; overflow: hidden;
         }
-        .nav-card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
-        .nav-card i { font-size: 56px; color: var(--primary); margin-bottom: 20px; }
-        .nav-card h3 { font-size: 20px; line-height: 1.4; }
+        .nav-card:hover { transform: translateY(-8px); border-color: var(--primary-light); box-shadow: var(--shadow-hover); }
+        .nav-card i { font-size: 48px; color: var(--primary); margin-bottom: 15px; transition: transform 0.3s; }
+        .nav-card:hover i { transform: scale(1.1); }
+        .nav-card h3 { font-size: 16px; line-height: 1.4; margin: 0; font-weight: 600; color: #1e293b; }
 
-        .card { background: white; padding: 35px; border-radius: 24px; box-shadow: var(--shadow); margin-bottom: 25px; }
-        
-        input, select, textarea {
-            width: 100%; padding: 16px; margin-bottom: 18px; border: 2px solid #f1f3f9;
-            border-radius: 14px; font-family: inherit; box-sizing: border-box; background: #f8f9fc; 
-            outline: none; font-size: 16px;
+        .pulse-card { border: 2px dashed var(--danger); animation: pulseDanger 2s infinite; }
+        .pulse-card:hover { border-style: solid; animation: none; }
+        @keyframes pulseDanger { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+
+        /* Compact Access Panel */
+        .compact-panel {
+            background: #ffffff; border-radius: 20px; box-shadow: var(--shadow);
+            padding: 20px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between;
+            border-left: 5px solid var(--danger); margin-bottom: 30px;
         }
+        .compact-panel .info { flex: 1; min-width: 250px; }
+        .compact-panel .inputs { display: flex; gap: 10px; flex: 2; min-width: 300px; align-items: center; flex-wrap: wrap; }
+        .digital-badge { background: #0f172a; padding: 8px 15px; border-radius: 8px; display: inline-block; margin-top: 10px; border: 1px solid #334155; }
+        .digital-text { font-family: 'Courier New', monospace; font-weight: 700; font-size: 14px; color: var(--success); }
+
+        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: var(--shadow); margin-bottom: 25px; }
+        
+        input[type="text"], input[type="password"], select, textarea {
+            width: 100%; padding: 14px 16px; margin-bottom: 15px; border: 2px solid #e2e8f0;
+            border-radius: 12px; font-family: inherit; box-sizing: border-box; background: #f8faff; 
+            outline: none; font-size: 14px; transition: 0.2s;
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); background: #fff; }
         
         button {
-            width: 100%; padding: 18px; border: none; border-radius: 14px; font-weight: 600;
-            cursor: pointer; transition: 0.3s; background: var(--primary); color: white;
-            font-size: 17px;
+            width: 100%; padding: 14px; border: none; border-radius: 12px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; background: var(--primary); color: white;
+            font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        button:hover { opacity: 0.9; transform: translateY(-2px); }
+        button:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(67, 97, 238, 0.2); }
+        button:active { transform: translateY(0); }
         
         .back-btn { 
-            width: auto; background: white; color: var(--text-main); padding: 12px 24px; 
-            margin-bottom: 30px; display: inline-flex; align-items: center; gap: 10px; 
-            box-shadow: var(--shadow); font-size: 16px; border: none; border-radius: 10px;
+            width: auto; background: white; color: var(--text-main); padding: 10px 20px; 
+            margin-bottom: 25px; box-shadow: var(--shadow); font-size: 14px; border: none; border-radius: 10px;
         }
 
-        .sub-nav { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
+        .sub-nav { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
         .sub-btn { 
-            flex: 1; min-width: 120px; padding: 15px; background: white; border-radius: 18px; text-align: center; 
-            cursor: pointer; font-weight: 600; box-shadow: var(--shadow); border: 2px solid transparent;
-            font-size: 15px;
+            flex: 1; min-width: 100px; padding: 12px; background: white; border-radius: 12px; text-align: center; 
+            cursor: pointer; font-weight: 600; box-shadow: var(--shadow); border: 2px solid transparent; font-size: 14px; transition: 0.2s;
         }
         .sub-btn.active { border-color: var(--primary); color: var(--primary); background: #f0f4ff; }
 
-        table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
-        td { background: white; padding: 20px; box-shadow: var(--shadow); font-size: 16px; }
-        td:first-child { border-radius: 15px 0 0 15px; }
-        td:last-child { border-radius: 0 15px 15px 0; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+        td { background: white; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); font-size: 14px; }
+        td:first-child { border-radius: 12px 0 0 12px; }
+        td:last-child { border-radius: 0 12px 12px 0; }
+        th { padding: 10px 15px; font-size: 13px; color: #64748b; font-weight: 600; }
 
-        #accessModal {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(5px); z-index: 2000; align-items: center; justify-content: center;
+        #accessModal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(5px); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-content { background: white; width: 90%; max-width: 500px; padding: 30px; border-radius: 24px; max-height: 85vh; overflow-y: auto; box-shadow: 0 25px 50px rgba(0,0,0,0.25); }
+        #checkboxArea { background: #f8faff; border: 1px solid #e2e8f0; border-radius: 12px; max-height: 250px; overflow-y: auto; margin-top: 15px; padding: 10px; }
+        .lesson-check-item { padding: 10px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 12px; font-size: 14px; }
+        .lesson-check-item input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary); }
+        .std-chk { width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary); }
+
+        /* Drag and Drop Enhancements */
+        .draggable-folder { border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 12px; background: #fff; transition: all 0.2s; }
+        .draggable-folder.drag-over { border: 2px dashed var(--primary); background: #f0f4ff; transform: scale(1.02); }
+        .drag-handle { cursor: grab; padding-right: 10px; color: #94a3b8; }
+        .drag-handle:active { cursor: grabbing; color: var(--primary); }
+
+        /* Toast Notification */
+        #toast {
+            visibility: hidden; min-width: 250px; background-color: var(--success); color: #fff; 
+            text-align: center; border-radius: 10px; padding: 16px; position: fixed; z-index: 9999; 
+            left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 15px; font-weight: 500;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: opacity 0.3s, bottom 0.3s; opacity: 0;
         }
-        .modal-content { background: white; width: 90%; max-width: 550px; padding: 40px; border-radius: 25px; max-height: 85vh; overflow-y: auto; }
-        
-        #checkboxArea { background: #fafafa; border: 1px solid #eee; border-radius: 15px; max-height: 250px; overflow-y: auto; margin-top: 15px; padding: 10px; }
-        .lesson-check-item { 
-            padding: 12px; border-bottom: 1px solid #f1f1f1; 
-            display: flex; align-items: center; gap: 12px; font-size: 16px;
-        }
-        .lesson-check-item input[type="checkbox"] { width: 22px; height: 22px; margin: 0; cursor: pointer; }
-        .control-btns { display: flex; gap: 10px; margin: 15px 0; }
-        .btn-sm { padding: 10px !important; font-size: 13px !important; width: auto !important; flex: 1; }
+        #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>Admin Control Center</h1>
-    <p>Smart Pro පද්ධති කළමනාකරණ පුවරුව</p>
-</header>
+<div id="toast"><i class="material-icons" style="vertical-align:middle; margin-right:5px; font-size:18px;">check_circle</i><span id="toastMsg"></span></div>
 
 <div class="container">
     <div id="homeScreen" class="page active-page">
-        <div class="nav-grid">
-            <div class="nav-card" onclick="showPage('addPage')"><i class="material-icons">video_library</i><h3>පාඩම් සහ වීඩියෝ<br>එක් කිරීම</h3></div>
-            <div class="nav-card" onclick="showPage('studentPage')"><i class="material-icons">groups</i><h3>ශිෂ්‍යයන්<br>කළමනාකරණය</h3></div>
-            <div class="nav-card" onclick="showPage('viewPage')"><i class="material-icons">analytics</i><h3>දත්ත පිරික්සුම සහ<br>මකා දැමීම</h3></div>
-            <div class="nav-card" onclick="openSpgMain()"><i class="material-icons">psychology</i><h3>Smart Paper<br>(SPG කොටස)</h3></div>
-            <div class="nav-card" onclick="showPage('linkTrackPage')" style="border: 2px dashed var(--danger);">
-                <i class="material-icons" style="color:var(--danger)">track_changes</i>
-                <h3>Link Track<br>(Live Sync)</h3>
+        
+        <!-- COMPACT App Access Settings -->
+        <div class="compact-panel">
+            <div class="info">
+                <h3 style="margin:0 0 5px 0; color:#1e293b; font-size:16px; display:flex; align-items:center; gap:5px;">
+                    <i class="material-icons" style="color:var(--danger); font-size:20px;">security</i> App Access
+                </h3>
+                <div class="digital-badge"><div id="currentMasterData" class="digital-text">ලෝඩ් වෙමින්...</div></div>
+            </div>
+            <div class="inputs">
+                <input type="text" id="newMasterUser" placeholder="New Username" style="flex:1; margin:0; padding:10px;">
+                <input type="text" id="newMasterPass" placeholder="New Password" style="flex:1; margin:0; padding:10px;">
+                <button style="background:#475569; width:auto; padding:10px;" onclick="generateAdminPass()" title="අහඹු මුරපදයක්"><i class="material-icons">autorenew</i></button>
+                <button style="width:auto; padding:10px 15px;" onclick="updateMasterAccess()"><i class="material-icons">save</i> Save</button>
             </div>
         </div>
 
-        <div class="card" style="border-top: 5px solid var(--danger); margin-top: 40px;">
-            <h3 style="display:flex; align-items:center; gap:10px;">
-                <i class="material-icons">security</i> App Access Settings
-            </h3>
-            <p style="font-size:14px; color:#64748b;">යමෙක් ලොග් වූ සැණින් Password එක ස්වයංක්‍රීයව වෙනස් වේ.</p>
-            
-            <div style="background: #fff0f6; padding: 20px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid var(--danger);">
-                <p style="margin:0; font-weight:700; color:var(--danger); font-size: 13px;">වලංගු මුරපදය (ACTIVE PASSWORD):</p>
-                <div id="currentMasterData" style="font-family: 'Courier New', monospace; margin-top:10px; font-weight: 900; font-size: 24px; letter-spacing: 2px;">ලෝඩ් වෙමින්...</div>
-            </div>
+        <h3 class="section-heading">ප්‍රධාන මෙනුව (Main Control)</h3>
 
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px;">
-                <div>
-                    <label style="font-size:12px; font-weight:bold; color:var(--primary);">USERNAME:</label>
-                    <input type="text" id="newMasterUser" placeholder="eg: ulindu">
-                </div>
-                <div>
-                    <label style="font-size:12px; font-weight:bold; color:var(--primary);">PASSWORD:</label>
-                    <input type="text" id="newMasterPass" placeholder="eg: 2007">
-                </div>
+        <!-- Navigation Grid -->
+        <div class="nav-grid">
+            <div class="nav-card" onclick="showPage('addPage')">
+                <i class="material-icons">video_library</i><h3>පාඩම් සහ වීඩියෝ<br>එක් කිරීම</h3>
             </div>
-            
-            <div style="display:flex; gap:10px;">
-                <button style="background:#5f6368; flex: 1;" onclick="generateAdminPass()">අහඹු ලෙස සාදන්න</button>
-                <button style="flex: 2;" onclick="updateMasterAccess()">දත්ත සුරකින්න</button>
+            <div class="nav-card" onclick="showPage('studentPage')">
+                <i class="material-icons" style="color: #8b5cf6;">groups</i><h3>ශිෂ්‍යයන්<br>කළමනාකරණය</h3>
+            </div>
+            <div class="nav-card" onclick="showPage('viewPage')">
+                <i class="material-icons" style="color: #06b6d4;">analytics</i><h3>දත්ත පිරික්සුම සහ<br>මකා දැමීම</h3>
+            </div>
+            <div class="nav-card" onclick="openSpgMain()">
+                <i class="material-icons" style="color: #f59e0b;">psychology</i><h3>Smart Paper<br>(SPG කොටස)</h3>
+            </div>
+            <div class="nav-card pulse-card" onclick="showPage('linkTrackPage')">
+                <i class="material-icons" style="color:var(--danger)">track_changes</i><h3 style="color: var(--danger);">Live Sync<br>(Link Tracker)</h3>
             </div>
         </div>
     </div>
 
+    <!-- Live Link Tracker -->
     <div id="linkTrackPage" class="page">
         <button class="back-btn" onclick="showPage('homeScreen')"><i class="material-icons">arrow_back</i> ආපසු</button>
         <div class="card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                <h3>Live Link Tracker</h3>
+                <h3 style="margin:0;">Live Link Tracker</h3>
                 <div style="display:flex; gap:10px;">
-                    <button class="btn-sm" style="background:var(--primary)" onclick="copyAllTracks()">Copy All Links</button>
-                    <button class="btn-sm" style="background:var(--danger)" onclick="clearTracks()">Clear All</button>
+                    <button style="width:auto; padding:8px 15px; font-size:13px;" onclick="copyAllTracks()">Copy All</button>
+                    <button style="width:auto; padding:8px 15px; font-size:13px; background:var(--danger);" onclick="clearTracks()">Clear All</button>
                 </div>
             </div>
-            <p style="font-size:14px; color:#666;">Python App එක මගින් Grab කරගන්නා වීඩියෝ මෙහි සජීවීව දිස්වේ.</p>
             <div style="overflow-x:auto;">
                 <table>
                     <thead><tr style="color:var(--primary)"><th>Video Name & Link</th><th style="text-align:right">Action</th></tr></thead>
@@ -170,107 +184,118 @@
         </div>
     </div>
 
+    <!-- Student Management -->
     <div id="studentPage" class="page">
         <button class="back-btn" onclick="showPage('homeScreen')"><i class="material-icons">arrow_back</i> ආපසු</button>
         <div class="sub-nav">
+            <div class="sub-btn active" id="btnStdManage" onclick="toggleStudentSec('manage')">සිසුන් පාලනය</div>
             <div class="sub-btn" id="btnStdAdd" onclick="toggleStudentSec('add')">නව ශිෂ්‍යයෙක්</div>
-            <div class="sub-btn" id="btnStdManage" onclick="toggleStudentSec('manage')">සිසුන් පාලනය</div>
         </div>
+        
         <div id="secStdAdd" class="card" style="display:none;">
-            <h3>නව ශිෂ්‍යයෙකු ලියාපදිංචිය</h3>
+            <h3 style="margin-top:0;">නව ශිෂ්‍යයෙකු ලියාපදිංචිය</h3>
             <input type="text" id="stdName" placeholder="ශිෂ්‍යයාගේ නම">
             <input type="text" id="stdPass" placeholder="මුරපදය">
             <select id="stdAccess">
-                <option value="et">ET පමණි</option>
-                <option value="sft">SFT පමණි</option>
-                <option value="ict">ICT පමණි</option>
-                <option value="both">ET සහ SFT දෙකම</option>
-                <option value="all">සියල්ල (ET, SFT, ICT)</option>
+                <option value="et">ET පමණි</option><option value="sft">SFT පමණි</option><option value="ict">ICT පමණි</option><option value="both">ET සහ SFT දෙකම</option><option value="all">සියල්ල (ET, SFT, ICT)</option>
             </select>
-            <button onclick="addStudent()">ලියාපදිංචි කරන්න</button>
+            <button onclick="addStudent()"><i class="material-icons">person_add</i> ලියාපදිංචි කරන්න</button>
         </div>
-        <div id="secStdManage" style="display:none;">
-            <div id="studentListArea"></div>
-        </div>
-    </div>
+        
+        <div id="secStdManage">
+            <div style="position: relative; margin-bottom: 20px;">
+                <i class="material-icons" style="position: absolute; left: 15px; top: 12px; color: #64748b;">search</i>
+                <input type="text" id="searchStudent" onkeyup="filterStudents()" placeholder="ශිෂ්‍යයාගේ නම සොයන්න..." style="padding-left: 45px; border-radius: 50px; margin-bottom:0;">
+            </div>
 
-    <div id="addPage" class="page">
-        <button class="back-btn" onclick="showPage('homeScreen')"><i class="material-icons">arrow_back</i> ආපසු</button>
-        <div class="card">
-            <h3>වීඩියෝ දත්ත එක් කරන්න</h3>
-            <select id="streamSelect" onchange="loadLessonsList()">
-                <option value="et">ET Stream</option>
-                <option value="sft">SFT Stream</option>
-                <option value="ict">ICT Stream</option>
-            </select>
-
-            <div style="background:#f0f4ff; padding:15px; border-radius:15px; margin-bottom:20px;">
-                <p style="margin-top:0; font-weight:700; font-size:14px; color:var(--primary);">නව ෆෝල්ඩරයක් සාදන්න:</p>
-                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px;">
-                    <div>
-                        <input type="text" id="newMonthlyInput" placeholder="Monthly Folder">
-                        <button class="btn-sm" onclick="createNewFolder('Monthly')">Monthly සාදන්න</button>
-                    </div>
-                    <div>
-                        <input type="text" id="newPapersInput" placeholder="Paper Folder">
-                        <button class="btn-sm" style="background:var(--success)" onclick="createNewFolder('Papers')">Papers සාදන්න</button>
-                    </div>
-                    <div>
-                        <input type="text" id="newLessonInput" placeholder="Lesson Folder">
-                        <button class="btn-sm" style="background:#6b21a8" onclick="createNewFolder('Lessons')">Lessons සාදන්න</button>
-                    </div>
+            <div style="background: #f0f4ff; padding: 15px; border-radius: 16px; margin-bottom: 20px; border-left: 4px solid var(--primary);">
+                <h4 style="margin-top: 0; color: var(--primary); margin-bottom: 10px; font-size:14px; display:flex; align-items:center; gap:5px;">
+                    <i class="material-icons" style="font-size:18px;">playlist_add_check</i> තෝරාගත් සිසුන්ට එකවර Access දීම (Bulk Access)
+                </h4>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                    <select id="bulkStream" onchange="loadBulkFolders()" style="flex: 1; min-width: 100px; margin-bottom: 0; padding: 10px; font-size:13px;">
+                        <option value="">Stream...</option><option value="et">ET</option><option value="sft">SFT</option><option value="ict">ICT</option>
+                    </select>
+                    <select id="bulkCat" onchange="loadBulkFolders()" style="flex: 1; min-width: 100px; margin-bottom: 0; padding: 10px; font-size:13px;">
+                        <option value="Monthly">Monthly</option><option value="Papers">Papers</option><option value="Lessons">Lessons</option>
+                    </select>
+                    <select id="bulkFolder" style="flex: 2; min-width: 150px; margin-bottom: 0; padding: 10px; font-size:13px;">
+                        <option value="">Folder තෝරන්න...</option>
+                    </select>
+                    <button onclick="grantBulkAccess()" style="flex: 1; min-width: 100px; padding: 10px; margin-bottom: 0; background: var(--success); font-size:13px;">
+                        <i class="material-icons" style="font-size:16px;">check_circle</i> දෙන්න
+                    </button>
                 </div>
             </div>
 
-            <hr style="margin:25px 0; border:none; border-top:1px solid #eee">
-            
-            <label>වර්ගය තෝරන්න:</label>
-            <select id="categorySelect" onchange="loadLessonsList()">
-                <option value="Monthly">Monthly</option>
-                <option value="Papers">Papers</option>
-                <option value="Lessons">Lessons</option>
+            <div id="studentListArea" style="overflow-x: auto;"></div>
+        </div>
+    </div>
+
+    <!-- Data Add Page -->
+    <div id="addPage" class="page">
+        <button class="back-btn" onclick="showPage('homeScreen')"><i class="material-icons">arrow_back</i> ආපසු</button>
+        <div class="card">
+            <h3 style="margin-top:0;">වීඩියෝ දත්ත එක් කරන්න</h3>
+            <select id="streamSelect" onchange="loadLessonsList()">
+                <option value="et">ET Stream</option><option value="sft">SFT Stream</option><option value="ict">ICT Stream</option>
             </select>
 
-            <label>ෆෝල්ඩරය තෝරන්න:</label>
+            <div style="background:#f8faff; padding:15px; border-radius:12px; margin-bottom:20px; border:1px solid #e2e8f0;">
+                <p style="margin-top:0; font-weight:600; font-size:13px; color:var(--primary);">නව ෆෝල්ඩරයක් සාදන්න:</p>
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:10px;">
+                    <div><input type="text" id="newMonthlyInput" placeholder="Monthly Folder" style="margin-bottom:8px; padding:10px;"><button style="padding:10px; font-size:13px;" onclick="createNewFolder('Monthly')">සාදන්න</button></div>
+                    <div><input type="text" id="newPapersInput" placeholder="Paper Folder" style="margin-bottom:8px; padding:10px;"><button style="padding:10px; font-size:13px; background:var(--success);" onclick="createNewFolder('Papers')">සාදන්න</button></div>
+                    <div><input type="text" id="newLessonInput" placeholder="Lesson Folder" style="margin-bottom:8px; padding:10px;"><button style="padding:10px; font-size:13px; background:#8b5cf6;" onclick="createNewFolder('Lessons')">සාදන්න</button></div>
+                </div>
+            </div>
+
+            <hr style="margin:20px 0; border:none; border-top:1px dashed #cbd5e1">
+            <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">වර්ගය තෝරන්න:</label>
+            <select id="categorySelect" onchange="loadLessonsList()"><option value="Monthly">Monthly</option><option value="Papers">Papers</option><option value="Lessons">Lessons</option></select>
+
+            <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">ෆෝල්ඩරය තෝරන්න:</label>
             <select id="lessonSelect"><option value="">තෝරන්න...</option></select>
-            <textarea id="bulkData" rows="6" placeholder="වීඩියෝ නම&#10;YouTube Link එක"></textarea>
-            <button style="background:var(--success);" onclick="uploadVideos()">Upload කරන්න</button>
+            <textarea id="bulkData" rows="5" placeholder="වීඩියෝ නම&#10;YouTube Link එක (එක පේළියක නම, ඊළඟ පේළියේ ලින්ක් එක)"></textarea>
+            <button style="background:var(--success);" onclick="uploadVideos()"><i class="material-icons">cloud_upload</i> Upload කරන්න</button>
         </div>
     </div>
 
+    <!-- Data View & Drag Drop (Search Bar Added) -->
     <div id="viewPage" class="page">
         <button class="back-btn" onclick="showPage('homeScreen')"><i class="material-icons">arrow_back</i> ආපසු</button>
-        <div style="display:flex; gap:15px; margin-bottom:25px;">
-            <button onclick="viewStorage('et')">ET දත්ත බලන්න</button>
-            <button onclick="viewStorage('sft')" style="background:var(--success)">SFT දත්ත බලන්න</button>
-            <button onclick="viewStorage('ict')" style="background:var(--primary)">ICT දත්ත බලන්න</button>
+        <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap: wrap;">
+            <button onclick="viewStorage('et')" style="flex:1; padding:12px; font-size:14px;">ET දත්ත</button>
+            <button onclick="viewStorage('sft')" style="background:var(--success); flex:1; padding:12px; font-size:14px;">SFT දත්ත</button>
+            <button onclick="viewStorage('ict')" style="background:#8b5cf6; flex:1; padding:12px; font-size:14px;">ICT දත්ත</button>
         </div>
-        <div id="storageArea" style="font-size: 18px;">ප්‍රභේදයක් තෝරන්න...</div>
+        <div id="storageArea" style="font-size: 16px; text-align: center; color: #64748b; padding: 30px 0;">ප්‍රභේදයක් තෝරන්න...</div>
     </div>
 
+    <!-- SPG -->
     <div id="spgPage" class="page">
         <button class="back-btn" onclick="showPage('homeScreen')"><i class="material-icons">arrow_back</i> ආපසු</button>
         <div id="spgTypeSelect" class="nav-grid">
-            <div class="nav-card" onclick="startSpg('Black Paper')"><i class="material-icons" style="color:#000">description</i><h3>Black Paper</h3></div>
-            <div class="nav-card" onclick="startSpg('Scorpion Paper')"><i class="material-icons" style="color:#d93025">bug_report</i><h3>Scorpion Paper</h3></div>
-            <div class="nav-card" onclick="startSpg('Flash Paper')"><i class="material-icons" style="color:#f4b400">bolt</i><h3>Flash Paper</h3></div>
+            <div class="nav-card" onclick="startSpg('Black Paper')"><i class="material-icons" style="color:#0f172a">description</i><h3>Black Paper</h3></div>
+            <div class="nav-card" onclick="startSpg('Scorpion Paper')"><i class="material-icons" style="color:var(--danger)">bug_report</i><h3>Scorpion Paper</h3></div>
+            <div class="nav-card" onclick="startSpg('Flash Paper')"><i class="material-icons" style="color:#eab308">bolt</i><h3>Flash Paper</h3></div>
         </div>
         <div id="spgEditor" style="display:none;">
             <button class="back-btn" onclick="openSpgMain()"><i class="material-icons">arrow_back</i> වර්ගය වෙනස් කරන්න</button>
-            <h2 id="spgTitle" style="text-align:center; color:var(--primary); font-size: 26px; margin-bottom: 20px;"></h2>
+            <h2 id="spgTitle" style="text-align:center; color:var(--primary); font-size: 24px; margin-bottom: 20px; font-weight:700;"></h2>
             <div class="sub-nav">
                 <div class="sub-btn active" id="btnSpgGen" onclick="toggleSpgSub('gen')">QR PDF Inserter</div>
                 <div class="sub-btn" id="btnSpgList" onclick="toggleSpgSub('list')">Manage Papers</div>
             </div>
             <div id="spgGenView" class="card">
-                <input type="file" id="pdf-file" accept="application/pdf">
+                <input type="file" id="pdf-file" accept="application/pdf" style="padding:10px; background:#fff;">
                 <input type="text" id="pdf-url" placeholder="PDF Link එක (Drive Link)">
                 <input type="text" id="pdf-label" placeholder="පේපර් එකේ නම (eg: Unit 01)">
-                <button onclick="processPdfAndQr()">Generate & Download PDF</button>
-                <div id="status" style="margin-top: 15px; font-weight: 500; color: var(--primary);"></div>
-                <div id="spgSaveDb" style="display:none; margin-top:25px; padding-top:25px; border-top:1px dashed #ccc;">
+                <button onclick="processPdfAndQr()"><i class="material-icons">qr_code_2</i> Generate PDF</button>
+                <div id="status" style="margin-top: 15px; font-weight: 500; color: var(--primary); text-align:center;"></div>
+                <div id="spgSaveDb" style="display:none; margin-top:20px; padding-top:20px; border-top:1px dashed #cbd5e1;">
                     <input type="text" id="final-pdf-link" placeholder="Final PDF URL (Hosting Link)">
-                    <button style="background:var(--success);" onclick="saveSpgToFirebase()">පද්ධතියට ඇතුළත් කරන්න</button>
+                    <button style="background:var(--success);" onclick="saveSpgToFirebase()"><i class="material-icons">cloud_upload</i> පද්ධතියට එක් කරන්න</button>
                 </div>
             </div>
             <div id="spgListView" style="display:none;"><div id="paperTableArea"></div></div>
@@ -278,22 +303,23 @@
     </div>
 </div>
 
+<!-- Access Control Modal -->
 <div id="accessModal">
     <div class="modal-content">
-        <h3 id="modalUser">Access Control</h3>
-        <label>ප්‍රධාන ප්‍රවේශය:</label>
-        <select id="modalAccessType" onchange="updateUserType()">
+        <h3 id="modalUser" style="margin-top:0; color:var(--primary); font-size:20px;">Access Control</h3>
+        <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">ප්‍රධාන ප්‍රවේශය:</label>
+        <select id="modalAccessType" onchange="updateUserType()" style="padding:10px;">
             <option value="et">ET</option><option value="sft">SFT</option><option value="ict">ICT</option><option value="both">Both</option><option value="all">All</option>
         </select>
-        <label>විෂය ධාරාව:</label>
-        <select id="modalStream" onchange="loadLessonCheckboxes()"></select>
-        <div class="control-btns">
-            <button class="btn-sm" style="background:#34a853;" onclick="toggleAll(true)">සියල්ල</button>
-            <button class="btn-sm" style="background:#5f6368;" onclick="toggleAll(false)">ඉවත් කරන්න</button>
+        <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">විෂය ධාරාව:</label>
+        <select id="modalStream" onchange="loadLessonCheckboxes()" style="padding:10px;"></select>
+        <div style="display:flex; gap:10px; margin: 15px 0;">
+            <button style="background:var(--success); padding:10px; font-size:13px;" onclick="toggleAll(true)">සියල්ල දෙන්න</button>
+            <button style="background:#64748b; padding:10px; font-size:13px;" onclick="toggleAll(false)">සියල්ල ඉවත් කරන්න</button>
         </div>
         <div id="checkboxArea"></div>
-        <button onclick="saveStudentAccess()" style="margin-top:25px;">වෙනස්කම් සුරකින්න</button>
-        <button onclick="closeModal()" style="background:#666; margin-top:10px;">වසන්න</button>
+        <button onclick="saveStudentAccess()" style="margin-top:20px;"><i class="material-icons">save</i> සුරකින්න</button>
+        <button onclick="closeModal()" style="background:#94a3b8; margin-top:10px;">වසන්න</button>
     </div>
 </div>
 
@@ -314,34 +340,37 @@
     let editingUserKey = "";
     let activeSpgType = "";
 
+    // Toast Notification System
+    function showToast(msg, isError = false) {
+        const t = document.getElementById('toast');
+        const icon = isError ? "error" : "check_circle";
+        t.style.backgroundColor = isError ? "var(--danger)" : "var(--success)";
+        t.innerHTML = `<i class="material-icons" style="vertical-align:middle; margin-right:5px; font-size:18px;">${icon}</i> <span style="vertical-align:middle;">${msg}</span>`;
+        t.className = "show";
+        setTimeout(() => { t.className = t.className.replace("show", ""); }, 3000);
+    }
+
     // --- NAVIGATION ---
     function showPage(id) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
         document.getElementById(id).classList.add('active-page');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         if(id === 'linkTrackPage') loadLiveTracks();
+        if(id === 'studentPage') loadStudents();
     }
 
-    // --- LINK TRACK LOGIC (NEW) ---
+    // --- LINK TRACK LOGIC ---
     function loadLiveTracks() {
         db.ref('link_tracks').on('value', snap => {
             const data = snap.val();
             const container = document.getElementById('trackTableBody');
             container.innerHTML = "";
-            if(!data) { container.innerHTML = "<tr><td colspan='2'>දත්ත කිසිවක් නැත.</td></tr>"; return; }
-            
+            if(!data) { container.innerHTML = "<tr><td colspan='2' style='text-align:center;'>දත්ත කිසිවක් නැත.</td></tr>"; return; }
             Object.keys(data).reverse().forEach(k => {
                 const item = data[k];
-                container.innerHTML += `
-                    <tr>
-                        <td>
-                            <b style="color:var(--text-main)">${item.title}</b><br>
-                            <small style="color:blue; word-break:break-all;">${item.url}</small>
-                        </td>
-                        <td style="text-align:right">
-                            <button class="btn-sm" style="width:auto !important; padding:8px 15px !important;" onclick="navigator.clipboard.writeText('${item.url}'); alert('ලින්ක් එක කොපි විය!')">Copy</button>
-                            <button class="btn-sm" style="width:auto !important; background:red; padding:8px 15px !important;" onclick="db.ref('link_tracks/${k}').remove()">Delete</button>
-                        </td>
-                    </tr>`;
+                container.innerHTML += `<tr><td><b style="color:var(--text-main); font-size:14px;">${item.title}</b><br><small style="color:var(--primary); word-break:break-all;">${item.url}</small></td>
+                <td style="text-align:right"><button style="width:auto; padding:6px 12px; font-size:12px; border-radius:8px; display:inline-block;" onclick="navigator.clipboard.writeText('${item.url}'); showToast('ලින්ක් එක කොපි විය!')">Copy</button>
+                <button style="width:auto; background:var(--danger); padding:6px 12px; font-size:12px; border-radius:8px; display:inline-block;" onclick="db.ref('link_tracks/${k}').remove()">Delete</button></td></tr>`;
             });
         });
     }
@@ -349,22 +378,10 @@
     async function copyAllTracks() {
         db.ref('link_tracks').once('value', snap => {
             const data = snap.val();
-            if(!data) return alert("කොපි කිරීමට දත්ත කිසිවක් නැත!");
-            
+            if(!data) return showToast("කොපි කිරීමට දත්ත නැත!", true);
             let formattedArray = [];
-            Object.keys(data).reverse().forEach(k => {
-                const item = data[k];
-                if(item.title && item.url) {
-                    formattedArray.push(`${item.title}\n${item.url}`);
-                }
-            });
-            
-            const allTracksText = formattedArray.join('\n\n');
-            navigator.clipboard.writeText(allTracksText).then(() => {
-                alert(`සියලුම මාතෘකා සහ ලින්ක්ස් (${formattedArray.length}) සාර්ථකව එකවර කොපි විය!`);
-            }).catch(err => {
-                alert("දත්ත කොපි කිරීමට නොහැකි විය: " + err);
-            });
+            Object.keys(data).reverse().forEach(k => { if(data[k].title && data[k].url) formattedArray.push(`${data[k].title}\n${data[k].url}`); });
+            navigator.clipboard.writeText(formattedArray.join('\n\n')).then(() => showToast(`සියලුම ලින්ක්ස් සාර්ථකව කොපි විය!`));
         });
     }
 
@@ -376,25 +393,22 @@
             const data = snap.val();
             const displayDiv = document.getElementById('currentMasterData');
             if(data) {
-                displayDiv.innerHTML = `USER: <span style="color:#4361ee">${data.username}</span> | PASS: <span style="color:#f72585">${data.password}</span>`;
+                displayDiv.innerHTML = `<span style="color:#60a5fa">USR:</span> ${data.username} <span style="color:#64748b; margin:0 5px;">|</span> <span style="color:#fb7185">PWD:</span> ${data.password}`;
                 document.getElementById('newMasterUser').value = data.username;
                 document.getElementById('newMasterPass').value = data.password;
-            } else { displayDiv.innerText = "Default: ulindu / 2007"; }
+            } else { displayDiv.innerHTML = "<span style='color:#60a5fa'>USR:</span> ulindu <span style='color:#64748b; margin:0 5px'>|</span> <span style='color:#fb7185'>PWD:</span> 2007"; }
         });
     }
 
-    function generateAdminPass() {
-        const rand = Math.floor(1000 + Math.random() * 9000).toString();
-        document.getElementById('newMasterPass').value = rand;
-    }
+    function generateAdminPass() { document.getElementById('newMasterPass').value = Math.floor(1000 + Math.random() * 9000).toString(); }
 
     async function updateMasterAccess() {
         const u = document.getElementById('newMasterUser').value.trim();
         const p = document.getElementById('newMasterPass').value.trim();
-        if(!u || !p) return alert("Fill all fields!");
+        if(!u || !p) return showToast("කරුණාකර සියලු තොරතුරු ඇතුළත් කරන්න!", true);
         if(confirm("App Verification තොරතුරු වෙනස් කිරීමට ඔබට විශ්වාසද?")) {
             await db.ref('master_settings').set({ username: u, password: p });
-            alert("සාර්ථකව වෙනස් විය!");
+            showToast("සාර්ථකව වෙනස් විය!");
         }
     }
 
@@ -404,146 +418,154 @@
         document.getElementById('secStdManage').style.display = t==='manage'?'block':'none';
         document.getElementById('btnStdAdd').classList.toggle('active', t==='add');
         document.getElementById('btnStdManage').classList.toggle('active', t==='manage');
-        if(t==='manage') loadStudents();
     }
 
     async function addStudent() {
         const name = document.getElementById('stdName').value;
         const pass = document.getElementById('stdPass').value;
         const acc = document.getElementById('stdAccess').value;
-        if(!name || !pass) return alert("Fill all fields!");
+        if(!name || !pass) return showToast("සියලු තොරතුරු ඇතුළත් කරන්න!", true);
         await db.ref('students').push({ name, password: pass, access: acc });
-        alert("සාර්ථකයි!");
+        showToast("සිසුවා සාර්ථකව ලියාපදිංචි විය!");
+        document.getElementById('stdName').value = ""; document.getElementById('stdPass').value = "";
         toggleStudentSec('manage');
     }
 
     function loadStudents() {
         db.ref('students').on('value', snap => {
             const data = snap.val() || {};
-            let h = `<table>`;
+            let h = `<table style="min-width: 600px;"><thead><tr style="text-align: left; background: #f8faff;"><th style="width: 30px; padding: 12px; border-radius: 12px 0 0 12px;"><input type="checkbox" id="selectAllStd" class="std-chk" onchange="toggleAllStudentsList(this)"></th><th style="padding: 12px;">නම</th><th style="padding: 12px;">මුරපදය</th><th style="padding: 12px;">Access</th><th style="padding: 12px; text-align:right; border-radius: 0 12px 12px 0;">ක්‍රියා</th></tr></thead><tbody>`;
             for(let k in data) {
-                h += `<tr><td><b style="font-size:18px;">${data[k].name}</b></td><td style="text-align:right">
-                    <button style="width:auto; padding:8px 20px;" onclick="openAccessModal('${k}','${data[k].name}','${data[k].access}')">Access</button>
-                    <i class="material-icons" style="color:red; cursor:pointer; vertical-align:middle; margin-left:15px; font-size: 28px;" onclick="deleteStudent('${k}')">delete</i></td></tr>`;
+                let acc = data[k].access || 'N/A';
+                let accColor = acc === 'all' ? '#10b981' : (acc === 'both' ? '#8b5cf6' : (acc === 'et' ? '#ef4444' : '#f59e0b'));
+                h += `<tr class="student-row"><td style="padding: 12px; border-bottom: 1px solid #f1f5f9;"><input type="checkbox" class="single-std-chk std-chk" value="${k}"></td>
+                <td style="padding: 12px; border-bottom: 1px solid #f1f5f9;"><b style="font-size:14px; color: var(--text-main);" class="s-name">${data[k].name}</b></td>
+                <td style="padding: 12px; border-bottom: 1px solid #f1f5f9;"><code style="background: #fff0f6; color: var(--danger); padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px;">${data[k].password}</code></td>
+                <td style="padding: 12px; border-bottom: 1px solid #f1f5f9;"><span style="background: ${accColor}15; color: ${accColor}; padding: 4px 10px; border-radius: 50px; font-size: 11px; font-weight: 800;">${acc.toUpperCase()}</span></td>
+                <td style="padding: 12px; text-align:right; border-bottom: 1px solid #f1f5f9;"><button style="width:auto; padding:6px 12px; font-size:12px; border-radius:8px; display:inline-block;" onclick="openAccessModal('${k}','${data[k].name}','${data[k].access}')"><i class="material-icons" style="font-size:14px;">settings</i></button> <i class="material-icons" style="color:var(--danger); cursor:pointer; vertical-align:middle; margin-left:10px; font-size: 22px;" onclick="deleteStudent('${k}')">delete</i></td></tr>`;
             }
-            document.getElementById('studentListArea').innerHTML = h + `</table>`;
+            document.getElementById('studentListArea').innerHTML = h + `</tbody></table>`;
         });
     }
 
-    // --- ACCESS MODAL ---
-    function openAccessModal(key, name, acc) {
-        editingUserKey = key;
-        document.getElementById('modalUser').innerText = name;
-        document.getElementById('modalAccessType').value = acc;
-        updateModalStreamOptions(acc);
-        document.getElementById('accessModal').style.display = 'flex';
-        loadLessonCheckboxes();
+    function filterStudents() {
+        let input = document.getElementById('searchStudent').value.toLowerCase();
+        document.querySelectorAll('.student-row').forEach(row => {
+            if(row.querySelector('.s-name').innerText.toLowerCase().includes(input)) { row.style.display = ""; } 
+            else { row.style.display = "none"; row.querySelector('.single-std-chk').checked = false; }
+        });
     }
 
+    function toggleAllStudentsList(source) {
+        document.querySelectorAll('.single-std-chk').forEach(chk => { if(chk.closest('tr').style.display !== 'none') chk.checked = source.checked; });
+    }
+
+    function loadBulkFolders() {
+        const s = document.getElementById('bulkStream').value, c = document.getElementById('bulkCat').value, sel = document.getElementById('bulkFolder');
+        sel.innerHTML = '<option value="">Folder තෝරන්න...</option>';
+        if(s && c) db.ref(`studyData/${s}/${c}`).once('value').then(snap => { const data = snap.val(); if(data) Object.keys(data).forEach(l => { let o = document.createElement('option'); o.value = l; o.innerText = l; sel.appendChild(o); }); });
+    }
+
+    async function grantBulkAccess() {
+        const stream = document.getElementById('bulkStream').value, folder = document.getElementById('bulkFolder').value;
+        if(!stream || !folder) return showToast("Stream සහ Folder තෝරන්න!", true);
+        const selectedCheckboxes = document.querySelectorAll('.single-std-chk:checked');
+        if(selectedCheckboxes.length === 0) return showToast("Access දිය යුතු සිසුන් තෝරන්න!", true);
+        if(!confirm(`සිසුන් ${selectedCheckboxes.length} දෙනාට [${folder}] සඳහා Access දෙන්නද?`)) return;
+        let updates = {};
+        selectedCheckboxes.forEach(chk => { updates[`students/${chk.value}/allowedLessons/${stream}/${folder}`] = true; });
+        try { await db.ref().update(updates); showToast("සාර්ථකව Access ලබා දෙන ලදී!"); document.querySelectorAll('.std-chk').forEach(c => c.checked = false); } 
+        catch(error) { showToast("දෝෂයක්: " + error, true); }
+    }
+
+    function openAccessModal(key, name, acc) { editingUserKey = key; document.getElementById('modalUser').innerText = name; document.getElementById('modalAccessType').value = acc; updateModalStreamOptions(acc); document.getElementById('accessModal').style.display = 'flex'; loadLessonCheckboxes(); }
     function updateModalStreamOptions(type) {
-        const s = document.getElementById('modalStream');
-        s.innerHTML = "";
+        const s = document.getElementById('modalStream'); s.innerHTML = "";
         if(type==='et'||type==='both'||type==='all') s.innerHTML += `<option value="et">ET</option>`;
         if(type==='sft'||type==='both'||type==='all') s.innerHTML += `<option value="sft">SFT</option>`;
         if(type==='ict'||type==='all') s.innerHTML += `<option value="ict">ICT</option>`;
     }
 
     async function loadLessonCheckboxes() {
-        const stream = document.getElementById('modalStream').value;
-        if(!stream) return;
-        const listDiv = document.getElementById("checkboxArea");
-        listDiv.innerHTML = "පෙරමින්...";
-        const cats = ['Monthly', 'Papers', 'Lessons'];
-        const uSnap = await db.ref(`students/${editingUserKey}/allowedLessons/${stream}`).once('value');
-        const allowed = uSnap.val() || {};
+        const stream = document.getElementById('modalStream').value; if(!stream) return;
+        const listDiv = document.getElementById("checkboxArea"); listDiv.innerHTML = "<p style='text-align:center;'>පෙරමින්...</p>";
+        const cats = ['Monthly', 'Papers', 'Lessons'], uSnap = await db.ref(`students/${editingUserKey}/allowedLessons/${stream}`).once('value'), allowed = uSnap.val() || {};
         let html = "";
         for(let cat of cats) {
-            const lSnap = await db.ref(`studyData/${stream}/${cat}`).once('value');
-            const lessons = lSnap.val() || {};
-            for(let l in lessons) {
-                const chk = allowed[l] ? 'checked' : '';
-                html += `<div class="lesson-check-item"><input type="checkbox" class="l-chk" value="${l}" ${chk}> <span>[${cat}] ${l}</span></div>`;
-            }
+            const lSnap = await db.ref(`studyData/${stream}/${cat}`).once('value'), lessons = lSnap.val() || {};
+            for(let l in lessons) html += `<div class="lesson-check-item"><input type="checkbox" class="l-chk" value="${l}" ${allowed[l] ? 'checked' : ''}> <span>[${cat}] ${l}</span></div>`;
         }
-        listDiv.innerHTML = html || "පාඩම් නැත.";
+        listDiv.innerHTML = html || "<p style='text-align:center;'>පාඩම් නැත.</p>";
     }
 
     async function saveStudentAccess() {
-        const stream = document.getElementById('modalStream').value;
-        let obj = {};
+        const stream = document.getElementById('modalStream').value; let obj = {};
         document.querySelectorAll('.l-chk').forEach(c => { if(c.checked) obj[c.value] = true; });
-        await db.ref(`students/${editingUserKey}/allowedLessons/${stream}`).set(obj);
-        alert("සුරැකුණා!");
+        await db.ref(`students/${editingUserKey}/allowedLessons/${stream}`).set(obj); showToast("සුරැකුණා!");
     }
 
-    async function updateUserType() {
-        const v = document.getElementById('modalAccessType').value;
-        await db.ref(`students/${editingUserKey}`).update({ access: v });
-        updateModalStreamOptions(v);
-        loadLessonCheckboxes();
-    }
-
+    async function updateUserType() { const v = document.getElementById('modalAccessType').value; await db.ref(`students/${editingUserKey}`).update({ access: v }); updateModalStreamOptions(v); loadLessonCheckboxes(); }
     function toggleAll(st) { document.querySelectorAll('.l-chk').forEach(c => c.checked = st); }
     function closeModal() { document.getElementById('accessModal').style.display='none'; }
-    function deleteStudent(k) { if(confirm("මෙම ශිෂ්‍යයා ඉවත් කරන්නද?")) db.ref(`students/${k}`).remove(); }
+    function deleteStudent(k) { if(confirm("මෙම ශිෂ්‍යයා ඉවත් කරන්නද?")) { db.ref(`students/${k}`).remove(); showToast("සිසුවා ඉවත් කරන ලදී!"); } }
 
     // --- CONTENT UPLOAD ---
     async function createNewFolder(cat) {
-        const s = document.getElementById('streamSelect').value;
-        const inputId = cat === 'Monthly' ? 'newMonthlyInput' : (cat === 'Papers' ? 'newPapersInput' : 'newLessonInput');
-        const n = document.getElementById(inputId).value.trim();
-        if(n) { 
-            await db.ref(`studyData/${s}/${cat}/${n}`).update({ created: Date.now() }); 
-            alert(`${cat} ෆෝල්ඩරය නිර්මාණය විය!`); 
-            document.getElementById(inputId).value = "";
-            loadLessonsList();
-        }
+        const s = document.getElementById('streamSelect').value, inputId = cat === 'Monthly' ? 'newMonthlyInput' : (cat === 'Papers' ? 'newPapersInput' : 'newLessonInput'), n = document.getElementById(inputId).value.trim();
+        if(n) { await db.ref(`studyData/${s}/${cat}/${n}`).update({ created: Date.now() }); showToast(`${cat} ෆෝල්ඩරය සෑදුවා!`); document.getElementById(inputId).value = ""; loadLessonsList(); }
     }
 
     function loadLessonsList() {
-        const s = document.getElementById('streamSelect').value;
-        const c = document.getElementById('categorySelect').value;
+        const s = document.getElementById('streamSelect').value, c = document.getElementById('categorySelect').value;
         db.ref(`studyData/${s}/${c}`).on('value', snap => {
-            const data = snap.val();
-            const sel = document.getElementById('lessonSelect');
-            sel.innerHTML = '<option value="">තෝරන්න...</option>';
-            if(data) Object.keys(data).forEach(l => {
-                let o = document.createElement('option'); o.value = l; o.innerText = l; sel.appendChild(o);
-            });
+            const data = snap.val(), sel = document.getElementById('lessonSelect'); sel.innerHTML = '<option value="">තෝරන්න...</option>';
+            if(data) Object.keys(data).forEach(l => { let o = document.createElement('option'); o.value = l; o.innerText = l; sel.appendChild(o); });
         });
     }
 
     async function uploadVideos() {
-        const s = document.getElementById('streamSelect').value;
-        const c = document.getElementById('categorySelect').value;
-        const l = document.getElementById('lessonSelect').value;
-        const lines = document.getElementById('bulkData').value.split('\n');
-        if(!l) return alert("කරුණාකර ෆෝල්ඩරයක් තෝරන්න!");
+        const s = document.getElementById('streamSelect').value, c = document.getElementById('categorySelect').value, l = document.getElementById('lessonSelect').value, lines = document.getElementById('bulkData').value.split('\n');
+        if(!l) return showToast("ෆෝල්ඩරයක් තෝරන්න!", true);
         let title = "";
         for(let line of lines) {
             line = line.trim(); if(!line) continue;
-            if(line.includes("http")) {
-                const match = line.match(/(?:v=|\/)([\w\-]{11})/);
-                if(match && title) await db.ref(`studyData/${s}/${c}/${l}/videos`).push({ id: match[1], title });
-                title = "";
-            } else title = line;
+            if(line.includes("http")) { const match = line.match(/(?:v=|\/)([\w\-]{11})/); if(match && title) await db.ref(`studyData/${s}/${c}/${l}/videos`).push({ id: match[1], title }); title = ""; } 
+            else title = line;
         }
-        alert("Upload සාර්ථකයි!");
+        showToast("Upload සාර්ථකයි!"); document.getElementById('bulkData').value = "";
     }
 
-    // --- STORAGE VIEW ---
+    // --- STORAGE VIEW & DRAG AND DROP ---
+    let draggedItemKey = null;
+
     function viewStorage(s) {
         const area = document.getElementById('storageArea');
         area.innerHTML = `
-            <h3 style="margin-bottom:20px;">${s.toUpperCase()} ගබඩාව</h3>
-            <div class="sub-nav">
-                <div class="sub-btn active" id="viewMon" onclick="renderCategoryView('${s}', 'Monthly')">Monthly</div>
-                <div class="sub-btn" id="viewPap" onclick="renderCategoryView('${s}', 'Papers')">Papers</div>
-                <div class="sub-btn" id="viewLes" onclick="renderCategoryView('${s}', 'Lessons')">Lessons</div>
+            <div style="background:white; padding:20px; border-radius:16px; box-shadow:var(--shadow);">
+                <h3 style="margin-top:0; color:var(--text-main); margin-bottom:15px; font-size:18px;">${s.toUpperCase()} ගබඩාව</h3>
+                
+                <div style="position: relative; margin-bottom: 15px;">
+                    <i class="material-icons" style="position: absolute; left: 12px; top: 12px; color: #64748b; font-size: 20px;">search</i>
+                    <input type="text" id="searchStorage" onkeyup="filterStorage()" placeholder="ෆෝල්ඩරයේ නම සොයන්න..." style="padding-left: 40px; border-radius: 50px; margin-bottom:0; padding-top: 10px; padding-bottom: 10px;">
+                </div>
+
+                <div class="sub-nav" style="margin-bottom:15px;">
+                    <div class="sub-btn active" id="viewMon" onclick="renderCategoryView('${s}', 'Monthly')">Monthly</div>
+                    <div class="sub-btn" id="viewPap" onclick="renderCategoryView('${s}', 'Papers')">Papers</div>
+                    <div class="sub-btn" id="viewLes" onclick="renderCategoryView('${s}', 'Lessons')">Lessons</div>
+                </div>
+                <div id="categoryViewArea" style="text-align:left;"></div>
             </div>
-            <div id="categoryViewArea"></div>
         `;
         renderCategoryView(s, 'Monthly');
+    }
+
+    function filterStorage() {
+        let input = document.getElementById('searchStorage').value.toLowerCase();
+        document.querySelectorAll('.draggable-folder').forEach(row => {
+            let name = row.querySelector('.folder-name').innerText.toLowerCase();
+            row.style.display = name.includes(input) ? "" : "none";
+        });
     }
 
     function renderCategoryView(s, c) {
@@ -553,32 +575,43 @@
         else if(c==='Lessons') document.getElementById('viewLes').classList.add('active');
 
         db.ref(`studyData/${s}/${c}`).on('value', snap => {
-            const data = snap.val();
+            const rawData = snap.val();
             const area = document.getElementById('categoryViewArea');
             area.innerHTML = "";
-            if(!data) { area.innerHTML = "දත්ත නැත."; return; }
-            for(let l in data) {
-                let vHtml = data[l].videos ? "" : `<p style="color:#f72585;">Recording ඇතුලත් කර නොමැත.</p>`;
-                if(data[l].videos) {
-                    for(let vk in data[l].videos) {
-                        vHtml += `<div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding:5px 0;">
-                            <span>${data[l].videos[vk].title}</span>
-                            <i class="material-icons" style="color:red; cursor:pointer;" onclick="deleteVideo(event, '${s}','${c}','${l}','${vk}')">delete</i>
+            if(!rawData) { area.innerHTML = "<p style='text-align:center; color:#64748b; padding:20px 0;'>දත්ත නැත.</p>"; return; }
+            
+            let dataArray = [];
+            for (let k in rawData) { dataArray.push({ key: k, ...rawData[k] }); }
+            dataArray.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+            dataArray.forEach((item) => {
+                const l = item.key;
+                let vHtml = item.videos ? "" : `<p style="color:var(--danger); font-size:13px; margin-top:0;">Recording ඇතුලත් කර නොමැත.</p>`;
+                if(item.videos) {
+                    for(let vk in item.videos) {
+                        vHtml += `<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding:8px 0;">
+                            <span style="font-size:13px;">${item.videos[vk].title}</span>
+                            <i class="material-icons" style="color:var(--danger); cursor:pointer; font-size:18px;" onclick="deleteVideo(event, '${s}','${c}','${l}','${vk}')">delete</i>
                         </div>`;
                     }
                 }
                 const safeId = "lesson_" + btoa(unescape(encodeURIComponent(l))).replace(/=/g, "");
+                
                 area.innerHTML += `
-                <div class="card" style="padding: 0; overflow: hidden; margin-bottom: 20px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; padding: 20px; cursor: pointer;" onclick="toggleAccordion('${safeId}')">
-                        <b>${l}</b><i class="material-icons" id="icon-${safeId}">expand_more</i>
+                <div class="draggable-folder" draggable="true" ondragstart="dragStart(event, '${l}')" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFolder(event, '${s}', '${c}', '${l}')">
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding: 12px 15px; cursor: pointer; background:#f8faff;" onclick="toggleAccordion('${safeId}')">
+                        <div style="display:flex; align-items:center;">
+                            <i class="material-icons drag-handle" title="Drag to reorder">drag_indicator</i>
+                            <b class="folder-name" style="font-size:14px; color:#1e293b;">${l}</b>
+                        </div>
+                        <i class="material-icons" id="icon-${safeId}" style="color:#64748b;">expand_more</i>
                     </div>
-                    <div id="content-${safeId}" class="accordion-content" style="display:none; padding: 20px; background:#fafafa;">
-                        <button style="width:auto; padding:8px; background:var(--danger); margin-bottom:15px;" onclick="deleteFolder('${s}','${c}','${l}')">මකන්න</button>
+                    <div id="content-${safeId}" style="display:none; padding: 15px; border-top:1px solid #e2e8f0;">
+                        <button style="width:auto; padding:6px 12px; background:var(--danger); margin-bottom:10px; font-size:12px; border-radius:6px;" onclick="deleteFolder('${s}','${c}','${l}')">ෆෝල්ඩරය මකන්න</button>
                         ${vHtml}
                     </div>
                 </div>`;
-            }
+            });
         });
     }
 
@@ -589,10 +622,63 @@
         const isOpen = content.style.display === 'block';
         content.style.display = isOpen ? 'none' : 'block';
         icon.innerText = isOpen ? 'expand_more' : 'expand_less';
+        
+        if (!isOpen) {
+            setTimeout(() => { content.parentElement.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 150);
+        }
     }
 
-    async function deleteVideo(event, s, c, l, vk) { event.stopPropagation(); if(confirm("මකන්නද?")) await db.ref(`studyData/${s}/${c}/${l}/videos/${vk}`).remove(); }
-    async function deleteFolder(s, c, l) { if(confirm("සම්පූර්ණ පාඩම මකන්නද?")) await db.ref(`studyData/${s}/${c}/${l}`).remove(); }
+    function dragStart(event, key) {
+        draggedItemKey = key;
+        event.dataTransfer.effectAllowed = 'move';
+        event.target.style.opacity = "0.5";
+    }
+    function dragOver(event) {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+        const folder = event.target.closest('.draggable-folder');
+        if(folder) folder.classList.add('drag-over');
+    }
+    function dragLeave(event) {
+        const folder = event.target.closest('.draggable-folder');
+        if(folder) folder.classList.remove('drag-over');
+    }
+
+    async function dropFolder(event, s, c, targetKey) {
+        event.preventDefault();
+        const folder = event.target.closest('.draggable-folder');
+        if(folder) folder.classList.remove('drag-over');
+        document.querySelectorAll('.draggable-folder').forEach(el => el.style.opacity = "1");
+
+        if(!draggedItemKey || draggedItemKey === targetKey) return;
+
+        const snap = await db.ref(`studyData/${s}/${c}`).once('value');
+        const data = snap.val();
+        if(!data) return;
+
+        let keys = Object.keys(data).sort((a, b) => (data[a].order || 0) - (data[b].order || 0));
+        const oldIndex = keys.indexOf(draggedItemKey);
+        const newIndex = keys.indexOf(targetKey);
+
+        if(oldIndex > -1 && newIndex > -1) {
+            keys.splice(oldIndex, 1);
+            keys.splice(newIndex, 0, draggedItemKey);
+            
+            let updates = {};
+            let timeBase = Date.now();
+            
+            keys.forEach((k, i) => { 
+                updates[`studyData/${s}/${c}/${k}/order`] = i; 
+                updates[`studyData/${s}/${c}/${k}/created`] = timeBase + (i * 1000); // ළමයින්ගේ App එකේ අනුපිළිවෙල හැදෙන්න Time එක වෙනස් කිරීම
+            });
+            await db.ref().update(updates);
+            showToast("අනුපිළිවෙල යාවත්කාලීන විය!");
+        }
+        draggedItemKey = null;
+    }
+
+    async function deleteVideo(event, s, c, l, vk) { event.stopPropagation(); if(confirm("මකන්නද?")) { await db.ref(`studyData/${s}/${c}/${l}/videos/${vk}`).remove(); showToast("Video මකා දැමුවා!"); } }
+    async function deleteFolder(s, c, l) { if(confirm("සම්පූර්ණ පාඩම මකන්නද?")) { await db.ref(`studyData/${s}/${c}/${l}`).remove(); showToast("Folder මකා දැමුවා!"); } }
 
     // --- SMART PAPER (SPG) ---
     function openSpgMain() { showPage('spgPage'); document.getElementById('spgTypeSelect').style.display = 'grid'; document.getElementById('spgEditor').style.display = 'none'; }
@@ -600,58 +686,48 @@
     function toggleSpgSub(v) { document.getElementById('spgGenView').style.display = v==='gen'?'block':'none'; document.getElementById('spgListView').style.display = v==='list'?'block':'none'; document.getElementById('btnSpgGen').classList.toggle('active', v==='gen'); document.getElementById('btnSpgList').classList.toggle('active', v==='list'); if(v==='list') loadPapers(); }
 
     async function processPdfAndQr() {
-        const fileInput = document.getElementById('pdf-file');
-        const url = document.getElementById('pdf-url').value;
-        const name = document.getElementById('pdf-label').value;
-        if(!fileInput.files[0] || !url || !name) return alert("Fill all fields!");
-        const statusEl = document.getElementById('status');
-        statusEl.innerText = "සකසමින්...";
+        const fileInput = document.getElementById('pdf-file'); const url = document.getElementById('pdf-url').value; const name = document.getElementById('pdf-label').value;
+        if(!fileInput.files[0] || !url || !name) return showToast("සියලු තොරතුරු පුරවන්න!", true);
+        const statusEl = document.getElementById('status'); statusEl.innerText = "සකසමින් පවතී... රැඳී සිටින්න.";
         try {
-            const qrHidden = document.getElementById('qr-hidden');
-            qrHidden.innerHTML = ""; 
+            const qrHidden = document.getElementById('qr-hidden'); qrHidden.innerHTML = ""; 
             new QRCode(qrHidden, { text: url, width: 400, height: 400, correctLevel: QRCode.CorrectLevel.H });
-            const qrImg = await new Promise((resolve, reject) => {
-                let attempts = 0;
-                const check = setInterval(async () => {
-                    const img = qrHidden.querySelector('img');
-                    attempts++;
-                    if (img && img.src && img.complete) { clearInterval(check); resolve(img); }
-                    if (attempts > 60) { clearInterval(check); reject("Error"); }
-                }, 100);
-            });
-            const canvas = document.getElementById('qr-canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = 400; canvas.height = 400;
-            ctx.drawImage(qrImg, 0, 0, 400, 400);
-            ctx.fillStyle = "white"; ctx.fillRect(100, 175, 200, 50);
-            ctx.fillStyle = "black"; ctx.textAlign = "center";
-            ctx.font = "bold 28px Arial"; ctx.fillText(name, 200, 210);
-            const qrBase64 = canvas.toDataURL('image/png');
-            const pdfDoc = await PDFLib.PDFDocument.load(await fileInput.files[0].arrayBuffer());
-            const firstPage = pdfDoc.getPages()[0];
-            const qrEmbed = await pdfDoc.embedPng(qrBase64);
+            const qrImg = await new Promise((resolve, reject) => { let attempts = 0; const check = setInterval(async () => { const img = qrHidden.querySelector('img'); attempts++; if (img && img.src && img.complete) { clearInterval(check); resolve(img); } if (attempts > 60) { clearInterval(check); reject("Error"); } }, 100); });
+            const canvas = document.getElementById('qr-canvas'), ctx = canvas.getContext('2d');
+            canvas.width = 400; canvas.height = 400; ctx.drawImage(qrImg, 0, 0, 400, 400); ctx.fillStyle = "white"; ctx.fillRect(100, 175, 200, 50); ctx.fillStyle = "black"; ctx.textAlign = "center"; ctx.font = "bold 28px Arial"; ctx.fillText(name, 200, 210);
+            const qrBase64 = canvas.toDataURL('image/png'), pdfDoc = await PDFLib.PDFDocument.load(await fileInput.files[0].arrayBuffer()), firstPage = pdfDoc.getPages()[0], qrEmbed = await pdfDoc.embedPng(qrBase64);
             firstPage.drawImage(qrEmbed, { x: 20, y: firstPage.getSize().height - 90, width: 70, height: 70 });
-            const pdfBytes = await pdfDoc.save();
-            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-            const dUrl = URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.href = dUrl; a.download = `${name}_SmartPaper.pdf`;
-            a.click();
-            statusEl.innerText = "සාර්ථකයි!";
-            document.getElementById('spgSaveDb').style.display = "block";
-        } catch (error) { statusEl.innerText = "දෝෂයකි."; }
+            const pdfBytes = await pdfDoc.save(), blob = new Blob([pdfBytes], { type: 'application/pdf' }), dUrl = URL.createObjectURL(blob), a = document.createElement('a'); a.href = dUrl; a.download = `${name}_SmartPaper.pdf`; a.click();
+            statusEl.innerHTML = "<span style='color:var(--success);'>සාර්ථකයි!</span>"; document.getElementById('spgSaveDb').style.display = "block";
+            showToast("PDF Generate විය!");
+        } catch (error) { statusEl.innerHTML = "<span style='color:var(--danger);'>දෝෂයකි.</span>"; }
     }
 
     async function saveSpgToFirebase() {
         const link = document.getElementById('final-pdf-link').value;
-        if(link) await db.ref(`papers/${activeSpgType}`).push({ label: document.getElementById('pdf-label').value, url: link });
-        alert("Saved!");
+        if(link) { await db.ref(`papers/${activeSpgType}`).push({ label: document.getElementById('pdf-label').value, url: link }); showToast("පද්ධතියට එක් කළා!"); document.getElementById('final-pdf-link').value = ""; }
     }
 
     function loadPapers() {
         db.ref(`papers/${activeSpgType}`).on('value', snap => {
-            const data = snap.val();
-            let h = `<table>`;
-            for(let id in data) h += `<tr><td>${data[id].label}</td><td style="text-align:right"><i class="material-icons" style="color:red; cursor:pointer;" onclick="deletePaper('${id}')">delete</i></td></tr>`;
+            const data = snap.val(); let h = `<table style="background:white; border-radius:12px; overflow:hidden;">`;
+            if(!data) h += `<tr><td style="text-align:center; color:#64748b;">පේපර්ස් කිසිවක් නැත.</td></tr>`;
+            for(let id in data) h += `<tr><td style="padding:10px 15px; font-weight:500;">${data[id].label}</td><td style="text-align:right; padding:10px 15px;"><i class="material-icons" style="color:var(--danger); cursor:pointer; font-size:20px;" onclick="deletePaper('${id}')">delete</i></td></tr>`;
+            document.getElementById('paperTableArea').innerHTML = h + `</table>`;
+        });
+    }
+
+    async function deletePaper(id) { if(confirm("මකන්නද?")) { await db.ref(`papers/${activeSpgType}/${id}`).remove(); showToast("මකා දැමුවා!"); } }
+
+    window.onload = () => { loadLessonsList(); loadMasterAccessData(); };
+</script>
+</body>
+</html>
+<script>{
+    {({
+
+
+
             document.getElementById('paperTableArea').innerHTML = h + `</table>`;
         });
     }
