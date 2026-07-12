@@ -191,8 +191,8 @@
             background: #000; border-radius: 25px; overflow: hidden; 
             box-shadow: 0 20px 40px rgba(0,0,0,0.7); border: 2px solid rgba(255,255,255,0.1);
         }
-        #player { width: 100%; height: 100%; position: absolute; pointer-events: none; }
-        .click-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
+        #player { width: 100%; height: 100%; position: absolute; pointer-events: none; border: none; }
+        .click-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; cursor: pointer; }
         
         .custom-controls { 
             position: absolute; bottom: 0; left: 0; right: 0; 
@@ -202,8 +202,8 @@
         .custom-controls.hidden { opacity: 0; pointer-events: none; transform: translateY(10px); }
 
         .seek-bar-container { width: 100%; height: 5px; background: rgba(255,255,255,0.2); border-radius: 10px; margin-bottom: 12px; cursor: pointer; position: relative; }
-        .seek-bar-progress { height: 100%; background: var(--primary); border-radius: 10px; width: 0%; position: relative; }
-        .seek-bar-knob { width: 14px; height: 14px; background: white; border-radius: 50%; position: absolute; right: -7px; top: -4.5px; box-shadow: 0 0 10px rgba(220,38,38,0.5); }
+        .seek-bar-progress { height: 100%; background: var(--primary); border-radius: 10px; width: 0%; position: relative; pointer-events: none; }
+        .seek-bar-knob { width: 14px; height: 14px; background: white; border-radius: 50%; position: absolute; right: -7px; top: -4.5px; box-shadow: 0 0 10px rgba(220,38,38,0.5); pointer-events: none; }
 
         .time-row { display: flex; align-items: center; justify-content: space-between; color: white; }
         .control-btn { background: none; border: none; color: white; cursor: pointer; display: flex; align-items: center; }
@@ -237,6 +237,38 @@
             color: var(--text-main); padding: 10px; border-radius: 50%;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             box-shadow: var(--shadow); transition: 0.3s;
+        }
+
+        /* ===== MOBILE FULLSCREEN FIX (Pseudo-Fullscreen) ===== */
+        .video-box.pseudo-fullscreen {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            max-width: 100vw !important;
+            max-height: 100vh !important;
+            z-index: 999999 !important;
+            aspect-ratio: unset !important;
+            border-radius: 0 !important;
+            border: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #000 !important;
+        }
+        .video-box.pseudo-fullscreen .custom-controls {
+            z-index: 9999999 !important;
+            padding: 30px 25px 25px !important;
+        }
+        .video-box.pseudo-fullscreen .click-layer {
+            z-index: 10 !important;
+        }
+        body.pseudo-fs-active {
+            overflow: hidden !important;
+        }
+        .video-box:fullscreen .custom-controls,
+        .video-box:-webkit-full-screen .custom-controls {
+            z-index: 2147483647 !important;
         }
     </style>
 </head>
@@ -337,7 +369,7 @@
                     </div>
                     <div style="display:flex; align-items:center; gap:10px;">
                         <button class="control-btn" onclick="toggleVolume(event)"><i class="material-icons" id="volIcon">volume_up</i></button>
-                        <button class="control-btn" onclick="toggleFullScreen(event)"><i class="material-icons">fullscreen</i></button>
+                        <button class="control-btn" onclick="toggleFullScreen(event)"><i class="material-icons" id="fsIconBtn">fullscreen</i></button>
                         <div style="position:relative;">
                             <button class="control-btn" onclick="toggleSpeedDropdown(event)"><i class="material-icons">more_vert</i></button>
                             <div class="speed-dropdown" id="speedMenu">
@@ -582,17 +614,37 @@
         document.getElementById("activeVideoTitle").innerText = vid.title;
         document.getElementById("videoListContainer").style.display = "none";
         document.getElementById("playerSection").style.display = "block";
+        
         if (!player) {
-            player = new YT.Player('player', { videoId: vid.id, playerVars: { 'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0, 'playsinline': 1 }, events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } });
-        } else { player.loadVideoById(vid.id); }
+            player = new YT.Player('player', { 
+                host: 'https://www.youtube-nocookie.com', // Fix 1: Block Ads using nocookie domain
+                videoId: vid.id, 
+                playerVars: { 
+                    'autoplay': 1, 
+                    'controls': 0, 
+                    'modestbranding': 1, 
+                    'rel': 0, 
+                    'playsinline': 1,
+                    'iv_load_policy': 3 // Hide annotations
+                }, 
+                events: { 
+                    'onReady': onPlayerReady, 
+                    'onStateChange': onPlayerStateChange 
+                } 
+            });
+        } else { 
+            player.loadVideoById(vid.id); 
+        }
     }
 
     function onPlayerReady() { setInterval(updateUI, 500); }
+    
     function onPlayerStateChange(e) {
         const btn = document.getElementById("playPauseBtn");
         if (e.data === YT.PlayerState.PLAYING) { btn.innerHTML = '<i class="material-icons">pause</i>'; resetTimer(); }
         else { btn.innerHTML = '<i class="material-icons">play_arrow</i>'; showControls(); }
     }
+    
     function skip(sec) { if (player) player.seekTo(player.getCurrentTime() + sec, true); }
     function togglePlay(e) { if(e) e.stopPropagation(); if(player) (player.getPlayerState() === 1) ? player.pauseVideo() : player.playVideo(); }
     function handleTap() { const cb = document.getElementById("controlBar"); document.getElementById("speedMenu").classList.remove("show"); cb.classList.contains("hidden") ? showControls() : hideControls(); }
@@ -600,7 +652,37 @@
     function hideControls() { if (player && player.getPlayerState() === 1) document.getElementById("controlBar").classList.add("hidden"); }
     function resetTimer() { clearTimeout(hideTimeout); if (player && player.getPlayerState() === 1) hideTimeout = setTimeout(hideControls, 4000); }
     function toggleVolume(e) { e.stopPropagation(); if(player.isMuted()) { player.unMute(); document.getElementById('volIcon').innerText = 'volume_up'; } else { player.mute(); document.getElementById('volIcon').innerText = 'volume_off'; } }
-    function toggleFullScreen(e) { e.stopPropagation(); var el = document.getElementById("videoContainer"); if (!document.fullscreenElement) el.requestFullscreen(); else document.exitFullscreen(); }
+    
+    // Fix 2: Mobile Fullscreen Controls Fix
+    function toggleFullScreen(e) { 
+        e.stopPropagation(); 
+        var el = document.getElementById("videoContainer"); 
+        var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        var fsIcon = document.getElementById('fsIconBtn');
+
+        if (isMobile) {
+            // Pseudo-fullscreen for Mobile
+            if (el.classList.contains('pseudo-fullscreen')) {
+                el.classList.remove('pseudo-fullscreen');
+                document.body.classList.remove('pseudo-fs-active');
+                if(fsIcon) fsIcon.innerText = 'fullscreen';
+            } else {
+                el.classList.add('pseudo-fullscreen');
+                document.body.classList.add('pseudo-fs-active');
+                if(fsIcon) fsIcon.innerText = 'fullscreen_exit';
+            }
+        } else {
+            // Native fullscreen for PC
+            if (!document.fullscreenElement) {
+                el.requestFullscreen();
+                if(fsIcon) fsIcon.innerText = 'fullscreen_exit';
+            } else {
+                document.exitFullscreen();
+                if(fsIcon) fsIcon.innerText = 'fullscreen';
+            }
+        }
+    }
+    
     function toggleSpeedDropdown(e) { e.stopPropagation(); document.getElementById("speedMenu").classList.toggle("show"); }
     function setSpeed(rate) { player.setPlaybackRate(rate); document.getElementById("speedMenu").classList.remove("show"); }
     function handleSeek(e) { e.stopPropagation(); var rect = e.currentTarget.getBoundingClientRect(); var pos = (e.clientX - rect.left) / rect.width; player.seekTo(player.getDuration() * pos, true); }
@@ -622,7 +704,17 @@
         return (h > 0 ? h + ":" : "") + (m < 10 && h > 0 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s; 
     }
 
-    function hidePlayer() { if(player) player.pauseVideo(); document.getElementById("playerSection").style.display = "none"; document.getElementById("videoListContainer").style.display = "block"; }
+    function hidePlayer() { 
+        if(player) player.pauseVideo(); 
+        document.getElementById("playerSection").style.display = "none"; 
+        document.getElementById("videoListContainer").style.display = "block"; 
+        // Reset fullscreen if returning
+        document.getElementById("videoContainer").classList.remove('pseudo-fullscreen');
+        document.body.classList.remove('pseudo-fs-active');
+        const fsIcon = document.getElementById('fsIconBtn');
+        if (fsIcon) fsIcon.innerText = 'fullscreen';
+        if (document.fullscreenElement) document.exitFullscreen();
+    }
 
     window.addEventListener('contextmenu', function (e) { e.preventDefault(); }, false);
 </script>
