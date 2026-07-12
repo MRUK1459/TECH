@@ -70,7 +70,7 @@
         }
         .login-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(220, 38, 38, 0.4); }
 
-        #subjectList { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; justify-content: center; }
+        #subjectList { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; justify-content: center; padding: 0 10px; }
 
         .subject-card { 
             background: var(--card-bg); border-radius: 28px; overflow: hidden;
@@ -157,31 +157,14 @@
             min-height: 34px;
             width: 100%;
         }
-        .folder-count {
-            font-size: 12px;
-            color: var(--text-sub);
-            margin-bottom: 12px;
-        }
+        .folder-count { font-size: 12px; color: var(--text-sub); margin-bottom: 12px; }
         .folder-btn {
-            width: 100%;
-            padding: 10px;
-            background: var(--folder-btn-bg);
-            color: var(--folder-btn-text);
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            box-sizing: border-box;
-            transition: 0.2s;
-            margin-top: auto;
+            width: 100%; padding: 10px; background: var(--folder-btn-bg); color: var(--folder-btn-text);
+            border-radius: 10px; font-size: 13px; font-weight: 600; display: flex;
+            align-items: center; justify-content: center; gap: 6px; box-sizing: border-box;
+            transition: 0.2s; margin-top: auto;
         }
-        .folder-card:hover .folder-btn {
-            background: var(--primary);
-            color: #ffffff;
-        }
+        .folder-card:hover .folder-btn { background: var(--primary); color: #ffffff; }
 
         .video-box { 
             position: relative; width: 100%; aspect-ratio: 16/9; 
@@ -190,7 +173,6 @@
         }
         #player { width: 100%; height: 100%; position: absolute; pointer-events: none; border: none; }
         
-        /* Click Layer for Touch Gestures */
         .click-layer { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             z-index: 10; cursor: pointer; touch-action: none; 
@@ -209,12 +191,10 @@
         .seek-bar-knob { width: 14px; height: 14px; background: white; border-radius: 50%; position: absolute; right: -7px; top: -4px; box-shadow: 0 0 10px rgba(220,38,38,0.5); pointer-events: none; transition: 0.2s; opacity: 0; }
         .seek-bar-container:hover .seek-bar-knob { opacity: 1; transform: scale(1.2); }
 
-        /* Layout Update: Icons separated to left and right */
         .time-row { display: flex; align-items: center; justify-content: space-between; color: white; width: 100%; }
         .left-controls { display: flex; align-items: center; gap: 10px; }
         .right-controls { display: flex; align-items: center; gap: 5px; }
         
-        /* Control Icons */
         .control-btn { 
             background: transparent; border: none; color: rgba(255, 255, 255, 0.85); cursor: pointer; display: flex; 
             align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 50%;
@@ -224,35 +204,18 @@
         .control-btn:hover { background: rgba(255, 255, 255, 0.15); color: #ffffff; transform: translateY(-2px); }
         .control-btn:active { transform: scale(0.9); }
 
-        /* Beautiful Skip Buttons */
-        .skip-btn {
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(5px);
-            width: 44px; height: 44px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
+        .skip-btn { background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(5px); width: 44px; height: 44px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .skip-btn:hover { background: rgba(255, 255, 255, 0.25); transform: translateY(-3px) scale(1.05); }
 
-        /* Highlighted Play Button */
         .play-btn-special { background: var(--primary); color: #ffffff; width: 52px; height: 52px; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4); }
         .play-btn-special i { font-size: 34px; }
         .play-btn-special:hover { background: var(--primary-light); box-shadow: 0 6px 20px rgba(220, 38, 38, 0.6); transform: translateY(-3px) scale(1.05); }
 
-        /* Volume Slider Customization */
         .vol-container { display: flex; align-items: center; position: relative; }
-        .vol-slider-wrapper { 
-            width: 0px; overflow: hidden; transition: width 0.3s ease; 
-            display: flex; align-items: center; opacity: 0;
-        }
+        .vol-slider-wrapper { width: 0px; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center; opacity: 0; }
         .vol-container:hover .vol-slider-wrapper, .vol-slider-wrapper:focus-within { width: 80px; opacity: 1; padding: 0 10px 0 5px; }
-        .vol-slider {
-            -webkit-appearance: none; width: 100%; height: 5px; background: rgba(255,255,255,0.3);
-            border-radius: 5px; outline: none; border: none; padding: 0; margin: 0; cursor: pointer;
-        }
-        .vol-slider::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
-            background: #fff; cursor: pointer; transition: 0.2s; box-shadow: 0 0 5px rgba(0,0,0,0.5);
-        }
+        .vol-slider { -webkit-appearance: none; width: 100%; height: 5px; background: rgba(255,255,255,0.3); border-radius: 5px; outline: none; border: none; padding: 0; margin: 0; cursor: pointer; }
+        .vol-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #fff; cursor: pointer; transition: 0.2s; box-shadow: 0 0 5px rgba(0,0,0,0.5); }
         .vol-slider::-webkit-slider-thumb:hover { transform: scale(1.2); background: var(--primary); }
 
         #playerOverlayInfo {
@@ -295,7 +258,49 @@
         }
         #themeToggleBtn:hover { transform: rotate(30deg); border-color: var(--primary); }
 
-        /* Mobile Fullscreen Fix */
+        /* Search Bar Styles */
+        .search-wrapper { max-width: 1200px; margin: 0 auto 25px; padding: 0 10px; position: relative; }
+        .search-input {
+            width: 100%; padding: 16px 20px 16px 50px; margin-bottom: 0;
+            border-radius: 20px; border: 1px solid var(--border-color);
+            background: var(--card-bg) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23dc2626" height="24" viewBox="0 0 24 24" width="24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>') no-repeat 15px center;
+            color: var(--text-main); font-size: 16px; box-shadow: var(--shadow); transition: 0.3s;
+        }
+        .search-input:focus { border-color: var(--primary); box-shadow: 0 10px 30px rgba(220, 38, 38, 0.25); outline: none; }
+
+        /* History Cards Styles */
+        .history-section { max-width: 1200px; margin: 0 auto 30px; padding: 0 10px; }
+        .section-title { font-size: 18px; color: var(--text-main); display: flex; align-items: center; gap: 8px; margin: 0 0 15px 0; font-weight: 600; }
+        .section-title i { color: var(--primary); }
+        .history-scroll { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scroll-snap-type: x mandatory; }
+        .history-scroll::-webkit-scrollbar { height: 6px; }
+        .history-scroll::-webkit-scrollbar-thumb { background: rgba(220,38,38,0.5); border-radius: 10px; }
+        .history-scroll::-webkit-scrollbar-track { background: transparent; }
+
+        .history-card {
+            min-width: 240px; max-width: 240px; background: var(--card-bg); border-radius: 16px; 
+            overflow: hidden; border: 1px solid var(--border-color); cursor: pointer;
+            transition: 0.3s; box-shadow: var(--shadow); scroll-snap-align: start; flex-shrink: 0;
+            position: relative;
+        }
+        .history-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .history-thumb-wrap { position: relative; width: 100%; aspect-ratio: 16/9; }
+        .history-thumb { width: 100%; height: 100%; object-fit: cover; }
+        .history-play-btn { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.6); color: white; border-radius: 50%; padding: 10px;
+            display: flex; opacity: 0; transition: 0.3s; backdrop-filter: blur(2px);
+        }
+        .history-card:hover .history-play-btn { opacity: 1; }
+        .history-progress { height: 4px; background: rgba(255,255,255,0.1); width: 100%; position: absolute; bottom: 0; left: 0; }
+        .history-progress-fill { height: 100%; background: var(--primary); transition: width 0.3s; }
+        .history-info { padding: 12px; }
+        .history-title { font-size: 14px; font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .global-section-title { max-width: 1200px; margin: 0 auto 15px; padding: 0 10px; font-size: 18px; color: var(--text-main); display: flex; align-items: center; gap: 8px;}
+        .global-section-title i { color: var(--primary); }
+
+        /* Mobile Fixes */
         .video-box.pseudo-fullscreen {
             position: fixed !important; top: 0 !important; left: 0 !important;
             width: 100vw !important; height: 100vh !important;
@@ -310,7 +315,6 @@
         .video-box:fullscreen .custom-controls,
         .video-box:-webkit-full-screen .custom-controls { z-index: 2147483647 !important; }
 
-        /* Mobile Responsive UI Adjustments for Control Bar */
         @media (max-width: 600px) {
             .left-controls { gap: 6px; }
             .control-btn { width: 36px; height: 36px; }
@@ -323,7 +327,9 @@
         }
     </style>
 </head>
-<body oncontextmenu="return false;"> <div id="masterAuthScreen" class="screen active">
+<body oncontextmenu="return false;"> 
+
+<div id="masterAuthScreen" class="screen active">
     <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:80vh;">
         <div style="width:90%; max-width:380px; text-align:center;">
             <h2 style="color:var(--primary)">App Verification</h2>
@@ -355,7 +361,28 @@
             <i class="material-icons" id="themeIcon">light_mode</i>
         </button>
     </div>
-    <div id="subjectList"></div>
+
+    <!-- Beautiful Search Bar -->
+    <div class="search-wrapper">
+        <input type="text" id="homeSearch" class="search-input" placeholder="පාඩම් සහ වීඩියෝ සොයන්න (Search lessons or videos)..." onkeyup="handleSearch()">
+    </div>
+
+    <!-- Search Results Container -->
+    <div id="searchResultsContainer" style="display:none; max-width: 1200px; margin: 0 auto; padding: 0 10px;">
+        <div class="section-title"><i class="material-icons">search</i> සෙවුම් ප්‍රතිඵල</div>
+        <div id="searchResults" class="folder-grid"></div>
+    </div>
+
+    <div id="defaultHomeContent">
+        <!-- Continue Watching History Section -->
+        <div class="history-section" id="historySection" style="display:none;">
+            <div class="section-title"><i class="material-icons">history</i> නැවත නැරඹීමට</div>
+            <div class="history-scroll" id="historyScroll"></div>
+        </div>
+
+        <div class="global-section-title" id="subjectTitle"><i class="material-icons">menu_book</i> විෂයයන්</div>
+        <div id="subjectList"></div>
+    </div>
 </div>
 
 <div id="categoriesScreen" class="screen">
@@ -393,7 +420,8 @@
 
 <div id="playerScreen" class="screen">
     <div id="videoListContainer">
-        <div onclick="showScreen('topicsScreen')" class="back-btn-ui">
+        <!-- Back button is dynamically set now -->
+        <div id="dynamicBackBtn" class="back-btn-ui">
             <i class="material-icons">arrow_back</i> <span id="lessonTitle">වීඩියෝ ලැයිස්තුව</span>
         </div>
         <div id="multiVideoList" class="folder-grid"></div>
@@ -407,32 +435,25 @@
             <div id="speedToast">2X Speed >></div>
             <div id="playerOverlayInfo"></div>
             
-            <!-- Touch Gestures Layer (Double Tap / Long Press) -->
             <div class="click-layer" id="videoTouchLayer" onpointerdown="handlePointerDown(event)" onpointerup="handlePointerUp(event)" onpointerleave="handlePointerUp(event)"></div>
             
-            <!-- NEW LAYOUT CONTROL BAR (No Overlapping) -->
             <div class="custom-controls" id="controlBar">
                 <div class="seek-bar-container" onclick="handleSeek(event)">
                     <div class="seek-bar-progress" id="seekBarProgress"><div class="seek-bar-knob"></div></div>
                 </div>
                 
                 <div class="time-row">
-                    <!-- Left Side Controls (Skip, Play, Skip, Time) -->
                     <div class="left-controls">
                         <button class="control-btn skip-btn" onclick="skip(-5)" title="Rewind 5s"><i class="material-icons">replay_5</i></button>
-                        
                         <button class="control-btn play-btn-special" onclick="togglePlay(event)" id="playPauseBtn" title="Play/Pause">
                             <i class="material-icons">play_arrow</i>
                         </button>
-                        
                         <button class="control-btn skip-btn" onclick="skip(5)" title="Forward 5s"><i class="material-icons">forward_5</i></button>
-
                         <div class="time-display" style="font-size:13px; font-weight:500; font-family:monospace; letter-spacing:0.5px; margin-left:10px;">
                             <span id="currentTime">0:00:00</span> / <span id="totalDuration" style="color:#aaa;">0:00:00</span>
                         </div>
                     </div>
                     
-                    <!-- Right Side Controls (Volume, Fullscreen, Settings) -->
                     <div class="right-controls">
                         <div class="vol-container">
                             <button class="control-btn" onclick="toggleMute(event)" title="Volume"><i class="material-icons" id="volIcon">volume_up</i></button>
@@ -440,9 +461,7 @@
                                 <input type="range" min="0" max="100" value="100" class="vol-slider" id="volSlider" oninput="changeVolume(event)">
                             </div>
                         </div>
-
                         <button class="control-btn" onclick="toggleFullScreen(event)" title="Fullscreen (F Key)"><i class="material-icons" id="fsIconBtn">fullscreen</i></button>
-                        
                         <div style="position:relative;">
                             <button class="control-btn" onclick="toggleSpeedDropdown(event)" title="Settings"><i class="material-icons">settings</i></button>
                             <div class="speed-dropdown" id="speedMenu">
@@ -481,7 +500,6 @@
                 triggerBackAction();
             }
         }
-
         function triggerBackAction() {
             if (window.history.length > 1) {
                 window.history.go(-(window.history.length - 1));
@@ -493,7 +511,6 @@
         window.addEventListener('resize', detectDevTools);
     })();
 
-    // Theme Toggle Handler
     function toggleTheme() {
         const body = document.body;
         body.classList.toggle('light-mode');
@@ -514,6 +531,12 @@
     let currentUser = null, player, hideTimeout, infoTimeout, currentVideos = [], activeStream = "";
     let isSpacePressed = false, lastUserSpeed = 1;
     let tapTimer = null, lastTapTime = 0, pressTimer = null, isLongPressing = false;
+    
+    // Variables for Advanced Search and History
+    let searchIndex = []; 
+    let currentSearchResults = [];
+    let currentPlayingVideo = null;
+    let resumeTime = 0;
 
     window.onload = () => {
         const savedTheme = localStorage.getItem('portalTheme');
@@ -532,6 +555,11 @@
     function showScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
+        
+        // Refresh history when returning to home screen
+        if(id === 'mainMenuScreen' && currentUser) {
+            renderHistory();
+        }
     }
 
     document.onkeydown = function(e) {
@@ -540,10 +568,8 @@
         if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
     };
 
-    // Keyboard Shortcuts (Space, F, Arrows)
     window.addEventListener('keydown', (e) => {
         if (document.getElementById('playerSection').style.display === 'block' && player) {
-            // Space for 2x Speed
             if (e.code === 'Space') {
                 e.preventDefault();
                 if (!isSpacePressed) {
@@ -557,15 +583,9 @@
                     }, 500);
                 }
             }
-            // Arrow Keys for skip
             if(e.code === 'ArrowRight') { e.preventDefault(); skip(5); showOverlayInfo('5s »'); showControls(); }
             if(e.code === 'ArrowLeft') { e.preventDefault(); skip(-5); showOverlayInfo('« 5s'); showControls(); }
-            
-            // F Key for Fullscreen Toggle
-            if(e.code === 'KeyF') {
-                e.preventDefault();
-                toggleFullScreen();
-            }
+            if(e.code === 'KeyF') { e.preventDefault(); toggleFullScreen(); }
         }
     });
 
@@ -585,13 +605,11 @@
         }
     });
 
-    // Touch Actions Logic (Double Tap to skip & Long Press for 2x Speed)
     function handlePointerDown(e) {
         if (!player) return;
         const currentTime = new Date().getTime();
         const tapLength = currentTime - lastTapTime;
         
-        // Long Press setup
         pressTimer = setTimeout(() => {
             isLongPressing = true;
             lastUserSpeed = player.getPlaybackRate() || 1;
@@ -600,17 +618,13 @@
         }, 500);
 
         if (tapLength < 300 && tapLength > 0) {
-            // Double Tap Detected
             clearTimeout(pressTimer);
             clearTimeout(tapTimer);
-            
             const rect = e.target.getBoundingClientRect();
             if (e.clientX < (rect.left + rect.width / 2)) {
-                skip(-10);
-                showOverlayInfo('« 10s');
+                skip(-10); showOverlayInfo('« 10s');
             } else {
-                skip(10);
-                showOverlayInfo('10s »');
+                skip(10); showOverlayInfo('10s »');
             }
             lastTapTime = 0; 
         } else {
@@ -673,6 +687,7 @@
         document.getElementById("helloMsg").innerText = currentUser.name;
         document.getElementById("userInitial").innerText = currentUser.name.charAt(0).toUpperCase();
         showScreen('mainMenuScreen');
+        
         db.ref(`students/${currentUser.id}/access`).on('value', s => {
             const acc = s.val(); 
             const list = document.getElementById("subjectList");
@@ -682,11 +697,146 @@
                 { id: 'sft', name: 'Science for Technology', tag: ['sft', 'both', 'all'], img: 'https://plain-apac-prod-public.komododecks.com/202604/23/FiS91VCeBtbXYo1nzdJk/image.jpg' },
                 { id: 'ict', name: 'Information Technology', tag: ['ict', 'all'], img: 'https://static.edumix.lk/sisulka//teacher/5f97bb4c9483423cb265bae2.jpg' }
             ];
+            
+            searchIndex = []; // Reset Index for Folders and Videos Search
+            
             subData.forEach(sub => {
                 if(sub.tag.includes(acc)) {
+                    // Display Subject Card
                     list.innerHTML += `<div class="subject-card" onclick="openStream('${sub.id}')"><img src="${sub.img}" class="subject-image"><div class="info-box"><h3>${sub.name}</h3><i class="material-icons">arrow_forward</i></div></div>`;
+                    
+                    // Fetch allowed Folders and Videos for Advanced Search Bar
+                    db.ref(`students/${currentUser.id}/allowedLessons/${sub.id}`).once('value', allowSnap => {
+                        const allowed = allowSnap.val() || {};
+                        
+                        db.ref(`studyData/${sub.id}`).once('value', dataSnap => {
+                            const streamData = dataSnap.val() || {};
+                            
+                            for(let folderName in allowed) {
+                                if(allowed[folderName]) {
+                                    // 1. Add Folder to Index
+                                    searchIndex.push({
+                                        type: 'folder',
+                                        stream: sub.id,
+                                        title: folderName, // This is what we search against
+                                        folderName: folderName
+                                    });
+                                    
+                                    // 2. Search all categories (Monthly/Lessons/etc.) for this folder's videos
+                                    for(let cat in streamData) {
+                                        if(streamData[cat] && streamData[cat][folderName] && streamData[cat][folderName].videos) {
+                                            const videosObj = streamData[cat][folderName].videos;
+                                            const vidArray = Object.values(videosObj);
+                                            
+                                            // 3. Add each video to Index
+                                            vidArray.forEach((v, vIndex) => {
+                                                searchIndex.push({
+                                                    type: 'video',
+                                                    stream: sub.id,
+                                                    folderName: folderName,
+                                                    title: v.title, // This is what we search against
+                                                    videoData: v,
+                                                    index: vIndex,
+                                                    allVideos: videosObj
+                                                });
+                                            });
+                                            break; // Found the folder, no need to check other categories
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    });
                 }
             });
+        });
+    }
+
+    /* ==== ADVANCED HOME SEARCH LOGIC (Folders + Videos) ==== */
+    function handleSearch() {
+        const query = document.getElementById("homeSearch").value.toLowerCase();
+        const resContainer = document.getElementById("searchResultsContainer");
+        const resultsGrid = document.getElementById("searchResults");
+        const defaultContent = document.getElementById("defaultHomeContent");
+        
+        if(query.trim() === '') {
+            resContainer.style.display = 'none';
+            defaultContent.style.display = 'block';
+            return;
+        }
+        
+        defaultContent.style.display = 'none';
+        resContainer.style.display = 'block';
+        resultsGrid.innerHTML = '';
+        
+        // Filter from pre-loaded Index and limit to 50 items to avoid lag
+        currentSearchResults = searchIndex.filter(item => item.title.toLowerCase().includes(query)).slice(0, 50);
+        
+        if(currentSearchResults.length === 0) {
+            resultsGrid.innerHTML = '<div style="color:var(--text-sub); grid-column: 1 / -1; text-align:center; padding: 20px;">කිසිදු පාඩමක් හෝ වීඩියෝවක් සොයාගත නොහැකි විය!</div>';
+            return;
+        }
+        
+        // Display Results
+        currentSearchResults.forEach((item, idx) => {
+            if(item.type === 'folder') {
+                resultsGrid.innerHTML += `
+                    <div class="folder-card" onclick="handleSearchClick(${idx})">
+                        <div class="folder-icon-wrap"><i class="material-icons">folder</i></div>
+                        <div class="folder-title">${item.title}</div>
+                        <div class="folder-count">Stream: ${item.stream.toUpperCase()}</div>
+                        <div class="folder-btn">View Folder <i class="material-icons">chevron_right</i></div>
+                    </div>
+                `;
+            } else if (item.type === 'video') {
+                const thumbUrl = `https://img.youtube.com/vi/${item.videoData.id}/mqdefault.jpg`;
+                resultsGrid.innerHTML += `
+                    <div class="folder-card" onclick="handleSearchClick(${idx})">
+                        <img src="${thumbUrl}" class="video-thumbnail" alt="${item.title}">
+                        <div class="folder-title">${item.title}</div>
+                        <div class="folder-count">Folder: ${item.folderName}</div>
+                        <div class="folder-btn" style="background:var(--primary); color:#ffffff;">
+                            Play Video <i class="material-icons">play_circle_filled</i>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+    }
+
+    function handleSearchClick(idx) {
+        const item = currentSearchResults[idx];
+        
+        if(item.type === 'folder') {
+            openSearchedFolder(item.stream, item.folderName);
+        } else if (item.type === 'video') {
+            activeStream = item.stream; // Set stream internally
+            // This displays the whole folder but auto-plays the selected video
+            showVideoList(item.folderName, item.allVideos, true);
+            playThisVideo(item.index);
+        }
+    }
+
+    function openSearchedFolder(stream, folderName) {
+        activeStream = stream;
+        
+        // Fallback method for folder clicks
+        db.ref(`studyData/${stream}`).once('value', snap => {
+            const data = snap.val() || {};
+            let foundVideos = null;
+            
+            for(let cat in data) {
+                if(data[cat] && data[cat][folderName] && data[cat][folderName].videos) {
+                    foundVideos = data[cat][folderName].videos;
+                    break;
+                }
+            }
+            
+            if(foundVideos) {
+                showVideoList(folderName, foundVideos, true);
+            } else {
+                alert('මෙම ෆෝල්ඩරයේ වීඩියෝ නොමැත!');
+            }
         });
     }
 
@@ -705,7 +855,7 @@
                     if(allowed[name]) {
                         const videoData = lessons[name].videos ? JSON.stringify(lessons[name].videos).replace(/"/g, '&quot;') : "null";
                         container.innerHTML += `
-                            <div class="folder-card" onclick="showVideoList('${name}', ${videoData})">
+                            <div class="folder-card" onclick="showVideoList('${name}', ${videoData}, false)">
                                 <div class="folder-icon-wrap"><i class="material-icons">folder</i></div>
                                 <div class="folder-title">${name}</div>
                                 <div class="folder-count">Folders</div>
@@ -717,11 +867,21 @@
         });
     }
 
-    function showVideoList(title, videos) {
+    function showVideoList(title, videos, isFromSearch) {
         document.getElementById("lessonTitle").innerText = title;
+        
+        // Dynamic Back Button Routing
+        const backBtn = document.getElementById("dynamicBackBtn");
+        if(isFromSearch) {
+            backBtn.setAttribute('onclick', "showScreen('mainMenuScreen')");
+        } else {
+            backBtn.setAttribute('onclick', "showScreen('topicsScreen')");
+        }
+
         showScreen('playerScreen');
         document.getElementById("videoListContainer").style.display = "block";
         document.getElementById("playerSection").style.display = "none";
+        
         const list = document.getElementById("multiVideoList");
         list.innerHTML = "";
         if (videos) {
@@ -741,6 +901,8 @@
 
     function playThisVideo(index) {
         const vid = currentVideos[index];
+        currentPlayingVideo = { id: vid.id, title: vid.title }; 
+        
         document.getElementById("activeVideoTitle").innerText = vid.title;
         document.getElementById("videoListContainer").style.display = "none";
         document.getElementById("playerSection").style.display = "block";
@@ -749,18 +911,8 @@
             player = new YT.Player('player', { 
                 host: 'https://www.youtube-nocookie.com', 
                 videoId: vid.id, 
-                playerVars: { 
-                    'autoplay': 1, 
-                    'controls': 0, 
-                    'modestbranding': 1, 
-                    'rel': 0, 
-                    'playsinline': 1,
-                    'iv_load_policy': 3 
-                }, 
-                events: { 
-                    'onReady': onPlayerReady, 
-                    'onStateChange': onPlayerStateChange 
-                } 
+                playerVars: { 'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0, 'playsinline': 1, 'iv_load_policy': 3 }, 
+                events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } 
             });
         } else { 
             player.loadVideoById(vid.id); 
@@ -769,11 +921,105 @@
         }
     }
 
+    /* ==== CONTINUE WATCHING (HISTORY) LOGIC ==== */
+    function saveHistory(vid) {
+        if(!vid || !player || typeof player.getCurrentTime !== 'function') return;
+        const time = player.getCurrentTime();
+        const dur = player.getDuration();
+        
+        if(time < 5 || dur <= 0) return; // Do not save if less than 5 seconds watched
+        
+        const historyKey = 'watchHistory_' + currentUser.id;
+        let history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+        
+        // Remove existing entry for same video
+        history = history.filter(h => h.id !== vid.id);
+        
+        // Add to front
+        history.unshift({
+            id: vid.id,
+            title: vid.title,
+            time: time,
+            duration: dur,
+            timestamp: Date.now()
+        });
+        
+        if(history.length > 10) history.pop(); // Keep only last 10
+        localStorage.setItem(historyKey, JSON.stringify(history));
+    }
+
+    function renderHistory() {
+        if(!currentUser) return;
+        const historyKey = 'watchHistory_' + currentUser.id;
+        const history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+        const historySec = document.getElementById('historySection');
+        const historyScroll = document.getElementById('historyScroll');
+        
+        if(history.length === 0) {
+            historySec.style.display = 'none';
+            return;
+        }
+        
+        historySec.style.display = 'block';
+        historyScroll.innerHTML = '';
+        
+        history.forEach(h => {
+            const prog = h.duration > 0 ? (h.time / h.duration) * 100 : 0;
+            const thumb = `https://img.youtube.com/vi/${h.id}/mqdefault.jpg`;
+            
+            historyScroll.innerHTML += `
+                <div class="history-card" onclick="resumeHistoryVideo('${h.id}', '${h.title.replace(/'/g, "\\'")}', ${h.time})">
+                    <div class="history-thumb-wrap">
+                        <img src="${thumb}" class="history-thumb">
+                        <div class="history-play-btn"><i class="material-icons">play_arrow</i></div>
+                        <div class="history-progress"><div class="history-progress-fill" style="width: ${prog}%"></div></div>
+                    </div>
+                    <div class="history-info">
+                        <div class="history-title">${h.title}</div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    function resumeHistoryVideo(id, title, time) {
+        resumeTime = time;
+        currentPlayingVideo = { id: id, title: title }; 
+        
+        document.getElementById("activeVideoTitle").innerText = title;
+        showScreen('playerScreen');
+        document.getElementById("videoListContainer").style.display = "none";
+        document.getElementById("playerSection").style.display = "block";
+        
+        // Setting back button to return to home securely
+        document.getElementById("dynamicBackBtn").setAttribute('onclick', "showScreen('mainMenuScreen')");
+        
+        if (!player) {
+            player = new YT.Player('player', {
+                host: 'https://www.youtube-nocookie.com',
+                videoId: id,
+                playerVars: { 'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0, 'playsinline': 1, 'iv_load_policy': 3 },
+                events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
+            });
+        } else {
+            player.loadVideoById(id, time); 
+            document.getElementById('volSlider').value = player.getVolume();
+            updateVolIcon(player.getVolume());
+            resumeTime = 0; // reset
+        }
+    }
+    /* ======================================= */
+
     function onPlayerReady() { 
         setInterval(updateUI, 500); 
         const vol = player.getVolume();
         document.getElementById('volSlider').value = vol;
         updateVolIcon(vol);
+        
+        if (resumeTime > 0) {
+            player.seekTo(resumeTime, true);
+            resumeTime = 0;
+        }
     }
     
     function onPlayerStateChange(e) {
@@ -862,6 +1108,11 @@
             document.getElementById("currentTime").innerText = formatTime(curr);
             document.getElementById("totalDuration").innerText = formatTime(dur);
             if (dur > 0) document.getElementById("seekBarProgress").style.width = (curr / dur) * 100 + "%"; 
+            
+            // Save history periodically when playing
+            if(player.getPlayerState() === YT.PlayerState.PLAYING && currentPlayingVideo) {
+                saveHistory(currentPlayingVideo);
+            }
         } 
     }
 
@@ -874,7 +1125,10 @@
     }
 
     function hidePlayer() { 
-        if(player) player.pauseVideo(); 
+        if(player) {
+            if(currentPlayingVideo) saveHistory(currentPlayingVideo); // Final save on close
+            player.pauseVideo(); 
+        }
         document.getElementById("playerSection").style.display = "none"; 
         document.getElementById("videoListContainer").style.display = "block"; 
         document.getElementById("videoContainer").classList.remove('pseudo-fullscreen');
