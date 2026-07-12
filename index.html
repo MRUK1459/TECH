@@ -209,7 +209,10 @@
         .seek-bar-knob { width: 14px; height: 14px; background: white; border-radius: 50%; position: absolute; right: -7px; top: -4px; box-shadow: 0 0 10px rgba(220,38,38,0.5); pointer-events: none; transition: 0.2s; opacity: 0; }
         .seek-bar-container:hover .seek-bar-knob { opacity: 1; transform: scale(1.2); }
 
-        .time-row { display: flex; align-items: center; justify-content: space-between; color: white; }
+        /* Layout Update: Icons separated to left and right */
+        .time-row { display: flex; align-items: center; justify-content: space-between; color: white; width: 100%; }
+        .left-controls { display: flex; align-items: center; gap: 10px; }
+        .right-controls { display: flex; align-items: center; gap: 5px; }
         
         /* Control Icons */
         .control-btn { 
@@ -234,8 +237,6 @@
         .play-btn-special { background: var(--primary); color: #ffffff; width: 52px; height: 52px; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4); }
         .play-btn-special i { font-size: 34px; }
         .play-btn-special:hover { background: var(--primary-light); box-shadow: 0 6px 20px rgba(220, 38, 38, 0.6); transform: translateY(-3px) scale(1.05); }
-
-        .center-controls { display: flex; align-items: center; gap: 15px; position: absolute; left: 50%; transform: translateX(-50%); }
 
         /* Volume Slider Customization */
         .vol-container { display: flex; align-items: center; position: relative; }
@@ -308,6 +309,18 @@
         body.pseudo-fs-active { overflow: hidden !important; }
         .video-box:fullscreen .custom-controls,
         .video-box:-webkit-full-screen .custom-controls { z-index: 2147483647 !important; }
+
+        /* Mobile Responsive UI Adjustments for Control Bar */
+        @media (max-width: 600px) {
+            .left-controls { gap: 6px; }
+            .control-btn { width: 36px; height: 36px; }
+            .control-btn i { font-size: 22px; }
+            .skip-btn { width: 38px; height: 38px; }
+            .play-btn-special { width: 44px; height: 44px; }
+            .play-btn-special i { font-size: 28px; }
+            .time-display { font-size: 11px !important; margin-left: 5px !important; }
+            .custom-controls { padding: 20px 15px 15px; }
+        }
     </style>
 </head>
 <body oncontextmenu="return false;"> <div id="masterAuthScreen" class="screen active">
@@ -394,20 +407,18 @@
             <div id="speedToast">2X Speed >></div>
             <div id="playerOverlayInfo"></div>
             
-            <!-- NEW: Touch Gestures Layer (Double Tap / Long Press) -->
+            <!-- Touch Gestures Layer (Double Tap / Long Press) -->
             <div class="click-layer" id="videoTouchLayer" onpointerdown="handlePointerDown(event)" onpointerup="handlePointerUp(event)" onpointerleave="handlePointerUp(event)"></div>
             
-            <!-- BEAUTIFIED CONTROL BAR -->
+            <!-- NEW LAYOUT CONTROL BAR (No Overlapping) -->
             <div class="custom-controls" id="controlBar">
                 <div class="seek-bar-container" onclick="handleSeek(event)">
                     <div class="seek-bar-progress" id="seekBarProgress"><div class="seek-bar-knob"></div></div>
                 </div>
+                
                 <div class="time-row">
-                    <div style="font-size:13px; font-weight:500; font-family:monospace; letter-spacing:0.5px;">
-                        <span id="currentTime">0:00:00</span> / <span id="totalDuration" style="color:#aaa;">0:00:00</span>
-                    </div>
-                    
-                    <div class="center-controls">
+                    <!-- Left Side Controls (Skip, Play, Skip, Time) -->
+                    <div class="left-controls">
                         <button class="control-btn skip-btn" onclick="skip(-5)" title="Rewind 5s"><i class="material-icons">replay_5</i></button>
                         
                         <button class="control-btn play-btn-special" onclick="togglePlay(event)" id="playPauseBtn" title="Play/Pause">
@@ -415,10 +426,14 @@
                         </button>
                         
                         <button class="control-btn skip-btn" onclick="skip(5)" title="Forward 5s"><i class="material-icons">forward_5</i></button>
+
+                        <div class="time-display" style="font-size:13px; font-weight:500; font-family:monospace; letter-spacing:0.5px; margin-left:10px;">
+                            <span id="currentTime">0:00:00</span> / <span id="totalDuration" style="color:#aaa;">0:00:00</span>
+                        </div>
                     </div>
                     
-                    <div style="display:flex; align-items:center; gap:5px;">
-                        <!-- NEW: Volume Bar Integration -->
+                    <!-- Right Side Controls (Volume, Fullscreen, Settings) -->
+                    <div class="right-controls">
                         <div class="vol-container">
                             <button class="control-btn" onclick="toggleMute(event)" title="Volume"><i class="material-icons" id="volIcon">volume_up</i></button>
                             <div class="vol-slider-wrapper">
@@ -427,6 +442,7 @@
                         </div>
 
                         <button class="control-btn" onclick="toggleFullScreen(event)" title="Fullscreen (F Key)"><i class="material-icons" id="fsIconBtn">fullscreen</i></button>
+                        
                         <div style="position:relative;">
                             <button class="control-btn" onclick="toggleSpeedDropdown(event)" title="Settings"><i class="material-icons">settings</i></button>
                             <div class="speed-dropdown" id="speedMenu">
@@ -545,7 +561,7 @@
             if(e.code === 'ArrowRight') { e.preventDefault(); skip(5); showOverlayInfo('5s »'); showControls(); }
             if(e.code === 'ArrowLeft') { e.preventDefault(); skip(-5); showOverlayInfo('« 5s'); showControls(); }
             
-            // NEW: F Key for Fullscreen Toggle
+            // F Key for Fullscreen Toggle
             if(e.code === 'KeyF') {
                 e.preventDefault();
                 toggleFullScreen();
@@ -581,7 +597,7 @@
             lastUserSpeed = player.getPlaybackRate() || 1;
             player.setPlaybackRate(2);
             document.getElementById('speedToast').style.display = 'block';
-        }, 500); // Trigger after 500ms hold
+        }, 500);
 
         if (tapLength < 300 && tapLength > 0) {
             // Double Tap Detected
@@ -589,7 +605,6 @@
             clearTimeout(tapTimer);
             
             const rect = e.target.getBoundingClientRect();
-            // Check if tap was on the left or right side
             if (e.clientX < (rect.left + rect.width / 2)) {
                 skip(-10);
                 showOverlayInfo('« 10s');
@@ -597,10 +612,9 @@
                 skip(10);
                 showOverlayInfo('10s »');
             }
-            lastTapTime = 0; // Reset
+            lastTapTime = 0; 
         } else {
             lastTapTime = currentTime;
-            // Schedule single tap (to show/hide controls)
             tapTimer = setTimeout(() => {
                 if (!isLongPressing) {
                     const cb = document.getElementById("controlBar");
@@ -757,7 +771,6 @@
 
     function onPlayerReady() { 
         setInterval(updateUI, 500); 
-        // Initial Volume
         const vol = player.getVolume();
         document.getElementById('volSlider').value = vol;
         updateVolIcon(vol);
@@ -775,7 +788,6 @@
     function hideControls() { if (player && player.getPlayerState() === 1) document.getElementById("controlBar").classList.add("hidden"); }
     function resetTimer() { clearTimeout(hideTimeout); if (player && player.getPlayerState() === 1) hideTimeout = setTimeout(hideControls, 4000); }
     
-    // NEW: Volume Slider Functions
     function changeVolume(e) {
         if(e) e.stopPropagation();
         const val = e.target.value;
@@ -813,7 +825,6 @@
         else icon.innerText = 'volume_up';
     }
     
-    // Fullscreen Toggle 
     function toggleFullScreen(e) { 
         if(e && e.stopPropagation) e.stopPropagation(); 
         var el = document.getElementById("videoContainer"); 
