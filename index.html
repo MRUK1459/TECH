@@ -450,8 +450,10 @@
                             <i class="material-icons">play_arrow</i>
                         </button>
                         <button class="control-btn skip-btn" onclick="skip(5)" title="Forward 5s"><i class="material-icons">forward_5</i></button>
-                        <div class="time-display" style="font-size:13px; font-weight:600; font-family:monospace; letter-spacing:0.5px; margin-left:10px;">
-                            <span id="currentTime">0:00:00</span> <span style="color:var(--text-sub); margin:0 4px;">/</span> <span id="totalDuration" style="color:var(--text-sub);">0:00:00</span>
+                        
+                        <!-- UPDATED TIME DISPLAY -->
+                        <div class="time-display" style="font-size:13px; font-weight:600; font-family:monospace; letter-spacing:0.5px; margin-left:10px; background: rgba(0,0,0,0.7); padding: 5px 10px; border-radius: 8px; color: #ffffff; border: 1px solid rgba(255,255,255,0.15);">
+                            <span id="currentTime">0:00:00</span> <span style="color:#a3a3a3; margin:0 4px;">/</span> <span id="totalDuration" style="color:#a3a3a3;">0:00:00</span>
                         </div>
                     </div>
                     
@@ -583,8 +585,11 @@
         if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
     };
 
+    // UPDATED KEYDOWN LISTENER
     window.addEventListener('keydown', (e) => {
         if (document.getElementById('playerSection').style.display === 'block' && player) {
+            
+            // Play/Pause with Space
             if (e.code === 'Space') {
                 e.preventDefault();
                 if (!isSpacePressed) {
@@ -598,6 +603,8 @@
                     }, 500);
                 }
             }
+            
+            // Arrow Keys Setup
             if(e.code === 'ArrowRight') { 
                 e.preventDefault(); 
                 skip(5); 
@@ -610,6 +617,46 @@
                 showOverlayInfo('« 5s'); 
                 showControls(); 
             }
+            if (e.code === 'ArrowUp') {
+                e.preventDefault();
+                let currentVol = player.getVolume();
+                let newVol = Math.min(100, currentVol + 10);
+                player.setVolume(newVol);
+                if (newVol > 0 && player.isMuted()) player.unMute();
+                document.getElementById('volSlider').value = newVol;
+                updateVolIcon(newVol);
+                showOverlayInfo('Volume: ' + newVol + '%');
+                showControls();
+            }
+            if (e.code === 'ArrowDown') {
+                e.preventDefault();
+                let currentVol = player.getVolume();
+                let newVol = Math.max(0, currentVol - 10);
+                player.setVolume(newVol);
+                document.getElementById('volSlider').value = newVol;
+                updateVolIcon(newVol);
+                showOverlayInfo('Volume: ' + newVol + '%');
+                showControls();
+            }
+
+            // Speed Control Setup
+            if (e.key === ']') {
+                e.preventDefault();
+                let currentSpeed = player.getPlaybackRate() || 1;
+                let newSpeed = Math.min(2.0, currentSpeed + 0.1);
+                player.setPlaybackRate(newSpeed);
+                showOverlayInfo('Speed: ' + newSpeed.toFixed(1) + 'x');
+                showControls();
+            }
+            if (e.key === '[') {
+                e.preventDefault();
+                let currentSpeed = player.getPlaybackRate() || 1;
+                let newSpeed = Math.max(1.0, currentSpeed - 0.1); // 1.0 දක්වා පමණක් අඩු කිරීමට
+                player.setPlaybackRate(newSpeed);
+                showOverlayInfo('Speed: ' + newSpeed.toFixed(1) + 'x');
+                showControls();
+            }
+
             if(e.code === 'KeyF') { 
                 e.preventDefault(); 
                 toggleFullScreen(); 
