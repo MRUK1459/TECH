@@ -29,7 +29,7 @@
             --folder-btn-text: #93c5fd;
         }
 
-        /* Light Mode Styles (White Screen) */
+        /* Light Mode Styles */
         body.light-mode {
             --bg: #f4f4f5; 
             --card-bg: #ffffff; 
@@ -136,7 +136,6 @@
             0%, 100% { opacity: 0.5; }
             50% { opacity: 1; }
         }
-        /* --- End Loading Screen CSS --- */
 
         body::before {
             content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
@@ -145,14 +144,13 @@
         }
         @keyframes drift { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- Hide Scrollbar Completely for HTML & Body to Prevent Layout Shift --- */
         html, body {
-            -ms-overflow-style: none !important;  /* IE and Edge */
-            scrollbar-width: none !important;  /* Firefox */
+            -ms-overflow-style: none !important;  
+            scrollbar-width: none !important;  
         }
         
         html::-webkit-scrollbar, body::-webkit-scrollbar {
-            display: none !important; /* Chrome, Safari and Opera */
+            display: none !important; 
         }
 
         body { 
@@ -161,13 +159,60 @@
             margin: 0; padding: 0; user-select: none; -webkit-touch-callout: none; 
             color: var(--text-main); min-height: 100vh;
             overflow-x: hidden; 
-            /* Enhanced smooth transition for Theme Changing */
             transition: background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1), color 1.2s cubic-bezier(0.4, 0, 0.2, 1); 
         }
         
         .screen { display: none; padding: 20px; box-sizing: border-box; min-height: 100vh; }
         .active { display: block; animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- New Auth Screen Animations & UI --- */
+        .auth-container {
+            display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 85vh;
+            position: relative;
+        }
+        .auth-card {
+            width: 90%; max-width: 420px; padding: 50px 40px; text-align: center;
+            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            position: relative; overflow: visible;
+        }
+        .auth-glow {
+            position: absolute; width: 280px; height: 280px; background: var(--primary);
+            filter: blur(120px); opacity: 0.35; border-radius: 50%; z-index: -1;
+            animation: pulseGlow 4s infinite alternate;
+        }
+        .auth-icon {
+            width: 70px; height: 70px; margin: 0 auto 20px; border-radius: 50%;
+            background: linear-gradient(135deg, rgba(37,99,235,0.2), rgba(37,99,235,0.05));
+            border: 1px solid var(--glass-border);
+            display: flex; justify-content: center; align-items: center;
+            color: var(--primary); font-size: 32px; box-shadow: var(--glass-shadow);
+        }
+        .auth-icon i { font-size: 34px; }
+        
+        .auth-input-group {
+            position: relative; margin-bottom: 20px; width: 100%;
+        }
+        .auth-input-group i {
+            position: absolute; left: 20px; top: 50%; transform: translateY(-50%); 
+            color: var(--text-sub); font-size: 22px; transition: 0.3s;
+        }
+        .auth-input-group input {
+            padding-left: 55px !important; margin-bottom: 0 !important; width: 100%;
+            font-size: 15px; letter-spacing: 0.5px;
+        }
+        .auth-input-group input:focus + i, .auth-input-group input:not(:placeholder-shown) + i {
+            color: var(--primary-light);
+        }
+
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(40px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes pulseGlow {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.2; }
+            100% { transform: scale(1.1) translate(10px, -10px); opacity: 0.45; }
+        }
 
         .greeting-container { padding: 30px 10px 20px 10px; display: flex; align-items: center; gap: 15px; }
 
@@ -185,14 +230,15 @@
         }
 
         .login-btn { 
-            width: 100%; padding: 18px; 
+            width: 100%; padding: 18px; margin-top: 10px;
             background: linear-gradient(135deg, var(--primary), var(--accent)); 
             color: white; border: none; border-radius: 18px; 
             font-weight: 700; font-size: 16px; cursor: pointer; transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
-            box-sizing: border-box;
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+            box-sizing: border-box; letter-spacing: 1px;
         }
-        .login-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(37, 99, 235, 0.5); }
+        .login-btn:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(37, 99, 235, 0.6); }
+        .login-btn:active { transform: translateY(0); scale: 0.98; }
 
         #subjectList { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; justify-content: center; padding: 0 10px; }
 
@@ -205,7 +251,6 @@
             border-radius: 24px;
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: pointer;
             position: relative;
         }
         .glass-card::before {
@@ -215,7 +260,9 @@
             -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: destination-out; mask-composite: exclude; pointer-events: none;
         }
-        .glass-card:hover {
+        
+        .clickable-card { cursor: pointer; }
+        .clickable-card:hover {
             transform: translateY(-8px) scale(1.02);
             border-color: var(--primary-light);
             box-shadow: var(--glass-glow);
@@ -242,6 +289,7 @@
             .category-grid, .folder-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
             .history-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
             .info-box h3 { font-size: 16px; }
+            .auth-card { padding: 40px 25px; }
         }
 
         .folder-card {
@@ -425,39 +473,61 @@
     <div class="loading-text">Loading</div>
 </div>
 
-<!-- Inline Script to prevent CSS Flash and set initial opposite stage -->
 <script>
     (function() {
         const savedTheme = localStorage.getItem('portalTheme');
         const loader = document.getElementById('loadingScreen');
         
-        // If Target is Light -> Start Dark, if Target is Dark -> Start Light
         if (savedTheme === 'light') {
-            loader.classList.add('dark-stage'); // Start opposite (Dark)
-            document.body.classList.add('light-mode'); // Prep body for end target
+            loader.classList.add('dark-stage'); 
+            document.body.classList.add('light-mode'); 
         } else {
-            loader.classList.add('light-stage'); // Start opposite (Light)
+            loader.classList.add('light-stage'); 
         }
     })();
 </script>
 
+<!-- New Premium Master Auth Screen -->
 <div id="masterAuthScreen" class="screen">
-    <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:80vh;">
-        <div class="glass-card" style="width:90%; max-width:400px; padding: 40px 30px; text-align:center;">
-            <h2 style="color:var(--primary); margin-top:0;">App Verification</h2>
-            <input type="text" id="mUser" placeholder="Username">
-            <input type="password" id="mPass" placeholder="Password">
+    <div class="auth-container">
+        <div class="auth-glow"></div>
+        <div class="glass-card auth-card">
+            <div class="auth-icon"><i class="material-icons">admin_panel_settings</i></div>
+            <h2 style="color:var(--text-main); margin-top:0; margin-bottom: 5px; font-weight:700; font-size: 24px;">App Verification</h2>
+            <p style="color:var(--text-sub); font-size:13px; margin-bottom:30px;">Secure Portal Access</p>
+            
+            <div class="auth-input-group">
+                <i class="material-icons">badge</i>
+                <input type="text" id="mUser" placeholder="Username">
+            </div>
+            <div class="auth-input-group">
+                <i class="material-icons">lock</i>
+                <input type="password" id="mPass" placeholder="Password">
+            </div>
+            
             <button class="login-btn" onclick="masterAuth()">තහවුරු කරන්න</button>
         </div>
     </div>
 </div>
 
+<!-- New Premium Student Login Screen -->
 <div id="loginScreen" class="screen">
-    <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:80vh;">
-        <div class="glass-card" style="width:90%; max-width:400px; padding: 40px 30px; text-align:center;">
-            <h2 style="color:var(--primary); margin-top:0;">Student Login</h2>
-            <input type="text" id="loginName" placeholder="ඔබේ නම">
-            <input type="password" id="loginPass" placeholder="මුරපදය">
+    <div class="auth-container">
+        <div class="auth-glow"></div>
+        <div class="glass-card auth-card">
+            <div class="auth-icon"><i class="material-icons">school</i></div>
+            <h2 style="color:var(--text-main); margin-top:0; margin-bottom: 5px; font-weight:700; font-size: 24px;">Student Login</h2>
+            <p style="color:var(--text-sub); font-size:13px; margin-bottom:30px;">Welcome back, Smart Learner</p>
+            
+            <div class="auth-input-group">
+                <i class="material-icons">person</i>
+                <input type="text" id="loginName" placeholder="ඔබේ නම">
+            </div>
+            <div class="auth-input-group">
+                <i class="material-icons">key</i>
+                <input type="password" id="loginPass" placeholder="මුරපදය">
+            </div>
+            
             <button class="login-btn" onclick="login()">ඇතුල් වන්න</button>
         </div>
     </div>
@@ -470,7 +540,7 @@
             <div class="greeting-text"><h2 style="margin:0; font-size:22px; font-weight:700;">Hello, <span id="helloMsg" style="color:var(--primary-light)">Student</span>!</h2></div>
         </div>
         <button id="themeToggleBtn" onclick="toggleTheme()">
-            <i class="material-icons" id="themeIcon">light_mode</i> <!-- Fixed dynamically below -->
+            <i class="material-icons" id="themeIcon">light_mode</i> 
         </button>
     </div>
 
@@ -487,7 +557,7 @@
         <div id="historyCategoryWrapper" style="display:none;">
             <div class="global-section-title"><i class="material-icons">history</i>VIDEO HISTORY</div>
             <div class="category-grid" style="max-width:1200px; margin: 0 auto 30px; padding: 0 10px;">
-                <div class="folder-card glass-card" onclick="showHistoryScreen()">
+                <div class="folder-card glass-card clickable-card" onclick="showHistoryScreen()">
                     <div class="folder-icon-wrap" style="color:var(--primary);"><i class="material-icons">history_toggle_off</i></div>
                     <div class="folder-title">සම්පූර්ණ කිරීමට ඇති Lesson</div>
                     <div class="folder-count" id="historyCount">0 VIDEO</div>
@@ -514,19 +584,19 @@
         <i class="material-icons">arrow_back</i> <span id="catSubTitle">Back</span>
     </div>
     <div class="category-grid" style="max-width:1200px; margin:0 auto; padding: 0 10px;">
-        <div class="folder-card glass-card" onclick="openCategory('Monthly')">
+        <div class="folder-card glass-card clickable-card" onclick="openCategory('Monthly')">
             <div class="folder-icon-wrap"><i class="material-icons">folder_open</i></div>
             <div class="folder-title">Monthly</div>
             <div class="folder-count">Folders</div>
             <div class="folder-btn">Open Folder <i class="material-icons">chevron_right</i></div>
         </div>
-        <div class="folder-card glass-card" onclick="openCategory('Papers')">
+        <div class="folder-card glass-card clickable-card" onclick="openCategory('Papers')">
             <div class="folder-icon-wrap"><i class="material-icons">description</i></div>
             <div class="folder-title">Papers</div>
             <div class="folder-count">Folders</div>
             <div class="folder-btn">Open Folder <i class="material-icons">chevron_right</i></div>
         </div>
-        <div class="folder-card glass-card" onclick="openCategory('Lessons')">
+        <div class="folder-card glass-card clickable-card" onclick="openCategory('Lessons')">
             <div class="folder-icon-wrap"><i class="material-icons">play_lesson</i></div>
             <div class="folder-title">Lessons</div>
             <div class="folder-count">Folders</div>
@@ -635,7 +705,34 @@
         window.addEventListener('resize', detectDevTools);
     })();
 
-    // --- Theme Toggle Smooth CSS Transition ---
+    // --- Elegant Page Transition Function ---
+    function triggerActionWithLoad(actionCallback) {
+        const loader = document.getElementById('loadingScreen');
+        // Reset loader styles for a quick smooth transition
+        loader.style.transition = 'opacity 0.4s ease';
+        loader.style.backgroundColor = 'var(--bg)'; // match current theme
+        loader.className = 'loading-screen'; // clear dual-stage classes
+        loader.style.display = 'flex';
+        
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                loader.style.opacity = '1';
+            });
+        });
+
+        setTimeout(() => {
+            if(actionCallback) actionCallback(); // Change the screen behind the loader
+            
+            // Fade out smoothly
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 400);
+            }, 300); // brief hold to feel the transition
+        }, 400); // wait for fade in
+    }
+
     function toggleTheme() {
         const body = document.body; 
         body.classList.toggle('light-mode'); 
@@ -670,13 +767,11 @@
     window.onload = () => {
         const savedTheme = localStorage.getItem('portalTheme');
         
-        // Update App Theme Icon Dynamically on Load
         const themeIcon = document.getElementById('themeIcon');
         if(themeIcon) {
             themeIcon.innerText = savedTheme === 'light' ? 'dark_mode' : 'light_mode';
         }
 
-        // App Auth Logic
         const isVerified = localStorage.getItem('isAppVerified'); 
         const savedUser = localStorage.getItem('studyUser');
         
@@ -692,25 +787,18 @@
         // --- SPLIT-TIME LOADING SCREEN LOGIC ---
         const loader = document.getElementById('loadingScreen');
         
-        // 1. Wait Half of the Time (1.5s) to Smoothly switch Background
         setTimeout(() => {
-            // Enable smooth background transition
             loader.style.transition = 'background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
-            
-            // Switch to the user's TARGET theme for the second half
             if (savedTheme === 'light') {
                 loader.classList.replace('dark-stage', 'light-stage');
             } else {
                 loader.classList.replace('light-stage', 'dark-stage');
             }
-        }, 1500); // Trigger halfway
+        }, 1500); 
 
-        // 2. Wait Full Time (3.0s total) to Fade Out Completely
         setTimeout(() => {
             loader.style.transition += ', opacity 1s cubic-bezier(0.4, 0, 0.2, 1)';
             loader.style.opacity = '0';
-            
-            // Remove from DOM after fade out completes
             setTimeout(() => {
                 loader.style.display = 'none';
             }, 1000); 
@@ -889,6 +977,7 @@
         }, 500); 
     }
 
+    // --- Master Authentication Logic (Updated with Smooth Transition) ---
     function masterAuth() {
         const u = document.getElementById("mUser").value.trim(); 
         const p = document.getElementById("mPass").value.trim();
@@ -897,13 +986,17 @@
             const data = snap.val(); 
             if (u === data.username && p === data.password) { 
                 localStorage.setItem('isAppVerified', 'true'); 
-                showScreen('loginScreen'); 
+                // Smooth transition to Student Login
+                triggerActionWithLoad(() => {
+                    showScreen('loginScreen'); 
+                });
             } else { 
-                alert("වැරදියි!"); 
+                alert("වැරදියි! (Incorrect)"); 
             } 
         });
     }
 
+    // --- Student Login Logic (Updated with Smooth Transition) ---
     function login() {
         const u = document.getElementById("loginName").value.trim(); 
         const p = document.getElementById("loginPass").value.trim();
@@ -914,11 +1007,14 @@
                 if(data[key].name === u && data[key].password === p) { 
                     currentUser = {id: key, ...data[key]}; 
                     localStorage.setItem('studyUser', JSON.stringify(currentUser)); 
-                    loadDashboard(); 
+                    // Smooth transition to Dashboard
+                    triggerActionWithLoad(() => {
+                        loadDashboard(); 
+                    });
                     return; 
                 } 
             }
-            alert("වැරදියි!");
+            alert("වැරදියි! (Incorrect)");
         });
     }
 
@@ -942,7 +1038,7 @@
             subData.forEach(sub => {
                 if(sub.tag.includes(acc)) {
                     list.innerHTML += `
-                    <div class="subject-card glass-card" onclick="openStream('${sub.id}')">
+                    <div class="subject-card glass-card clickable-card" onclick="openStream('${sub.id}')">
                         <img src="${sub.img}" class="subject-image">
                         <div class="info-box">
                             <h3>${sub.name}</h3>
@@ -1009,7 +1105,7 @@
         currentSearchResults.forEach((item, idx) => {
             if(item.type === 'folder') {
                 resultsGrid.innerHTML += `
-                <div class="folder-card glass-card" onclick="handleSearchClick(${idx})">
+                <div class="folder-card glass-card clickable-card" onclick="handleSearchClick(${idx})">
                     <div class="folder-icon-wrap"><i class="material-icons">folder_open</i></div>
                     <div class="folder-title">${item.title}</div>
                     <div class="folder-count">Stream: ${item.stream.toUpperCase()}</div>
@@ -1018,7 +1114,7 @@
             } else if (item.type === 'video') {
                 const thumbUrl = `https://img.youtube.com/vi/${item.videoData.id}/mqdefault.jpg`;
                 resultsGrid.innerHTML += `
-                <div class="folder-card glass-card" onclick="handleSearchClick(${idx})">
+                <div class="folder-card glass-card clickable-card" onclick="handleSearchClick(${idx})">
                     <img src="${thumbUrl}" class="video-thumbnail" alt="${item.title}">
                     <div class="folder-title">${item.title}</div>
                     <div class="folder-count">Folder: ${item.folderName}</div>
@@ -1080,7 +1176,7 @@
                     if(allowed[name]) {
                         const videoData = lessons[name].videos ? JSON.stringify(lessons[name].videos).replace(/"/g, '&quot;') : "null";
                         container.innerHTML += `
-                        <div class="folder-card glass-card" onclick="showVideoList('${name}', ${videoData}, false)">
+                        <div class="folder-card glass-card clickable-card" onclick="showVideoList('${name}', ${videoData}, false)">
                             <div class="folder-icon-wrap"><i class="material-icons">folder_copy</i></div>
                             <div class="folder-title">${name}</div>
                             <div class="folder-count">Lessons Folder</div>
@@ -1115,7 +1211,7 @@
             currentVideos.forEach((v, index) => {
                 const thumbUrl = `https://img.youtube.com/vi/${v.id}/mqdefault.jpg`;
                 list.innerHTML += `
-                <div class="folder-card glass-card" onclick="playThisVideo(${index})">
+                <div class="folder-card glass-card clickable-card" onclick="playThisVideo(${index})">
                     <img src="${thumbUrl}" class="video-thumbnail" alt="${v.title}">
                     <div class="folder-title">${v.title}</div>
                     <div class="folder-count">YouTube Video</div>
@@ -1215,7 +1311,7 @@
                 const prog = h.duration > 0 ? (h.time / h.duration) * 100 : 0;
                 const thumb = `https://img.youtube.com/vi/${h.id}/mqdefault.jpg`;
                 historyGrid.innerHTML += `
-                    <div class="history-card glass-card" onclick="resumeHistoryVideo('${h.id}', '${h.title.replace(/'/g, "\\'")}', ${h.time})">
+                    <div class="history-card glass-card clickable-card" onclick="resumeHistoryVideo('${h.id}', '${h.title.replace(/'/g, "\\'")}', ${h.time})">
                         <div class="history-thumb-wrap">
                             <img src="${thumb}" class="history-thumb">
                             <div class="history-play-btn"><i class="material-icons">play_arrow</i></div>
