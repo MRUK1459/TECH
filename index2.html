@@ -149,6 +149,9 @@
             <div class="nav-card" onclick="showPage('addPage')">
                 <i class="material-icons">video_library</i><h3>පාඩම් සහ වීඩියෝ<br>එක් කිරීම</h3>
             </div>
+            <div class="nav-card" onclick="showPage('pdfPage')">
+                <i class="material-icons" style="color: #10b981;">picture_as_pdf</i><h3>PDF ගොනු<br>එක් කිරීම</h3>
+            </div>
             <div class="nav-card" onclick="showPage('studentPage')">
                 <i class="material-icons" style="color: #8b5cf6;">groups</i><h3>ශිෂ්‍යයන්<br>කළමනාකරණය</h3>
             </div>
@@ -261,6 +264,32 @@
         </div>
     </div>
 
+    <!-- PDF Add Page -->
+    <div id="pdfPage" class="page">
+        <button class="back-btn" onclick="showPage('homeScreen')"><i class="material-icons">arrow_back</i> ආපසු</button>
+        <div class="card">
+            <h3 style="margin-top:0;">PDF ලින්ක් එක් කරන්න</h3>
+            <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">Stream එක තෝරන්න:</label>
+            <select id="pdfStreamSelect" onchange="loadPdfLessonsList()">
+                <option value="et">ET Stream</option><option value="sft">SFT Stream</option><option value="ict">ICT Stream</option>
+            </select>
+            
+            <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">වර්ගය තෝරන්න:</label>
+            <select id="pdfCategorySelect" onchange="loadPdfLessonsList()">
+                <option value="Monthly">Monthly</option><option value="Papers">Papers</option><option value="Lessons">Lessons</option>
+            </select>
+
+            <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">ෆෝල්ඩරය තෝරන්න:</label>
+            <select id="pdfLessonSelect" onchange="loadPdfVideosList()">
+                <option value="">ෆෝල්ඩරය තෝරන්න...</option>
+            </select>
+
+            <div id="pdfVideosArea" style="margin-top:20px;">
+                <p style="color:#64748b; font-size:14px; text-align:center;">කරුණාකර ඉහතින් ෆෝල්ඩරයක් තෝරන්න.</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Data View & Drag Drop (Search Bar Added) -->
     <div id="viewPage" class="page">
         <button class="back-btn" onclick="showPage('homeScreen')"><i class="material-icons">arrow_back</i> ආපසු</button>
@@ -357,6 +386,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
         if(id === 'linkTrackPage') loadLiveTracks();
         if(id === 'studentPage') loadStudents();
+        if(id === 'pdfPage') loadPdfLessonsList();
     }
 
     // --- LINK TRACK LOGIC ---
@@ -533,6 +563,68 @@
             else title = line;
         }
         showToast("Upload සාර්ථකයි!"); document.getElementById('bulkData').value = "";
+    }
+
+    // --- PDF LINKS UPLOAD LOGIC ---
+    function loadPdfLessonsList() {
+        const s = document.getElementById('pdfStreamSelect').value;
+        const c = document.getElementById('pdfCategorySelect').value;
+        db.ref(`studyData/${s}/${c}`).on('value', snap => {
+            const data = snap.val();
+            const sel = document.getElementById('pdfLessonSelect');
+            sel.innerHTML = '<option value="">ෆෝල්ඩරය තෝරන්න...</option>';
+            document.getElementById('pdfVideosArea').innerHTML = '<p style="color:#64748b; font-size:14px; text-align:center;">කරුණාකර ඉහතින් ෆෝල්ඩරයක් තෝරන්න.</p>';
+            if(data) {
+                Object.keys(data).forEach(l => { 
+                    let o = document.createElement('option'); o.value = l; o.innerText = l; sel.appendChild(o); 
+                });
+            }
+        });
+    }
+
+    function loadPdfVideosList() {
+        const s = document.getElementById('pdfStreamSelect').value;
+        const c = document.getElementById('pdfCategorySelect').value;
+        const l = document.getElementById('pdfLessonSelect').value;
+        const area = document.getElementById('pdfVideosArea');
+        area.innerHTML = '';
+        
+        if(!l) {
+            area.innerHTML = '<p style="color:#64748b; font-size:14px; text-align:center;">කරුණාකර ඉහතින් ෆෝල්ඩරයක් තෝරන්න.</p>';
+            return;
+        }
+        
+        db.ref(`studyData/${s}/${c}/${l}/videos`).on('value', snap => {
+            const data = snap.val();
+            if(!data) { 
+                area.innerHTML = '<p style="color:#64748b; font-size:14px; text-align:center;">මෙම ෆෝල්ඩරයේ වීඩියෝ නොමැත.</p>'; 
+                return; 
+            }
+            let html = '';
+            for(let vk in data) {
+                let v = data[vk];
+                let currentPdf = v.pdfLink || '';
+                html += `
+                <div style="background:#f8faff; padding:15px; border-radius:12px; margin-bottom:15px; border:1px solid #e2e8f0;">
+                    <h4 style="margin:0 0 10px 0; font-size:14px; color:#1e293b;"><i class="material-icons" style="font-size:16px; vertical-align:middle; color:var(--primary);">play_circle</i> ${v.title}</h4>
+                    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                        <input type="text" id="pdfLink_${vk}" placeholder="PDF Link එක මෙතනට Paste කරන්න..." value="${currentPdf}" style="margin-bottom:0; flex:1; min-width:200px;">
+                        <button style="width:auto; padding:12px 20px; background:var(--success); font-size:13px;" onclick="savePdfLink('${s}','${c}','${l}','${vk}')"><i class="material-icons" style="font-size:16px;">save</i> Save PDF</button>
+                    </div>
+                </div>`;
+            }
+            area.innerHTML = html;
+        });
+    }
+
+    async function savePdfLink(s, c, l, vk) {
+        const pdfLink = document.getElementById(`pdfLink_${vk}`).value.trim();
+        try {
+            await db.ref(`studyData/${s}/${c}/${l}/videos/${vk}`).update({ pdfLink: pdfLink });
+            showToast("PDF Link එක සාර්ථකව යාවත්කාලීන විය!");
+        } catch (error) {
+            showToast("දෝෂයක්: " + error.message, true);
+        }
     }
 
     // --- STORAGE VIEW & DRAG AND DROP ---
@@ -720,24 +812,6 @@
     async function deletePaper(id) { if(confirm("මකන්නද?")) { await db.ref(`papers/${activeSpgType}/${id}`).remove(); showToast("මකා දැමුවා!"); } }
 
     window.onload = () => { loadLessonsList(); loadMasterAccessData(); };
-</script>
-</body>
-</html>
-<script>{
-    {({
-
-
-
-            document.getElementById('paperTableArea').innerHTML = h + `</table>`;
-        });
-    }
-
-    async function deletePaper(id) { if(confirm("මකන්නද?")) await db.ref(`papers/${activeSpgType}/${id}`).remove(); }
-
-    window.onload = () => { 
-        loadLessonsList(); 
-        loadMasterAccessData(); 
-    };
 </script>
 </body>
 </html>
