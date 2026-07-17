@@ -609,6 +609,13 @@
             <div class="folder-count">Folders</div>
             <div class="folder-btn">Open Folder <i class="material-icons">chevron_right</i></div>
         </div>
+        <!-- New Video Edit Category -->
+        <div class="folder-card glass-card clickable-card" onclick="openCategory('Video Edit')">
+            <div class="folder-icon-wrap" style="color:#f43f5e; background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.2);"><i class="material-icons">movie_edit</i></div>
+            <div class="folder-title">Video Edit</div>
+            <div class="folder-count">Folders</div>
+            <div class="folder-btn">Open Folder <i class="material-icons">chevron_right</i></div>
+        </div>
     </div>
 </div>
 
@@ -712,32 +719,30 @@
         window.addEventListener('resize', detectDevTools);
     })();
 
-    // --- Elegant Page Transition Function ---
     function triggerActionWithLoad(actionCallback) {
         const loader = document.getElementById('loadingScreen');
-        // Reset loader styles for a quick smooth transition
+        
         loader.style.transition = 'opacity 0.4s ease';
-        loader.style.backgroundColor = 'var(--bg)'; // match current theme
-        loader.className = 'loading-screen'; // clear dual-stage classes
+        loader.style.backgroundColor = 'var(--bg)';
+        loader.className = 'loading-screen';
         loader.style.display = 'flex';
         
         requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                loader.style.opacity = '1';
+            requestAnimationFrame(() => { 
+                loader.style.opacity = '1'; 
             });
         });
 
         setTimeout(() => {
-            if(actionCallback) actionCallback(); // Change the screen behind the loader
+            if (actionCallback) actionCallback();
             
-            // Fade out smoothly
             setTimeout(() => {
                 loader.style.opacity = '0';
-                setTimeout(() => {
-                    loader.style.display = 'none';
+                setTimeout(() => { 
+                    loader.style.display = 'none'; 
                 }, 400);
-            }, 300); // brief hold to feel the transition
-        }, 400); // wait for fade in
+            }, 300); 
+        }, 400); 
     }
 
     function toggleTheme() {
@@ -762,21 +767,37 @@
     firebase.initializeApp(firebaseConfig); 
     const db = firebase.database();
 
-    let currentUser = null, player, hideTimeout, infoTimeout, currentVideos = [], activeStream = "";
-    let isSpacePressed = false, lastUserSpeed = 1; 
-    let tapTimer = null, lastTapTime = 0, pressTimer = null, isLongPressing = false;
+    let currentUser = null;
+    let player;
+    let hideTimeout;
+    let infoTimeout;
+    let currentVideos = [];
+    let activeStream = "";
+    
+    let isSpacePressed = false;
+    let lastUserSpeed = 1; 
+    let tapTimer = null;
+    let lastTapTime = 0;
+    let pressTimer = null;
+    let isLongPressing = false;
+    
     let searchIndex = []; 
     let currentSearchResults = []; 
     let currentPlayingVideo = null; 
     let resumeTime = 0;
     let isPlayingFromHistory = false;
+    
+    // Live listeners globally tracked for real-time sorting
+    let currentTopicsRef = null;
+    let currentVideosRef = null;
+    let activeCatName = "";
 
     window.onload = () => {
         const savedTheme = localStorage.getItem('portalTheme');
-        
         const themeIcon = document.getElementById('themeIcon');
-        if(themeIcon) {
-            themeIcon.innerText = savedTheme === 'light' ? 'dark_mode' : 'light_mode';
+        
+        if (themeIcon) { 
+            themeIcon.innerText = savedTheme === 'light' ? 'dark_mode' : 'light_mode'; 
         }
 
         const isVerified = localStorage.getItem('isAppVerified'); 
@@ -791,9 +812,7 @@
             loadDashboard(); 
         }
 
-        // --- SPLIT-TIME LOADING SCREEN LOGIC ---
         const loader = document.getElementById('loadingScreen');
-        
         setTimeout(() => {
             loader.style.transition = 'background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
             if (savedTheme === 'light') {
@@ -806,8 +825,8 @@
         setTimeout(() => {
             loader.style.transition += ', opacity 1s cubic-bezier(0.4, 0, 0.2, 1)';
             loader.style.opacity = '0';
-            setTimeout(() => {
-                loader.style.display = 'none';
+            setTimeout(() => { 
+                loader.style.display = 'none'; 
             }, 1000); 
         }, 3000); 
     };
@@ -816,7 +835,7 @@
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         
-        if((id === 'mainMenuScreen' || id === 'historyScreen') && currentUser) { 
+        if ((id === 'mainMenuScreen' || id === 'historyScreen') && currentUser) { 
             renderHistory(); 
         }
     }
@@ -848,18 +867,19 @@
                 }
             }
             
-            if(e.code === 'ArrowRight') { 
+            if (e.code === 'ArrowRight') { 
                 e.preventDefault(); 
                 skip(5); 
                 showOverlayInfo('5s »'); 
                 showControls(); 
             }
-            if(e.code === 'ArrowLeft') { 
+            if (e.code === 'ArrowLeft') { 
                 e.preventDefault(); 
                 skip(-5); 
                 showOverlayInfo('« 5s'); 
                 showControls(); 
             }
+            
             if (e.code === 'ArrowUp') {
                 e.preventDefault();
                 let currentVol = player.getVolume();
@@ -871,6 +891,7 @@
                 showOverlayInfo('Volume: ' + newVol + '%');
                 showControls();
             }
+            
             if (e.code === 'ArrowDown') {
                 e.preventDefault();
                 let currentVol = player.getVolume();
@@ -881,25 +902,24 @@
                 showOverlayInfo('Volume: ' + newVol + '%');
                 showControls();
             }
-
-            if (e.key === ']') {
-                e.preventDefault();
-                let currentSpeed = player.getPlaybackRate() || 1;
-                let newSpeed = Math.min(2.0, currentSpeed + 0.1);
-                player.setPlaybackRate(newSpeed);
-                showOverlayInfo('Speed: ' + newSpeed.toFixed(1) + 'x');
-                showControls();
+            
+            if (e.key === ']') { 
+                e.preventDefault(); 
+                let s = Math.min(2.0, (player.getPlaybackRate() || 1) + 0.1); 
+                player.setPlaybackRate(s); 
+                showOverlayInfo('Speed: ' + s.toFixed(1) + 'x'); 
+                showControls(); 
             }
-            if (e.key === '[') {
-                e.preventDefault();
-                let currentSpeed = player.getPlaybackRate() || 1;
-                let newSpeed = Math.max(1.0, currentSpeed - 0.1);
-                player.setPlaybackRate(newSpeed);
-                showOverlayInfo('Speed: ' + newSpeed.toFixed(1) + 'x');
-                showControls();
+            
+            if (e.key === '[') { 
+                e.preventDefault(); 
+                let s = Math.max(1.0, (player.getPlaybackRate() || 1) - 0.1); 
+                player.setPlaybackRate(s); 
+                showOverlayInfo('Speed: ' + s.toFixed(1) + 'x'); 
+                showControls(); 
             }
-
-            if(e.code === 'KeyF') { 
+            
+            if (e.code === 'KeyF') { 
                 e.preventDefault(); 
                 toggleFullScreen(); 
             }
@@ -910,6 +930,7 @@
         if (e.code === 'Space' && player) {
             e.preventDefault(); 
             clearTimeout(this.spaceTimer);
+            
             if (isSpacePressed) {
                 if (player.getPlaybackRate() !== 2 || document.getElementById('speedToast').style.display === 'none') { 
                     togglePlay(e); 
@@ -937,8 +958,8 @@
         if (tapLength < 300 && tapLength > 0) {
             clearTimeout(pressTimer); 
             clearTimeout(tapTimer); 
-            const rect = e.target.getBoundingClientRect();
             
+            const rect = e.target.getBoundingClientRect();
             if (e.clientX < (rect.left + rect.width / 2)) { 
                 skip(-10); 
                 showOverlayInfo('« 10s'); 
@@ -953,6 +974,7 @@
                 if (!isLongPressing) { 
                     const cb = document.getElementById("controlBar"); 
                     document.getElementById("speedMenu").classList.remove("show"); 
+                    
                     if (cb.classList.contains("hidden")) {
                         showControls(); 
                     } else {
@@ -978,13 +1000,13 @@
         const el = document.getElementById('playerOverlayInfo'); 
         el.innerText = text; 
         el.style.display = 'block'; 
+        
         clearTimeout(infoTimeout); 
         infoTimeout = setTimeout(() => { 
             el.style.display = 'none'; 
         }, 500); 
     }
 
-    // --- Master Authentication Logic (Updated with Smooth Transition) ---
     function masterAuth() {
         const u = document.getElementById("mUser").value.trim(); 
         const p = document.getElementById("mPass").value.trim();
@@ -993,8 +1015,7 @@
             const data = snap.val(); 
             if (u === data.username && p === data.password) { 
                 localStorage.setItem('isAppVerified', 'true'); 
-                // Smooth transition to Student Login
-                triggerActionWithLoad(() => {
+                triggerActionWithLoad(() => { 
                     showScreen('loginScreen'); 
                 });
             } else { 
@@ -1003,7 +1024,6 @@
         });
     }
 
-    // --- Student Login Logic (Updated with Smooth Transition) ---
     function login() {
         const u = document.getElementById("loginName").value.trim(); 
         const p = document.getElementById("loginPass").value.trim();
@@ -1012,10 +1032,10 @@
             const data = snap.val();
             for(let key in data) { 
                 if(data[key].name === u && data[key].password === p) { 
-                    currentUser = {id: key, ...data[key]}; 
+                    currentUser = { id: key, ...data[key] }; 
                     localStorage.setItem('studyUser', JSON.stringify(currentUser)); 
-                    // Smooth transition to Dashboard
-                    triggerActionWithLoad(() => {
+                    
+                    triggerActionWithLoad(() => { 
                         loadDashboard(); 
                     });
                     return; 
@@ -1034,6 +1054,7 @@
             const acc = s.val(); 
             const list = document.getElementById("subjectList"); 
             list.innerHTML = "";
+            
             const subData = [
                 { id: 'et', name: 'Engineering Technology', tag: ['et', 'both', 'all'], img: 'https://static.edumix.lk/sisulka//teacher/5f991c128edc0d4ef4e41a51.jpg' },
                 { id: 'sft', name: 'Science for Technology', tag: ['sft', 'both', 'all'], img: 'https://plain-apac-prod-public.komododecks.com/202604/23/FiS91VCeBtbXYo1nzdJk/image.jpg' },
@@ -1043,7 +1064,7 @@
             searchIndex = []; 
             
             subData.forEach(sub => {
-                if(sub.tag.includes(acc)) {
+                if (sub.tag.includes(acc)) {
                     list.innerHTML += `
                     <div class="subject-card glass-card clickable-card" onclick="openStream('${sub.id}')">
                         <img src="${sub.img}" class="subject-image">
@@ -1055,26 +1076,36 @@
                     
                     db.ref(`students/${currentUser.id}/allowedLessons/${sub.id}`).once('value', allowSnap => {
                         const allowed = allowSnap.val() || {};
+                        
                         db.ref(`studyData/${sub.id}`).once('value', dataSnap => {
                             const streamData = dataSnap.val() || {};
-                            for(let folderName in allowed) {
-                                if(allowed[folderName]) {
-                                    searchIndex.push({ type: 'folder', stream: sub.id, title: folderName, folderName: folderName });
-                                    for(let cat in streamData) {
-                                        if(streamData[cat] && streamData[cat][folderName] && streamData[cat][folderName].videos) {
-                                            const videosObj = streamData[cat][folderName].videos;
-                                            Object.values(videosObj).forEach((v, vIndex) => { 
-                                                searchIndex.push({ 
-                                                    type: 'video', 
-                                                    stream: sub.id, 
-                                                    folderName: folderName, 
-                                                    title: v.title, 
-                                                    videoData: v, 
-                                                    index: vIndex, 
-                                                    allVideos: videosObj 
-                                                }); 
+                            for (let folderName in allowed) {
+                                if (allowed[folderName]) {
+                                    for (let cat in streamData) {
+                                        if (streamData[cat] && streamData[cat][folderName]) {
+                                            
+                                            searchIndex.push({ 
+                                                type: 'folder', 
+                                                stream: sub.id, 
+                                                title: folderName, 
+                                                folderName: folderName, 
+                                                catName: cat 
                                             });
-                                            break; 
+                                            
+                                            if (streamData[cat][folderName].videos) {
+                                                const videosObj = streamData[cat][folderName].videos;
+                                                Object.values(videosObj).forEach((v, vIndex) => { 
+                                                    searchIndex.push({ 
+                                                        type: 'video', 
+                                                        stream: sub.id, 
+                                                        folderName: folderName, 
+                                                        catName: cat, 
+                                                        title: v.title, 
+                                                        videoData: v, 
+                                                        index: vIndex 
+                                                    }); 
+                                                });
+                                            }
                                         }
                                     }
                                 }
@@ -1093,7 +1124,7 @@
         const resultsGrid = document.getElementById("searchResults"); 
         const defaultContent = document.getElementById("defaultHomeContent");
         
-        if(query.trim() === '') { 
+        if (query.trim() === '') { 
             resContainer.style.display = 'none'; 
             defaultContent.style.display = 'block'; 
             return; 
@@ -1102,15 +1133,16 @@
         defaultContent.style.display = 'none'; 
         resContainer.style.display = 'block'; 
         resultsGrid.innerHTML = '';
+        
         currentSearchResults = searchIndex.filter(item => item.title.toLowerCase().includes(query)).slice(0, 50);
         
-        if(currentSearchResults.length === 0) { 
+        if (currentSearchResults.length === 0) { 
             resultsGrid.innerHTML = '<div style="color:var(--text-sub); grid-column: 1 / -1; text-align:center; padding: 20px;">කිසිදු පාඩමක් හෝ වීඩියෝවක් සොයාගත නොහැකි විය!</div>'; 
             return; 
         }
         
         currentSearchResults.forEach((item, idx) => {
-            if(item.type === 'folder') {
+            if (item.type === 'folder') {
                 resultsGrid.innerHTML += `
                 <div class="folder-card glass-card clickable-card" onclick="handleSearchClick(${idx})">
                     <div class="folder-icon-wrap"><i class="material-icons">folder_open</i></div>
@@ -1121,7 +1153,8 @@
             } else if (item.type === 'video') {
                 const thumbUrl = `https://img.youtube.com/vi/${item.videoData.id}/mqdefault.jpg`;
                 let pdfBtnHtml = "";
-                if(item.videoData.pdfLink) {
+                
+                if (item.videoData.pdfLink) {
                     pdfBtnHtml = `<div class="pdf-btn" onclick="event.stopPropagation(); window.open('${item.videoData.pdfLink}', '_blank')">Download PDF <i class="material-icons">download</i></div>`;
                 }
                 
@@ -1141,32 +1174,13 @@
 
     function handleSearchClick(idx) {
         const item = currentSearchResults[idx];
-        if(item.type === 'folder') { 
-            openSearchedFolder(item.stream, item.folderName); 
+        if (item.type === 'folder') { 
+            activeStream = item.stream;
+            showVideoListRealtime(item.folderName, item.catName, true); 
         } else if (item.type === 'video') { 
             activeStream = item.stream; 
-            showVideoList(item.folderName, item.allVideos, true); 
-            playThisVideo(item.index); 
+            showVideoListRealtime(item.folderName, item.catName, true, item.videoData.id); 
         }
-    }
-
-    function openSearchedFolder(stream, folderName) {
-        activeStream = stream;
-        db.ref(`studyData/${stream}`).once('value', snap => {
-            const data = snap.val() || {}; 
-            let foundVideos = null;
-            for(let cat in data) { 
-                if(data[cat] && data[cat][folderName] && data[cat][folderName].videos) { 
-                    foundVideos = data[cat][folderName].videos; 
-                    break; 
-                } 
-            }
-            if(foundVideos) { 
-                showVideoList(folderName, foundVideos, true); 
-            } else { 
-                alert('මෙම ෆෝල්ඩරයේ වීඩියෝ නොමැත!'); 
-            }
-        });
     }
 
     function openStream(type) { 
@@ -1175,37 +1189,55 @@
         showScreen('categoriesScreen'); 
     }
     
+    // Updated real-time sync for folders
     function openCategory(catName) {
+        activeCatName = catName;
         document.getElementById("subTitle").innerText = `${activeStream.toUpperCase()} - ${catName}`; 
         showScreen('topicsScreen');
         
+        if (currentTopicsRef) {
+            currentTopicsRef.off('value'); 
+        }
+
         db.ref(`students/${currentUser.id}/allowedLessons/${activeStream}`).on('value', s => {
             const allowed = s.val() || {};
-            db.ref(`studyData/${activeStream}/${catName}`).once('value', ds => {
+            
+            currentTopicsRef = db.ref(`studyData/${activeStream}/${catName}`);
+            currentTopicsRef.on('value', ds => {
                 const lessons = ds.val() || {}; 
                 const container = document.getElementById("topicsList"); 
                 container.innerHTML = "";
-                for(let name in lessons) {
-                    if(allowed[name]) {
-                        const videoData = lessons[name].videos ? JSON.stringify(lessons[name].videos).replace(/"/g, '&quot;') : "null";
+                
+                let dataArray = [];
+                for (let name in lessons) { 
+                    dataArray.push({ name: name, ...lessons[name] }); 
+                }
+                
+                // Sort Folders by 'order' parameter for real-time Sync
+                dataArray.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+                dataArray.forEach(item => {
+                    let name = item.name;
+                    if (allowed[name]) {
                         container.innerHTML += `
-                        <div class="folder-card glass-card clickable-card" onclick="showVideoList('${name}', ${videoData}, false)">
+                        <div class="folder-card glass-card clickable-card" onclick="showVideoListRealtime('${name.replace(/'/g, "\\'")}', '${catName}', false)">
                             <div class="folder-icon-wrap"><i class="material-icons">folder_copy</i></div>
                             <div class="folder-title">${name}</div>
                             <div class="folder-count">Lessons Folder</div>
                             <div class="folder-btn">View Lessons <i class="material-icons">chevron_right</i></div>
                         </div>`;
                     }
-                }
+                });
             });
         });
     }
 
-    function showVideoList(title, videos, isFromSearch) {
-        document.getElementById("lessonTitle").innerText = title; 
+    // Updated real-time sync for videos
+    function showVideoListRealtime(folderName, catName, isFromSearch, autoPlayVidId = null) {
+        document.getElementById("lessonTitle").innerText = folderName; 
         const backBtn = document.getElementById("dynamicBackBtn");
         
-        if(isFromSearch) { 
+        if (isFromSearch) { 
             backBtn.setAttribute('onclick', "showScreen('mainMenuScreen')"); 
         } else { 
             backBtn.setAttribute('onclick', "showScreen('topicsScreen')"); 
@@ -1217,28 +1249,54 @@
         isPlayingFromHistory = false; 
         
         const list = document.getElementById("multiVideoList"); 
-        list.innerHTML = "";
+        list.innerHTML = "<div style='color:var(--text-sub); text-align:center; grid-column:1/-1; padding:20px;'>Loading Videos...</div>";
         
-        if (videos) {
-            currentVideos = Object.values(videos);
-            currentVideos.forEach((v, index) => {
-                const thumbUrl = `https://img.youtube.com/vi/${v.id}/mqdefault.jpg`;
-                
-                let pdfBtnHtml = "";
-                if(v.pdfLink) {
-                    pdfBtnHtml = `<div class="pdf-btn" onclick="event.stopPropagation(); window.open('${v.pdfLink}', '_blank')">Download PDF <i class="material-icons">download</i></div>`;
-                }
-
-                list.innerHTML += `
-                <div class="folder-card glass-card clickable-card" onclick="playThisVideo(${index})">
-                    <img src="${thumbUrl}" class="video-thumbnail" alt="${v.title}">
-                    <div class="folder-title">${v.title}</div>
-                    <div class="folder-count">YouTube Video</div>
-                    <div class="folder-btn">Watch Now <i class="material-icons">play_circle_filled</i></div>
-                    ${pdfBtnHtml}
-                </div>`;
-            });
+        if (currentVideosRef) {
+            currentVideosRef.off('value');
         }
+        
+        currentVideosRef = db.ref(`studyData/${activeStream}/${catName}/${folderName}/videos`);
+        currentVideosRef.on('value', snap => {
+            const videos = snap.val();
+            list.innerHTML = "";
+            currentVideos = [];
+            
+            if (videos) {
+                // Sort videos based on 'order' parameter dynamically
+                let vArr = Object.keys(videos).map(k => ({ key: k, ...videos[k] }));
+                vArr.sort((a, b) => (a.order || 0) - (b.order || 0));
+                
+                currentVideos = vArr; 
+                
+                currentVideos.forEach((v, index) => {
+                    const thumbUrl = `https://img.youtube.com/vi/${v.id}/mqdefault.jpg`;
+                    let pdfBtnHtml = "";
+                    
+                    if (v.pdfLink) {
+                        pdfBtnHtml = `<div class="pdf-btn" onclick="event.stopPropagation(); window.open('${v.pdfLink}', '_blank')">Download PDF <i class="material-icons">download</i></div>`;
+                    }
+                    
+                    list.innerHTML += `
+                    <div class="folder-card glass-card clickable-card" onclick="playThisVideo(${index})">
+                        <img src="${thumbUrl}" class="video-thumbnail" alt="${v.title}">
+                        <div class="folder-title">${v.title}</div>
+                        <div class="folder-count">YouTube Video</div>
+                        <div class="folder-btn">Watch Now <i class="material-icons">play_circle_filled</i></div>
+                        ${pdfBtnHtml}
+                    </div>`;
+                });
+                
+                if (autoPlayVidId) {
+                    const idx = currentVideos.findIndex(v => v.id === autoPlayVidId);
+                    if (idx !== -1) { 
+                        playThisVideo(idx); 
+                        autoPlayVidId = null; 
+                    }
+                }
+            } else {
+                list.innerHTML = "<div style='color:var(--text-sub); text-align:center; grid-column:1/-1; padding:20px;'>මෙම ෆෝල්ඩරයේ වීඩියෝ නොමැත.</div>";
+            }
+        });
     }
 
     function playThisVideo(index) {
@@ -1274,14 +1332,16 @@
     }
 
     function saveHistory(vid) {
-        if(!vid || !player || typeof player.getCurrentTime !== 'function') return;
+        if (!vid || !player || typeof player.getCurrentTime !== 'function') return;
+        
         const time = player.getCurrentTime(); 
         const dur = player.getDuration();
         
-        if(time < 1 || dur <= 0 || (time / dur) > 0.99) return; 
+        if (time < 1 || dur <= 0 || (time / dur) > 0.99) return; 
         
         const historyKey = 'watchHistory_' + currentUser.id;
         let history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+        
         history = history.filter(h => h.id !== vid.id);
         history.unshift({ 
             id: vid.id, 
@@ -1291,32 +1351,35 @@
             timestamp: Date.now() 
         });
         
-        if(history.length > 10) {
-            history.pop(); 
-        }
+        if (history.length > 10) history.pop(); 
+        
         localStorage.setItem(historyKey, JSON.stringify(history));
     }
 
     function removeHistory(vidId) {
-        if(!currentUser || !vidId) return;
+        if (!currentUser || !vidId) return;
+        
         const historyKey = 'watchHistory_' + currentUser.id;
         let history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+        
         history = history.filter(h => h.id !== vidId);
         localStorage.setItem(historyKey, JSON.stringify(history));
+        
         renderHistory();
     }
 
     function renderHistory() {
-        if(!currentUser) return;
+        if (!currentUser) return;
+        
         const historyKey = 'watchHistory_' + currentUser.id;
         const history = JSON.parse(localStorage.getItem(historyKey) || '[]');
         const categoryWrapper = document.getElementById('historyCategoryWrapper');
         const historyCount = document.getElementById('historyCount');
         const historyGrid = document.getElementById('historyGrid');
         
-        if(history.length === 0) { 
+        if (history.length === 0) { 
             categoryWrapper.style.display = 'none'; 
-            if(historyGrid) {
+            if (historyGrid) {
                 historyGrid.innerHTML = '<div style="color:var(--text-sub); width:100%; text-align:center; grid-column:1/-1;">නැවත නැරඹීමට වීඩියෝ නොමැත.</div>';
             }
             return; 
@@ -1325,11 +1388,12 @@
         categoryWrapper.style.display = 'block'; 
         historyCount.innerText = history.length + ' Videos (නැවත නැරඹීමට)';
         
-        if(historyGrid) {
+        if (historyGrid) {
             historyGrid.innerHTML = '';
             history.forEach(h => {
                 const prog = h.duration > 0 ? (h.time / h.duration) * 100 : 0;
                 const thumb = `https://img.youtube.com/vi/${h.id}/mqdefault.jpg`;
+                
                 historyGrid.innerHTML += `
                     <div class="history-card glass-card clickable-card" onclick="resumeHistoryVideo('${h.id}', '${h.title.replace(/'/g, "\\'")}', ${h.time})">
                         <div class="history-thumb-wrap">
@@ -1340,8 +1404,7 @@
                         <div class="history-info">
                             <div class="history-title">${h.title}</div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
         }
     }
@@ -1386,6 +1449,7 @@
         const vol = player.getVolume(); 
         document.getElementById('volSlider').value = vol; 
         updateVolIcon(vol);
+        
         if (resumeTime > 0) { 
             player.seekTo(resumeTime, true); 
             resumeTime = 0; 
@@ -1394,15 +1458,17 @@
     
     function onPlayerStateChange(e) {
         const btn = document.getElementById("playPauseBtn");
+        
         if (e.data === YT.PlayerState.PLAYING) { 
             btn.innerHTML = '<i class="material-icons">pause</i>'; 
             resetTimer(); 
-        } else if (e.data === YT.PlayerState.ENDED) {
+        } else if (e.data === YT.PlayerState.ENDED) { 
             btn.innerHTML = '<i class="material-icons">replay</i>'; 
-            showControls();
-            if(currentPlayingVideo) { 
+            showControls(); 
+            
+            if (currentPlayingVideo) {
                 removeHistory(currentPlayingVideo.id); 
-            } 
+            }
         } else { 
             btn.innerHTML = '<i class="material-icons">play_arrow</i>'; 
             showControls(); 
@@ -1414,42 +1480,44 @@
             player.seekTo(player.getCurrentTime() + sec, true); 
         }
     }
-
+    
     function togglePlay(e) { 
-        if(e) e.stopPropagation(); 
-        if(player) {
+        if (e) e.stopPropagation(); 
+        
+        if (player) { 
             if (player.getPlayerState() === 1) {
-                player.pauseVideo();
+                player.pauseVideo(); 
             } else {
-                player.playVideo();
+                player.playVideo(); 
             }
-        }
+        } 
     }
-
+    
     function showControls() { 
         document.getElementById("controlBar").classList.remove("hidden"); 
         resetTimer(); 
     }
-
+    
     function hideControls() { 
         if (player && player.getPlayerState() === 1) {
             document.getElementById("controlBar").classList.add("hidden"); 
         }
     }
-
+    
     function resetTimer() { 
         clearTimeout(hideTimeout); 
         if (player && player.getPlayerState() === 1) {
             hideTimeout = setTimeout(hideControls, 4000); 
         }
     }
-
+    
     function changeVolume(e) { 
-        if(e) e.stopPropagation(); 
+        if (e) e.stopPropagation(); 
         const val = e.target.value; 
-        if(player) { 
+        
+        if (player) { 
             player.setVolume(val); 
-            if(val > 0 && player.isMuted()) {
+            if (val > 0 && player.isMuted()) {
                 player.unMute(); 
             }
             updateVolIcon(val); 
@@ -1457,16 +1525,18 @@
     }
 
     function toggleMute(e) { 
-        if(e) e.stopPropagation(); 
-        if(!player) return; 
+        if (e) e.stopPropagation(); 
+        if (!player) return; 
         
         if (player.isMuted() || player.getVolume() === 0) { 
             player.unMute(); 
             let currentVol = player.getVolume(); 
+            
             if (currentVol === 0) { 
                 player.setVolume(100); 
                 currentVol = 100; 
             } 
+            
             document.getElementById('volSlider').value = currentVol; 
             updateVolIcon(currentVol); 
         } else { 
@@ -1488,7 +1558,8 @@
     }
 
     function toggleFullScreen(e) { 
-        if(e && e.stopPropagation) e.stopPropagation(); 
+        if (e && e.stopPropagation) e.stopPropagation(); 
+        
         var el = document.getElementById("videoContainer"); 
         var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); 
         var fsIcon = document.getElementById('fsIconBtn'); 
@@ -1497,19 +1568,19 @@
             if (el.classList.contains('pseudo-fullscreen')) { 
                 el.classList.remove('pseudo-fullscreen'); 
                 document.body.classList.remove('pseudo-fs-active'); 
-                if(fsIcon) fsIcon.innerText = 'fullscreen'; 
+                if (fsIcon) fsIcon.innerText = 'fullscreen'; 
             } else { 
                 el.classList.add('pseudo-fullscreen'); 
                 document.body.classList.add('pseudo-fs-active'); 
-                if(fsIcon) fsIcon.innerText = 'fullscreen_exit'; 
+                if (fsIcon) fsIcon.innerText = 'fullscreen_exit'; 
             } 
         } else { 
             if (!document.fullscreenElement) { 
                 el.requestFullscreen(); 
-                if(fsIcon) fsIcon.innerText = 'fullscreen_exit'; 
+                if (fsIcon) fsIcon.innerText = 'fullscreen_exit'; 
             } else { 
-                if(document.exitFullscreen) document.exitFullscreen(); 
-                if(fsIcon) fsIcon.innerText = 'fullscreen'; 
+                if (document.exitFullscreen) document.exitFullscreen(); 
+                if (fsIcon) fsIcon.innerText = 'fullscreen'; 
             } 
         } 
     }
@@ -1518,12 +1589,12 @@
         e.stopPropagation(); 
         document.getElementById("speedMenu").classList.toggle("show"); 
     }
-
+    
     function setSpeed(rate) { 
         player.setPlaybackRate(rate); 
         document.getElementById("speedMenu").classList.remove("show"); 
     }
-
+    
     function handleSeek(e) { 
         e.stopPropagation(); 
         var rect = e.currentTarget.getBoundingClientRect(); 
@@ -1533,7 +1604,9 @@
     
     function updateUI() { 
         if (player && player.getCurrentTime) { 
-            var curr = player.getCurrentTime(), dur = player.getDuration(); 
+            var curr = player.getCurrentTime();
+            var dur = player.getDuration(); 
+            
             document.getElementById("currentTime").innerText = formatTime(curr); 
             document.getElementById("totalDuration").innerText = formatTime(dur);
             
@@ -1541,8 +1614,8 @@
                 document.getElementById("seekBarProgress").style.width = (curr / dur) * 100 + "%"; 
             }
             
-            if(player.getPlayerState() === YT.PlayerState.PLAYING && currentPlayingVideo) { 
-                if((dur - curr) > 2) { 
+            if (player.getPlayerState() === YT.PlayerState.PLAYING && currentPlayingVideo) { 
+                if ((dur - curr) > 2) {
                     saveHistory(currentPlayingVideo); 
                 }
             }
@@ -1558,11 +1631,12 @@
     }
 
     function hidePlayer() { 
-        if(player) { 
-            if(currentPlayingVideo && player.getPlayerState() !== YT.PlayerState.ENDED) {
-                const time = player.getCurrentTime(); 
+        if (player) { 
+            if (currentPlayingVideo && player.getPlayerState() !== YT.PlayerState.ENDED) {
+                const time = player.getCurrentTime();
                 const dur = player.getDuration();
-                if(dur - time > 2) { 
+                
+                if (dur - time > 2) {
                     saveHistory(currentPlayingVideo); 
                 }
             } 
@@ -1581,10 +1655,10 @@
             document.exitFullscreen();
         }
         
-        if(isPlayingFromHistory) {
-            isPlayingFromHistory = false;
-            showScreen('historyScreen');
-        } else {
+        if (isPlayingFromHistory) { 
+            isPlayingFromHistory = false; 
+            showScreen('historyScreen'); 
+        } else { 
             document.getElementById("videoListContainer").style.display = "block"; 
         }
     }
