@@ -11,17 +11,16 @@
            CLASSIC DARK MODE (DEFAULT) - MATTE BLACK
            ================================================== */
         :root { 
-            --primary: #2563eb;       /* Default Blue */
+            --primary: #2563eb;       
             --primary-light: #60a5fa; 
             --accent: #1d4ed8; 
-            --bg: #121212;            /* Beautiful Matte Black */
-            --card-bg: #1e1e1e;       /* Slightly lighter for cards */
+            --bg: #121212;            
+            --card-bg: #1e1e1e;       
             --text-main: #ffffff; 
             --text-sub: #a1a1aa; 
             --danger: #ef4444;
             --border-color: rgba(255,255,255,0.05);
             
-            /* Glassmorphism Variables - Standard Dark */
             --glass-bg: rgba(30, 30, 30, 0.6);
             --glass-border: rgba(255, 255, 255, 0.05);
             --glass-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
@@ -55,14 +54,12 @@
         /* ==================================================
            RGB MODE (CRIMSON RED + GLASS ORBS)
            ================================================== */
-        
         body.crimson-mode {
-            /* Change all UI to Red/Crimson! */
             --primary: #ef4444; 
             --primary-light: #f87171; 
             --accent: #b91c1c; 
             
-            --bg: #0a0a0a; /* Slightly darker than matte to make glows pop */
+            --bg: #0a0a0a; 
             --glass-bg: rgba(15, 10, 10, 0.65); 
             --glass-border: rgba(255, 255, 255, 0.1);
             --glass-shadow: 0 8px 32px rgba(220, 38, 38, 0.2);
@@ -79,58 +76,33 @@
             --glass-shadow: 0 8px 32px rgba(220, 38, 38, 0.15);
         }
 
-        /* Intense Glass Blur strictly for RGB Mode */
         body.crimson-mode .glass-card, 
         body.crimson-mode .search-input {
             backdrop-filter: blur(30px) saturate(150%);
             -webkit-backdrop-filter: blur(30px) saturate(150%);
         }
 
-        /* Ambient Animated Orbs - ONLY shown in Crimson Mode */
         .ambient-glow {
             position: fixed;
             border-radius: 50%;
             filter: blur(150px);
             z-index: -2;
-            opacity: 0; /* Totally hidden in standard dark mode */
+            opacity: 0; 
             pointer-events: none;
             transition: opacity 1s ease;
         }
         
-        body.crimson-mode .ambient-glow { 
-            opacity: 0.55; 
-        }
+        body.crimson-mode .ambient-glow { opacity: 0.55; }
+        body.crimson-mode.light-mode .ambient-glow { opacity: 0.25; filter: blur(100px); }
         
-        body.crimson-mode.light-mode .ambient-glow { 
-            opacity: 0.25; 
-            filter: blur(100px); 
-        }
-        
-        /* Smaller, more elegant Orbs */
-        .glow-1 { 
-            width: 30vw; height: 30vw; 
-            background: #ef4444; 
-            top: -5%; left: -5%; 
-            animation: floatA 12s infinite alternate ease-in-out; 
-        }
-        .glow-2 { 
-            width: 25vw; height: 25vw; 
-            background: #991b1b; 
-            bottom: -5%; right: -5%; 
-            animation: floatB 15s infinite alternate ease-in-out; 
-        }
-        .glow-3 { 
-            width: 35vw; height: 35vw; 
-            background: #f43f5e; 
-            top: 40%; left: 35%; 
-            animation: floatC 18s infinite alternate ease-in-out; 
-        }
+        .glow-1 { width: 30vw; height: 30vw; background: #ef4444; top: -5%; left: -5%; animation: floatA 12s infinite alternate ease-in-out; }
+        .glow-2 { width: 25vw; height: 25vw; background: #991b1b; bottom: -5%; right: -5%; animation: floatB 15s infinite alternate ease-in-out; }
+        .glow-3 { width: 35vw; height: 35vw; background: #f43f5e; top: 40%; left: 35%; animation: floatC 18s infinite alternate ease-in-out; }
         
         @keyframes floatA { 0% { transform: translate(0, 0); } 100% { transform: translate(15vw, 15vh); } }
         @keyframes floatB { 0% { transform: translate(0, 0); } 100% { transform: translate(-15vw, -15vh); } }
         @keyframes floatC { 0% { transform: translate(0, 0) scale(0.9); } 100% { transform: translate(15vw, -10vh) scale(1.1); } }
 
-        /* Universal Action Buttons (Top Right) */
         .top-action-btn {
             background: var(--glass-bg); 
             border: 1px solid var(--glass-border);
@@ -149,7 +121,6 @@
         .top-action-btn:hover { transform: translateY(-3px) scale(1.1); border-color: var(--primary); color: var(--primary-light); }
         .top-action-btn:active { transform: scale(0.95); }
         
-        /* RGB Mode Button Active State */
         .top-action-btn.active-crimson { 
             border-color: #ef4444; color: #ef4444; 
             box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); 
@@ -159,7 +130,6 @@
             background: linear-gradient(45deg, rgba(239, 68, 68, 0.15), rgba(255, 255, 255, 0.05));
         }
 
-        /* --- Custom Pop Animations for Dashboard --- */
         @keyframes popBounce {
             0% { opacity: 0; transform: translateY(30px) scale(0.95); }
             60% { opacity: 1; transform: translateY(-5px) scale(1.02); }
@@ -171,7 +141,6 @@
             animation: popBounce 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
 
-        /* --- Loading Screen Dual-Phase CSS --- */
         .loading-screen {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -212,7 +181,6 @@
         .active { display: block; animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- Auth Screen UI --- */
         .auth-container { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 85vh; position: relative; }
         .auth-card { width: 90%; max-width: 420px; padding: 50px 40px; text-align: center; animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; position: relative; overflow: visible; }
         
@@ -296,7 +264,7 @@
 
         .search-wrapper { max-width: 1200px; margin: 0 auto 30px; padding: 0 10px; position: relative; }
         .search-input {
-            width: 100%; padding: 16px 20px 16px 50px; margin-bottom: 0;
+            width: 100%; padding: 16px 45px 16px 50px; margin-bottom: 0;
             border-radius: 20px; border: 1px solid var(--glass-border); background: var(--glass-bg);
             color: var(--text-main); font-size: 15px; box-shadow: var(--glass-shadow); transition: all 0.3s ease;
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23a1a1aa" height="26" viewBox="0 0 24 24" width="26"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>');
@@ -304,6 +272,25 @@
         }
         .search-input:focus { border-color: var(--primary-light); box-shadow: var(--glass-glow); outline: none; }
         .search-input::placeholder { color: var(--text-sub); }
+
+        /* New Clear Button Style */
+        .search-clear { 
+            position: absolute; 
+            right: 25px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            cursor: pointer; 
+            color: var(--text-sub); 
+            display: none; 
+            transition: color 0.3s;
+            font-size: 20px;
+            padding: 5px;
+            background: var(--glass-bg);
+            border-radius: 50%;
+        }
+        .search-clear:hover { 
+            color: var(--danger); 
+        }
 
         .history-card { width: 100%; padding: 10px; border-radius: 16px; background: rgba(0,0,0,0.2); box-sizing: border-box; cursor: pointer; }
         .history-thumb-wrap { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
@@ -380,12 +367,10 @@
 </head>
 <body oncontextmenu="return false;"> 
 
-<!-- Ambient Background Glows (Active only in Crimson Mode, Removed from Default Matte Black) -->
 <div class="ambient-glow glow-1"></div>
 <div class="ambient-glow glow-2"></div>
 <div class="ambient-glow glow-3"></div>
 
-<!-- Dual-Phase Loading Screen -->
 <div id="loadingScreen" class="loading-screen">
     <div class="live-indicator">
         <div class="blob blob-1"></div>
@@ -401,26 +386,21 @@
         const savedCrimson = localStorage.getItem('portalCrimson');
         const loader = document.getElementById('loadingScreen');
         
-        // IF LIGHT MODE is set -> Start with Dark Stage (black background), then switch to Light
         if (savedTheme === 'light') {
             loader.classList.add('dark-stage'); 
             document.body.classList.add('light-mode'); 
         } else {
-            // IF DARK MODE is set -> Start with Light Stage (white background), then switch to Dark
             loader.classList.add('light-stage'); 
         }
 
-        // RGB Mode (Crimson) is OFF by default so user sees Matte Black first
         if (savedCrimson === 'true') {
             document.body.classList.add('crimson-mode');
         }
     })();
 </script>
 
-<!-- New Premium Master Auth Screen -->
 <div id="masterAuthScreen" class="screen">
     <div class="auth-container">
-        <!-- Auth View Toggles -->
         <div style="position: absolute; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 50;">
             <button class="top-action-btn crimson-btn" onclick="toggleCrimson()" title="Toggle RGB/Crimson Glass Mode">
                 <i class="material-icons">lens_blur</i>
@@ -452,10 +432,8 @@
     </div>
 </div>
 
-<!-- New Premium Student Login Screen -->
 <div id="loginScreen" class="screen">
     <div class="auth-container">
-        <!-- Auth View Toggles -->
         <div style="position: absolute; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 50;">
             <button class="top-action-btn crimson-btn" onclick="toggleCrimson()" title="Toggle RGB/Crimson Glass Mode">
                 <i class="material-icons">lens_blur</i>
@@ -487,7 +465,6 @@
     </div>
 </div>
 
-<!-- Main Dashboard Screen -->
 <div id="mainMenuScreen" class="screen">
     <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; margin-bottom: 20px;">
         <div class="greeting-container pop-target" style="padding: 10px;">
@@ -497,7 +474,6 @@
             </div>
         </div>
         
-        <!-- Main View Toggles -->
         <div style="display: flex; gap: 10px; padding: 10px;" class="pop-target">
             <button class="top-action-btn crimson-btn" onclick="toggleCrimson()" title="Toggle RGB/Crimson Glass Mode">
                 <i class="material-icons">lens_blur</i>
@@ -508,12 +484,14 @@
         </div>
     </div>
 
-    <div class="search-wrapper pop-target">
-        <input type="text" id="homeSearch" class="search-input" placeholder="පාඩම් සහ වීඩියෝ සොයන්න (Search lessons or videos)..." onkeyup="handleSearch()">
+    <!-- Home Page Search Bar -->
+    <div class="search-wrapper">
+        <input type="text" id="homeSearch" class="search-input" placeholder="පාඩම් සහ වීඩියෝ සොයන්න (Search lessons or videos)..." onkeyup="handleSearch('home')">
+        <i class="material-icons search-clear" id="homeSearchClear" onclick="clearSearch('home')">close</i>
     </div>
 
     <div id="searchResultsContainer" style="display:none; max-width: 1200px; margin: 0 auto; padding: 0 10px;">
-        <div class="section-title"><i class="material-icons">search</i> සෙවුම් ප්‍රතිඵල</div>
+        <div class="section-title" style="margin-bottom:15px; font-size:18px; font-weight:700;"><i class="material-icons" style="vertical-align:middle;">search</i> සෙවුම් ප්‍රතිඵල</div>
         <div id="searchResults" class="folder-grid"></div>
     </div>
 
@@ -547,11 +525,24 @@
     <div id="historyGrid" class="history-grid" style="max-width:1200px; margin:0 auto; padding: 0 10px;"></div>
 </div>
 
+<!-- Stream Screen (Monthly, Papers, Lessons) -->
 <div id="categoriesScreen" class="screen">
     <div onclick="showScreen('mainMenuScreen')" class="back-btn-ui" style="max-width:1200px; margin:0 auto; padding: 10px;">
         <i class="material-icons">arrow_back</i> <span id="catSubTitle">Back</span>
     </div>
-    <div class="category-grid" style="max-width:1200px; margin:0 auto; padding: 0 10px;">
+
+    <!-- Stream Search Bar -->
+    <div class="search-wrapper" style="max-width:1200px; margin: 0 auto 20px; padding: 0 10px;">
+        <input type="text" id="streamSearch" class="search-input" placeholder="මෙම විෂය තුළ සොයන්න..." onkeyup="handleSearch('stream')">
+        <i class="material-icons search-clear" id="streamSearchClear" onclick="clearSearch('stream')">close</i>
+    </div>
+
+    <div id="streamSearchResultsContainer" style="display:none; max-width: 1200px; margin: 0 auto; padding: 0 10px;">
+        <div class="section-title" style="margin-bottom:15px; font-size:18px; font-weight:700;"><i class="material-icons" style="vertical-align:middle;">search</i> සෙවුම් ප්‍රතිඵල</div>
+        <div id="streamSearchResults" class="folder-grid"></div>
+    </div>
+
+    <div id="defaultStreamContent" class="category-grid" style="max-width:1200px; margin:0 auto; padding: 0 10px;">
         <div class="folder-card glass-card clickable-card" onclick="openCategory('Monthly')">
             <div class="folder-icon-wrap"><i class="material-icons">folder_open</i></div>
             <div class="folder-title">Monthly</div>
@@ -573,10 +564,23 @@
     </div>
 </div>
 
+<!-- Topic Folder Screen -->
 <div id="topicsScreen" class="screen">
     <div onclick="showScreen('categoriesScreen')" class="back-btn-ui" style="max-width:1200px; margin:0 auto; padding: 10px;">
         <i class="material-icons">arrow_back</i> <span id="subTitle">Back</span>
     </div>
+
+    <!-- Category Topic Search Bar -->
+    <div class="search-wrapper" style="max-width:1200px; margin: 0 auto 20px; padding: 0 10px;">
+        <input type="text" id="topicSearch" class="search-input" placeholder="මෙම කාණ්ඩය තුළ සොයන්න..." onkeyup="handleSearch('topic')">
+        <i class="material-icons search-clear" id="topicSearchClear" onclick="clearSearch('topic')">close</i>
+    </div>
+
+    <div id="topicSearchResultsContainer" style="display:none; max-width: 1200px; margin: 0 auto; padding: 0 10px;">
+        <div class="section-title" style="margin-bottom:15px; font-size:18px; font-weight:700;"><i class="material-icons" style="vertical-align:middle;">search</i> සෙවුම් ප්‍රතිඵල</div>
+        <div id="topicSearchResults" class="folder-grid"></div>
+    </div>
+
     <div id="topicsList" class="folder-grid" style="max-width:1200px; margin:0 auto; padding: 0 10px;"></div>
 </div>
 
@@ -585,6 +589,18 @@
         <div id="dynamicBackBtn" class="back-btn-ui">
             <i class="material-icons">arrow_back</i> <span id="lessonTitle">වීඩියෝ ලැයිස්තුව</span>
         </div>
+
+        <!-- NEW: Video Folder Search Bar -->
+        <div class="search-wrapper" style="margin: 0 auto 20px; padding: 0; width: 100%;">
+            <input type="text" id="videoSearch" class="search-input" placeholder="මෙම වීඩියෝ ලැයිස්තුව තුළ සොයන්න..." onkeyup="handleSearch('video')">
+            <i class="material-icons search-clear" id="videoSearchClear" onclick="clearSearch('video')">close</i>
+        </div>
+
+        <div id="videoSearchResultsContainer" style="display:none; width: 100%; margin-bottom: 20px;">
+            <div class="section-title" style="margin-bottom:15px; font-size:18px; font-weight:700;"><i class="material-icons" style="vertical-align:middle;">search</i> සෙවුම් ප්‍රතිඵල</div>
+            <div id="videoSearchResults" class="folder-grid"></div>
+        </div>
+        
         <div id="multiVideoList" class="folder-grid"></div>
     </div>
     <div id="playerSection" style="display:none; max-width:1200px; margin:0 auto; padding: 0 10px;">
@@ -671,7 +687,6 @@
         window.addEventListener('resize', detectDevTools);
     })();
 
-    /* Toggle System Update & Icons */
     function updateToggleIcons() {
         const isLight = document.body.classList.contains('light-mode');
         const isCrimson = document.body.classList.contains('crimson-mode');
@@ -707,7 +722,6 @@
         updateToggleIcons();
     }
 
-    // Animation Function for Smart escaping buttons
     function applyEscapingButton(btnId, userInpId, passInpId) {
         const btn = document.getElementById(btnId);
         if(!btn) return;
@@ -720,7 +734,6 @@
                     e.preventDefault(); 
                     e.stopPropagation(); 
                 }
-                // Instantly jumps away randomly
                 const moveX = (Math.random() < 0.5 ? -1 : 1) * (Math.random() * 80 + 50); 
                 const moveY = (Math.random() < 0.5 ? -1 : 1) * (Math.random() * 60 + 30);
                 btn.style.transform = `translate(${moveX}px, ${moveY}px)`;
@@ -748,13 +761,11 @@
         applyEscapingButton('studentBtn', 'loginName', 'loginPass');
     }
 
-    // --- Elegant Page Transition Function (Index Five Timing & Style) ---
     function triggerActionWithLoad(actionCallback) {
         const loader = document.getElementById('loadingScreen');
-        // Reset loader styles for a quick smooth transition
         loader.style.transition = 'opacity 0.4s ease';
-        loader.style.backgroundColor = 'var(--bg)'; // match current theme
-        loader.className = 'loading-screen'; // clear dual-stage classes
+        loader.style.backgroundColor = 'var(--bg)';
+        loader.className = 'loading-screen';
         loader.style.display = 'flex';
         
         requestAnimationFrame(() => {
@@ -764,28 +775,26 @@
         });
 
         setTimeout(() => {
-            if(actionCallback) actionCallback(); // Change the screen behind the loader
+            if(actionCallback) actionCallback(); 
             
-            // Fade out smoothly
             setTimeout(() => {
                 loader.style.opacity = '0';
                 setTimeout(() => {
                     loader.style.display = 'none';
                 }, 400);
-            }, 300); // brief hold to feel the transition
-        }, 400); // wait for fade in
+            }, 300);
+        }, 400);
     }
 
-    // Function to trigger pop animations for dashboard elements
     function triggerPopAnimations() {
         const targets = document.querySelectorAll('.pop-target');
         let delay = 0.1;
         targets.forEach((el) => {
             el.classList.remove('pop-anim');
-            void el.offsetWidth; // Trigger reflow
+            void el.offsetWidth;
             el.style.animationDelay = `${delay}s`;
             el.classList.add('pop-anim');
-            delay += 0.1; // Stagger effect
+            delay += 0.1;
         });
     }
 
@@ -821,8 +830,8 @@
     let activeCatName = "";
 
     window.onload = () => {
-        updateToggleIcons(); // Set correct icons on load
-        initFunAnimations(); // Start escaping button animations
+        updateToggleIcons(); 
+        initFunAnimations(); 
         
         const savedTheme = localStorage.getItem('portalTheme');
         const isVerified = localStorage.getItem('isAppVerified'); 
@@ -1085,7 +1094,6 @@
         document.getElementById("userInitial").innerText = currentUser.name.charAt(0).toUpperCase();
         showScreen('mainMenuScreen');
         
-        // Trigger entrance animations beautifully
         triggerPopAnimations();
         
         db.ref(`students/${currentUser.id}/access`).on('value', s => {
@@ -1099,7 +1107,7 @@
             ];
             
             searchIndex = []; 
-            let delayCounter = 0.4; // Initial delay for subject cards
+            let delayCounter = 0.4;
             
             subData.forEach(sub => {
                 if (sub.tag.includes(acc)) {
@@ -1155,28 +1163,119 @@
         });
     }
 
-    function handleSearch() {
-        const query = document.getElementById("homeSearch").value.toLowerCase(); 
-        const resContainer = document.getElementById("searchResultsContainer"); 
-        const resultsGrid = document.getElementById("searchResults"); 
-        const defaultContent = document.getElementById("defaultHomeContent");
-        
-        if (query.trim() === '') { 
-            resContainer.style.display = 'none'; 
-            defaultContent.style.display = 'block'; 
-            return; 
+    // --- SMART SEARCH FUNCTION ---
+    function clearSearch(context) {
+        let inputId = context === 'home' ? 'homeSearch' : (context === 'stream' ? 'streamSearch' : (context === 'topic' ? 'topicSearch' : 'videoSearch'));
+        if (document.getElementById(inputId)) {
+            document.getElementById(inputId).value = '';
         }
+        handleSearch(context);
+    }
+
+    function handleSearch(context) {
+        if (!context) context = 'home';
         
-        defaultContent.style.display = 'none'; 
-        resContainer.style.display = 'block'; 
+        let inputId, resWrapper, resultsGrid, defaultContent, displayStyle;
+        let filterStream = null;
+        let filterCat = null;
+
+        // Custom search for inner video folder list
+        if (context === 'video') {
+            const query = document.getElementById('videoSearch').value.toLowerCase();
+            const clearBtn = document.getElementById('videoSearchClear');
+            const resultsGrid = document.getElementById("videoSearchResults");
+            const resWrapper = document.getElementById("videoSearchResultsContainer");
+            const defaultContent = document.getElementById("multiVideoList");
+
+            if (query.trim() === '') {
+                clearBtn.style.display = 'none';
+                resWrapper.style.display = 'none';
+                defaultContent.style.display = 'grid';
+                return;
+            }
+
+            clearBtn.style.display = 'block';
+            defaultContent.style.display = 'none';
+            resWrapper.style.display = 'block';
+            resultsGrid.innerHTML = '';
+
+            const filteredVideos = currentVideos.filter(v => v.title.toLowerCase().includes(query));
+
+            if (filteredVideos.length === 0) {
+                resultsGrid.innerHTML = '<div style="color:var(--text-sub); grid-column: 1 / -1; text-align:center; padding: 20px;">කිසිදු වීඩියෝවක් සොයාගත නොහැකි විය!</div>';
+                return;
+            }
+
+            filteredVideos.forEach((v) => {
+                const originalIndex = currentVideos.findIndex(orig => orig.id === v.id);
+                const thumbUrl = `https://img.youtube.com/vi/${v.id}/mqdefault.jpg`;
+                let pdfBtnHtml = v.pdfLink ? `<div class="pdf-btn" onclick="event.stopPropagation(); window.open('${v.pdfLink}', '_blank')">Download PDF <i class="material-icons">download</i></div>` : "";
+                
+                resultsGrid.innerHTML += `
+                <div class="folder-card glass-card clickable-card" onclick="playThisVideo(${originalIndex})">
+                    <img src="${thumbUrl}" class="video-thumbnail" alt="${v.title}">
+                    <div class="folder-title">${v.title}</div>
+                    <div class="folder-count">YouTube Video</div>
+                    <div class="folder-btn">Watch Now <i class="material-icons">play_circle_filled</i></div>
+                    ${pdfBtnHtml}
+                </div>`;
+            });
+            return;
+        }
+
+        if (context === 'home') {
+            inputId = 'homeSearch';
+            resWrapper = document.getElementById("searchResultsContainer");
+            resultsGrid = document.getElementById("searchResults");
+            defaultContent = document.getElementById("defaultHomeContent");
+            displayStyle = 'block';
+        } else if (context === 'stream') {
+            inputId = 'streamSearch';
+            resWrapper = document.getElementById("streamSearchResultsContainer");
+            resultsGrid = document.getElementById("streamSearchResults");
+            defaultContent = document.getElementById("defaultStreamContent");
+            displayStyle = 'block';
+            filterStream = activeStream;
+        } else if (context === 'topic') {
+            inputId = 'topicSearch';
+            resWrapper = document.getElementById("topicSearchResultsContainer");
+            resultsGrid = document.getElementById("topicSearchResults");
+            defaultContent = document.getElementById("topicsList");
+            displayStyle = 'block';
+            filterStream = activeStream;
+            filterCat = activeCatName;
+        }
+
+        const query = document.getElementById(inputId).value.toLowerCase();
+        const clearBtn = document.getElementById(inputId + "Clear");
+
+        if (query.trim() === '') {
+            clearBtn.style.display = 'none';
+            resWrapper.style.display = 'none';
+            defaultContent.style.display = (context === 'topic' ? 'grid' : (context === 'stream' ? 'grid' : 'block'));
+            return;
+        }
+
+        clearBtn.style.display = 'block';
+        defaultContent.style.display = 'none';
+        resWrapper.style.display = displayStyle;
         resultsGrid.innerHTML = '';
-        currentSearchResults = searchIndex.filter(item => item.title.toLowerCase().includes(query)).slice(0, 50);
-        
-        if (currentSearchResults.length === 0) { 
-            resultsGrid.innerHTML = '<div style="color:var(--text-sub); grid-column: 1 / -1; text-align:center; padding: 20px;">කිසිදු පාඩමක් හෝ වීඩියෝවක් සොයාගත නොහැකි විය!</div>'; 
-            return; 
+
+        let filteredIndex = searchIndex;
+        if (filterStream) {
+            filteredIndex = filteredIndex.filter(item => item.stream === filterStream);
         }
-        
+        if (filterCat) {
+            filteredIndex = filteredIndex.filter(item => item.catName === filterCat);
+        }
+
+        currentSearchResults = filteredIndex.filter(item => item.title.toLowerCase().includes(query)).slice(0, 50);
+
+        if (currentSearchResults.length === 0) {
+            resultsGrid.innerHTML = '<div style="color:var(--text-sub); grid-column: 1 / -1; text-align:center; padding: 20px;">කිසිදු පාඩමක් හෝ වීඩියෝවක් සොයාගත නොහැකි විය!</div>';
+            return;
+        }
+
         currentSearchResults.forEach((item, idx) => {
             if (item.type === 'folder') {
                 resultsGrid.innerHTML += `
@@ -1217,13 +1316,16 @@
     function openStream(type) { 
         activeStream = type; 
         document.getElementById("catSubTitle").innerText = type.toUpperCase(); 
+        clearSearch('stream'); // Clean search state
         showScreen('categoriesScreen'); 
     }
     
     function openCategory(catName) {
         activeCatName = catName; 
         document.getElementById("subTitle").innerText = `${activeStream.toUpperCase()} - ${catName}`; 
+        clearSearch('topic'); // Clean search state
         showScreen('topicsScreen');
+        
         if (currentTopicsRef) { 
             currentTopicsRef.off('value'); 
         }
@@ -1267,6 +1369,12 @@
         } else { 
             backBtn.setAttribute('onclick', "showScreen('topicsScreen')"); 
         }
+
+        // Clean video folder search state before displaying new folder
+        document.getElementById('videoSearch').value = '';
+        document.getElementById('videoSearchClear').style.display = 'none';
+        document.getElementById('videoSearchResultsContainer').style.display = 'none';
+        document.getElementById('multiVideoList').style.display = 'grid';
         
         showScreen('playerScreen'); 
         document.getElementById("videoListContainer").style.display = "block"; 
