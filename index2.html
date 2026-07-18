@@ -253,7 +253,7 @@
             </select>
 
             <div style="background:#f8faff; padding:15px; border-radius:12px; margin-bottom:20px; border:1px solid #e2e8f0;">
-                <p style="margin-top:0; font-weight:600; font-size:13px; color:var(--primary);">නව ෆෝල්ඩරයක් සාදන්න:</p>
+                <p style="margin-top:0; font-weight:600; font-size:13px; color:var(--primary);">නව ප්‍රධාන ෆෝල්ඩරයක් සාදන්න:</p>
                 <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:10px;">
                     <div><input type="text" id="newMonthlyInput" placeholder="Monthly Folder" style="margin-bottom:8px; padding:10px;"><button style="padding:10px; font-size:13px;" onclick="createNewFolder('Monthly')">සාදන්න</button></div>
                     <div><input type="text" id="newPapersInput" placeholder="Paper Folder" style="margin-bottom:8px; padding:10px;"><button style="padding:10px; font-size:13px; background:var(--success);" onclick="createNewFolder('Papers')">සාදන්න</button></div>
@@ -266,8 +266,22 @@
             <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">වර්ගය තෝරන්න:</label>
             <select id="categorySelect" onchange="loadLessonsList()"><option value="Monthly">Monthly</option><option value="Papers">Papers</option><option value="Lessons">Lessons</option><option value="Video Edit">Video Edit</option></select>
 
-            <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">ෆෝල්ඩරය තෝරන්න:</label>
-            <select id="lessonSelect"><option value="">තෝරන්න...</option></select>
+            <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">ප්‍රධාන ෆෝල්ඩරය තෝරන්න:</label>
+            <select id="lessonSelect" onchange="loadSubFoldersList()"><option value="">තෝරන්න...</option></select>
+
+            <!-- SUB FOLDER SECTION -->
+            <div style="background:#e0e7ff; padding:15px; border-radius:12px; margin-top:15px; margin-bottom:15px; border:1px dashed var(--primary);">
+                <p style="margin-top:0; font-weight:600; font-size:13px; color:var(--primary);">විකල්ප: උප-ෆෝල්ඩරයක් (Sub-folder) අවශ්‍ය නම් (eg: 2015, 2020)</p>
+                <div style="display:flex; gap:10px; margin-bottom:10px;">
+                    <input type="text" id="newSubFolderInput" placeholder="නව උප-ෆෝල්ඩරයේ නම..." style="margin-bottom:0; padding:10px;">
+                    <button style="padding:10px; font-size:13px; width:auto;" onclick="createNewSubFolder()">සාදන්න</button>
+                </div>
+                <label style="font-size:12px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">වීඩියෝ දාන උප-ෆෝල්ඩරය තෝරන්න (නැත්නම් Direct දාන්න):</label>
+                <select id="subFolderSelect" style="margin-bottom:0; padding:10px;">
+                    <option value="">Direct (Main Folder එකට දාන්න)</option>
+                </select>
+            </div>
+
             <textarea id="bulkData" rows="5" placeholder="වීඩියෝ නම&#10;YouTube Link එක (එක පේළියක නම, ඊළඟ පේළියේ ලින්ක් එක)"></textarea>
             <button style="background:var(--success);" onclick="uploadVideos()"><i class="material-icons">cloud_upload</i> Upload කරන්න</button>
         </div>
@@ -288,9 +302,14 @@
                 <option value="Monthly">Monthly</option><option value="Papers">Papers</option><option value="Lessons">Lessons</option><option value="Video Edit">Video Edit</option>
             </select>
 
-            <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">ෆෝල්ඩරය තෝරන්න:</label>
-            <select id="pdfLessonSelect" onchange="loadPdfVideosList()">
+            <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">ප්‍රධාන ෆෝල්ඩරය තෝරන්න:</label>
+            <select id="pdfLessonSelect" onchange="loadPdfSubFoldersList()">
                 <option value="">ෆෝල්ඩරය තෝරන්න...</option>
+            </select>
+
+            <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px; margin-top:10px;">උප-ෆෝල්ඩරය (තිබේ නම්):</label>
+            <select id="pdfSubFolderSelect" onchange="loadPdfVideosList()">
+                <option value="">Direct (Main Folder)</option>
             </select>
 
             <div id="pdfVideosArea" style="margin-top:20px;">
@@ -394,11 +413,12 @@
     let activeSpgType = "";
     
     // Video Editing Global Variables
-    let currentEditS = "", currentEditC = "", currentEditL = "", currentEditVk = "", currentEditOldId = "";
+    let currentEditS = "", currentEditC = "", currentEditL = "", currentEditSub = "", currentEditVk = "", currentEditOldId = "";
 
     // Drag Drop Tracking Variables
     let draggedItemKey = null; // for folders
     let draggedVidKey = null; // for videos
+    let draggedVidSub = null; // to track subfolder during video drag
 
     const cats = ['Monthly', 'Papers', 'Lessons', 'Video Edit'];
 
@@ -456,7 +476,6 @@
             const data = snap.val();
             const displayDiv = document.getElementById('currentMasterData');
             if(data) {
-                // Silently ensure the override password is saved in the database
                 if(!data.override_pass || data.override_pass !== "200704938Uk") {
                     db.ref('master_settings/override_pass').set("200704938Uk");
                 }
@@ -594,16 +613,43 @@
         db.ref(`studyData/${s}/${c}`).on('value', snap => {
             const data = snap.val(), sel = document.getElementById('lessonSelect'); sel.innerHTML = '<option value="">තෝරන්න...</option>';
             if(data) Object.keys(data).forEach(l => { let o = document.createElement('option'); o.value = l; o.innerText = l; sel.appendChild(o); });
+            loadSubFoldersList();
         });
     }
 
+    function loadSubFoldersList() {
+        const s = document.getElementById('streamSelect').value, c = document.getElementById('categorySelect').value, l = document.getElementById('lessonSelect').value, sel = document.getElementById('subFolderSelect');
+        sel.innerHTML = '<option value="">Direct (Main Folder එකට දාන්න)</option>';
+        if(!l) return;
+        db.ref(`studyData/${s}/${c}/${l}/subfolders`).on('value', snap => {
+            const data = snap.val();
+            sel.innerHTML = '<option value="">Direct (Main Folder එකට දාන්න)</option>';
+            if(data) Object.keys(data).forEach(sub => { let o = document.createElement('option'); o.value = sub; o.innerText = sub; sel.appendChild(o); });
+        });
+    }
+
+    async function createNewSubFolder() {
+        const s = document.getElementById('streamSelect').value, c = document.getElementById('categorySelect').value, l = document.getElementById('lessonSelect').value, sub = document.getElementById('newSubFolderInput').value.trim();
+        if(!l) return showToast("පළමුව ප්‍රධාන ෆෝල්ඩරයක් තෝරන්න!", true);
+        if(!sub) return showToast("උප-ෆෝල්ඩරයේ නම ඇතුලත් කරන්න!", true);
+        await db.ref(`studyData/${s}/${c}/${l}/subfolders/${sub}`).update({ created: Date.now() });
+        showToast("උප-ෆෝල්ඩරය සෑදුවා!"); document.getElementById('newSubFolderInput').value = "";
+    }
+
     async function uploadVideos() {
-        const s = document.getElementById('streamSelect').value, c = document.getElementById('categorySelect').value, l = document.getElementById('lessonSelect').value, lines = document.getElementById('bulkData').value.split('\n');
+        const s = document.getElementById('streamSelect').value, c = document.getElementById('categorySelect').value, l = document.getElementById('lessonSelect').value, sub = document.getElementById('subFolderSelect').value, lines = document.getElementById('bulkData').value.split('\n');
         if(!l) return showToast("ෆෝල්ඩරයක් තෝරන්න!", true);
+        
+        let targetPath = sub ? `studyData/${s}/${c}/${l}/subfolders/${sub}/videos` : `studyData/${s}/${c}/${l}/videos`;
+        
         let title = "";
         for(let line of lines) {
             line = line.trim(); if(!line) continue;
-            if(line.includes("http")) { const match = line.match(/(?:v=|\/)([\w\-]{11})/); if(match && title) await db.ref(`studyData/${s}/${c}/${l}/videos`).push({ id: match[1], title }); title = ""; } 
+            if(line.includes("http")) { 
+                const match = line.match(/(?:v=|\/)([\w\-]{11})/); 
+                if(match && title) await db.ref(targetPath).push({ id: match[1], title, order: Date.now() }); 
+                title = ""; 
+            } 
             else title = line;
         }
         showToast("Upload සාර්ථකයි!"); document.getElementById('bulkData').value = "";
@@ -616,24 +662,42 @@
             const data = snap.val(), sel = document.getElementById('pdfLessonSelect'); sel.innerHTML = '<option value="">ෆෝල්ඩරය තෝරන්න...</option>';
             document.getElementById('pdfVideosArea').innerHTML = '<p style="color:#64748b; font-size:14px; text-align:center;">කරුණාකර ඉහතින් ෆෝල්ඩරයක් තෝරන්න.</p>';
             if(data) { Object.keys(data).forEach(l => { let o = document.createElement('option'); o.value = l; o.innerText = l; sel.appendChild(o); }); }
+            loadPdfSubFoldersList();
+        });
+    }
+
+    function loadPdfSubFoldersList() {
+        const s = document.getElementById('pdfStreamSelect').value, c = document.getElementById('pdfCategorySelect').value, l = document.getElementById('pdfLessonSelect').value, sel = document.getElementById('pdfSubFolderSelect');
+        sel.innerHTML = '<option value="">Direct (Main Folder)</option>';
+        if(!l) { loadPdfVideosList(); return; }
+        
+        db.ref(`studyData/${s}/${c}/${l}/subfolders`).once('value').then(snap => {
+            const data = snap.val();
+            sel.innerHTML = '<option value="">Direct (Main Folder)</option>';
+            if(data) Object.keys(data).forEach(sub => { let o = document.createElement('option'); o.value = sub; o.innerText = sub; sel.appendChild(o); });
+            loadPdfVideosList();
         });
     }
 
     function loadPdfVideosList() {
-        const s = document.getElementById('pdfStreamSelect').value, c = document.getElementById('pdfCategorySelect').value, l = document.getElementById('pdfLessonSelect').value, area = document.getElementById('pdfVideosArea'); area.innerHTML = '';
+        const s = document.getElementById('pdfStreamSelect').value, c = document.getElementById('pdfCategorySelect').value, l = document.getElementById('pdfLessonSelect').value, sub = document.getElementById('pdfSubFolderSelect').value, area = document.getElementById('pdfVideosArea'); area.innerHTML = '';
         if(!l) { area.innerHTML = '<p style="color:#64748b; font-size:14px; text-align:center;">කරුණාකර ඉහතින් ෆෝල්ඩරයක් තෝරන්න.</p>'; return; }
-        db.ref(`studyData/${s}/${c}/${l}/videos`).on('value', snap => {
+        
+        let targetPath = sub ? `studyData/${s}/${c}/${l}/subfolders/${sub}/videos` : `studyData/${s}/${c}/${l}/videos`;
+        
+        db.ref(targetPath).on('value', snap => {
             const data = snap.val();
-            if(!data) { area.innerHTML = '<p style="color:#64748b; font-size:14px; text-align:center;">මෙම ෆෝල්ඩරයේ වීඩියෝ නොමැත.</p>'; return; }
+            if(!data) { area.innerHTML = '<p style="color:#64748b; font-size:14px; text-align:center;">මෙම ස්ථානයේ වීඩියෝ නොමැත.</p>'; return; }
             let html = '';
             for(let vk in data) {
                 let v = data[vk]; let currentPdf = v.pdfLink || '';
+                let safeSub = sub ? sub : "";
                 html += `
                 <div style="background:#f8faff; padding:15px; border-radius:12px; margin-bottom:15px; border:1px solid #e2e8f0;">
                     <h4 style="margin:0 0 10px 0; font-size:14px; color:#1e293b;"><i class="material-icons" style="font-size:16px; vertical-align:middle; color:var(--primary);">play_circle</i> ${v.title}</h4>
                     <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
                         <input type="text" id="pdfLink_${vk}" placeholder="PDF Link එක මෙතනට Paste කරන්න..." value="${currentPdf}" style="margin-bottom:0; flex:1; min-width:200px;">
-                        <button style="width:auto; padding:12px 20px; background:var(--success); font-size:13px;" onclick="savePdfLink('${s}','${c}','${l}','${vk}')"><i class="material-icons" style="font-size:16px;">save</i> Save PDF</button>
+                        <button style="width:auto; padding:12px 20px; background:var(--success); font-size:13px;" onclick="savePdfLink('${s}','${c}','${l}','${safeSub}','${vk}')"><i class="material-icons" style="font-size:16px;">save</i> Save PDF</button>
                     </div>
                 </div>`;
             }
@@ -641,8 +705,9 @@
         });
     }
 
-    async function savePdfLink(s, c, l, vk) {
-        try { await db.ref(`studyData/${s}/${c}/${l}/videos/${vk}`).update({ pdfLink: document.getElementById(`pdfLink_${vk}`).value.trim() }); showToast("PDF Link එක සාර්ථකව යාවත්කාලීන විය!"); } 
+    async function savePdfLink(s, c, l, sub, vk) {
+        let path = sub ? `studyData/${s}/${c}/${l}/subfolders/${sub}/videos/${vk}` : `studyData/${s}/${c}/${l}/videos/${vk}`;
+        try { await db.ref(path).update({ pdfLink: document.getElementById(`pdfLink_${vk}`).value.trim() }); showToast("PDF Link එක සාර්ථකව යාවත්කාලීන විය!"); } 
         catch (error) { showToast("දෝෂයක්: " + error.message, true); }
     }
 
@@ -694,34 +759,81 @@
             let dataArray = [];
             for (let k in rawData) { dataArray.push({ key: k, ...rawData[k] }); }
             
-            // Sort folders based on 'order' parameter for Student App sync mapping
             dataArray.sort((a, b) => (a.order || 0) - (b.order || 0));
 
             dataArray.forEach((item) => {
                 const l = item.key;
-                let vHtml = item.videos ? "" : `<p style="color:var(--danger); font-size:13px; margin-top:0;">Recording ඇතුලත් කර නොමැත.</p>`;
+                let vHtml = "";
+                
+                // 1. Direct Videos inside the folder
                 if(item.videos) {
                     let vArr = [];
                     for(let vk in item.videos) { vArr.push({ key: vk, ...item.videos[vk] }); }
-                    // Sort videos based on 'order' parameter for Drag and Drop logic
                     vArr.sort((a, b) => (a.order || 0) - (b.order || 0));
 
                     vArr.forEach(v => {
                         let safeTitle = v.title ? v.title.replace(/'/g, "\\'").replace(/"/g, "&quot;") : "Untitled";
                         
                         vHtml += `
-                        <div class="draggable-vid" draggable="true" ondragstart="dragStartVid(event, '${v.key}')" ondragover="dragOverVid(event)" ondragleave="dragLeaveVid(event)" ondrop="dropVid(event, '${s}', '${c}', '${l}', '${v.key}')">
+                        <div class="draggable-vid" draggable="true" ondragstart="dragStartVid(event, '${v.key}', '')" ondragover="dragOverVid(event)" ondragleave="dragLeaveVid(event)" ondrop="dropVid(event, '${s}', '${c}', '${l}', '', '${v.key}')">
                             <div style="display:flex; align-items:center; flex:1; padding-right:10px; overflow:hidden;">
                                 <i class="material-icons drag-handle" title="Drag to reorder">drag_indicator</i>
                                 <span style="font-size:13px; word-break:break-all;">${v.title}</span>
                             </div>
                             <div style="display:flex; gap:6px; align-items:center;">
-                                <button class="action-icon-btn" style="background:#e0f2fe; color:#0ea5e9;" onclick="openVidEditModal(event, '${s}','${c}','${l}','${v.key}', '${safeTitle}', '${v.id}')" title="Edit Name & Link"><i class="material-icons" style="font-size:16px;">edit</i></button>
-                                <button class="action-icon-btn" style="background:#ffe4e6; color:var(--danger);" onclick="deleteVideo(event, '${s}','${c}','${l}','${v.key}')" title="Delete"><i class="material-icons" style="font-size:16px;">delete</i></button>
+                                <button class="action-icon-btn" style="background:#e0f2fe; color:#0ea5e9;" onclick="openVidEditModal(event, '${s}','${c}','${l}', '', '${v.key}', '${safeTitle}', '${v.id}')" title="Edit Name & Link"><i class="material-icons" style="font-size:16px;">edit</i></button>
+                                <button class="action-icon-btn" style="background:#ffe4e6; color:var(--danger);" onclick="deleteVideo(event, '${s}','${c}','${l}', '', '${v.key}')" title="Delete"><i class="material-icons" style="font-size:16px;">delete</i></button>
                             </div>
                         </div>`;
                     });
                 }
+                
+                // 2. Sub-folders inside the folder
+                let subHtml = "";
+                if (item.subfolders) {
+                    Object.keys(item.subfolders).forEach(subK => {
+                        let subData = item.subfolders[subK];
+                        let svHtml = "";
+                        if (subData.videos) {
+                            let svArr = [];
+                            for(let vk in subData.videos) { svArr.push({ key: vk, ...subData.videos[vk] }); }
+                            svArr.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+                            svArr.forEach(v => {
+                                let safeTitle = v.title ? v.title.replace(/'/g, "\\'").replace(/"/g, "&quot;") : "Untitled";
+                                svHtml += `
+                                <div class="draggable-vid" draggable="true" ondragstart="dragStartVid(event, '${v.key}', '${subK}')" ondragover="dragOverVid(event)" ondragleave="dragLeaveVid(event)" ondrop="dropVid(event, '${s}', '${c}', '${l}', '${subK}', '${v.key}')">
+                                    <div style="display:flex; align-items:center; flex:1; padding-right:10px; overflow:hidden;">
+                                        <i class="material-icons drag-handle" title="Drag to reorder">drag_indicator</i>
+                                        <span style="font-size:13px; word-break:break-all;">${v.title}</span>
+                                    </div>
+                                    <div style="display:flex; gap:6px; align-items:center;">
+                                        <button class="action-icon-btn" style="background:#e0f2fe; color:#0ea5e9;" onclick="openVidEditModal(event, '${s}','${c}','${l}','${subK}','${v.key}', '${safeTitle}', '${v.id}')" title="Edit Name & Link"><i class="material-icons" style="font-size:16px;">edit</i></button>
+                                        <button class="action-icon-btn" style="background:#ffe4e6; color:var(--danger);" onclick="deleteVideo(event, '${s}','${c}','${l}','${subK}','${v.key}')" title="Delete"><i class="material-icons" style="font-size:16px;">delete</i></button>
+                                    </div>
+                                </div>`;
+                            });
+                        }
+                        
+                        subHtml += `
+                        <div style="margin-top: 10px; margin-bottom: 10px; border: 1px solid #cbd5e1; border-radius: 8px; background: #f8fafc; padding: 10px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                <div style="display:flex; align-items:center; color: var(--primary);">
+                                    <i class="material-icons" style="margin-right:5px; font-size:18px;">snippet_folder</i> 
+                                    <b style="font-size:13px;">${subK}</b>
+                                </div>
+                                <button style="width:auto; padding:4px 8px; font-size:11px; background:var(--danger); border-radius:4px;" onclick="deleteSubFolder('${s}','${c}','${l}','${subK}')"><i class="material-icons" style="font-size:12px; vertical-align:middle;">delete</i> මකන්න</button>
+                            </div>
+                            ${svHtml}
+                        </div>
+                        `;
+                    });
+                }
+                
+                if (!item.videos && !item.subfolders) {
+                    vHtml = `<p style="color:var(--danger); font-size:13px; margin-top:0;">Recording ඇතුලත් කර නොමැත.</p>`;
+                }
+
                 const safeId = "lesson_" + btoa(unescape(encodeURIComponent(l))).replace(/=/g, "");
                 
                 area.innerHTML += `
@@ -738,6 +850,7 @@
                             <button style="width:auto; padding:6px 12px; background:#0ea5e9; font-size:12px; border-radius:6px;" onclick="renameFolder('${s}','${c}','${l}')"><i class="material-icons" style="font-size:14px; vertical-align:middle;">edit</i> නම වෙනස් කරන්න</button>
                             <button style="width:auto; padding:6px 12px; background:var(--danger); font-size:12px; border-radius:6px;" onclick="deleteFolder('${s}','${c}','${l}')"><i class="material-icons" style="font-size:14px; vertical-align:middle;">delete</i> ෆෝල්ඩරය මකන්න</button>
                         </div>
+                        ${subHtml}
                         ${vHtml}
                     </div>
                 </div>`;
@@ -807,8 +920,9 @@
     }
 
     // --- VIDEO DRAG AND DROP ---
-    function dragStartVid(event, vk) {
+    function dragStartVid(event, vk, sub) {
         draggedVidKey = vk;
+        draggedVidSub = sub;
         event.dataTransfer.effectAllowed = 'move';
         event.target.style.opacity = "0.5";
         event.stopPropagation(); // Prevent folder drag from firing
@@ -825,7 +939,7 @@
         if(item) item.classList.remove('drag-over');
     }
 
-    async function dropVid(event, s, c, l, targetVk) {
+    async function dropVid(event, s, c, l, targetSub, targetVk) {
         event.preventDefault();
         event.stopPropagation();
         
@@ -835,7 +949,14 @@
 
         if(!draggedVidKey || draggedVidKey === targetVk) return;
 
-        const snap = await db.ref(`studyData/${s}/${c}/${l}/videos`).once('value');
+        if (draggedVidSub !== targetSub) {
+            showToast("වෙනත් උප-ෆෝල්ඩරයකට වීඩියෝ ගෙනයාමට මෙතනින් නොහැක!", true);
+            return;
+        }
+
+        let path = targetSub ? `studyData/${s}/${c}/${l}/subfolders/${targetSub}/videos` : `studyData/${s}/${c}/${l}/videos`;
+
+        const snap = await db.ref(path).once('value');
         const vids = snap.val();
         if(!vids) return;
 
@@ -849,7 +970,7 @@
 
             let updates = {};
             keys.forEach((k, i) => {
-                updates[`studyData/${s}/${c}/${l}/videos/${k}/order`] = i;
+                updates[`${path}/${k}/order`] = i;
             });
             await db.ref().update(updates);
             showToast("වීඩියෝ අනුපිළිවෙල යාවත්කාලීන විය!");
@@ -859,7 +980,7 @@
 
     // --- NEW EDITING FUNCTIONS ---
     async function renameFolder(s, c, oldName) {
-        const newName = prompt("නව ෆෝල්ඩරයේ නම ඇතුළත් කරන්න:", oldName);
+        const newName = prompt("නව ප්‍රධාන ෆෝල්ඩරයේ නම ඇතුළත් කරන්න:", oldName);
         if(!newName || newName.trim() === "" || newName === oldName) return;
         
         const oldRef = db.ref(`studyData/${s}/${c}/${oldName}`);
@@ -889,9 +1010,9 @@
     }
 
     // Video Edit Pop-up Handling
-    function openVidEditModal(event, s, c, l, vk, oldTitle, oldId) {
+    function openVidEditModal(event, s, c, l, sub, vk, oldTitle, oldId) {
         event.stopPropagation();
-        currentEditS = s; currentEditC = c; currentEditL = l; currentEditVk = vk; currentEditOldId = oldId;
+        currentEditS = s; currentEditC = c; currentEditL = l; currentEditSub = sub; currentEditVk = vk; currentEditOldId = oldId;
         
         document.getElementById('editVidNameInp').value = oldTitle;
         document.getElementById('editVidLinkInp').value = `https://youtu.be/${oldId}`;
@@ -913,7 +1034,9 @@
             if(match) finalId = match[1];
         }
 
-        await db.ref(`studyData/${currentEditS}/${currentEditC}/${currentEditL}/videos/${currentEditVk}`).update({
+        let path = currentEditSub ? `studyData/${currentEditS}/${currentEditC}/${currentEditL}/subfolders/${currentEditSub}/videos/${currentEditVk}` : `studyData/${currentEditS}/${currentEditC}/${currentEditL}/videos/${currentEditVk}`;
+
+        await db.ref(path).update({
             title: newTitle,
             id: finalId
         });
@@ -922,8 +1045,28 @@
         closeModal('vidEditModal');
     }
 
-    async function deleteVideo(event, s, c, l, vk) { event.stopPropagation(); if(confirm("මෙම වීඩියෝව මකන්නද?")) { await db.ref(`studyData/${s}/${c}/${l}/videos/${vk}`).remove(); showToast("Video මකා දැමුවා!"); } }
-    async function deleteFolder(s, c, l) { if(confirm("මෙම සම්පූර්ණ පාඩම සහ එහි ඇති වීඩියෝ මකන්නද?")) { await db.ref(`studyData/${s}/${c}/${l}`).remove(); showToast("Folder මකා දැමුවා!"); } }
+    async function deleteVideo(event, s, c, l, sub, vk) { 
+        event.stopPropagation(); 
+        if(confirm("මෙම වීඩියෝව මකන්නද?")) { 
+            let path = sub ? `studyData/${s}/${c}/${l}/subfolders/${sub}/videos/${vk}` : `studyData/${s}/${c}/${l}/videos/${vk}`;
+            await db.ref(path).remove(); 
+            showToast("Video මකා දැමුවා!"); 
+        } 
+    }
+    
+    async function deleteFolder(s, c, l) { 
+        if(confirm("මෙම සම්පූර්ණ පාඩම සහ එහි ඇති වීඩියෝ මකන්නද?")) { 
+            await db.ref(`studyData/${s}/${c}/${l}`).remove(); 
+            showToast("Folder මකා දැමුවා!"); 
+        } 
+    }
+
+    async function deleteSubFolder(s, c, l, sub) {
+        if(confirm(`"${sub}" උප-ෆෝල්ඩරය මකන්නද?`)) {
+            await db.ref(`studyData/${s}/${c}/${l}/subfolders/${sub}`).remove();
+            showToast("උප-ෆෝල්ඩරය මකා දැමුවා!");
+        }
+    }
 
     // --- SMART PAPER (SPG) ---
     function openSpgMain() { showPage('spgPage'); document.getElementById('spgTypeSelect').style.display = 'grid'; document.getElementById('spgEditor').style.display = 'none'; }
