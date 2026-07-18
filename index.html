@@ -592,7 +592,7 @@
 
         <!-- NEW: Video Folder Search Bar -->
         <div class="search-wrapper" style="margin: 0 auto 20px; padding: 0; width: 100%;">
-            <input type="text" id="videoSearch" class="search-input" placeholder="මෙම වීඩියෝ ලැයිස්තුව තුළ සොයන්න..." onkeyup="handleSearch('video')">
+            <input type="text" id="videoSearch" class="search-input" placeholder="මෙම ලැයිස්තුව තුළ සොයන්න..." onkeyup="handleSearch('video')">
             <i class="material-icons search-clear" id="videoSearchClear" onclick="clearSearch('video')">close</i>
         </div>
 
@@ -1130,25 +1130,35 @@
                                 if (allowed[folderName]) {
                                     for (let cat in streamData) {
                                         if (streamData[cat] && streamData[cat][folderName]) {
+                                            let fData = streamData[cat][folderName];
+                                            
+                                            // Push main folder
                                             searchIndex.push({ 
-                                                type: 'folder', 
-                                                stream: sub.id, 
-                                                title: folderName, 
-                                                folderName: folderName, 
-                                                catName: cat 
+                                                type: 'folder', stream: sub.id, title: folderName, folderName: folderName, catName: cat 
                                             });
-                                            if (streamData[cat][folderName].videos) {
-                                                const videosObj = streamData[cat][folderName].videos;
-                                                Object.values(videosObj).forEach((v, vIndex) => { 
+                                            
+                                            // Direct videos
+                                            if (fData.videos) {
+                                                Object.values(fData.videos).forEach((v, vIndex) => { 
                                                     searchIndex.push({ 
-                                                        type: 'video', 
-                                                        stream: sub.id, 
-                                                        folderName: folderName, 
-                                                        catName: cat, 
-                                                        title: v.title, 
-                                                        videoData: v, 
-                                                        index: vIndex 
+                                                        type: 'video', stream: sub.id, folderName: folderName, catName: cat, subFolder: null, title: v.title, videoData: v, index: vIndex 
                                                     }); 
+                                                });
+                                            }
+                                            
+                                            // Subfolders
+                                            if (fData.subfolders) {
+                                                Object.keys(fData.subfolders).forEach(subK => {
+                                                    searchIndex.push({
+                                                        type: 'subfolder', stream: sub.id, title: `${folderName} > ${subK}`, folderName: folderName, subFolderName: subK, catName: cat 
+                                                    });
+                                                    if (fData.subfolders[subK].videos) {
+                                                        Object.values(fData.subfolders[subK].videos).forEach((v, vIndex) => {
+                                                            searchIndex.push({ 
+                                                                type: 'video', stream: sub.id, folderName: folderName, catName: cat, subFolder: subK, title: v.title, videoData: v, index: vIndex 
+                                                            }); 
+                                                        });
+                                                    }
                                                 });
                                             }
                                         }
@@ -1179,7 +1189,6 @@
         let filterStream = null;
         let filterCat = null;
 
-        // Custom search for inner video folder list
         if (context === 'video') {
             const query = document.getElementById('videoSearch').value.toLowerCase();
             const clearBtn = document.getElementById('videoSearchClear');
@@ -1277,10 +1286,10 @@
         }
 
         currentSearchResults.forEach((item, idx) => {
-            if (item.type === 'folder') {
+            if (item.type === 'folder' || item.type === 'subfolder') {
                 resultsGrid.innerHTML += `
                 <div class="folder-card glass-card clickable-card" onclick="handleSearchClick(${idx})">
-                    <div class="folder-icon-wrap"><i class="material-icons">folder_open</i></div>
+                    <div class="folder-icon-wrap" style="${item.type === 'subfolder' ? 'color:var(--primary); background:rgba(37, 99, 235, 0.1);' : ''}"><i class="material-icons">${item.type === 'subfolder' ? 'snippet_folder' : 'folder_open'}</i></div>
                     <div class="folder-title">${item.title}</div>
                     <div class="folder-count">Stream: ${item.stream.toUpperCase()}</div>
                     <div class="folder-btn">View Folder <i class="material-icons">chevron_right</i></div>
@@ -1288,11 +1297,12 @@
             } else if (item.type === 'video') {
                 const thumbUrl = `https://img.youtube.com/vi/${item.videoData.id}/mqdefault.jpg`;
                 let pdfBtnHtml = item.videoData.pdfLink ? `<div class="pdf-btn" onclick="event.stopPropagation(); window.open('${item.videoData.pdfLink}', '_blank')">Download PDF <i class="material-icons">download</i></div>` : "";
+                let folderPathName = item.subFolder ? `${item.folderName} > ${item.subFolder}` : item.folderName;
                 resultsGrid.innerHTML += `
                 <div class="folder-card glass-card clickable-card" onclick="handleSearchClick(${idx})">
                     <img src="${thumbUrl}" class="video-thumbnail" alt="${item.title}">
                     <div class="folder-title">${item.title}</div>
-                    <div class="folder-count">Folder: ${item.folderName}</div>
+                    <div class="folder-count">Folder: ${folderPathName}</div>
                     <div class="folder-btn" style="background:var(--primary); color:#ffffff; border:none;">
                         Play Video <i class="material-icons">play_circle_filled</i>
                     </div>
@@ -1307,23 +1317,36 @@
         if (item.type === 'folder') { 
             activeStream = item.stream; 
             showVideoListRealtime(item.folderName, item.catName, true); 
+        } else if (item.type === 'subfolder') {
+            activeStream = item.stream; 
+            showScreen('playerScreen'); 
+            document.getElementById("videoListContainer").style.display = "block";
+            document.getElementById("playerSection").style.display = "none";
+            openSubFolder(item.folderName, item.subFolderName, item.catName);
         } else if (item.type === 'video') { 
             activeStream = item.stream; 
-            showVideoListRealtime(item.folderName, item.catName, true, item.videoData.id); 
+            if (item.subFolder) {
+                showScreen('playerScreen');
+                document.getElementById("videoListContainer").style.display = "block";
+                document.getElementById("playerSection").style.display = "none";
+                openSubFolder(item.folderName, item.subFolder, item.catName, item.videoData.id);
+            } else {
+                showVideoListRealtime(item.folderName, item.catName, true, item.videoData.id); 
+            }
         }
     }
 
     function openStream(type) { 
         activeStream = type; 
         document.getElementById("catSubTitle").innerText = type.toUpperCase(); 
-        clearSearch('stream'); // Clean search state
+        clearSearch('stream'); 
         showScreen('categoriesScreen'); 
     }
     
     function openCategory(catName) {
         activeCatName = catName; 
         document.getElementById("subTitle").innerText = `${activeStream.toUpperCase()} - ${catName}`; 
-        clearSearch('topic'); // Clean search state
+        clearSearch('topic'); 
         showScreen('topicsScreen');
         
         if (currentTopicsRef) { 
@@ -1370,7 +1393,6 @@
             backBtn.setAttribute('onclick', "showScreen('topicsScreen')"); 
         }
 
-        // Clean video folder search state before displaying new folder
         document.getElementById('videoSearch').value = '';
         document.getElementById('videoSearchClear').style.display = 'none';
         document.getElementById('videoSearchResultsContainer').style.display = 'none';
@@ -1382,15 +1404,93 @@
         isPlayingFromHistory = false; 
         
         const list = document.getElementById("multiVideoList"); 
-        list.innerHTML = "<div style='color:var(--text-sub); text-align:center; grid-column:1/-1; padding:20px;'>Loading Videos...</div>";
+        list.innerHTML = "<div style='color:var(--text-sub); text-align:center; grid-column:1/-1; padding:20px;'>Loading Data...</div>";
         
         if (currentVideosRef) { 
             currentVideosRef.off('value'); 
         }
         
-        currentVideosRef = db.ref(`studyData/${activeStream}/${catName}/${folderName}/videos`);
+        currentVideosRef = db.ref(`studyData/${activeStream}/${catName}/${folderName}`);
         currentVideosRef.on('value', snap => {
-            const videos = snap.val(); 
+            const folderData = snap.val(); 
+            list.innerHTML = ""; 
+            currentVideos = [];
+            
+            if (folderData) {
+                let hasContent = false;
+                
+                // 1. Render Subfolders
+                if (folderData.subfolders) {
+                    hasContent = true;
+                    Object.keys(folderData.subfolders).forEach(subK => {
+                        list.innerHTML += `
+                        <div class="folder-card glass-card clickable-card" onclick="openSubFolder('${folderName.replace(/'/g, "\\'")}', '${subK.replace(/'/g, "\\'")}', '${catName}')">
+                            <div class="folder-icon-wrap" style="color:var(--primary); background:rgba(37, 99, 235, 0.1);">
+                                <i class="material-icons">snippet_folder</i>
+                            </div>
+                            <div class="folder-title">${subK}</div>
+                            <div class="folder-count">Sub Folder</div>
+                            <div class="folder-btn">විවෘත කරන්න <i class="material-icons">chevron_right</i></div>
+                        </div>`;
+                    });
+                }
+                
+                // 2. Render Direct Videos
+                if (folderData.videos) {
+                    hasContent = true;
+                    let vArr = Object.keys(folderData.videos).map(k => ({ key: k, ...folderData.videos[k] })); 
+                    vArr.sort((a, b) => (a.order || 0) - (b.order || 0)); 
+                    currentVideos = vArr; 
+                    
+                    currentVideos.forEach((v, index) => {
+                        const thumbUrl = `https://img.youtube.com/vi/${v.id}/mqdefault.jpg`;
+                        let pdfBtnHtml = v.pdfLink ? `<div class="pdf-btn" onclick="event.stopPropagation(); window.open('${v.pdfLink}', '_blank')">Download PDF <i class="material-icons">download</i></div>` : "";
+                        list.innerHTML += `
+                        <div class="folder-card glass-card clickable-card" onclick="playThisVideo(${index})">
+                            <img src="${thumbUrl}" class="video-thumbnail" alt="${v.title}">
+                            <div class="folder-title">${v.title}</div>
+                            <div class="folder-count">YouTube Video</div>
+                            <div class="folder-btn">Watch Now <i class="material-icons">play_circle_filled</i></div>
+                            ${pdfBtnHtml}
+                        </div>`;
+                    });
+                    
+                    if (autoPlayVidId) { 
+                        const idx = currentVideos.findIndex(v => v.id === autoPlayVidId); 
+                        if (idx !== -1) { 
+                            playThisVideo(idx); 
+                            autoPlayVidId = null; 
+                        } 
+                    }
+                }
+                
+                if (!hasContent) {
+                    list.innerHTML = "<div style='color:var(--text-sub); text-align:center; grid-column:1/-1; padding:20px;'>මෙම ෆෝල්ඩරයේ දත්ත නොමැත.</div>"; 
+                }
+            } else { 
+                list.innerHTML = "<div style='color:var(--text-sub); text-align:center; grid-column:1/-1; padding:20px;'>මෙම ෆෝල්ඩරයේ දත්ත නොමැත.</div>"; 
+            }
+        });
+    }
+
+    function openSubFolder(folderName, subFolderName, catName, autoPlayVidId = null) {
+        document.getElementById("lessonTitle").innerText = `${folderName} > ${subFolderName}`; 
+        const backBtn = document.getElementById("dynamicBackBtn");
+        backBtn.setAttribute('onclick', `showVideoListRealtime('${folderName.replace(/'/g, "\\'")}', '${catName}', false)`);
+
+        document.getElementById('videoSearch').value = '';
+        document.getElementById('videoSearchClear').style.display = 'none';
+        document.getElementById('videoSearchResultsContainer').style.display = 'none';
+        document.getElementById('multiVideoList').style.display = 'grid';
+
+        if (currentVideosRef) { 
+            currentVideosRef.off('value'); 
+        }
+        
+        currentVideosRef = db.ref(`studyData/${activeStream}/${catName}/${folderName}/subfolders/${subFolderName}/videos`);
+        currentVideosRef.on('value', snap => {
+            const videos = snap.val();
+            const list = document.getElementById("multiVideoList"); 
             list.innerHTML = ""; 
             currentVideos = [];
             
@@ -1411,7 +1511,7 @@
                         ${pdfBtnHtml}
                     </div>`;
                 });
-                
+
                 if (autoPlayVidId) { 
                     const idx = currentVideos.findIndex(v => v.id === autoPlayVidId); 
                     if (idx !== -1) { 
@@ -1419,8 +1519,8 @@
                         autoPlayVidId = null; 
                     } 
                 }
-            } else { 
-                list.innerHTML = "<div style='color:var(--text-sub); text-align:center; grid-column:1/-1; padding:20px;'>මෙම ෆෝල්ඩරයේ වීඩියෝ නොමැත.</div>"; 
+            } else {
+                list.innerHTML = "<div style='color:var(--text-sub); text-align:center; grid-column:1/-1; padding:20px;'>මෙම උප-ෆෝල්ඩරයේ වීඩියෝ නොමැත.</div>"; 
             }
         });
     }
