@@ -124,6 +124,60 @@
         
         .action-icon-btn { background:#f1f5f9; color:#475569; border:none; border-radius:6px; padding:6px; cursor:pointer; transition:0.2s; display:flex; align-items:center; justify-content:center; }
         .action-icon-btn:hover { background:#e2e8f0; transform:scale(1.05); }
+
+        /* ==================================================
+           LIVE CHAT MONITOR STYLES - ORIGINAL UI + CHAT BUBBLES
+           ================================================== */
+        .chat-monitor-layout { display: flex; gap: 20px; height: 75vh; min-height: 550px; }
+        
+        /* Left Panel - Video List */
+        .chat-video-list { flex: 1; background: white; border-radius: 20px; box-shadow: var(--shadow); padding: 20px; overflow-y: auto; border-right: 2px solid #f1f5f9; display: flex; flex-direction: column;}
+        .chat-video-item { padding: 15px; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; background: #f8faff; position: relative;}
+        .chat-video-item:hover, .chat-video-item.active { background: #e0e7ff; border-color: var(--primary); }
+        .chat-video-item h4 { margin: 0 0 5px 0; font-size: 14px; color: var(--text-main); padding-right: 20px;}
+        .chat-video-item p { margin: 0; font-size: 12px; color: #64748b; }
+
+        /* Auto-Delete Toggle Switch - Matching Original App Theme */
+        .switch { position: relative; display: inline-block; width: 36px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2);}
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(16px); }
+
+        /* Right Panel - Active Chat Area */
+        .chat-active-panel { flex: 2; background: white; border-radius: 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; overflow: hidden; position: relative;}
+        .chat-header { background: var(--primary); color: white; padding: 15px 20px; font-weight: 600; font-size: 16px; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 10;}
+        
+        .chat-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; background: #f8fafc; }
+        
+        /* Chat Bubbles Style */
+        .bubble-container { display: flex; margin-bottom: 15px; width: 100%; flex-direction: column; }
+        .bubble-left { align-items: flex-start; }
+        .bubble-right { align-items: flex-end; }
+        
+        .chat-bubble { max-width: 75%; padding: 12px 16px; font-size: 14px; line-height: 1.5; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.02); word-wrap: break-word; }
+        .bubble-student { background: white; border: 1px solid #e2e8f0; border-radius: 16px 16px 16px 0; color: #1e293b; }
+        .bubble-admin { background: var(--primary); border: 1px solid var(--primary-light); border-radius: 16px 16px 0 16px; color: white; box-shadow: 0 2px 10px rgba(67, 97, 238, 0.2); }
+        
+        .chat-msg-header { font-size: 11px; margin-bottom: 5px; font-weight: bold; }
+        
+        .chat-reply-btn { background: #f1f5f9; color: var(--primary); padding: 4px 10px; border-radius: 12px; font-size: 11px; border: none; font-weight: 600; cursor: pointer; margin-top: 8px; transition: 0.2s; align-self: flex-start;}
+        .chat-reply-btn:hover { background: #e0e7ff; }
+
+        /* Global Fixed Reply Input Area */
+        #replyInputArea { padding: 15px 20px; background: white; border-top: 1px solid #e2e8f0; display: none; flex-direction: column; gap: 10px; z-index: 10; box-shadow: 0 -5px 20px rgba(0,0,0,0.02);}
+        .reply-target-info { font-size: 12px; color: var(--primary); font-weight: bold; background: #e0e7ff; padding: 8px 12px; border-radius: 8px; display: none; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary);}
+        
+        /* Modern Chat Input Box */
+        .chat-input-wrapper { display: flex; gap: 10px; align-items: center; background: #f8faff; border: 2px solid #e2e8f0; border-radius: 24px; padding: 4px 4px 4px 15px; transition: 0.2s; }
+        .chat-input-wrapper:focus-within { border-color: var(--primary); background: #ffffff; }
+        
+        #adminReplyInput { border: none; background: transparent; padding: 8px 0; margin: 0; box-shadow: none; font-size: 14px; flex: 1; }
+        #adminReplyInput:focus { border: none; outline: none; }
+        
+        .send-btn-chat { border-radius: 50%; width: 40px; height: 40px; padding: 0; background: var(--primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.2s;}
+        .send-btn-chat:hover { transform: scale(1.05); }
     </style>
 </head>
 <body>
@@ -162,15 +216,76 @@
             <div class="nav-card" onclick="showPage('studentPage')">
                 <i class="material-icons" style="color: #8b5cf6;">groups</i><h3>ශිෂ්‍යයන්<br>කළමනාකරණය</h3>
             </div>
-            <!-- Video Edit & Manage Main Menu Item -->
             <div class="nav-card" onclick="showPage('viewPage')" style="border-bottom: 4px solid #0ea5e9;">
                 <i class="material-icons" style="color: #0ea5e9;">movie_edit</i><h3 style="color: #0ea5e9;">Video Edit & Manage<br>(සංස්කරණය)</h3>
             </div>
+
+            <!-- LIVE CHAT NAV CARD -->
+            <div class="nav-card pulse-card" onclick="openChatMonitor()" style="border-color: #ec4899; box-shadow: 0 0 15px rgba(236, 72, 153, 0.2);">
+                <i class="material-icons" style="color: #ec4899;">forum</i>
+                <h3 style="color: #ec4899;">Live Chat<br>Monitor</h3>
+            </div>
+
             <div class="nav-card" onclick="openSpgMain()">
                 <i class="material-icons" style="color: #f59e0b;">psychology</i><h3>Smart Paper<br>(SPG කොටස)</h3>
             </div>
             <div class="nav-card pulse-card" onclick="showPage('linkTrackPage')">
                 <i class="material-icons" style="color:var(--danger)">track_changes</i><h3 style="color: var(--danger);">Live Sync<br>(Link Tracker)</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIVE CHAT MONITOR PAGE -->
+    <div id="chatMonitorPage" class="page">
+        <button class="back-btn" onclick="showPage('homeScreen')"><i class="material-icons">arrow_back</i> ආපසු</button>
+        
+        <div class="chat-monitor-layout">
+            <!-- Left: List of Videos with Active Chats -->
+            <div class="chat-video-list">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #e2e8f0;">
+                    <h3 style="margin:0; font-size: 15px; color: var(--primary);">Active Chats</h3>
+                    <div style="display:flex; align-items:center; gap:8px;" title="සක්‍රීය කර ඇති විට රිප්ලයි කළ විගස චැට් එක ලිස්ට් එකෙන් මැකේ">
+                        <span style="font-size:12px; font-weight:600; color:#64748b;">Auto Delete</span>
+                        <label class="switch">
+                            <input type="checkbox" id="autoDeleteToggle" checked onchange="loadActiveChatVideos()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div id="chatVideoListItems" style="flex:1; overflow-y:auto; padding-right:5px;">
+                    <div style="text-align:center; color: gray; margin-top: 20px;">Loading Chats...</div>
+                </div>
+            </div>
+
+            <!-- Right: Chat Messages and Reply Area -->
+            <div class="chat-active-panel">
+                <div class="chat-header">
+                    <i class="material-icons">video_library</i> <span id="monitorVideoTitle">Select a video to monitor</span>
+                </div>
+                
+                <div class="chat-box" id="adminChatBox">
+                    <div style="text-align:center; color: #94a3b8; margin-top: 50px;">
+                        <i class="material-icons" style="font-size: 54px; opacity: 0.5;">forum</i><br>
+                        වම් පසින් වීඩියෝවක් තෝරන්න
+                    </div>
+                </div>
+
+                <!-- Global Admin Reply Input (Always Visible when chat is open) -->
+                <div id="replyInputArea">
+                    <div class="reply-target-info" id="replyTargetBanner">
+                        <span id="replyingToText">Replying to: Student</span>
+                        <i class="material-icons" style="cursor: pointer; font-size: 18px;" onclick="cancelReply()">close</i>
+                    </div>
+                    
+                    <div class="chat-input-wrapper">
+                        <i class="material-icons" style="color:#94a3b8; cursor:pointer;" title="Emoji / Attach">emoji_emotions</i>
+                        <input type="text" id="adminReplyInput" placeholder="ඔබේ පිළිතුර මෙහි ටයිප් කරන්න..." onkeypress="if(event.key === 'Enter') sendAdminReply();">
+                        <button class="send-btn-chat" onclick="sendAdminReply()" title="Send">
+                            <i class="material-icons" style="font-size: 20px;">send</i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -269,7 +384,6 @@
             <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">ප්‍රධාන ෆෝල්ඩරය තෝරන්න:</label>
             <select id="lessonSelect" onchange="loadSubFoldersList()"><option value="">තෝරන්න...</option></select>
 
-            <!-- SUB FOLDER SECTION -->
             <div style="background:#e0e7ff; padding:15px; border-radius:12px; margin-top:15px; margin-bottom:15px; border:1px dashed var(--primary);">
                 <p style="margin-top:0; font-weight:600; font-size:13px; color:var(--primary);">විකල්ප: උප-ෆෝල්ඩරයක් (Sub-folder) අවශ්‍ය නම් (eg: 2015, 2020)</p>
                 <div style="display:flex; gap:10px; margin-bottom:10px;">
@@ -420,6 +534,15 @@
     let draggedVidKey = null; // for videos
     let draggedVidSub = null; // to track subfolder during video drag
 
+    // LIVE CHAT VARIABLES
+    let activeAdminChatVid = null;
+    let activeAdminChatTitle = null;
+    let currentReplyMsgId = null;
+    let currentReplyUserId = null;
+    let fallbackReplyMsgId = null; // Used to track latest message if no specific reply is chosen
+    let fallbackReplyUserId = null;
+    let activeChatListener = null;
+
     const cats = ['Monthly', 'Papers', 'Lessons', 'Video Edit'];
 
     function showToast(msg, isError = false) {
@@ -441,6 +564,206 @@
     }
 
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    // ==========================================
+    // UPDATED: ADMIN LIVE CHAT MONITOR LOGIC
+    // ==========================================
+    function openChatMonitor() {
+        showPage('chatMonitorPage');
+        loadActiveChatVideos();
+    }
+
+    function loadActiveChatVideos() {
+        const listItemsDiv = document.getElementById('chatVideoListItems');
+        const isAutoDeleteOn = document.getElementById('autoDeleteToggle').checked;
+        
+        db.ref('chats').on('value', snap => {
+            const chats = snap.val();
+            listItemsDiv.innerHTML = "";
+            
+            if(!chats) {
+                listItemsDiv.innerHTML = `<div style="text-align:center; color:gray; font-size: 13px; margin-top:20px;">No chats available.</div>`;
+                return;
+            }
+
+            let chatArray = Object.keys(chats).map(vidId => {
+                return {
+                    vidId: vidId,
+                    title: chats[vidId].meta ? chats[vidId].meta.title : 'Unknown Video',
+                    lastActive: chats[vidId].meta ? chats[vidId].meta.lastActive : 0,
+                    msgCount: chats[vidId].messages ? Object.keys(chats[vidId].messages).length : 0
+                };
+            }).filter(c => c.msgCount > 0).sort((a, b) => b.lastActive - a.lastActive);
+
+            if(chatArray.length === 0) {
+                listItemsDiv.innerHTML = `<div style="text-align:center; color:gray; font-size: 13px; margin-top:20px;">No chats available.</div>`;
+            }
+
+            chatArray.forEach(c => {
+                const isActive = (activeAdminChatVid === c.vidId) ? 'active' : '';
+                
+                // Manual Delete Button (Show only if Auto Delete is OFF)
+                let deleteIconHtml = !isAutoDeleteOn ? `
+                    <i class="material-icons" style="color: var(--danger); font-size: 18px; cursor: pointer; padding: 4px; background: #ffe4e6; border-radius: 5px;" 
+                       onclick="manualDeleteChat(event, '${c.vidId}')" title="මෙම චැට් එක මකන්න">delete</i>
+                ` : '';
+
+                listItemsDiv.innerHTML += `
+                <div class="chat-video-item ${isActive}" onclick="loadAdminMessages('${c.vidId}', '${c.title.replace(/'/g, "\\'")}')">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <h4>${c.title}</h4>
+                        ${deleteIconHtml}
+                    </div>
+                    <p><i class="material-icons" style="font-size:12px; vertical-align:middle;">forum</i> ${c.msgCount} Messages</p>
+                </div>`;
+            });
+        });
+    }
+
+    async function manualDeleteChat(event, vidId) {
+        event.stopPropagation();
+        if(confirm("මෙම චැට් එක සම්පූර්ණයෙන්ම මකා දමන්නද?")) {
+            await db.ref(`chats/${vidId}`).remove();
+            
+            if(activeAdminChatVid === vidId) {
+                resetChatView();
+            }
+            showToast("චැට් එක සාර්ථකව මකා දැමුවා!");
+        }
+    }
+
+    function resetChatView() {
+        activeAdminChatVid = null;
+        activeAdminChatTitle = null;
+        document.getElementById('monitorVideoTitle').innerText = "Select a video to monitor";
+        document.getElementById('adminChatBox').innerHTML = `
+            <div style="text-align:center; color: #94a3b8; margin-top: 50px;">
+                <i class="material-icons" style="font-size: 54px; opacity: 0.5;">forum</i><br>
+                වම් පසින් වීඩියෝවක් තෝරන්න
+            </div>`;
+        document.getElementById('replyInputArea').style.display = 'none';
+        cancelReply();
+    }
+
+    function loadAdminMessages(vidId, title) {
+        activeAdminChatVid = vidId;
+        activeAdminChatTitle = title;
+        document.getElementById('monitorVideoTitle').innerText = title;
+        
+        // Show input area globally for this chat
+        document.getElementById('replyInputArea').style.display = 'flex';
+        
+        // Highlight active item
+        document.querySelectorAll('.chat-video-item').forEach(el => el.classList.remove('active'));
+        if(event && event.currentTarget) {
+            event.currentTarget.classList.add('active');
+        }
+
+        const box = document.getElementById('adminChatBox');
+        cancelReply(); 
+
+        if(activeChatListener) activeChatListener.off(); 
+        
+        activeChatListener = db.ref(`chats/${vidId}/messages`);
+        activeChatListener.on('value', snap => {
+            box.innerHTML = "";
+            const msgs = snap.val();
+            
+            if(msgs) {
+                for(let key in msgs) {
+                    const msg = msgs[key];
+                    let dateStr = new Date(msg.timestamp).toLocaleString();
+                    
+                    // Track the last message just in case they reply without selecting a specific message
+                    fallbackReplyMsgId = key;
+                    fallbackReplyUserId = msg.userId;
+                    
+                    // UNIQUE UI: LEFT / RIGHT BUBBLES
+                    box.innerHTML += `
+                    <div class="bubble-container bubble-left">
+                        <div class="chat-bubble bubble-student">
+                            <div class="chat-msg-header" style="color: var(--primary);">
+                                ${msg.userName} <span style="color:#94a3b8; font-weight:normal; margin-left:5px;">${dateStr}</span>
+                            </div>
+                            <div>${msg.text}</div>
+                            ${!msg.adminReply ? `
+                            <button class="chat-reply-btn" onclick="prepareReply('${key}', '${msg.userId}', '${msg.userName.replace(/'/g, "\\'")}')">
+                                <i class="material-icons" style="font-size: 12px; vertical-align:middle;">reply</i> Reply
+                            </button>
+                            ` : ''}
+                        </div>
+                    </div>`;
+
+                    // If Admin already replied to this message, show it on the right
+                    if (msg.adminReply) {
+                        box.innerHTML += `
+                        <div class="bubble-container bubble-right">
+                            <div class="chat-bubble bubble-admin">
+                                <div class="chat-msg-header" style="color: #e0e7ff;">
+                                    Admin (ඔබ) <span style="font-weight:normal; margin-left:5px; opacity:0.8;">${dateStr}</span>
+                                </div>
+                                <div>${msg.adminReply}</div>
+                            </div>
+                        </div>`;
+                    }
+                }
+                box.scrollTop = box.scrollHeight;
+            } else {
+                box.innerHTML = `<div style="text-align:center; color: #94a3b8; margin-top: 50px;">No messages found.</div>`;
+            }
+        });
+    }
+
+    function prepareReply(msgId, userId, userName) {
+        currentReplyMsgId = msgId;
+        currentReplyUserId = userId;
+        document.getElementById('replyTargetBanner').style.display = 'flex';
+        document.getElementById('replyingToText').innerText = `Replying to: ${userName}`;
+        document.getElementById('adminReplyInput').focus();
+    }
+
+    function cancelReply() {
+        currentReplyMsgId = null;
+        currentReplyUserId = null;
+        document.getElementById('replyTargetBanner').style.display = 'none';
+        document.getElementById('adminReplyInput').value = "";
+    }
+
+    async function sendAdminReply() {
+        const replyText = document.getElementById('adminReplyInput').value.trim();
+        if(!replyText || !activeAdminChatVid) return;
+
+        // If user didn't click specific reply button, default to the latest message
+        let targetMsgId = currentReplyMsgId || fallbackReplyMsgId;
+        let targetUserId = currentReplyUserId || fallbackReplyUserId;
+        
+        if(!targetMsgId) return;
+
+        // 1. Update the original message with the Admin's reply
+        await db.ref(`chats/${activeAdminChatVid}/messages/${targetMsgId}`).update({
+            adminReply: replyText
+        });
+
+        // 2. Send Push Notification / In-App Alert to the Student
+        await db.ref(`notifications/${targetUserId}`).push({
+            vidId: activeAdminChatVid,
+            vidTitle: activeAdminChatTitle,
+            replyText: replyText,
+            timestamp: Date.now(),
+            read: false
+        });
+
+        showToast("Reply sent! ළමයා වෙත පණිවිඩය යවන ලදී.");
+        cancelReply();
+
+        // 3. AUTO DELETE LOGIC
+        const isAutoDeleteOn = document.getElementById('autoDeleteToggle').checked;
+        if(isAutoDeleteOn) {
+            await db.ref(`chats/${activeAdminChatVid}`).remove();
+            resetChatView();
+            showToast("Chat එක ලැයිස්තුවෙන් ඉවත් විය.");
+        }
+    }
 
     // --- LINK TRACK LOGIC ---
     function loadLiveTracks() {
@@ -891,7 +1214,6 @@
         if(folder) folder.classList.remove('drag-over');
         document.querySelectorAll('.draggable-folder').forEach(el => el.style.opacity = "1");
 
-        // Ignore drop if it originated from a video inside the folder
         if(event.target.closest('.draggable-vid')) return;
         if(!draggedItemKey || draggedItemKey === targetKey) return;
 
@@ -925,7 +1247,7 @@
         draggedVidSub = sub;
         event.dataTransfer.effectAllowed = 'move';
         event.target.style.opacity = "0.5";
-        event.stopPropagation(); // Prevent folder drag from firing
+        event.stopPropagation();
     }
     function dragOverVid(event) {
         event.preventDefault();
@@ -1009,7 +1331,6 @@
         }
     }
 
-    // Video Edit Pop-up Handling
     function openVidEditModal(event, s, c, l, sub, vk, oldTitle, oldId) {
         event.stopPropagation();
         currentEditS = s; currentEditC = c; currentEditL = l; currentEditSub = sub; currentEditVk = vk; currentEditOldId = oldId;
