@@ -879,6 +879,7 @@
     let currentPlayingVideo = null; 
     let resumeTime = 0;
     let isPlayingFromHistory = false;
+    let isPlayingFromNotification = false;
     let currentTopicsRef = null;
     let currentVideosRef = null;
     let activeCatName = "";
@@ -1400,9 +1401,9 @@
                 showScreen('playerScreen');
                 document.getElementById("videoListContainer").style.display = "block";
                 document.getElementById("playerSection").style.display = "none";
-                openSubFolder(item.folderName, item.subFolder, item.catName, item.videoData.id);
+                openSubFolder(item.folderName, item.subFolder, item.catName, item.videoData.id, false); 
             } else {
-                showVideoListRealtime(item.folderName, item.catName, true, item.videoData.id); 
+                showVideoListRealtime(item.folderName, item.catName, true, item.videoData.id, false); 
             }
         }
     }
@@ -1454,7 +1455,7 @@
         });
     }
 
-    function showVideoListRealtime(folderName, catName, isFromSearch, autoPlayVidId = null) {
+    function showVideoListRealtime(folderName, catName, isFromSearch, autoPlayVidId = null, scrollToChat = true) {
         document.getElementById("lessonTitle").innerText = folderName; 
         const backBtn = document.getElementById("dynamicBackBtn");
         
@@ -1473,6 +1474,7 @@
         document.getElementById("videoListContainer").style.display = "block"; 
         document.getElementById("playerSection").style.display = "none"; 
         isPlayingFromHistory = false; 
+        isPlayingFromNotification = false;
         
         const list = document.getElementById("multiVideoList"); 
         list.innerHTML = "<div style='color:var(--text-sub); text-align:center; grid-column:1/-1; padding:20px;'>Loading Data...</div>";
@@ -1529,7 +1531,7 @@
                     if (autoPlayVidId) { 
                         const idx = currentVideos.findIndex(v => v.id === autoPlayVidId); 
                         if (idx !== -1) { 
-                            playThisVideo(idx); 
+                            playThisVideo(idx, scrollToChat); 
                             autoPlayVidId = null; 
                         } 
                     }
@@ -1544,7 +1546,7 @@
         });
     }
 
-    function openSubFolder(folderName, subFolderName, catName, autoPlayVidId = null) {
+    function openSubFolder(folderName, subFolderName, catName, autoPlayVidId = null, scrollToChat = true) {
         document.getElementById("lessonTitle").innerText = `${folderName} > ${subFolderName}`; 
         const backBtn = document.getElementById("dynamicBackBtn");
         backBtn.setAttribute('onclick', `showVideoListRealtime('${folderName.replace(/'/g, "\\'")}', '${catName}', false)`);
@@ -1586,7 +1588,7 @@
                 if (autoPlayVidId) { 
                     const idx = currentVideos.findIndex(v => v.id === autoPlayVidId); 
                     if (idx !== -1) { 
-                        playThisVideo(idx); 
+                        playThisVideo(idx, scrollToChat); 
                         autoPlayVidId = null; 
                     } 
                 }
@@ -1596,13 +1598,14 @@
         });
     }
 
-    function playThisVideo(index) {
+    function playThisVideo(index, scrollToChat = false) {
         const vid = currentVideos[index]; 
         currentPlayingVideo = { id: vid.id, title: vid.title }; 
         document.getElementById("activeVideoTitle").innerText = vid.title; 
         document.getElementById("videoListContainer").style.display = "none"; 
         document.getElementById("playerSection").style.display = "block"; 
         isPlayingFromHistory = false;
+        isPlayingFromNotification = false;
         
         if (!player) { 
             player = new YT.Player('player', { 
@@ -1623,6 +1626,68 @@
 
         // Initialize Chat for this video
         initLiveChat(vid.id, vid.title);
+        
+        // --- NEW SCROLL TO CHAT LOGIC ---
+        if (scrollToChat) {
+            setTimeout(() => {
+                const chatSec = document.getElementById('liveChatSection');
+                if (chatSec) {
+                    chatSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    chatSec.style.transition = "box-shadow 0.5s";
+                    chatSec.style.boxShadow = "0 0 25px var(--primary)";
+                    setTimeout(() => {
+                        chatSec.style.boxShadow = "var(--glass-shadow)";
+                    }, 2500);
+                }
+            }, 1000); 
+        }
+    }
+
+    // --- NEW DIRECT PLAY FUNCTION FOR NOTIFICATIONS ---
+    function playVideoDirectly(vidId, vidTitle, scrollToChat = true) {
+        currentPlayingVideo = { id: vidId, title: vidTitle }; 
+        document.getElementById("activeVideoTitle").innerText = vidTitle; 
+        document.getElementById("videoListContainer").style.display = "none"; 
+        document.getElementById("playerSection").style.display = "block"; 
+        
+        isPlayingFromHistory = false;
+        isPlayingFromNotification = true;
+        
+        showScreen('playerScreen'); 
+        
+        if (!player) { 
+            player = new YT.Player('player', { 
+                host: 'https://www.youtube-nocookie.com', 
+                videoId: vidId, 
+                playerVars: { 
+                    'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0, 'playsinline': 1, 'iv_load_policy': 3 
+                }, 
+                events: { 
+                    'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange 
+                } 
+            }); 
+        } else { 
+            player.loadVideoById(vidId); 
+            document.getElementById('volSlider').value = player.getVolume(); 
+            updateVolIcon(player.getVolume()); 
+        }
+
+        // Initialize Chat for this video
+        initLiveChat(vidId, vidTitle);
+        
+        if (scrollToChat) {
+            setTimeout(() => {
+                const chatSec = document.getElementById('liveChatSection');
+                if (chatSec) {
+                    chatSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    chatSec.style.transition = "box-shadow 0.5s";
+                    chatSec.style.boxShadow = "0 0 25px var(--primary)";
+                    setTimeout(() => {
+                        chatSec.style.boxShadow = "var(--glass-shadow)";
+                    }, 2500);
+                }
+            }, 1000); 
+        }
     }
 
     function saveHistory(vid) {
@@ -1697,6 +1762,7 @@
 
     function resumeHistoryVideo(id, title, time) {
         isPlayingFromHistory = true; 
+        isPlayingFromNotification = false;
         resumeTime = time; 
         currentPlayingVideo = { id: id, title: title }; 
         document.getElementById("activeVideoTitle").innerText = title;
@@ -1928,7 +1994,10 @@
             document.exitFullscreen(); 
         }
         
-        if (isPlayingFromHistory) { 
+        if (isPlayingFromNotification) {
+            isPlayingFromNotification = false;
+            showScreen('mainMenuScreen'); 
+        } else if (isPlayingFromHistory) { 
             isPlayingFromHistory = false; 
             showScreen('historyScreen'); 
         } else { 
@@ -2073,10 +2142,10 @@
         document.getElementById('notifDesc').innerText = msg.substring(0, 30) + "...";
         toast.classList.add('show');
         
-        // Clicking notification opens that video
+        // Clicking notification opens that video DIRECTLY and scrolls to chat
         toast.onclick = () => {
             closeNotification();
-            showVideoListRealtime(vidTitle, 'Lessons', true, vidId); // Navigates to video
+            playVideoDirectly(vidId, vidTitle, true);
         };
 
         setTimeout(closeNotification, 6000); // Auto hide after 6s
