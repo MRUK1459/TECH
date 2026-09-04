@@ -2158,6 +2158,40 @@
     window.addEventListener('contextmenu', function (e) { 
         e.preventDefault(); 
     }, false);
+
+    // ==========================================
+    // ANDROID NATIVE BACK BUTTON SUPPORT
+    // ==========================================
+    window.handleAndroidBack = function() {
+        // 1. If Video Player is open
+        if (document.getElementById("playerSection") && document.getElementById("playerSection").style.display === "block") {
+            hidePlayer();
+            return true; 
+        }
+        // 2. If Video List (Folders/Subfolders) is open
+        if (document.getElementById("playerScreen") && document.getElementById("playerScreen").classList.contains("active")) {
+            const backBtn = document.getElementById("dynamicBackBtn");
+            if (backBtn) backBtn.click();
+            return true;
+        }
+        // 3. If Topics List is open
+        if (document.getElementById("topicsScreen") && document.getElementById("topicsScreen").classList.contains("active")) {
+            showScreen("categoriesScreen");
+            return true;
+        }
+        // 4. If Categories/Streams List is open
+        if (document.getElementById("categoriesScreen") && document.getElementById("categoriesScreen").classList.contains("active")) {
+            showScreen("mainMenuScreen");
+            return true;
+        }
+        // 5. If History Screen is open
+        if (document.getElementById("historyScreen") && document.getElementById("historyScreen").classList.contains("active")) {
+            showScreen("mainMenuScreen");
+            return true;
+        }
+        // 6. If Main Menu (Home Screen) or Auth/Login is open -> Tell Android to handle it (Exit App)
+        return false;
+    };
 </script>
 </body>
 </html>
