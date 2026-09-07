@@ -1138,7 +1138,11 @@
             filteredVideos.forEach((v) => {
                 const originalIndex = currentVideos.findIndex(orig => orig.id === v.id); const thumbUrl = `https://img.youtube.com/vi/${v.id}/mqdefault.jpg`;
                 let pdfBtnHtml = v.pdfLink ? `<div class="pdf-btn" onclick="event.stopPropagation(); window.open('${v.pdfLink}', '_blank')">Download PDF <i class="material-icons">download</i></div>` : "";
-                resultsGrid.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="playThisVideo(${originalIndex})"><img src="${thumbUrl}" class="video-thumbnail" alt="${v.title}"><div class="folder-title">${v.title}</div><div class="folder-count">YouTube Video</div><div class="folder-btn">Watch Now <i class="material-icons">play_circle_filled</i></div>${pdfBtnHtml}</div>`;
+                
+                // Escape quotes
+                const safeTitle = v.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                
+                resultsGrid.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="playThisVideo(${originalIndex})"><img src="${thumbUrl}" class="video-thumbnail" alt="${safeTitle}"><div class="folder-title">${v.title}</div><div class="folder-count">YouTube Video</div><div class="folder-btn">Watch Now <i class="material-icons">play_circle_filled</i></div>${pdfBtnHtml}</div>`;
             }); return;
         }
 
@@ -1164,7 +1168,11 @@
                 const thumbUrl = `https://img.youtube.com/vi/${item.videoData.id}/mqdefault.jpg`;
                 let pdfBtnHtml = item.videoData.pdfLink ? `<div class="pdf-btn" onclick="event.stopPropagation(); window.open('${item.videoData.pdfLink}', '_blank')">Download PDF <i class="material-icons">download</i></div>` : "";
                 let folderPathName = item.subFolder ? `${item.folderName} > ${item.subFolder}` : item.folderName;
-                resultsGrid.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="handleSearchClick(${idx})"><img src="${thumbUrl}" class="video-thumbnail" alt="${item.title}"><div class="folder-title">${item.title}</div><div class="folder-count">Folder: ${folderPathName}</div><div class="folder-btn" style="background:var(--primary); color:#ffffff; border:none;">Play Video <i class="material-icons">play_circle_filled</i></div>${pdfBtnHtml}</div>`;
+                
+                // Escape quotes
+                const safeTitle = item.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+
+                resultsGrid.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="handleSearchClick(${idx})"><img src="${thumbUrl}" class="video-thumbnail" alt="${safeTitle}"><div class="folder-title">${item.title}</div><div class="folder-count">Folder: ${folderPathName}</div><div class="folder-btn" style="background:var(--primary); color:#ffffff; border:none;">Play Video <i class="material-icons">play_circle_filled</i></div>${pdfBtnHtml}</div>`;
             }
         });
     }
@@ -1244,7 +1252,11 @@
                     currentVideos.forEach((v, index) => {
                         const thumbUrl = `https://img.youtube.com/vi/${v.id}/mqdefault.jpg`;
                         let pdfBtnHtml = v.pdfLink ? `<div class="pdf-btn" onclick="event.stopPropagation(); window.open('${v.pdfLink}', '_blank')">Download PDF <i class="material-icons">download</i></div>` : "";
-                        list.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="playThisVideo(${index})"><img src="${thumbUrl}" class="video-thumbnail" alt="${v.title}"><div class="folder-title">${v.title}</div><div class="folder-count">YouTube Video</div><div class="folder-btn">Watch Now <i class="material-icons">play_circle_filled</i></div>${pdfBtnHtml}</div>`;
+                        
+                        // Escape quotes
+                        const safeTitle = v.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+
+                        list.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="playThisVideo(${index})"><img src="${thumbUrl}" class="video-thumbnail" alt="${safeTitle}"><div class="folder-title">${v.title}</div><div class="folder-count">YouTube Video</div><div class="folder-btn">Watch Now <i class="material-icons">play_circle_filled</i></div>${pdfBtnHtml}</div>`;
                     });
                     if (autoPlayVidId) { const idx = currentVideos.findIndex(v => v.id === autoPlayVidId); if (idx !== -1) { playThisVideo(idx, scrollToChat); autoPlayVidId = null; } }
                 }
@@ -1267,7 +1279,11 @@
                 currentVideos.forEach((v, index) => {
                     const thumbUrl = `https://img.youtube.com/vi/${v.id}/mqdefault.jpg`;
                     let pdfBtnHtml = v.pdfLink ? `<div class="pdf-btn" onclick="event.stopPropagation(); window.open('${v.pdfLink}', '_blank')">Download PDF <i class="material-icons">download</i></div>` : "";
-                    list.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="playThisVideo(${index})"><img src="${thumbUrl}" class="video-thumbnail" alt="${v.title}"><div class="folder-title">${v.title}</div><div class="folder-count">YouTube Video</div><div class="folder-btn">Watch Now <i class="material-icons">play_circle_filled</i></div>${pdfBtnHtml}</div>`;
+                    
+                    // Escape quotes
+                    const safeTitle = v.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+
+                    list.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="playThisVideo(${index})"><img src="${thumbUrl}" class="video-thumbnail" alt="${safeTitle}"><div class="folder-title">${v.title}</div><div class="folder-count">YouTube Video</div><div class="folder-btn">Watch Now <i class="material-icons">play_circle_filled</i></div>${pdfBtnHtml}</div>`;
                 });
                 if (autoPlayVidId) { const idx = currentVideos.findIndex(v => v.id === autoPlayVidId); if (idx !== -1) { playThisVideo(idx, scrollToChat); autoPlayVidId = null; } }
             } else { list.innerHTML = "<div style='color:var(--text-sub); text-align:center; grid-column:1/-1; padding:20px;'>මෙම උප-ෆෝල්ඩරයේ වීඩියෝ නොමැත.</div>"; }
@@ -1292,8 +1308,20 @@
         
         markVideoViewed(vid.id);
 
-        if (!player) { player = new YT.Player('player', { host: 'https://www.youtube-nocookie.com', videoId: vid.id, playerVars: { 'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0, 'playsinline': 1, 'iv_load_policy': 3 }, events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } }); } 
-        else { player.loadVideoById(vid.id); document.getElementById('volSlider').value = player.getVolume(); updateVolIcon(player.getVolume()); }
+        if (!player) { 
+            player = new YT.Player('player', { 
+                host: 'https://www.youtube-nocookie.com', 
+                videoId: vid.id, 
+                playerVars: { 'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0, 'playsinline': 1, 'iv_load_policy': 3 }, 
+                events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } 
+            }); 
+        } 
+        else { 
+            // Correct Object API format for loading Video
+            player.loadVideoById({videoId: vid.id, startSeconds: 0}); 
+            document.getElementById('volSlider').value = player.getVolume(); 
+            updateVolIcon(player.getVolume()); 
+        }
         
         initLiveChat(vid.id, vid.title);
         
@@ -1305,8 +1333,20 @@
         isPlayingFromHistory = false; isPlayingFromNotification = true; showScreen('playerScreen'); 
         markVideoViewed(vidId); 
 
-        if (!player) { player = new YT.Player('player', { host: 'https://www.youtube-nocookie.com', videoId: vidId, playerVars: { 'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0, 'playsinline': 1, 'iv_load_policy': 3 }, events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } }); } 
-        else { player.loadVideoById(vidId); document.getElementById('volSlider').value = player.getVolume(); updateVolIcon(player.getVolume()); }
+        if (!player) { 
+            player = new YT.Player('player', { 
+                host: 'https://www.youtube-nocookie.com', 
+                videoId: vidId, 
+                playerVars: { 'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0, 'playsinline': 1, 'iv_load_policy': 3 }, 
+                events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } 
+            }); 
+        } 
+        else { 
+            // Correct Object API format for loading Video
+            player.loadVideoById({videoId: vidId, startSeconds: 0}); 
+            document.getElementById('volSlider').value = player.getVolume(); 
+            updateVolIcon(player.getVolume()); 
+        }
         
         initLiveChat(vidId, vidTitle);
         if (scrollToChat) { setTimeout(() => { const chatSec = document.getElementById('liveChatSection'); if (chatSec) { chatSec.scrollIntoView({ behavior: 'smooth', block: 'center' }); chatSec.style.transition = "box-shadow 0.5s"; chatSec.style.boxShadow = "0 0 25px var(--primary)"; setTimeout(() => { chatSec.style.boxShadow = "var(--glass-shadow)"; }, 2500); } }, 1000); }
@@ -1316,45 +1356,109 @@
         if (!vid || !player || !activeStream || typeof player.getCurrentTime !== 'function') return;
         const time = player.getCurrentTime(); const dur = player.getDuration();
         if (time < 1 || dur <= 0 || (time / dur) > 0.99) return; 
-        const historyKey = 'watchHistory_' + currentUser.id + '_' + activeStream; let history = JSON.parse(localStorage.getItem(historyKey) || '[]');
-        history = history.filter(h => h.id !== vid.id); history.unshift({ id: vid.id, title: vid.title, time: time, duration: dur, timestamp: Date.now() });
-        if (history.length > 10) history.pop(); localStorage.setItem(historyKey, JSON.stringify(history));
-        renderHistory();
+        
+        const historyKey = 'watchHistory_' + currentUser.id + '_' + activeStream; 
+        let history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+        history = history.filter(h => h.id !== vid.id); 
+        history.unshift({ id: vid.id, title: vid.title, time: time, duration: dur, timestamp: Date.now() });
+        if (history.length > 10) history.pop(); 
+        
+        localStorage.setItem(historyKey, JSON.stringify(history));
+        // FIX: Removed renderHistory() here to prevent infinite loop/lag!
     }
 
     function removeHistory(vidId) {
-        if (!currentUser || !vidId || !activeStream) return; const historyKey = 'watchHistory_' + currentUser.id + '_' + activeStream; let history = JSON.parse(localStorage.getItem(historyKey) || '[]');
-        history = history.filter(h => h.id !== vidId); localStorage.setItem(historyKey, JSON.stringify(history)); renderHistory();
+        if (!currentUser || !vidId || !activeStream) return; 
+        const historyKey = 'watchHistory_' + currentUser.id + '_' + activeStream; 
+        let history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+        history = history.filter(h => h.id !== vidId); 
+        localStorage.setItem(historyKey, JSON.stringify(history)); 
+        renderHistory();
     }
 
     function renderHistory() {
         if (!currentUser || !activeStream) return;
-        const historyKey = 'watchHistory_' + currentUser.id + '_' + activeStream; const history = JSON.parse(localStorage.getItem(historyKey) || '[]'); 
+        const historyKey = 'watchHistory_' + currentUser.id + '_' + activeStream; 
+        const history = JSON.parse(localStorage.getItem(historyKey) || '[]'); 
         const historyGrid = document.getElementById('historyGrid');
         
-        if(document.getElementById('statHistoryCount')) { document.getElementById('statHistoryCount').innerText = history.length; }
+        if(document.getElementById('statHistoryCount')) { 
+            document.getElementById('statHistoryCount').innerText = history.length; 
+        }
 
         if (history.length === 0) { 
-            if (historyGrid) { historyGrid.innerHTML = '<div style="color:var(--text-sub); width:100%; text-align:center; grid-column:1/-1;">නැවත නැරඹීමට වීඩියෝ නොමැත.</div>'; } return; 
+            if (historyGrid) { historyGrid.innerHTML = '<div style="color:var(--text-sub); width:100%; text-align:center; grid-column:1/-1;">නැවත නැරඹීමට වීඩියෝ නොමැත.</div>'; } 
+            return; 
         }
         
         if (historyGrid) {
             historyGrid.innerHTML = '';
             history.forEach(h => {
-                const prog = h.duration > 0 ? (h.time / h.duration) * 100 : 0; const thumb = `https://img.youtube.com/vi/${h.id}/mqdefault.jpg`;
-                historyGrid.innerHTML += `<div class="history-card glass-card clickable-card" onclick="resumeHistoryVideo('${h.id}', '${h.title.replace(/'/g, "\\'")}', ${h.time})"><div class="history-thumb-wrap"><img src="${thumb}" class="history-thumb"><div class="history-play-btn"><i class="material-icons">play_arrow</i></div><div class="history-progress"><div class="history-progress-fill" style="width: ${prog}%"></div></div></div><div class="history-info"><div class="history-title">${h.title}</div></div></div>`;
+                const prog = h.duration > 0 ? (h.time / h.duration) * 100 : 0; 
+                const thumb = `https://img.youtube.com/vi/${h.id}/mqdefault.jpg`;
+                
+                // Escape double and single quotes to prevent breaking the onclick handler
+                const safeTitle = h.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+
+                historyGrid.innerHTML += `
+                <div class="history-card glass-card clickable-card" onclick="resumeHistoryVideo('${h.id}', '${safeTitle}', ${h.time})">
+                    <div class="history-thumb-wrap">
+                        <img src="${thumb}" class="history-thumb">
+                        <div class="history-play-btn"><i class="material-icons">play_arrow</i></div>
+                        <div class="history-progress"><div class="history-progress-fill" style="width: ${prog}%"></div></div>
+                    </div>
+                    <div class="history-info"><div class="history-title">${h.title}</div></div>
+                </div>`;
             });
         }
     }
 
     function resumeHistoryVideo(id, title, time) {
-        isPlayingFromHistory = true; isPlayingFromNotification = false; resumeTime = time; currentPlayingVideo = { id: id, title: title }; document.getElementById("activeVideoTitle").innerText = title;
-        showScreen('playerScreen'); document.getElementById("videoListContainer").style.display = "none"; document.getElementById("playerSection").style.display = "block";
-        if (!player) { player = new YT.Player('player', { host: 'https://www.youtube-nocookie.com', videoId: id, playerVars: { 'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0, 'playsinline': 1, 'iv_load_policy': 3 }, events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } }); } else { player.loadVideoById(id, time); document.getElementById('volSlider').value = player.getVolume(); updateVolIcon(player.getVolume()); resumeTime = 0; }
+        isPlayingFromHistory = true; 
+        isPlayingFromNotification = false; 
+        resumeTime = parseFloat(time); // Make sure time is parsed correctly
+        currentPlayingVideo = { id: id, title: title }; 
+        document.getElementById("activeVideoTitle").innerText = title;
+        
+        showScreen('playerScreen'); 
+        document.getElementById("videoListContainer").style.display = "none"; 
+        document.getElementById("playerSection").style.display = "block";
+        
+        if (!player) { 
+            player = new YT.Player('player', { 
+                host: 'https://www.youtube-nocookie.com', 
+                videoId: id, 
+                playerVars: { 
+                    'autoplay': 1, 
+                    'controls': 0, 
+                    'modestbranding': 1, 
+                    'rel': 0, 
+                    'playsinline': 1, 
+                    'iv_load_policy': 3,
+                    'start': Math.floor(resumeTime) // Fallback for reliable start time on init
+                }, 
+                events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } 
+            }); 
+        } else { 
+            // Correct Object API format for loading Video with Start Time
+            player.loadVideoById({videoId: id, startSeconds: resumeTime}); 
+            document.getElementById('volSlider').value = player.getVolume(); 
+            updateVolIcon(player.getVolume()); 
+            resumeTime = 0; 
+        }
         initLiveChat(id, title);
     }
 
-    function onPlayerReady() { setInterval(updateUI, 500); const vol = player.getVolume(); document.getElementById('volSlider').value = vol; updateVolIcon(vol); if (resumeTime > 0) { player.seekTo(resumeTime, true); resumeTime = 0; } }
+    function onPlayerReady() { 
+        setInterval(updateUI, 500); 
+        const vol = player.getVolume(); 
+        document.getElementById('volSlider').value = vol; 
+        updateVolIcon(vol); 
+        if (resumeTime > 0) { 
+            player.seekTo(resumeTime, true); 
+            resumeTime = 0; 
+        } 
+    }
     
     function onPlayerStateChange(e) {
         const btn = document.getElementById("playPauseBtn");
@@ -1399,11 +1503,20 @@
     function formatTime(t) { t = Math.round(t); var h = Math.floor(t / 3600); var m = Math.floor((t % 3600) / 60); var s = t % 60; return (h > 0 ? h + ":" : "") + (m < 10 && h > 0 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s; }
 
     function hidePlayer() { 
-        if (player) { if (currentPlayingVideo && player.getPlayerState() !== YT.PlayerState.ENDED) { const time = player.getCurrentTime(); const dur = player.getDuration(); if (dur - time > 2) { saveHistory(currentPlayingVideo); } } player.pauseVideo(); }
+        if (player) { 
+            if (currentPlayingVideo && player.getPlayerState() !== YT.PlayerState.ENDED) { 
+                const time = player.getCurrentTime(); const dur = player.getDuration(); 
+                if (dur - time > 2) { saveHistory(currentPlayingVideo); } 
+            } 
+            player.pauseVideo(); 
+        }
         document.getElementById("playerSection").style.display = "none"; document.getElementById("videoContainer").classList.remove('pseudo-fullscreen'); document.body.classList.remove('pseudo-fs-active');
         const fsIcon = document.getElementById('fsIconBtn'); if (fsIcon) { fsIcon.innerText = 'fullscreen'; } if (document.fullscreenElement) { document.exitFullscreen(); }
         
-        if (isPlayingFromNotification) { isPlayingFromNotification = false; showScreen('categoriesScreen'); } else if (isPlayingFromHistory) { isPlayingFromHistory = false; showScreen('historyScreen'); } else { document.getElementById("videoListContainer").style.display = "block"; }
+        if (isPlayingFromNotification) { isPlayingFromNotification = false; showScreen('categoriesScreen'); } 
+        else if (isPlayingFromHistory) { isPlayingFromHistory = false; showScreen('historyScreen'); } 
+        else { document.getElementById("videoListContainer").style.display = "block"; }
+        
         if(chatListenerRef) chatListenerRef.off(); document.getElementById('emojiPicker').style.display = 'none';
     }
 
@@ -1483,4 +1596,5 @@
     };
 </script>
 </body>
+</html>
 </html>
