@@ -37,9 +37,6 @@
             --chat-other-text: #ffffff;
         }
 
-        /* ==================================================
-           CLASSIC LIGHT MODE
-           ================================================== */
         body.light-mode {
             --bg: #f8fafc; 
             --card-bg: #ffffff; 
@@ -56,16 +53,12 @@
             --folder-btn-bg: rgba(37, 99, 235, 0.1);
             --folder-btn-text: #2563eb;
 
-            /* WHATSAPP LIGHT MODE COLORS */
             --chat-me-bg: #dcf8c6;
             --chat-me-text: #111111;
             --chat-other-bg: #ffffff;
             --chat-other-text: #111111;
         }
 
-        /* ==================================================
-           RGB MODE (CRIMSON RED)
-           ================================================== */
         body.crimson-mode {
             --primary: #ef4444; 
             --primary-light: #f87171; 
@@ -104,9 +97,6 @@
             -webkit-backdrop-filter: blur(30px) saturate(150%);
         }
 
-        /* ==================================================
-           DASHBOARD SPECIFIC CUSTOM STYLES
-           ================================================== */
         .stats-grid-home { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; width: 100%; box-sizing: border-box; }
         .stat-box { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 16px; padding: 18px 15px; text-align: center; box-shadow: var(--glass-shadow); backdrop-filter: blur(10px); transition: 0.3s ease; position: relative; overflow: hidden; box-sizing: border-box; }
         .stat-box:hover { transform: translateY(-5px); border-color: var(--primary-light); box-shadow: var(--glass-glow); }
@@ -122,7 +112,6 @@
         .chart-panel { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 25px; box-shadow: var(--glass-shadow); backdrop-filter: blur(10px); box-sizing: border-box; }
         .chart-panel h3 { margin: 0 0 15px 0; font-size: 14px; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; }
 
-        /* Task Items */
         .task-item { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; box-shadow: var(--glass-shadow); box-sizing: border-box; }
         .task-item:hover { border-color: var(--primary-light); background: rgba(37,99,235,0.05); }
         .task-checkbox { width: 22px; height: 22px; cursor: pointer; accent-color: var(--primary); }
@@ -394,6 +383,72 @@
 <div class="ambient-glow glow-3"></div>
 
 <script>
+    // ==========================================
+    // නව Anti-DevTools පද්ධතිය (Advanced Security)
+    // ==========================================
+    (function() {
+        let isCrashing = false;
+
+        function crashAndExit() {
+            if (isCrashing) return;
+            isCrashing = true;
+            
+            // වෙබ් අඩවිය සම්පූර්ණයෙන්ම හිස් කර ක්‍රෑෂ් කිරීම
+            document.documentElement.innerHTML = "";
+            // ඉතිහාසය මකා දමා වෙනත් පිටුවකට ක්ෂණිකව යොමු කිරීම
+            window.location.replace("https://www.google.com");
+        }
+
+        // 1. Zoom-Proof Resize Detection (Zoom කිරීමේදී එන ගැටලුව නිරාකරණය කර ඇත)
+        function detectDocked() {
+            const threshold = 160;
+            const zoom = window.devicePixelRatio || 1;
+            
+            // False positive වැලැක්වීම සඳහා
+            if (window.outerWidth === 0 || window.outerHeight === 0) return;
+
+            // Zoom level එකට අනුව Width/Height ගණනය කිරීම
+            const widthDiff = window.outerWidth - (window.innerWidth * zoom);
+            const heightDiff = window.outerHeight - (window.innerHeight * zoom);
+
+            // DevTools Right හෝ Bottom විවෘත වූ සැණින් අල්ලා ගැනීම
+            if (widthDiff > threshold || heightDiff > threshold) {
+                crashAndExit();
+            }
+        }
+
+        // 2. Console Open Detection (Undocked/Floating DevTools ක්ෂණිකව අල්ලා ගැනීම)
+        const devtoolsDetector = new Image();
+        Object.defineProperty(devtoolsDetector, 'id', {
+            get: function() {
+                crashAndExit();
+                return 'x';
+            }
+        });
+
+        // 3. Debugger Time-Lag Trap (අවසාන ආරක්ෂාව)
+        function detectDebugger() {
+            const start = new Date().getTime();
+            debugger;
+            const end = new Date().getTime();
+            if (end - start > 100) {
+                crashAndExit();
+            }
+        }
+
+        // සෑම මිලි තත්පර 500කට වරක් මෙම ක්‍රම 3ම පරීක්ෂා කිරීම
+        setInterval(() => {
+            detectDocked();
+            console.log(devtoolsDetector); // DevTools Console එක Open නම් ක්‍රියාත්මක වේ
+            console.clear();
+            detectDebugger();
+        }, 500);
+
+        // DevTools ඕපන් කරන මොහොතේම Resize හරහා ක්ෂණිකව ක්‍රියාත්මක වීමට 
+        window.addEventListener('resize', detectDocked);
+    })();
+    // ==========================================
+
     (function() {
         const savedTheme = localStorage.getItem('portalTheme');
         const savedCrimson = localStorage.getItem('portalCrimson');
@@ -727,24 +782,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
 <script>
-    (function() {
-        function detectDevTools() {
-            const threshold = 160; 
-            const widthThreshold = window.outerWidth - window.innerWidth > threshold; 
-            const heightThreshold = window.outerHeight - window.innerHeight > threshold;
-            const startTime = +new Date(); 
-            debugger; 
-            const endTime = +new Date(); 
-            const isDebugging = (endTime - startTime) > 100;
-            if (widthThreshold || heightThreshold || isDebugging) { triggerBackAction(); }
-        }
-        function triggerBackAction() { 
-            if (window.history.length > 1) { window.history.go(-(window.history.length - 1)); } else { window.location.href = "https://www.google.com"; } 
-        }
-        setInterval(detectDevTools, 1000); 
-        window.addEventListener('resize', detectDevTools);
-    })();
-
     function updateToggleIcons() {
         const isLight = document.body.classList.contains('light-mode');
         const isCrimson = document.body.classList.contains('crimson-mode');
@@ -818,22 +855,16 @@
     function updateDashboardStats() {
         if(!currentUser || !activeStream) return;
         
-        // 1. Max Session
         let sessionTimeMs = Date.now() - streamSessionStartTime;
         let maxSessionKey = 'maxSession_' + currentUser.id + '_' + activeStream;
         let maxSessionMs = parseInt(localStorage.getItem(maxSessionKey) || '0');
-        if(sessionTimeMs > maxSessionMs) {
-            maxSessionMs = sessionTimeMs;
-            localStorage.setItem(maxSessionKey, maxSessionMs);
-        }
+        if(sessionTimeMs > maxSessionMs) { maxSessionMs = sessionTimeMs; localStorage.setItem(maxSessionKey, maxSessionMs); }
         let mH = Math.floor(maxSessionMs / 3600000); let mM = Math.floor((maxSessionMs % 3600000) / 60000);
         if(document.getElementById('statMaxSession')) { document.getElementById('statMaxSession').innerText = mH + 'h ' + mM + 'm'; }
         
-        // 2. Daily Session for Line Chart
         let today = new Date().toDateString();
         let dailyStatsKey = 'dailyStats_' + currentUser.id + '_' + activeStream;
         let dailyStats = JSON.parse(localStorage.getItem(dailyStatsKey) || '{}');
-        
         let todaySessionStartKey = 'todaySessionStart_' + activeStream;
         let todaySessionStart = parseInt(sessionStorage.getItem(todaySessionStartKey) || Date.now());
         sessionStorage.setItem(todaySessionStartKey, todaySessionStart); 
@@ -845,32 +876,22 @@
         
         updateLineChart(dailyStats);
 
-        // 3. Tasks Completed
         let tasksKey = 'tasks_' + currentUser.id + '_' + activeStream;
         let tasks = JSON.parse(localStorage.getItem(tasksKey)) || { selected: [], completed: [] };
-        if(document.getElementById('statTasks')) {
-            document.getElementById('statTasks').innerText = tasks.completed.length + '/' + tasks.selected.length;
-        }
+        if(document.getElementById('statTasks')) { document.getElementById('statTasks').innerText = tasks.completed.length + '/' + tasks.selected.length; }
 
-        // 4. Recordings Viewed
         let viewedSetKey = 'viewedSet_' + currentUser.id + '_' + activeStream;
         let viewedSet = JSON.parse(localStorage.getItem(viewedSetKey) || '[]');
         if(document.getElementById('statViewed')) { document.getElementById('statViewed').innerText = viewedSet.length; }
 
-        // 5. Activity Focus (Donut Chart)
         let actStatsKey = 'activityStats_' + currentUser.id + '_' + activeStream;
         let actStats = JSON.parse(localStorage.getItem(actStatsKey)) || { Lessons: 0, Papers: 0, Monthly: 0 };
         let totalAct = (actStats.Lessons || 0) + (actStats.Papers || 0) + (actStats.Monthly || 0);
-        
         let pL = totalAct ? Math.round(((actStats.Lessons || 0) / totalAct) * 100) : 0;
         let pP = totalAct ? Math.round(((actStats.Papers || 0) / totalAct) * 100) : 0;
         let pM = totalAct ? Math.round(((actStats.Monthly || 0) / totalAct) * 100) : 0;
-        
-        if (totalAct === 0) { pL = 34; pP = 33; pM = 33; } // Default visual if no data
-        
-        let grad1 = pL;
-        let grad2 = pL + pP;
-        
+        if (totalAct === 0) { pL = 34; pP = 33; pM = 33; }
+        let grad1 = pL; let grad2 = pL + pP;
         let donut = document.getElementById('activityDonut');
         if(donut) {
             donut.style.background = `conic-gradient(var(--primary) 0% ${grad1}%, #10b981 ${grad1}% ${grad2}%, #f59e0b ${grad2}% 100%)`;
@@ -884,98 +905,54 @@
         for(let i=5; i>=0; i--) {
             let d = new Date(); d.setDate(d.getDate() - i);
             let dateStr = d.toDateString(); let ms = dailyStats[dateStr] || 0; let mins = ms / 60000;
-            if(mins === 0 && i !== 0) mins = Math.random() * 15 + 5; // Visual data points if empty
-            let y = 30 - Math.min(30, (mins / 60) * 30);
-            let x = (5 - i) * 20; 
-            points.push(`${x},${y}`);
-            circles += `<circle cx="${x}" cy="${y}" r="3" fill="var(--primary)"/>`;
+            if(mins === 0 && i !== 0) mins = Math.random() * 15 + 5; 
+            let y = 30 - Math.min(30, (mins / 60) * 30); let x = (5 - i) * 20; 
+            points.push(`${x},${y}`); circles += `<circle cx="${x}" cy="${y}" r="3" fill="var(--primary)"/>`;
         }
-        if(document.getElementById('sessionPolyline')) {
-            document.getElementById('sessionPolyline').setAttribute('points', points.join(' '));
-            document.getElementById('sessionCircles').innerHTML = circles;
-        }
+        if(document.getElementById('sessionPolyline')) { document.getElementById('sessionPolyline').setAttribute('points', points.join(' ')); document.getElementById('sessionCircles').innerHTML = circles; }
     }
     
-    setInterval(updateDashboardStats, 10000); // Auto-update stats
+    setInterval(updateDashboardStats, 10000); 
 
     // ==================== TASK SELECTION LOGIC ====================
     function openTasksScreen() {
         showScreen('tasksScreen');
         document.getElementById('taskSubTitle').innerText = activeStream.toUpperCase() + " Tasks";
-        
-        // Find Unique Videos for the active stream globally
         let uniqueVideos = {};
-        searchIndex.forEach(item => {
-            if(item.type === 'video' && item.stream === activeStream) {
-                if(!uniqueVideos[item.videoData.id]) {
-                    uniqueVideos[item.videoData.id] = item;
-                }
-            }
-        });
+        searchIndex.forEach(item => { if(item.type === 'video' && item.stream === activeStream) { if(!uniqueVideos[item.videoData.id]) { uniqueVideos[item.videoData.id] = item; } } });
         allStreamVideosForTasks = Object.values(uniqueVideos);
-        
         document.getElementById('taskSearchInput').value = '';
         document.getElementById('taskSearchClear').style.display = 'none';
-        filterTaskCat('All'); // Will call renderTasks()
+        filterTaskCat('All');
     }
 
     function filterTaskCat(cat) {
-        activeTaskCategory = cat;
-        document.querySelectorAll('.task-cat-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById('taskCat_' + cat).classList.add('active');
-        renderTasks();
+        activeTaskCategory = cat; document.querySelectorAll('.task-cat-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById('taskCat_' + cat).classList.add('active'); renderTasks();
     }
 
     function handleTaskSearch() {
         let query = document.getElementById('taskSearchInput').value.toLowerCase();
         let clearBtn = document.getElementById('taskSearchClear');
-        clearBtn.style.display = query.trim() !== '' ? 'block' : 'none';
-        renderTasks();
+        clearBtn.style.display = query.trim() !== '' ? 'block' : 'none'; renderTasks();
     }
-
-    function clearTaskSearch() {
-        document.getElementById('taskSearchInput').value = '';
-        handleTaskSearch();
-    }
+    function clearTaskSearch() { document.getElementById('taskSearchInput').value = ''; handleTaskSearch(); }
 
     function renderTasks() {
-        let container = document.getElementById('tasksListContainer');
-        let query = document.getElementById('taskSearchInput').value.toLowerCase();
-        
-        let tasksKey = 'tasks_' + currentUser.id + '_' + activeStream;
-        let tasks = JSON.parse(localStorage.getItem(tasksKey)) || { selected: [], completed: [] };
+        let container = document.getElementById('tasksListContainer'); let query = document.getElementById('taskSearchInput').value.toLowerCase();
+        let tasksKey = 'tasks_' + currentUser.id + '_' + activeStream; let tasks = JSON.parse(localStorage.getItem(tasksKey)) || { selected: [], completed: [] };
+        if (allStreamVideosForTasks.length === 0) { container.innerHTML = "<div style='color:var(--text-sub); text-align:center;'>ඔබට තවමත් වීඩියෝ සඳහා අවසර ලබා දී නොමැත.</div>"; return; }
 
-        if (allStreamVideosForTasks.length === 0) {
-            container.innerHTML = "<div style='color:var(--text-sub); text-align:center;'>ඔබට තවමත් වීඩියෝ සඳහා අවසර ලබා දී නොමැත.</div>";
-            return;
-        }
-
-        let filtered = allStreamVideosForTasks.filter(item => {
-            let matchCat = activeTaskCategory === 'All' || item.catName === activeTaskCategory;
-            let matchSearch = item.title.toLowerCase().includes(query) || item.folderName.toLowerCase().includes(query);
-            return matchCat && matchSearch;
-        });
-
-        if (filtered.length === 0) {
-            container.innerHTML = "<div style='color:var(--text-sub); text-align:center; padding: 20px;'>ගැලපෙන කාර්යයන් නොමැත.</div>";
-            return;
-        }
+        let filtered = allStreamVideosForTasks.filter(item => { let matchCat = activeTaskCategory === 'All' || item.catName === activeTaskCategory; let matchSearch = item.title.toLowerCase().includes(query) || item.folderName.toLowerCase().includes(query); return matchCat && matchSearch; });
+        if (filtered.length === 0) { container.innerHTML = "<div style='color:var(--text-sub); text-align:center; padding: 20px;'>ගැලපෙන කාර්යයන් නොමැත.</div>"; return; }
 
         let html = "";
         filtered.forEach(item => {
-            let vidId = item.videoData.id;
-            let title = item.title;
-            let path = item.subFolder ? `${item.folderName} > ${item.subFolder}` : item.folderName;
-            
-            // Badge color based on category
+            let vidId = item.videoData.id; let title = item.title; let path = item.subFolder ? `${item.folderName} > ${item.subFolder}` : item.folderName;
             let badgeColor = item.catName === 'Papers' ? '#f59e0b' : (item.catName === 'Monthly' ? '#10b981' : 'var(--primary)');
             let catBadge = `<span style="font-size:10px; background:${badgeColor}; color:white; padding:2px 6px; border-radius:8px; margin-right:5px; display:inline-block;">${item.catName}</span>`;
-            
-            let isSelected = tasks.selected.includes(vidId);
-            let isCompleted = tasks.completed.includes(vidId);
-            
-            let checkState = isSelected ? "checked" : "";
-            let disableState = isCompleted ? "disabled" : "";
+            let isSelected = tasks.selected.includes(vidId); let isCompleted = tasks.completed.includes(vidId);
+            let checkState = isSelected ? "checked" : ""; let disableState = isCompleted ? "disabled" : "";
             let statusBadge = isCompleted ? `<span style="color:#10b981; font-size:11px; border:1px solid #10b981; padding:2px 6px; border-radius:10px; margin-top:4px; display:inline-block;">Completed</span>` : ``;
             
             html += `
@@ -985,158 +962,77 @@
                     <div style="font-size:11px; color:var(--text-sub); margin-top:2px;">${catBadge} ${path}</div>
                     <div>${statusBadge}</div>
                 </div>
-                <div>
-                    <input type="checkbox" class="task-checkbox" onchange="toggleTask('${vidId}', this.checked)" ${checkState} ${disableState}>
-                </div>
+                <div><input type="checkbox" class="task-checkbox" onchange="toggleTask('${vidId}', this.checked)" ${checkState} ${disableState}></div>
             </div>`;
         });
-        
         container.innerHTML = html;
     }
 
     function toggleTask(vidId, isChecked) {
-        let tasksKey = 'tasks_' + currentUser.id + '_' + activeStream;
-        let tasks = JSON.parse(localStorage.getItem(tasksKey)) || { selected: [], completed: [] };
-        if (isChecked) {
-            if (!tasks.selected.includes(vidId)) tasks.selected.push(vidId);
-        } else {
-            tasks.selected = tasks.selected.filter(id => id !== vidId);
-        }
-        localStorage.setItem(tasksKey, JSON.stringify(tasks));
-        updateDashboardStats();
+        let tasksKey = 'tasks_' + currentUser.id + '_' + activeStream; let tasks = JSON.parse(localStorage.getItem(tasksKey)) || { selected: [], completed: [] };
+        if (isChecked) { if (!tasks.selected.includes(vidId)) tasks.selected.push(vidId); } else { tasks.selected = tasks.selected.filter(id => id !== vidId); }
+        localStorage.setItem(tasksKey, JSON.stringify(tasks)); updateDashboardStats();
     }
 
     function checkTaskCompletion(vidId) {
         if(!currentUser || !activeStream) return;
-        let tasksKey = 'tasks_' + currentUser.id + '_' + activeStream;
-        let tasks = JSON.parse(localStorage.getItem(tasksKey)) || { selected: [], completed: [] };
-        
-        if (tasks.selected.includes(vidId) && !tasks.completed.includes(vidId)) {
-            tasks.completed.push(vidId);
-            localStorage.setItem(tasksKey, JSON.stringify(tasks));
-            updateDashboardStats();
-        }
+        let tasksKey = 'tasks_' + currentUser.id + '_' + activeStream; let tasks = JSON.parse(localStorage.getItem(tasksKey)) || { selected: [], completed: [] };
+        if (tasks.selected.includes(vidId) && !tasks.completed.includes(vidId)) { tasks.completed.push(vidId); localStorage.setItem(tasksKey, JSON.stringify(tasks)); updateDashboardStats(); }
     }
 
-    // ==================== BANNERS SLIDER LOGIC ====================
-    let bannerInterval;
-    let currentBannerIndex = 0;
-
+    // ==================== BANNERS ====================
+    let bannerInterval; let currentBannerIndex = 0;
     function loadBannersForStudent() {
         db.ref('banners').on('value', snap => {
-            const data = snap.val();
-            const container = document.getElementById('bannerContainer');
-            const slidesWrap = document.getElementById('bannerSlides');
-            
-            if(bannerInterval) clearInterval(bannerInterval);
-            slidesWrap.style.transform = `translateX(0%)`;
-            currentBannerIndex = 0;
+            const data = snap.val(); const container = document.getElementById('bannerContainer'); const slidesWrap = document.getElementById('bannerSlides');
+            if(bannerInterval) clearInterval(bannerInterval); slidesWrap.style.transform = `translateX(0%)`; currentBannerIndex = 0;
+            if(!data) { container.style.display = 'none'; return; }
 
-            if(!data) {
-                container.style.display = 'none';
-                return;
-            }
-
-            let validBanners = [];
-            const userAcc = currentUser.access; // 'et', 'sft', 'ict', 'both', 'all'
+            let validBanners = []; 
+            const userAcc = currentUser.access || ''; 
+            let userAccArr = userAcc.split(',');
+            if(userAcc === 'both') userAccArr = ['et', 'sft'];
             
             Object.keys(data).forEach(k => {
-                const bTarget = data[k].target;
-                let isMatch = false;
-                
-                if(bTarget === 'all' || userAcc === 'all') isMatch = true;
-                else if(userAcc === bTarget) isMatch = true;
-                else if(userAcc === 'both' && (bTarget === 'et' || bTarget === 'sft')) isMatch = true;
-                
+                const bTarget = data[k].target; let isMatch = false;
+                if(bTarget === 'all' || userAcc === 'all' || userAccArr.includes('all')) isMatch = true;
+                else if(userAccArr.includes(bTarget)) isMatch = true;
                 if(isMatch) validBanners.push(data[k]);
             });
 
-            if(validBanners.length === 0) {
-                container.style.display = 'none';
-                return;
-            }
-
+            if(validBanners.length === 0) { container.style.display = 'none'; return; }
             validBanners.sort((a,b) => b.timestamp - a.timestamp);
-
-            container.style.display = 'block';
-            let html = '';
-            validBanners.forEach(b => {
-                html += `
-                <div class="banner-slide">
-                    <div class="banner-text">
-                        <i class="material-icons">campaign</i> 
-                        <span>${b.text}</span>
-                    </div>
-                </div>`;
-            });
+            container.style.display = 'block'; let html = '';
+            validBanners.forEach(b => { html += `<div class="banner-slide"><div class="banner-text"><i class="material-icons">campaign</i> <span>${b.text}</span></div></div>`; });
             slidesWrap.innerHTML = html;
-
-            if(validBanners.length > 1) {
-                bannerInterval = setInterval(() => {
-                    currentBannerIndex = (currentBannerIndex + 1) % validBanners.length;
-                    slidesWrap.style.transform = `translateX(-${currentBannerIndex * 100}%)`;
-                }, 4000); 
-            }
+            if(validBanners.length > 1) { bannerInterval = setInterval(() => { currentBannerIndex = (currentBannerIndex + 1) % validBanners.length; slidesWrap.style.transform = `translateX(-${currentBannerIndex * 100}%)`; }, 4000); }
         });
     }
 
-    // ==================== NATIVE BACK BUTTON TRAP LOGIC ====================
+    // ==================== NATIVE BACK BUTTON LOGIC ====================
     let lastBackPress = 0;
     history.pushState(null, null, location.href); 
-
     window.addEventListener('popstate', function(event) {
-        if (document.getElementById("playerSection") && document.getElementById("playerSection").style.display === "block") { 
-            hidePlayer(); 
-            history.pushState(null, null, location.href); 
-        } else if (document.getElementById("playerScreen") && document.getElementById("playerScreen").classList.contains("active")) { 
-            const backBtn = document.getElementById("dynamicBackBtn"); 
-            if (backBtn) backBtn.click(); 
-            history.pushState(null, null, location.href); 
-        } else if (document.getElementById("tasksScreen") && document.getElementById("tasksScreen").classList.contains("active")) { 
-            showScreen("categoriesScreen", false); 
-            history.pushState(null, null, location.href); 
-        } else if (document.getElementById("topicsScreen") && document.getElementById("topicsScreen").classList.contains("active")) { 
-            showScreen("categoriesScreen", false); 
-            history.pushState(null, null, location.href); 
-        } else if (document.getElementById("categoriesScreen") && document.getElementById("categoriesScreen").classList.contains("active")) { 
-            showScreen("mainMenuScreen", false); 
-            history.pushState(null, null, location.href); 
-        } else if (document.getElementById("historyScreen") && document.getElementById("historyScreen").classList.contains("active")) { 
-            // Return to appropriate previous screen dynamically if needed, but home screen is safest fallback from history
-            if(document.getElementById("categoriesScreen").classList.contains("active")) {
-                 showScreen("categoriesScreen", false); 
-            } else {
-                 showScreen("mainMenuScreen", false); 
-            }
-            history.pushState(null, null, location.href); 
-        } else if (document.getElementById("mainMenuScreen") && document.getElementById("mainMenuScreen").classList.contains("active")) {
+        if (document.getElementById("playerSection") && document.getElementById("playerSection").style.display === "block") { hidePlayer(); history.pushState(null, null, location.href); } 
+        else if (document.getElementById("playerScreen") && document.getElementById("playerScreen").classList.contains("active")) { const backBtn = document.getElementById("dynamicBackBtn"); if (backBtn) backBtn.click(); history.pushState(null, null, location.href); } 
+        else if (document.getElementById("tasksScreen") && document.getElementById("tasksScreen").classList.contains("active")) { showScreen("categoriesScreen", false); history.pushState(null, null, location.href); } 
+        else if (document.getElementById("topicsScreen") && document.getElementById("topicsScreen").classList.contains("active")) { showScreen("categoriesScreen", false); history.pushState(null, null, location.href); } 
+        else if (document.getElementById("categoriesScreen") && document.getElementById("categoriesScreen").classList.contains("active")) { showScreen("mainMenuScreen", false); history.pushState(null, null, location.href); } 
+        else if (document.getElementById("historyScreen") && document.getElementById("historyScreen").classList.contains("active")) { if(document.getElementById("categoriesScreen").classList.contains("active")) { showScreen("categoriesScreen", false); } else { showScreen("mainMenuScreen", false); } history.pushState(null, null, location.href); } 
+        else if (document.getElementById("mainMenuScreen") && document.getElementById("mainMenuScreen").classList.contains("active")) {
             const now = new Date().getTime();
-            if (now - lastBackPress < 2000) {
-                history.back(); // Let Android close the app
-            } else {
-                lastBackPress = now;
-                let exitToast = document.getElementById('exitToast');
-                if(!exitToast){
-                    exitToast = document.createElement('div');
-                    exitToast.id = 'exitToast';
-                    exitToast.style.cssText = "position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.8); color:white; padding:10px 20px; border-radius:20px; z-index:999999; font-size:14px; transition:0.3s; opacity:0; pointer-events:none; white-space:nowrap;";
-                    exitToast.innerText = "ඉවත් වීමට නැවතත් Back ඔබන්න";
-                    document.body.appendChild(exitToast);
-                }
-                exitToast.style.opacity = '1';
-                setTimeout(() => { exitToast.style.opacity = '0'; }, 2000);
-                history.pushState(null, null, location.href);
+            if (now - lastBackPress < 2000) { history.back(); } else {
+                lastBackPress = now; let exitToast = document.getElementById('exitToast');
+                if(!exitToast){ exitToast = document.createElement('div'); exitToast.id = 'exitToast'; exitToast.style.cssText = "position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.8); color:white; padding:10px 20px; border-radius:20px; z-index:999999; font-size:14px; transition:0.3s; opacity:0; pointer-events:none; white-space:nowrap;"; exitToast.innerText = "ඉවත් වීමට නැවතත් Back ඔබන්න"; document.body.appendChild(exitToast); }
+                exitToast.style.opacity = '1'; setTimeout(() => { exitToast.style.opacity = '0'; }, 2000); history.pushState(null, null, location.href);
             }
-        } else {
-            history.pushState(null, null, location.href);
-        }
+        } else { history.pushState(null, null, location.href); }
     });
 
     window.onload = () => {
         updateToggleIcons(); initFunAnimations(); initEmojiPicker(); 
         const savedTheme = localStorage.getItem('portalTheme'); const isVerified = localStorage.getItem('isAppVerified'); const savedUser = localStorage.getItem('studyUser');
         if (!isVerified) { document.getElementById('masterAuthScreen').classList.add('active'); } else if (!savedUser) { document.getElementById('loginScreen').classList.add('active'); } else { currentUser = JSON.parse(savedUser); loadDashboard(); listenForNotifications(); }
-
         const loader = document.getElementById('loadingScreen');
         setTimeout(() => { loader.style.transition = 'background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1)'; if (savedTheme === 'light') { loader.classList.replace('dark-stage', 'light-stage'); } else { loader.classList.replace('light-stage', 'dark-stage'); } }, 1500); 
         setTimeout(() => { loader.style.transition += ', opacity 1s cubic-bezier(0.4, 0, 0.2, 1)'; loader.style.opacity = '0'; setTimeout(() => { loader.style.display = 'none'; }, 1000); }, 3000); 
@@ -1147,17 +1043,11 @@
     function showScreen(id, pushState = true) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        if ((id === 'mainMenuScreen' || id === 'categoriesScreen' || id === 'historyScreen') && currentUser) { 
-            if(activeStream) { renderHistory(); updateDashboardStats(); }
-        }
-        if (pushState) {
-            // Keep native routing stack updated 
-            history.pushState(null, null, location.href);
-        }
+        if ((id === 'mainMenuScreen' || id === 'categoriesScreen' || id === 'historyScreen') && currentUser) { if(activeStream) { renderHistory(); updateDashboardStats(); } }
+        if (pushState) { history.pushState(null, null, location.href); }
     }
     
     function showHistoryScreen() { showScreen('historyScreen'); }
-
     document.onkeydown = function(e) { if (e.keyCode == 123) return false; if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) return false; if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; };
 
     window.addEventListener('keydown', (e) => {
@@ -1187,8 +1077,7 @@
             if (e.clientX < (rect.left + rect.width / 2)) { skip(-10); showOverlayInfo('« 10s'); } else { skip(10); showOverlayInfo('10s »'); }
             lastTapTime = 0; 
         } else {
-            lastTapTime = currentTime;
-            tapTimer = setTimeout(() => { if (!isLongPressing) { const cb = document.getElementById("controlBar"); document.getElementById("speedMenu").classList.remove("show"); if (cb.classList.contains("hidden")) { showControls(); } else { hideControls(); } } }, 300);
+            lastTapTime = currentTime; tapTimer = setTimeout(() => { if (!isLongPressing) { const cb = document.getElementById("controlBar"); document.getElementById("speedMenu").classList.remove("show"); if (cb.classList.contains("hidden")) { showControls(); } else { hideControls(); } } }, 300);
         }
     }
     
@@ -1223,60 +1112,105 @@
         });
     }
 
+    /* =========================================================
+       UPDATED DYNAMIC DASHBOARD LOADER - ADD NEW SUBJECTS HERE
+       ========================================================= */
     function loadDashboard() {
         document.getElementById("helloMsg").innerText = currentUser.name; 
         document.getElementById("userInitial").innerText = currentUser.name.charAt(0).toUpperCase();
         showScreen('mainMenuScreen'); triggerPopAnimations(); 
-        
-        loadBannersForStudent(); // Initialize Banners
+        loadBannersForStudent(); 
         
         db.ref(`students/${currentUser.id}/access`).on('value', s => {
-            const acc = s.val(); const list = document.getElementById("subjectList"); list.innerHTML = "";
-            const subData = [
-                { id: 'et', name: 'Engineering Technology', tag: ['et', 'both', 'all'], img: 'https://static.edumix.lk/sisulka//teacher/5f991c128edc0d4ef4e41a51.jpg' },
-                { id: 'sft', name: 'Science for Technology', tag: ['sft', 'both', 'all'], img: 'https://plain-apac-prod-public.komododecks.com/202604/23/FiS91VCeBtbXYo1nzdJk/image.jpg' },
-                { id: 'ict', name: 'Information Technology', tag: ['ict', 'all'], img: 'https://static.edumix.lk/sisulka//teacher/5f97bb4c9483423cb265bae2.jpg' }
-            ];
+
+            // --- අලුතින් එකතු කළ කොටස (START) ---
+            if (s.val() === null) {
+                localStorage.removeItem('studyUser'); 
+                window.location.reload(); 
+                return;
+            }
+            // --- අලුතින් එකතු කළ කොටස (END) ---
+
+            const acc = s.val() || ''; const list = document.getElementById("subjectList"); 
             
-            searchIndex = []; let delayCounter = 0.4;
-            
-            subData.forEach(sub => {
-                if (sub.tag.includes(acc)) {
-                    list.innerHTML += `
-                    <div class="subject-card glass-card clickable-card pop-anim" style="animation-delay: ${delayCounter}s" onclick="openStream('${sub.id}')">
-                        <img src="${sub.img}" class="subject-image">
-                        <div class="info-box"><h3>${sub.name}</h3><i class="material-icons">arrow_forward</i></div>
-                    </div>`;
-                    delayCounter += 0.1;
-                    
-                    db.ref(`students/${currentUser.id}/allowedLessons/${sub.id}`).once('value', allowSnap => {
-                        const allowed = allowSnap.val() || {};
-                        db.ref(`studyData/${sub.id}`).once('value', dataSnap => {
-                            const streamData = dataSnap.val() || {};
-                            for (let folderName in allowed) {
-                                if (allowed[folderName]) {
-                                    for (let cat in streamData) {
-                                        if (streamData[cat] && streamData[cat][folderName]) {
-                                            let fData = streamData[cat][folderName];
-                                            searchIndex.push({ type: 'folder', stream: sub.id, title: folderName, folderName: folderName, catName: cat });
-                                            if (fData.videos) {
-                                                Object.values(fData.videos).forEach((v, vIndex) => { searchIndex.push({ type: 'video', stream: sub.id, folderName: folderName, catName: cat, subFolder: null, title: v.title, videoData: v, index: vIndex }); });
-                                            }
-                                            if (fData.subfolders) {
-                                                Object.keys(fData.subfolders).forEach(subK => {
-                                                    searchIndex.push({ type: 'subfolder', stream: sub.id, title: `${folderName} > ${subK}`, folderName: folderName, subFolderName: subK, catName: cat });
-                                                    if (fData.subfolders[subK].videos) {
-                                                        Object.values(fData.subfolders[subK].videos).forEach((v, vIndex) => { searchIndex.push({ type: 'video', stream: sub.id, folderName: folderName, catName: cat, subFolder: subK, title: v.title, videoData: v, index: vIndex }); });
-                                                    }
-                                                });
+            // Fetch dynamically created subjects from Admin Panel
+            db.ref('subjects').on('value', subSnap => {
+                list.innerHTML = "";
+                const dynamicSubjects = subSnap.val() || {};
+                
+                // Keep the default ones as fallback / base
+                let allSubjects = [
+                    { id: 'et', name: 'Engineering Technology', tag: ['et', 'both', 'all'], img: 'https://static.edumix.lk/sisulka//teacher/5f991c128edc0d4ef4e41a51.jpg' },
+                    { id: 'sft', name: 'Science for Technology', tag: ['sft', 'both', 'all'], img: 'https://plain-apac-prod-public.komododecks.com/202604/23/FiS91VCeBtbXYo1nzdJk/image.jpg' },
+                    { id: 'ict', name: 'Information Technology', tag: ['ict', 'all'], img: 'https://static.edumix.lk/sisulka//teacher/5f97bb4c9483423cb265bae2.jpg' }
+                ];
+                
+                // Append dynamically added subjects from Firebase
+                for(let key in dynamicSubjects) {
+                    // Check if it's already in the default array to avoid duplicates
+                    if(!allSubjects.find(x => x.id === key)) {
+                        allSubjects.push({
+                            id: key, 
+                            name: dynamicSubjects[key].name, 
+                            tag: [key, 'all'], // Needs 'all' access or the specific subject ID as access
+                            img: dynamicSubjects[key].image
+                        });
+                    }
+                }
+                
+                searchIndex = []; let delayCounter = 0.4;
+                
+                let userAccArr = acc.split(',');
+                if(acc === 'both') userAccArr = ['et', 'sft'];
+
+                allSubjects.forEach(sub => {
+                    // Check Access Level
+                    let hasAccess = false;
+                    if (acc === 'all' || userAccArr.includes('all') || userAccArr.includes(sub.id)) {
+                        hasAccess = true;
+                    }
+                    if (!hasAccess && sub.tag) {
+                        sub.tag.forEach(t => { if(userAccArr.includes(t)) hasAccess = true; });
+                    }
+
+                    if (hasAccess) {
+                        list.innerHTML += `
+                        <div class="subject-card glass-card clickable-card pop-anim" style="animation-delay: ${delayCounter}s" onclick="openStream('${sub.id}')">
+                            <img src="${sub.img}" class="subject-image">
+                            <div class="info-box"><h3>${sub.name}</h3><i class="material-icons">arrow_forward</i></div>
+                        </div>`;
+                        delayCounter += 0.1;
+                        
+                        // Load search index data dynamically for ANY subject
+                        db.ref(`students/${currentUser.id}/allowedLessons/${sub.id}`).once('value', allowSnap => {
+                            const allowed = allowSnap.val() || {};
+                            db.ref(`studyData/${sub.id}`).once('value', dataSnap => {
+                                const streamData = dataSnap.val() || {};
+                                for (let folderName in allowed) {
+                                    if (allowed[folderName]) {
+                                        for (let cat in streamData) {
+                                            if (streamData[cat] && streamData[cat][folderName]) {
+                                                let fData = streamData[cat][folderName];
+                                                searchIndex.push({ type: 'folder', stream: sub.id, title: folderName, folderName: folderName, catName: cat });
+                                                if (fData.videos) {
+                                                    Object.values(fData.videos).forEach((v, vIndex) => { searchIndex.push({ type: 'video', stream: sub.id, folderName: folderName, catName: cat, subFolder: null, title: v.title, videoData: v, index: vIndex }); });
+                                                }
+                                                if (fData.subfolders) {
+                                                    Object.keys(fData.subfolders).forEach(subK => {
+                                                        searchIndex.push({ type: 'subfolder', stream: sub.id, title: `${folderName} > ${subK}`, folderName: folderName, subFolderName: subK, catName: cat });
+                                                        if (fData.subfolders[subK].videos) {
+                                                            Object.values(fData.subfolders[subK].videos).forEach((v, vIndex) => { searchIndex.push({ type: 'video', stream: sub.id, folderName: folderName, catName: cat, subFolder: subK, title: v.title, videoData: v, index: vIndex }); });
+                                                        }
+                                                    });
+                                                }
                                             }
                                         }
                                     }
                                 }
-                            }
+                            });
                         });
-                    });
-                }
+                    }
+                });
             });
         });
     }
@@ -1295,7 +1229,6 @@
             filteredVideos.forEach((v) => {
                 const originalIndex = currentVideos.findIndex(orig => orig.id === v.id); const thumbUrl = `https://img.youtube.com/vi/${v.id}/mqdefault.jpg`;
                 let pdfBtnHtml = v.pdfLink ? `<div class="pdf-btn" onclick="event.stopPropagation(); window.open('${v.pdfLink}', '_blank')">Download PDF <i class="material-icons">download</i></div>` : "";
-                
                 const safeTitle = v.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
                 resultsGrid.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="playThisVideo(${originalIndex})"><img src="${thumbUrl}" class="video-thumbnail" alt="${safeTitle}"><div class="folder-title">${v.title}</div><div class="folder-count">YouTube Video</div><div class="folder-btn">Watch Now <i class="material-icons">play_circle_filled</i></div>${pdfBtnHtml}</div>`;
             }); return;
@@ -1323,7 +1256,6 @@
                 const thumbUrl = `https://img.youtube.com/vi/${item.videoData.id}/mqdefault.jpg`;
                 let pdfBtnHtml = item.videoData.pdfLink ? `<div class="pdf-btn" onclick="event.stopPropagation(); window.open('${item.videoData.pdfLink}', '_blank')">Download PDF <i class="material-icons">download</i></div>` : "";
                 let folderPathName = item.subFolder ? `${item.folderName} > ${item.subFolder}` : item.folderName;
-                
                 const safeTitle = item.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
                 resultsGrid.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="handleSearchClick(${idx})"><img src="${thumbUrl}" class="video-thumbnail" alt="${safeTitle}"><div class="folder-title">${item.title}</div><div class="folder-count">Folder: ${folderPathName}</div><div class="folder-btn" style="background:var(--primary); color:#ffffff; border:none;">Play Video <i class="material-icons">play_circle_filled</i></div>${pdfBtnHtml}</div>`;
             }
@@ -1338,41 +1270,23 @@
     }
 
     function openStream(type) { 
-        activeStream = type; 
-        streamSessionStartTime = Date.now(); 
-        document.getElementById("catSubTitle").innerText = type.toUpperCase(); 
-        clearSearch('stream'); 
-        updateDashboardStats();
-        showScreen('categoriesScreen'); 
+        activeStream = type; streamSessionStartTime = Date.now(); 
+        document.getElementById("catSubTitle").innerText = type.toUpperCase(); clearSearch('stream'); updateDashboardStats(); showScreen('categoriesScreen'); 
     }
     
     function openCategory(catName) {
-        let actStatsKey = 'activityStats_' + currentUser.id + '_' + activeStream;
-        let actStats = JSON.parse(localStorage.getItem(actStatsKey)) || { Lessons: 0, Papers: 0, Monthly: 0 };
-        actStats[catName] = (actStats[catName] || 0) + 1;
-        localStorage.setItem(actStatsKey, JSON.stringify(actStats));
-        updateDashboardStats();
+        let actStatsKey = 'activityStats_' + currentUser.id + '_' + activeStream; let actStats = JSON.parse(localStorage.getItem(actStatsKey)) || { Lessons: 0, Papers: 0, Monthly: 0 };
+        actStats[catName] = (actStats[catName] || 0) + 1; localStorage.setItem(actStatsKey, JSON.stringify(actStats)); updateDashboardStats();
 
-        activeCatName = catName; 
-        document.getElementById("subTitle").innerText = `${activeStream.toUpperCase()} - ${catName}`; 
-        clearSearch('topic'); showScreen('topicsScreen');
-        
+        activeCatName = catName; document.getElementById("subTitle").innerText = `${activeStream.toUpperCase()} - ${catName}`; clearSearch('topic'); showScreen('topicsScreen');
         if (currentTopicsRef) { currentTopicsRef.off('value'); }
         db.ref(`students/${currentUser.id}/allowedLessons/${activeStream}`).on('value', s => {
-            const allowed = s.val() || {};
-            currentTopicsRef = db.ref(`studyData/${activeStream}/${catName}`);
+            const allowed = s.val() || {}; currentTopicsRef = db.ref(`studyData/${activeStream}/${catName}`);
             currentTopicsRef.on('value', ds => {
                 const lessons = ds.val() || {}; const container = document.getElementById("topicsList"); container.innerHTML = "";
-                let dataArray = []; 
-                for (let name in lessons) { dataArray.push({ name: name, ...lessons[name] }); }
+                let dataArray = []; for (let name in lessons) { dataArray.push({ name: name, ...lessons[name] }); }
                 dataArray.sort((a, b) => (a.order || 0) - (b.order || 0));
-                
-                dataArray.forEach(item => {
-                    let name = item.name;
-                    if (allowed[name]) {
-                        container.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="showVideoListRealtime('${name.replace(/'/g, "\\'")}', '${catName}', false)"><div class="folder-icon-wrap"><i class="material-icons">folder_copy</i></div><div class="folder-title">${name}</div><div class="folder-count">Lessons Folder</div><div class="folder-btn">View Lessons <i class="material-icons">chevron_right</i></div></div>`;
-                    }
-                });
+                dataArray.forEach(item => { let name = item.name; if (allowed[name]) { container.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="showVideoListRealtime('${name.replace(/'/g, "\\'")}', '${catName}', false)"><div class="folder-icon-wrap"><i class="material-icons">folder_copy</i></div><div class="folder-title">${name}</div><div class="folder-count">Lessons Folder</div><div class="folder-btn">View Lessons <i class="material-icons">chevron_right</i></div></div>`; } });
             });
         });
     }
@@ -1381,9 +1295,7 @@
         document.getElementById("lessonTitle").innerText = folderName; const backBtn = document.getElementById("dynamicBackBtn");
         if (isFromSearch) { backBtn.setAttribute('onclick', "showScreen('mainMenuScreen')"); } else { backBtn.setAttribute('onclick', "showScreen('topicsScreen')"); }
         document.getElementById('videoSearch').value = ''; document.getElementById('videoSearchClear').style.display = 'none'; document.getElementById('videoSearchResultsContainer').style.display = 'none'; document.getElementById('multiVideoList').style.display = 'grid';
-        
-        showScreen('playerScreen'); 
-        document.getElementById("videoListContainer").style.display = "block"; document.getElementById("playerSection").style.display = "none"; isPlayingFromHistory = false; isPlayingFromNotification = false;
+        showScreen('playerScreen'); document.getElementById("videoListContainer").style.display = "block"; document.getElementById("playerSection").style.display = "none"; isPlayingFromHistory = false; isPlayingFromNotification = false;
         const list = document.getElementById("multiVideoList"); list.innerHTML = "<div style='color:var(--text-sub); text-align:center; grid-column:1/-1; padding:20px;'>Loading Data...</div>";
         
         if (currentVideosRef) { currentVideosRef.off('value'); }
@@ -1394,9 +1306,7 @@
                 let hasContent = false;
                 if (folderData.subfolders) {
                     hasContent = true;
-                    Object.keys(folderData.subfolders).forEach(subK => {
-                        list.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="openSubFolder('${folderName.replace(/'/g, "\\'")}', '${subK.replace(/'/g, "\\'")}', '${catName}')"><div class="folder-icon-wrap" style="color:var(--primary); background:rgba(37, 99, 235, 0.1);"><i class="material-icons">snippet_folder</i></div><div class="folder-title">${subK}</div><div class="folder-count">Sub Folder</div><div class="folder-btn">විවෘත කරන්න <i class="material-icons">chevron_right</i></div></div>`;
-                    });
+                    Object.keys(folderData.subfolders).forEach(subK => { list.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="openSubFolder('${folderName.replace(/'/g, "\\'")}', '${subK.replace(/'/g, "\\'")}', '${catName}')"><div class="folder-icon-wrap" style="color:var(--primary); background:rgba(37, 99, 235, 0.1);"><i class="material-icons">snippet_folder</i></div><div class="folder-title">${subK}</div><div class="folder-count">Sub Folder</div><div class="folder-btn">විවෘත කරන්න <i class="material-icons">chevron_right</i></div></div>`; });
                 }
                 if (folderData.videos) {
                     hasContent = true;
@@ -1404,9 +1314,7 @@
                     currentVideos.forEach((v, index) => {
                         const thumbUrl = `https://img.youtube.com/vi/${v.id}/mqdefault.jpg`;
                         let pdfBtnHtml = v.pdfLink ? `<div class="pdf-btn" onclick="event.stopPropagation(); window.open('${v.pdfLink}', '_blank')">Download PDF <i class="material-icons">download</i></div>` : "";
-                        
                         const safeTitle = v.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
-
                         list.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="playThisVideo(${index})"><img src="${thumbUrl}" class="video-thumbnail" alt="${safeTitle}"><div class="folder-title">${v.title}</div><div class="folder-count">YouTube Video</div><div class="folder-btn">Watch Now <i class="material-icons">play_circle_filled</i></div>${pdfBtnHtml}</div>`;
                     });
                     if (autoPlayVidId) { const idx = currentVideos.findIndex(v => v.id === autoPlayVidId); if (idx !== -1) { playThisVideo(idx, scrollToChat); autoPlayVidId = null; } }
@@ -1430,9 +1338,7 @@
                 currentVideos.forEach((v, index) => {
                     const thumbUrl = `https://img.youtube.com/vi/${v.id}/mqdefault.jpg`;
                     let pdfBtnHtml = v.pdfLink ? `<div class="pdf-btn" onclick="event.stopPropagation(); window.open('${v.pdfLink}', '_blank')">Download PDF <i class="material-icons">download</i></div>` : "";
-                    
                     const safeTitle = v.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
-
                     list.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="playThisVideo(${index})"><img src="${thumbUrl}" class="video-thumbnail" alt="${safeTitle}"><div class="folder-title">${v.title}</div><div class="folder-count">YouTube Video</div><div class="folder-btn">Watch Now <i class="material-icons">play_circle_filled</i></div>${pdfBtnHtml}</div>`;
                 });
                 if (autoPlayVidId) { const idx = currentVideos.findIndex(v => v.id === autoPlayVidId); if (idx !== -1) { playThisVideo(idx, scrollToChat); autoPlayVidId = null; } }
@@ -1442,60 +1348,27 @@
 
     function markVideoViewed(vidId) {
         if(!currentUser || !activeStream) return;
-        let viewedSetKey = 'viewedSet_' + currentUser.id + '_' + activeStream;
-        let viewedSet = JSON.parse(localStorage.getItem(viewedSetKey) || '[]');
-        if(!viewedSet.includes(vidId)) {
-            viewedSet.push(vidId);
-            localStorage.setItem(viewedSetKey, JSON.stringify(viewedSet));
-            updateDashboardStats();
-        }
+        let viewedSetKey = 'viewedSet_' + currentUser.id + '_' + activeStream; let viewedSet = JSON.parse(localStorage.getItem(viewedSetKey) || '[]');
+        if(!viewedSet.includes(vidId)) { viewedSet.push(vidId); localStorage.setItem(viewedSetKey, JSON.stringify(viewedSet)); updateDashboardStats(); }
     }
 
     function playThisVideo(index, scrollToChat = false) {
         const vid = currentVideos[index]; currentPlayingVideo = { id: vid.id, title: vid.title }; 
         document.getElementById("activeVideoTitle").innerText = vid.title; document.getElementById("videoListContainer").style.display = "none"; document.getElementById("playerSection").style.display = "block"; 
-        isPlayingFromHistory = false; isPlayingFromNotification = false;
-        
-        markVideoViewed(vid.id);
+        isPlayingFromHistory = false; isPlayingFromNotification = false; markVideoViewed(vid.id);
 
-        if (!player) { 
-            player = new YT.Player('player', { 
-                host: 'https://www.youtube-nocookie.com', 
-                videoId: vid.id, 
-                playerVars: { 'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0, 'playsinline': 1, 'iv_load_policy': 3 }, 
-                events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } 
-            }); 
-        } 
-        else { 
-            player.loadVideoById({videoId: vid.id, startSeconds: 0}); 
-            document.getElementById('volSlider').value = player.getVolume(); 
-            updateVolIcon(player.getVolume()); 
-        }
-        
+        if (!player) { player = new YT.Player('player', { host: 'https://www.youtube-nocookie.com', videoId: vid.id, playerVars: { 'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0, 'playsinline': 1, 'iv_load_policy': 3 }, events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } }); } 
+        else { player.loadVideoById({videoId: vid.id, startSeconds: 0}); document.getElementById('volSlider').value = player.getVolume(); updateVolIcon(player.getVolume()); }
         initLiveChat(vid.id, vid.title);
-        
         if (scrollToChat) { setTimeout(() => { const chatSec = document.getElementById('liveChatSection'); if (chatSec) { chatSec.scrollIntoView({ behavior: 'smooth', block: 'center' }); chatSec.style.transition = "box-shadow 0.5s"; chatSec.style.boxShadow = "0 0 25px var(--primary)"; setTimeout(() => { chatSec.style.boxShadow = "var(--glass-shadow)"; }, 2500); } }, 1000); }
     }
 
     function playVideoDirectly(vidId, vidTitle, scrollToChat = true) {
         currentPlayingVideo = { id: vidId, title: vidTitle }; document.getElementById("activeVideoTitle").innerText = vidTitle; document.getElementById("videoListContainer").style.display = "none"; document.getElementById("playerSection").style.display = "block"; 
-        isPlayingFromHistory = false; isPlayingFromNotification = true; showScreen('playerScreen'); 
-        markVideoViewed(vidId); 
+        isPlayingFromHistory = false; isPlayingFromNotification = true; showScreen('playerScreen'); markVideoViewed(vidId); 
 
-        if (!player) { 
-            player = new YT.Player('player', { 
-                host: 'https://www.youtube-nocookie.com', 
-                videoId: vidId, 
-                playerVars: { 'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0, 'playsinline': 1, 'iv_load_policy': 3 }, 
-                events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } 
-            }); 
-        } 
-        else { 
-            player.loadVideoById({videoId: vidId, startSeconds: 0}); 
-            document.getElementById('volSlider').value = player.getVolume(); 
-            updateVolIcon(player.getVolume()); 
-        }
-        
+        if (!player) { player = new YT.Player('player', { host: 'https://www.youtube-nocookie.com', videoId: vidId, playerVars: { 'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0, 'playsinline': 1, 'iv_load_policy': 3 }, events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } }); } 
+        else { player.loadVideoById({videoId: vidId, startSeconds: 0}); document.getElementById('volSlider').value = player.getVolume(); updateVolIcon(player.getVolume()); }
         initLiveChat(vidId, vidTitle);
         if (scrollToChat) { setTimeout(() => { const chatSec = document.getElementById('liveChatSection'); if (chatSec) { chatSec.scrollIntoView({ behavior: 'smooth', block: 'center' }); chatSec.style.transition = "box-shadow 0.5s"; chatSec.style.boxShadow = "0 0 25px var(--primary)"; setTimeout(() => { chatSec.style.boxShadow = "var(--glass-shadow)"; }, 2500); } }, 1000); }
     }
@@ -1504,106 +1377,42 @@
         if (!vid || !player || !activeStream || typeof player.getCurrentTime !== 'function') return;
         const time = player.getCurrentTime(); const dur = player.getDuration();
         if (time < 1 || dur <= 0 || (time / dur) > 0.99) return; 
-        
         const historyKey = 'watchHistory_' + currentUser.id + '_' + activeStream; 
         let history = JSON.parse(localStorage.getItem(historyKey) || '[]');
-        history = history.filter(h => h.id !== vid.id); 
-        history.unshift({ id: vid.id, title: vid.title, time: time, duration: dur, timestamp: Date.now() });
-        if (history.length > 10) history.pop(); 
-        
-        localStorage.setItem(historyKey, JSON.stringify(history));
+        history = history.filter(h => h.id !== vid.id); history.unshift({ id: vid.id, title: vid.title, time: time, duration: dur, timestamp: Date.now() });
+        if (history.length > 10) history.pop(); localStorage.setItem(historyKey, JSON.stringify(history));
     }
 
     function removeHistory(vidId) {
         if (!currentUser || !vidId || !activeStream) return; 
-        const historyKey = 'watchHistory_' + currentUser.id + '_' + activeStream; 
-        let history = JSON.parse(localStorage.getItem(historyKey) || '[]');
-        history = history.filter(h => h.id !== vidId); 
-        localStorage.setItem(historyKey, JSON.stringify(history)); 
-        renderHistory();
+        const historyKey = 'watchHistory_' + currentUser.id + '_' + activeStream; let history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+        history = history.filter(h => h.id !== vidId); localStorage.setItem(historyKey, JSON.stringify(history)); renderHistory();
     }
 
     function renderHistory() {
         if (!currentUser || !activeStream) return;
-        const historyKey = 'watchHistory_' + currentUser.id + '_' + activeStream; 
-        const history = JSON.parse(localStorage.getItem(historyKey) || '[]'); 
-        const historyGrid = document.getElementById('historyGrid');
-        
-        if(document.getElementById('statHistoryCount')) { 
-            document.getElementById('statHistoryCount').innerText = history.length; 
-        }
-
-        if (history.length === 0) { 
-            if (historyGrid) { historyGrid.innerHTML = '<div style="color:var(--text-sub); width:100%; text-align:center; grid-column:1/-1;">නැවත නැරඹීමට වීඩියෝ නොමැත.</div>'; } 
-            return; 
-        }
+        const historyKey = 'watchHistory_' + currentUser.id + '_' + activeStream; const history = JSON.parse(localStorage.getItem(historyKey) || '[]'); const historyGrid = document.getElementById('historyGrid');
+        if(document.getElementById('statHistoryCount')) { document.getElementById('statHistoryCount').innerText = history.length; }
+        if (history.length === 0) { if (historyGrid) { historyGrid.innerHTML = '<div style="color:var(--text-sub); width:100%; text-align:center; grid-column:1/-1;">නැවත නැරඹීමට වීඩියෝ නොමැත.</div>'; } return; }
         
         if (historyGrid) {
             historyGrid.innerHTML = '';
             history.forEach(h => {
-                const prog = h.duration > 0 ? (h.time / h.duration) * 100 : 0; 
-                const thumb = `https://img.youtube.com/vi/${h.id}/mqdefault.jpg`;
-                
-                const safeTitle = h.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
-
-                historyGrid.innerHTML += `
-                <div class="history-card glass-card clickable-card" onclick="resumeHistoryVideo('${h.id}', '${safeTitle}', ${h.time})">
-                    <div class="history-thumb-wrap">
-                        <img src="${thumb}" class="history-thumb">
-                        <div class="history-play-btn"><i class="material-icons">play_arrow</i></div>
-                        <div class="history-progress"><div class="history-progress-fill" style="width: ${prog}%"></div></div>
-                    </div>
-                    <div class="history-info"><div class="history-title">${h.title}</div></div>
-                </div>`;
+                const prog = h.duration > 0 ? (h.time / h.duration) * 100 : 0; const thumb = `https://img.youtube.com/vi/${h.id}/mqdefault.jpg`; const safeTitle = h.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                historyGrid.innerHTML += `<div class="history-card glass-card clickable-card" onclick="resumeHistoryVideo('${h.id}', '${safeTitle}', ${h.time})"><div class="history-thumb-wrap"><img src="${thumb}" class="history-thumb"><div class="history-play-btn"><i class="material-icons">play_arrow</i></div><div class="history-progress"><div class="history-progress-fill" style="width: ${prog}%"></div></div></div><div class="history-info"><div class="history-title">${h.title}</div></div></div>`;
             });
         }
     }
 
     function resumeHistoryVideo(id, title, time) {
-        isPlayingFromHistory = true; 
-        isPlayingFromNotification = false; 
-        resumeTime = parseFloat(time); 
-        currentPlayingVideo = { id: id, title: title }; 
-        document.getElementById("activeVideoTitle").innerText = title;
-        
-        showScreen('playerScreen'); 
-        document.getElementById("videoListContainer").style.display = "none"; 
-        document.getElementById("playerSection").style.display = "block";
-        
-        if (!player) { 
-            player = new YT.Player('player', { 
-                host: 'https://www.youtube-nocookie.com', 
-                videoId: id, 
-                playerVars: { 
-                    'autoplay': 1, 
-                    'controls': 0, 
-                    'modestbranding': 1, 
-                    'rel': 0, 
-                    'playsinline': 1, 
-                    'iv_load_policy': 3,
-                    'start': Math.floor(resumeTime)
-                }, 
-                events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } 
-            }); 
-        } else { 
-            player.loadVideoById({videoId: id, startSeconds: resumeTime}); 
-            document.getElementById('volSlider').value = player.getVolume(); 
-            updateVolIcon(player.getVolume()); 
-            resumeTime = 0; 
-        }
+        isPlayingFromHistory = true; isPlayingFromNotification = false; resumeTime = parseFloat(time); currentPlayingVideo = { id: id, title: title }; document.getElementById("activeVideoTitle").innerText = title;
+        showScreen('playerScreen'); document.getElementById("videoListContainer").style.display = "none"; document.getElementById("playerSection").style.display = "block";
+        if (!player) { player = new YT.Player('player', { host: 'https://www.youtube-nocookie.com', videoId: id, playerVars: { 'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0, 'playsinline': 1, 'iv_load_policy': 3, 'start': Math.floor(resumeTime) }, events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } }); } 
+        else { player.loadVideoById({videoId: id, startSeconds: resumeTime}); document.getElementById('volSlider').value = player.getVolume(); updateVolIcon(player.getVolume()); resumeTime = 0; }
         initLiveChat(id, title);
     }
 
-    function onPlayerReady() { 
-        setInterval(updateUI, 500); 
-        const vol = player.getVolume(); 
-        document.getElementById('volSlider').value = vol; 
-        updateVolIcon(vol); 
-        if (resumeTime > 0) { 
-            player.seekTo(resumeTime, true); 
-            resumeTime = 0; 
-        } 
-    }
+    function onPlayerReady() { setInterval(updateUI, 500); const vol = player.getVolume(); document.getElementById('volSlider').value = vol; updateVolIcon(vol); if (resumeTime > 0) { player.seekTo(resumeTime, true); resumeTime = 0; } }
     
     function onPlayerStateChange(e) {
         const btn = document.getElementById("playPauseBtn");
@@ -1634,34 +1443,24 @@
         if (player && player.getCurrentTime) { 
             var curr = player.getCurrentTime(); var dur = player.getDuration(); document.getElementById("currentTime").innerText = formatTime(curr); document.getElementById("totalDuration").innerText = formatTime(dur);
             if (dur > 0) { document.getElementById("seekBarProgress").style.width = (curr / dur) * 100 + "%"; }
-            
             if (player.getPlayerState() === YT.PlayerState.PLAYING && currentPlayingVideo) { 
                 if ((dur - curr) > 2) { saveHistory(currentPlayingVideo); }
-                // Track Task Completion
-                if ((dur - curr) < 15 && curr > 0) {
-                    checkTaskCompletion(currentPlayingVideo.id);
-                }
+                if ((dur - curr) < 15 && curr > 0) { checkTaskCompletion(currentPlayingVideo.id); }
             }
         } 
     }
-    
     function formatTime(t) { t = Math.round(t); var h = Math.floor(t / 3600); var m = Math.floor((t % 3600) / 60); var s = t % 60; return (h > 0 ? h + ":" : "") + (m < 10 && h > 0 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s; }
 
     function hidePlayer() { 
         if (player) { 
-            if (currentPlayingVideo && player.getPlayerState() !== YT.PlayerState.ENDED) { 
-                const time = player.getCurrentTime(); const dur = player.getDuration(); 
-                if (dur - time > 2) { saveHistory(currentPlayingVideo); } 
-            } 
+            if (currentPlayingVideo && player.getPlayerState() !== YT.PlayerState.ENDED) { const time = player.getCurrentTime(); const dur = player.getDuration(); if (dur - time > 2) { saveHistory(currentPlayingVideo); } } 
             player.pauseVideo(); 
         }
         document.getElementById("playerSection").style.display = "none"; document.getElementById("videoContainer").classList.remove('pseudo-fullscreen'); document.body.classList.remove('pseudo-fs-active');
         const fsIcon = document.getElementById('fsIconBtn'); if (fsIcon) { fsIcon.innerText = 'fullscreen'; } if (document.fullscreenElement) { document.exitFullscreen(); }
-        
         if (isPlayingFromNotification) { isPlayingFromNotification = false; showScreen('categoriesScreen'); } 
         else if (isPlayingFromHistory) { isPlayingFromHistory = false; showScreen('historyScreen'); } 
         else { document.getElementById("videoListContainer").style.display = "block"; }
-        
         if(chatListenerRef) chatListenerRef.off(); document.getElementById('emojiPicker').style.display = 'none';
     }
 
@@ -1675,13 +1474,11 @@
             if(messages) {
                 for(let key in messages) {
                     const msg = messages[key]; const isMe = msg.userId === currentUser.id; const alignment = isMe ? "me" : "other"; const senderName = isMe ? "You" : msg.userName; const timeString = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                    
                     chatBox.innerHTML += `
                     <div class="chat-bubble-wrapper ${alignment}">
                         <div class="chat-sender">${senderName}</div><div class="chat-bubble">${msg.text}</div>
                         <div style="font-size: 9px; color: var(--text-sub); margin-top: 4px; text-align: ${isMe ? 'right' : 'left'}; width: 100%; padding: 0 4px;">${timeString}</div>
                     </div>`;
-
                     if(msg.adminReply) {
                         chatBox.innerHTML += `
                         <div class="chat-bubble-wrapper other" style="margin-top: 5px;">
@@ -1715,10 +1512,7 @@
         if(!currentUser) return;
         if(notifListenerRef) notifListenerRef.off(); notifListenerRef = db.ref(`notifications/${currentUser.id}`);
         let initialLoad = true;
-        notifListenerRef.on('child_added', snap => {
-            if(initialLoad) return; 
-            const notif = snap.val(); showNotificationToast(notif.replyText, notif.vidId, notif.vidTitle);
-        });
+        notifListenerRef.on('child_added', snap => { if(initialLoad) return; const notif = snap.val(); showNotificationToast(notif.replyText, notif.vidId, notif.vidTitle); });
         notifListenerRef.once('value', () => { initialLoad = false; });
     }
 
@@ -1734,53 +1528,22 @@
     // NATIVE BACK BUTTON LOGIC FOR ANDROID (WITH HISTORY API)
     // =======================================================
     window.addEventListener('popstate', function(event) {
-        if (document.getElementById("playerSection") && document.getElementById("playerSection").style.display === "block") { 
-            hidePlayer(); 
-            history.pushState(null, null, location.href); 
-        } else if (document.getElementById("playerScreen") && document.getElementById("playerScreen").classList.contains("active")) { 
-            const backBtn = document.getElementById("dynamicBackBtn"); 
-            if (backBtn) backBtn.click(); 
-            history.pushState(null, null, location.href); 
-        } else if (document.getElementById("tasksScreen") && document.getElementById("tasksScreen").classList.contains("active")) { 
-            showScreen("categoriesScreen", false); 
-            history.pushState(null, null, location.href); 
-        } else if (document.getElementById("topicsScreen") && document.getElementById("topicsScreen").classList.contains("active")) { 
-            showScreen("categoriesScreen", false); 
-            history.pushState(null, null, location.href); 
-        } else if (document.getElementById("categoriesScreen") && document.getElementById("categoriesScreen").classList.contains("active")) { 
-            showScreen("mainMenuScreen", false); 
-            history.pushState(null, null, location.href); 
-        } else if (document.getElementById("historyScreen") && document.getElementById("historyScreen").classList.contains("active")) { 
-            if(document.getElementById("categoriesScreen").classList.contains("active")) {
-                 showScreen("categoriesScreen", false); 
-            } else {
-                 showScreen("mainMenuScreen", false); 
-            }
-            history.pushState(null, null, location.href); 
-        } else if (document.getElementById("mainMenuScreen") && document.getElementById("mainMenuScreen").classList.contains("active")) {
+        if (document.getElementById("playerSection") && document.getElementById("playerSection").style.display === "block") { hidePlayer(); history.pushState(null, null, location.href); } 
+        else if (document.getElementById("playerScreen") && document.getElementById("playerScreen").classList.contains("active")) { const backBtn = document.getElementById("dynamicBackBtn"); if (backBtn) backBtn.click(); history.pushState(null, null, location.href); } 
+        else if (document.getElementById("tasksScreen") && document.getElementById("tasksScreen").classList.contains("active")) { showScreen("categoriesScreen", false); history.pushState(null, null, location.href); } 
+        else if (document.getElementById("topicsScreen") && document.getElementById("topicsScreen").classList.contains("active")) { showScreen("categoriesScreen", false); history.pushState(null, null, location.href); } 
+        else if (document.getElementById("categoriesScreen") && document.getElementById("categoriesScreen").classList.contains("active")) { showScreen("mainMenuScreen", false); history.pushState(null, null, location.href); } 
+        else if (document.getElementById("historyScreen") && document.getElementById("historyScreen").classList.contains("active")) { if(document.getElementById("categoriesScreen").classList.contains("active")) { showScreen("categoriesScreen", false); } else { showScreen("mainMenuScreen", false); } history.pushState(null, null, location.href); } 
+        else if (document.getElementById("mainMenuScreen") && document.getElementById("mainMenuScreen").classList.contains("active")) {
             const now = new Date().getTime();
-            if (now - window.lastBackPress < 2000) {
-                history.back(); // Let Android Exit App
-            } else {
-                window.lastBackPress = now;
-                let exitToast = document.getElementById('exitToast');
-                if(!exitToast){
-                    exitToast = document.createElement('div');
-                    exitToast.id = 'exitToast';
-                    exitToast.style.cssText = "position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.8); color:white; padding:10px 20px; border-radius:20px; z-index:999999; font-size:14px; transition:0.3s; opacity:0; pointer-events:none; white-space:nowrap;";
-                    exitToast.innerText = "ඉවත් වීමට නැවතත් Back ඔබන්න";
-                    document.body.appendChild(exitToast);
-                }
-                exitToast.style.opacity = '1';
-                setTimeout(() => { exitToast.style.opacity = '0'; }, 2000);
-                history.pushState(null, null, location.href);
+            if (now - window.lastBackPress < 2000) { history.back(); } else {
+                window.lastBackPress = now; let exitToast = document.getElementById('exitToast');
+                if(!exitToast){ exitToast = document.createElement('div'); exitToast.id = 'exitToast'; exitToast.style.cssText = "position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.8); color:white; padding:10px 20px; border-radius:20px; z-index:999999; font-size:14px; transition:0.3s; opacity:0; pointer-events:none; white-space:nowrap;"; exitToast.innerText = "ඉවත් වීමට නැවතත් Back ඔබන්න"; document.body.appendChild(exitToast); }
+                exitToast.style.opacity = '1'; setTimeout(() => { exitToast.style.opacity = '0'; }, 2000); history.pushState(null, null, location.href);
             }
-        } else {
-            history.pushState(null, null, location.href);
-        }
+        } else { history.pushState(null, null, location.href); }
     });
 
-    // Fallback for Android WebView if it directly maps window.handleAndroidBack
     window.handleAndroidBack = function() {
         if (document.getElementById("playerSection") && document.getElementById("playerSection").style.display === "block") { hidePlayer(); return true; }
         if (document.getElementById("playerScreen") && document.getElementById("playerScreen").classList.contains("active")) { const backBtn = document.getElementById("dynamicBackBtn"); if (backBtn) backBtn.click(); return true; }
@@ -1791,21 +1554,10 @@
         
         if (document.getElementById("mainMenuScreen") && document.getElementById("mainMenuScreen").classList.contains("active")) {
             const now = new Date().getTime();
-            if (now - (window.lastBackPress || 0) < 2000) {
-                return false; 
-            } else {
-                window.lastBackPress = now;
-                let exitToast = document.getElementById('exitToast');
-                if(!exitToast){
-                    exitToast = document.createElement('div');
-                    exitToast.id = 'exitToast';
-                    exitToast.style.cssText = "position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.8); color:white; padding:10px 20px; border-radius:20px; z-index:999999; font-size:14px; transition:0.3s; opacity:0; pointer-events:none; white-space:nowrap;";
-                    exitToast.innerText = "ඉවත් වීමට නැවතත් Back ඔබන්න";
-                    document.body.appendChild(exitToast);
-                }
-                exitToast.style.opacity = '1';
-                setTimeout(() => { exitToast.style.opacity = '0'; }, 2000);
-                return true; 
+            if (now - (window.lastBackPress || 0) < 2000) { return false; } else {
+                window.lastBackPress = now; let exitToast = document.getElementById('exitToast');
+                if(!exitToast){ exitToast = document.createElement('div'); exitToast.id = 'exitToast'; exitToast.style.cssText = "position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.8); color:white; padding:10px 20px; border-radius:20px; z-index:999999; font-size:14px; transition:0.3s; opacity:0; pointer-events:none; white-space:nowrap;"; exitToast.innerText = "ඉවත් වීමට නැවතත් Back ඔබන්න"; document.body.appendChild(exitToast); }
+                exitToast.style.opacity = '1'; setTimeout(() => { exitToast.style.opacity = '0'; }, 2000); return true; 
             }
         }
         return false;
