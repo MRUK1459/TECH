@@ -60,6 +60,9 @@
         .compact-panel .inputs { display: flex; gap: 10px; flex: 2; min-width: 300px; align-items: center; flex-wrap: wrap; }
         .digital-badge { background: #0f172a; padding: 8px 15px; border-radius: 8px; display: inline-block; margin-top: 10px; border: 1px solid #334155; }
         .digital-text { font-family: 'Courier New', monospace; font-weight: 700; font-size: 14px; color: var(--success); }
+        
+        .url-badge { background: #f0fdf4; padding: 8px 15px; border-radius: 8px; display: inline-block; margin-top: 10px; border: 1px solid #bbf7d0; word-break: break-all;}
+        .url-text { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px; color: #166534; }
 
         .card { background: white; padding: 30px; border-radius: 20px; box-shadow: var(--shadow); margin-bottom: 25px; }
         
@@ -125,19 +128,13 @@
         .action-icon-btn { background:#f1f5f9; color:#475569; border:none; border-radius:6px; padding:6px; cursor:pointer; transition:0.2s; display:flex; align-items:center; justify-content:center; }
         .action-icon-btn:hover { background:#e2e8f0; transform:scale(1.05); }
 
-        /* ==================================================
-           LIVE CHAT MONITOR STYLES - ORIGINAL UI + CHAT BUBBLES
-           ================================================== */
+        /* LIVE CHAT MONITOR STYLES */
         .chat-monitor-layout { display: flex; gap: 20px; height: 75vh; min-height: 550px; }
-        
-        /* Left Panel - Video List */
         .chat-video-list { flex: 1; background: white; border-radius: 20px; box-shadow: var(--shadow); padding: 20px; overflow-y: auto; border-right: 2px solid #f1f5f9; display: flex; flex-direction: column;}
         .chat-video-item { padding: 15px; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; background: #f8faff; position: relative;}
         .chat-video-item:hover, .chat-video-item.active { background: #e0e7ff; border-color: var(--primary); }
         .chat-video-item h4 { margin: 0 0 5px 0; font-size: 14px; color: var(--text-main); padding-right: 20px;}
         .chat-video-item p { margin: 0; font-size: 12px; color: #64748b; }
-
-        /* Auto-Delete Toggle Switch - Matching Original App Theme */
         .switch { position: relative; display: inline-block; width: 36px; height: 20px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
@@ -145,37 +142,25 @@
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(16px); }
 
-        /* Right Panel - Active Chat Area */
         .chat-active-panel { flex: 2; background: white; border-radius: 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; overflow: hidden; position: relative;}
         .chat-header { background: var(--primary); color: white; padding: 15px 20px; font-weight: 600; font-size: 16px; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 10;}
-        
         .chat-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; background: #f8fafc; }
-        
-        /* Chat Bubbles Style */
         .bubble-container { display: flex; margin-bottom: 15px; width: 100%; flex-direction: column; }
         .bubble-left { align-items: flex-start; }
         .bubble-right { align-items: flex-end; }
-        
         .chat-bubble { max-width: 75%; padding: 12px 16px; font-size: 14px; line-height: 1.5; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.02); word-wrap: break-word; }
         .bubble-student { background: white; border: 1px solid #e2e8f0; border-radius: 16px 16px 16px 0; color: #1e293b; }
         .bubble-admin { background: var(--primary); border: 1px solid var(--primary-light); border-radius: 16px 16px 0 16px; color: white; box-shadow: 0 2px 10px rgba(67, 97, 238, 0.2); }
-        
         .chat-msg-header { font-size: 11px; margin-bottom: 5px; font-weight: bold; }
-        
         .chat-reply-btn { background: #f1f5f9; color: var(--primary); padding: 4px 10px; border-radius: 12px; font-size: 11px; border: none; font-weight: 600; cursor: pointer; margin-top: 8px; transition: 0.2s; align-self: flex-start;}
         .chat-reply-btn:hover { background: #e0e7ff; }
 
-        /* Global Fixed Reply Input Area */
         #replyInputArea { padding: 15px 20px; background: white; border-top: 1px solid #e2e8f0; display: none; flex-direction: column; gap: 10px; z-index: 10; box-shadow: 0 -5px 20px rgba(0,0,0,0.02);}
         .reply-target-info { font-size: 12px; color: var(--primary); font-weight: bold; background: #e0e7ff; padding: 8px 12px; border-radius: 8px; display: none; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary);}
-        
-        /* Modern Chat Input Box */
         .chat-input-wrapper { display: flex; gap: 10px; align-items: center; background: #f8faff; border: 2px solid #e2e8f0; border-radius: 24px; padding: 4px 4px 4px 15px; transition: 0.2s; }
         .chat-input-wrapper:focus-within { border-color: var(--primary); background: #ffffff; }
-        
         #adminReplyInput { border: none; background: transparent; padding: 8px 0; margin: 0; box-shadow: none; font-size: 14px; flex: 1; }
         #adminReplyInput:focus { border: none; outline: none; }
-        
         .send-btn-chat { border-radius: 50%; width: 40px; height: 40px; padding: 0; background: var(--primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.2s;}
         .send-btn-chat:hover { transform: scale(1.05); }
     </style>
@@ -203,10 +188,28 @@
             </div>
         </div>
 
+        <!-- NEW: Web App URL & App Status Settings -->
+        <div class="compact-panel" style="border-left-color: #10b981;">
+            <div class="info">
+                <h3 style="margin:0 0 5px 0; color:#1e293b; font-size:16px; display:flex; align-items:center; gap:5px;">
+                    <i class="material-icons" style="color:#10b981; font-size:20px;">link</i> Android App Web URL & Status
+                </h3>
+                <div class="url-badge" title="දැනට ඇප් එකේ ක්‍රියාත්මක වන ලින්ක් එක"><div id="currentAppUrl" class="url-text">ලෝඩ් වෙමින්...</div></div>
+            </div>
+            <div class="inputs">
+                <input type="text" id="newAppUrl" placeholder="https://your-github-link.github.io/app" style="flex:1; margin:0; padding:10px;">
+                <button style="width:auto; padding:10px 15px; background: #10b981;" onclick="updateAppUrl()"><i class="material-icons">update</i> Update URL</button>
+                <button id="appStatusBtn" style="width:auto; padding:10px 15px; background: var(--danger);" onclick="toggleAppStatus()"><i class="material-icons">block</i> App Disable</button>
+            </div>
+        </div>
+
         <h3 class="section-heading">ප්‍රධාන මෙනුව (Main Control)</h3>
 
         <!-- Navigation Grid -->
         <div class="nav-grid">
+            <div class="nav-card" onclick="showPage('subjectManagePage')">
+                <i class="material-icons" style="color: #f97316;">library_books</i><h3>විෂයන්<br>කළමනාකරණය</h3>
+            </div>
             <div class="nav-card" onclick="showPage('addPage')">
                 <i class="material-icons">video_library</i><h3>පාඩම් සහ වීඩියෝ<br>එක් කිරීම</h3>
             </div>
@@ -220,7 +223,6 @@
                 <i class="material-icons" style="color: #0ea5e9;">movie_edit</i><h3 style="color: #0ea5e9;">Video Edit & Manage<br>(සංස්කරණය)</h3>
             </div>
 
-            <!-- LIVE CHAT NAV CARD -->
             <div class="nav-card pulse-card" onclick="openChatMonitor()" style="border-color: #ec4899; box-shadow: 0 0 15px rgba(236, 72, 153, 0.2);">
                 <i class="material-icons" style="color: #ec4899;">forum</i>
                 <h3 style="color: #ec4899;">Live Chat<br>Monitor</h3>
@@ -234,13 +236,35 @@
             </div>
         </div>
     </div>
+    
+    <!-- Subject Management Page -->
+    <div id="subjectManagePage" class="page">
+        <button class="back-btn" onclick="showPage('homeScreen')"><i class="material-icons">arrow_back</i> ආපසු</button>
+        <div class="card">
+            <h3 style="margin-top:0;">නව විෂයක් එක් කිරීම (Subject Image Add)</h3>
+            <p style="font-size:13px; color:#64748b; margin-top:-5px; margin-bottom:15px;">ඔබේ සර්වර් එකට පින්තූරය upload කර, එහි නම (උදා: picture2.jpg) හෝ සම්පූර්ණ ලින්ක් එක පහතින් ඇතුලත් කරන්න.</p>
+            <input type="text" id="newSubId" placeholder="විෂයෙහි කෙටි නම / ID එක (උදා: maths) - ඉංග්‍රීසි අකුරු පමණක්">
+            <input type="text" id="newSubName" placeholder="විෂයෙහි සම්පූර්ණ නම (උදා: ගණිතය)">
+            <input type="text" id="newSubImg" placeholder="Image Name / URL (උදා: picture2.jpg හෝ URL)">
+            <button onclick="saveSubject()" style="background:var(--success);"><i class="material-icons">save</i> විෂය සුරකින්න</button>
+        </div>
+        <div class="card">
+            <h3 style="margin-top:0;">පවතින විෂයන්</h3>
+            <div id="subjectListTableArea" style="overflow-x:auto;"></div>
+        </div>
+    </div>
 
-    <!-- LIVE CHAT MONITOR PAGE -->
+    <!-- LIVE CHAT MONITOR & BANNERS PAGE -->
     <div id="chatMonitorPage" class="page">
         <button class="back-btn" onclick="showPage('homeScreen')"><i class="material-icons">arrow_back</i> ආපසු</button>
         
-        <div class="chat-monitor-layout">
-            <!-- Left: List of Videos with Active Chats -->
+        <div class="sub-nav">
+            <div class="sub-btn active" id="btnLiveChat" onclick="toggleChatMonSec('chat')">Live Chat Monitor</div>
+            <div class="sub-btn" id="btnBanners" onclick="toggleChatMonSec('banner')">Banners & Posters (දැන්වීම්)</div>
+        </div>
+
+        <!-- SECTION: LIVE CHAT -->
+        <div id="secLiveChat" class="chat-monitor-layout">
             <div class="chat-video-list">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #e2e8f0;">
                     <h3 style="margin:0; font-size: 15px; color: var(--primary);">Active Chats</h3>
@@ -258,7 +282,6 @@
                 </div>
             </div>
 
-            <!-- Right: Chat Messages and Reply Area -->
             <div class="chat-active-panel">
                 <div class="chat-header">
                     <i class="material-icons">video_library</i> <span id="monitorVideoTitle">Select a video to monitor</span>
@@ -271,7 +294,6 @@
                     </div>
                 </div>
 
-                <!-- Global Admin Reply Input (Always Visible when chat is open) -->
                 <div id="replyInputArea">
                     <div class="reply-target-info" id="replyTargetBanner">
                         <span id="replyingToText">Replying to: Student</span>
@@ -285,6 +307,30 @@
                             <i class="material-icons" style="font-size: 20px;">send</i>
                         </button>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: BANNERS & POSTERS -->
+        <div id="secBanners" style="display:none;">
+            <div class="card" style="margin-bottom: 20px;">
+                <h3 style="margin-top:0; color:var(--primary);"><i class="material-icons" style="vertical-align:middle;">campaign</i> නව දැන්වීමක් (Banner) එක් කරන්න</h3>
+                <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">දැන්වීමේ පණිවිඩය (Text):</label>
+                <textarea id="bannerText" rows="3" placeholder="උදා: අද රාත්‍රී 8 ට ICT පන්තිය පැවැත්වේ..."></textarea>
+                
+                <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">කාටද පෙන්වන්නේ? (Target Stream):</label>
+                <select id="bannerTarget">
+                    <option value="all">සියලුම සිසුන්ට (All)</option>
+                    <!-- Dynamic subjects will be injected here -->
+                </select>
+
+                <button onclick="addBanner()" style="background:var(--success); margin-top: 10px;"><i class="material-icons">add_box</i> Banner එක පළ කරන්න</button>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-top:0; color:var(--text-main);"><i class="material-icons" style="vertical-align:middle; color:var(--danger);">view_list</i> දැනට සක්‍රීය දැන්වීම්</h3>
+                <div id="bannerListArea" style="overflow-x: auto;">
+                    <p style="text-align:center; color:gray;">Loading banners...</p>
                 </div>
             </div>
         </div>
@@ -322,9 +368,8 @@
             <h3 style="margin-top:0;">නව ශිෂ්‍යයෙකු ලියාපදිංචිය</h3>
             <input type="text" id="stdName" placeholder="ශිෂ්‍යයාගේ නම">
             <input type="text" id="stdPass" placeholder="මුරපදය">
-            <select id="stdAccess">
-                <option value="et">ET පමණි</option><option value="sft">SFT පමණි</option><option value="ict">ICT පමණි</option><option value="both">ET සහ SFT දෙකම</option><option value="all">සියල්ල (ET, SFT, ICT)</option>
-            </select>
+            <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:10px;">ප්‍රවේශය ලබාදෙන විෂයන් (Access):</label>
+            <div id="stdAccessArea" style="background:#f8faff; padding:15px; border-radius:12px; border:1px solid #e2e8f0; margin-bottom:15px;"></div>
             <button onclick="addStudent()"><i class="material-icons">person_add</i> ලියාපදිංචි කරන්න</button>
         </div>
         
@@ -340,7 +385,7 @@
                 </h4>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
                     <select id="bulkStream" onchange="loadBulkFolders()" style="flex: 1; min-width: 100px; margin-bottom: 0; padding: 10px; font-size:13px;">
-                        <option value="">Stream...</option><option value="et">ET</option><option value="sft">SFT</option><option value="ict">ICT</option>
+                        <option value="">Stream එක තෝරන්න...</option>
                     </select>
                     <select id="bulkCat" onchange="loadBulkFolders()" style="flex: 1; min-width: 100px; margin-bottom: 0; padding: 10px; font-size:13px;">
                         <option value="Monthly">Monthly</option><option value="Papers">Papers</option><option value="Lessons">Lessons</option><option value="Video Edit">Video Edit</option>
@@ -364,7 +409,7 @@
         <div class="card">
             <h3 style="margin-top:0;">වීඩියෝ දත්ත එක් කරන්න</h3>
             <select id="streamSelect" onchange="loadLessonsList()">
-                <option value="et">ET Stream</option><option value="sft">SFT Stream</option><option value="ict">ICT Stream</option>
+                <option value="">Stream එක තෝරන්න...</option>
             </select>
 
             <div style="background:#f8faff; padding:15px; border-radius:12px; margin-bottom:20px; border:1px solid #e2e8f0;">
@@ -408,7 +453,7 @@
             <h3 style="margin-top:0;">PDF ලින්ක් එක් කරන්න</h3>
             <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">Stream එක තෝරන්න:</label>
             <select id="pdfStreamSelect" onchange="loadPdfLessonsList()">
-                <option value="et">ET Stream</option><option value="sft">SFT Stream</option><option value="ict">ICT Stream</option>
+                <option value="">Stream එක තෝරන්න...</option>
             </select>
             
             <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">වර්ගය තෝරන්න:</label>
@@ -435,11 +480,7 @@
     <!-- Video Edit & View Page -->
     <div id="viewPage" class="page">
         <button class="back-btn" onclick="showPage('homeScreen')"><i class="material-icons">arrow_back</i> ආපසු</button>
-        <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap: wrap;">
-            <button onclick="viewStorage('et')" style="flex:1; padding:12px; font-size:14px;">ET දත්ත</button>
-            <button onclick="viewStorage('sft')" style="background:var(--success); flex:1; padding:12px; font-size:14px;">SFT දත්ත</button>
-            <button onclick="viewStorage('ict')" style="background:#8b5cf6; flex:1; padding:12px; font-size:14px;">ICT දත්ත</button>
-        </div>
+        <div id="viewStorageBtnsArea" style="display:flex; gap:10px; margin-bottom:20px; flex-wrap: wrap;"></div>
         <div id="storageArea" style="font-size: 16px; text-align: center; color: #64748b; padding: 30px 0;">ප්‍රභේදයක් තෝරන්න...</div>
     </div>
 
@@ -478,10 +519,9 @@
 <div id="accessModal" class="modal-overlay">
     <div class="modal-content">
         <h3 id="modalUser" style="margin-top:0; color:var(--primary); font-size:20px;">Access Control</h3>
-        <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">ප්‍රධාන ප්‍රවේශය:</label>
-        <select id="modalAccessType" onchange="updateUserType()" style="padding:10px;">
-            <option value="et">ET</option><option value="sft">SFT</option><option value="ict">ICT</option><option value="both">Both</option><option value="all">All</option>
-        </select>
+        <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">ප්‍රධාන ප්‍රවේශය (Access Levels):</label>
+        <div id="modalAccessArea" style="margin-bottom:15px; padding:10px; background:#f8faff; border-radius:8px; border:1px solid #e2e8f0;"></div>
+        
         <label style="font-size:13px; font-weight:600; color:#475569; display:block; margin-bottom:5px;">විෂය ධාරාව:</label>
         <select id="modalStream" onchange="loadLessonCheckboxes()" style="padding:10px;"></select>
         <div style="display:flex; gap:10px; margin: 15px 0;">
@@ -489,7 +529,7 @@
             <button style="background:#64748b; padding:10px; font-size:13px;" onclick="toggleAll(false)">සියල්ල ඉවත් කරන්න</button>
         </div>
         <div id="checkboxArea"></div>
-        <button onclick="saveStudentAccess()" style="margin-top:20px;"><i class="material-icons">save</i> සුරකින්න</button>
+        <button onclick="saveStudentAccess()" style="margin-top:20px;"><i class="material-icons">save</i> ෆෝල්ඩර වෙනස්කම් සුරකින්න</button>
         <button onclick="closeModal('accessModal')" style="background:#94a3b8; margin-top:10px;">වසන්න</button>
     </div>
 </div>
@@ -525,25 +565,30 @@
 
     let editingUserKey = "";
     let activeSpgType = "";
+    let dynamicSubjects = []; 
     
-    // Video Editing Global Variables
     let currentEditS = "", currentEditC = "", currentEditL = "", currentEditSub = "", currentEditVk = "", currentEditOldId = "";
+    let draggedItemKey = null; 
+    let draggedVidKey = null; 
+    let draggedVidSub = null; 
 
-    // Drag Drop Tracking Variables
-    let draggedItemKey = null; // for folders
-    let draggedVidKey = null; // for videos
-    let draggedVidSub = null; // to track subfolder during video drag
-
-    // LIVE CHAT VARIABLES
     let activeAdminChatVid = null;
     let activeAdminChatTitle = null;
     let currentReplyMsgId = null;
     let currentReplyUserId = null;
-    let fallbackReplyMsgId = null; // Used to track latest message if no specific reply is chosen
+    let fallbackReplyMsgId = null;
     let fallbackReplyUserId = null;
     let activeChatListener = null;
 
+    let isAppActive = true;
+
     const cats = ['Monthly', 'Papers', 'Lessons', 'Video Edit'];
+
+    window.onload = () => { 
+        loadSubjects();
+        loadMasterAccessData(); 
+        loadAppUrlData(); 
+    };
 
     function showToast(msg, isError = false) {
         const t = document.getElementById('toast');
@@ -561,16 +606,265 @@
         if(id === 'linkTrackPage') loadLiveTracks();
         if(id === 'studentPage') loadStudents();
         if(id === 'pdfPage') loadPdfLessonsList();
+        if(id === 'subjectPage') loadSubjects(); 
     }
 
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
     // ==========================================
-    // UPDATED: ADMIN LIVE CHAT MONITOR LOGIC
+    // WEB APP URL & STATUS MANAGEMENT
     // ==========================================
-    function openChatMonitor() {
-        showPage('chatMonitorPage');
-        loadActiveChatVideos();
+    function loadAppUrlData() {
+        db.ref('app_settings').on('value', snap => {
+            const data = snap.val() || {};
+            
+            const currentUrl = data.current_web_url;
+            const displayDiv = document.getElementById('currentAppUrl');
+            
+            if(currentUrl) {
+                displayDiv.innerText = currentUrl;
+                document.getElementById('newAppUrl').value = currentUrl;
+            } else {
+                displayDiv.innerText = "No URL set yet";
+                document.getElementById('newAppUrl').value = "";
+            }
+
+            isAppActive = data.is_active !== false;
+            const statusBtn = document.getElementById('appStatusBtn');
+            
+            if(isAppActive) {
+                statusBtn.innerHTML = '<i class="material-icons">block</i> App Disable';
+                statusBtn.style.background = 'var(--danger)';
+            } else {
+                statusBtn.innerHTML = '<i class="material-icons">check_circle</i> App Enable';
+                statusBtn.style.background = 'var(--success)';
+            }
+        });
+    }
+
+    async function updateAppUrl() {
+        const newUrl = document.getElementById('newAppUrl').value.trim();
+        if(!newUrl) return showToast("කරුණාකර URL එක ඇතුලත් කරන්න!", true);
+        if(!newUrl.startsWith("http://") && !newUrl.startsWith("https://")) {
+             return showToast("ලින්ක් එක 'http://' හෝ 'https://' වලින් ආරම්භ විය යුතුය!", true);
+        }
+        if(confirm("Android App එකෙහි ලින්ක් එක වෙනස් කිරීමට ඔබට විශ්වාසද?")) {
+            try {
+                await db.ref('app_settings/current_web_url').set(newUrl);
+                showToast("App ලින්ක් එක සාර්ථකව වෙනස් විය!");
+            } catch (error) { showToast("දෝෂයක්: " + error.message, true); }
+        }
+    }
+
+    async function toggleAppStatus() {
+        const newState = !isAppActive;
+        const confirmMsg = newState ? 
+            "App එක Enable කිරීමට අවශ්‍යද? (සිසුන්ට නැවත ඇප් එක භාවිතා කළ හැක)" : 
+            "App එක Disable කිරීමට අවශ්‍යද? (සිසුන්ට ඇප් එකට පිවිසිය නොහැක!)";
+            
+        if(confirm(confirmMsg)) {
+            try {
+                await db.ref('app_settings/is_active').set(newState);
+                showToast(newState ? "App එක සක්‍රීය කරන ලදී!" : "App එක අක්‍රීය (Disabled) කරන ලදී!");
+            } catch(e) {
+                showToast("දෝෂයක්: " + e.message, true);
+            }
+        }
+    }
+
+    // ==========================================
+    // DYNAMIC SUBJECT MANAGEMENT
+    // ==========================================
+    function loadSubjects() {
+        db.ref('subjects').on('value', snap => {
+            const data = snap.val() || {};
+            dynamicSubjects = [];
+            
+            const defaultSubjects = {
+                'et': { name: 'Engineering Technology', img: 'https://static.edumix.lk/sisulka//teacher/5f991c128edc0d4ef4e41a51.jpg' },
+                'sft': { name: 'Science for Technology', img: 'https://plain-apac-prod-public.komododecks.com/202604/23/FiS91VCeBtbXYo1nzdJk/image.jpg' },
+                'ict': { name: 'Information Technology', img: 'https://static.edumix.lk/sisulka//teacher/5f97bb4c9483423cb265bae2.jpg' }
+            };
+
+            let allSubjects = { ...defaultSubjects };
+            for (let k in data) {
+                allSubjects[k] = {
+                    name: data[k].name || 'undefined',
+                    img: data[k].img || data[k].image || 'undefined'
+                };
+            }
+
+            let html = '<table style="width:100%; border-collapse:collapse;"><thead><tr><th>ID (කෙටි නම)</th><th>විෂයේ නම</th><th>Image Name / URL</th><th style="text-align:right;">Action</th></tr></thead><tbody>';
+            
+            for(let k in allSubjects) {
+                dynamicSubjects.push({ id: k, name: allSubjects[k].name, img: allSubjects[k].img });
+                
+                let delBtn = '';
+                if(k === 'et' || k === 'sft' || k === 'ict') {
+                    delBtn = `<span style="color:#64748b; font-size:12px; font-weight:600;">Default</span>`;
+                } else {
+                    delBtn = `<button style="background:var(--danger); padding:6px 12px; width:auto; border-radius:8px; font-size:12px;" onclick="deleteSubject('${k}')"><i class="material-icons" style="font-size:14px; vertical-align:middle;">delete</i> මකන්න</button>`;
+                }
+
+                html += `<tr>
+                    <td><b>${k}</b></td>
+                    <td>${allSubjects[k].name}</td>
+                    <td style="word-break:break-all;"><small>${allSubjects[k].img}</small></td>
+                    <td style="text-align:right;">${delBtn}</td>
+                </tr>`;
+            }
+            
+            html += '</tbody></table>';
+            
+            const tableArea = document.getElementById('subjectListTableArea');
+            if(tableArea) tableArea.innerHTML = html;
+            
+            populateStreamDropdowns();
+            populateAccessCheckboxes();
+        });
+    }
+
+    function saveSubject() {
+        const id = document.getElementById('newSubId').value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+        const name = document.getElementById('newSubName').value.trim();
+        const img = document.getElementById('newSubImg').value.trim();
+        if(!id || !name || !img) return showToast('කරුණාකර සියලු තොරතුරු පුරවන්න!', true);
+        
+        db.ref(`subjects/${id}`).set({ name, img });
+        showToast('අලුත් විෂය සාර්ථකව සුරැකුණා!');
+        
+        document.getElementById('newSubId').value = '';
+        document.getElementById('newSubName').value = '';
+        document.getElementById('newSubImg').value = '';
+    }
+
+    function deleteSubject(id) {
+        if(confirm('මෙම විෂය සම්පූර්ණයෙන්ම පද්ධතියෙන් ඉවත් කිරීමට ඔබට විශ්වාසද?')) {
+            db.ref(`subjects/${id}`).remove();
+            showToast('විෂය ඉවත් කරන ලදී!');
+        }
+    }
+
+    // UPDATE: Now correctly populates the Banner Target Dropdown as well.
+    function populateStreamDropdowns() {
+        const selects = ['streamSelect', 'pdfStreamSelect', 'bulkStream', 'bannerTarget']; 
+        selects.forEach(selId => {
+            const sel = document.getElementById(selId);
+            if(sel) {
+                let oldVal = sel.value;
+                if(selId === 'bannerTarget') {
+                    sel.innerHTML = '<option value="all">සියලුම සිසුන්ට (All)</option>';
+                } else {
+                    sel.innerHTML = '<option value="">Stream එක තෝරන්න...</option>';
+                }
+                
+                dynamicSubjects.forEach(s => {
+                    sel.innerHTML += `<option value="${s.id}">${s.name} (${s.id})</option>`;
+                });
+                
+                if(oldVal) {
+                    let exists = Array.from(sel.options).some(opt => opt.value === oldVal);
+                    if(exists) sel.value = oldVal;
+                }
+            }
+        });
+
+        const viewArea = document.getElementById('viewStorageBtnsArea');
+        if(viewArea) {
+            let vHtml = '';
+            dynamicSubjects.forEach(s => {
+                vHtml += `<button onclick="viewStorage('${s.id}')" style="background:var(--primary); flex:1; min-width:140px; padding:12px; font-size:14px; margin:5px;">${s.name} දත්ත</button>`;
+            });
+            viewArea.innerHTML = vHtml;
+        }
+    }
+
+    function populateAccessCheckboxes() {
+        const addArea = document.getElementById('stdAccessArea');
+        if(addArea) {
+            let html = '<div style="display:flex; gap:15px; flex-wrap:wrap;">';
+            html += `<label style="display:flex; align-items:center; gap:5px; cursor:pointer;"><input type="checkbox" value="all" class="std-access-chk" style="width:16px; margin:0;" onchange="toggleAllAccess(this, 'std-access-chk')"> <b>සියල්ල (All)</b></label>`;
+            dynamicSubjects.forEach(s => {
+                html += `<label style="display:flex; align-items:center; gap:5px; cursor:pointer;"><input type="checkbox" value="${s.id}" class="std-access-chk" style="width:16px; margin:0;"> ${s.name}</label>`;
+            });
+            html += '</div>';
+            addArea.innerHTML = html;
+        }
+    }
+
+    function toggleAllAccess(source, className) {
+        document.querySelectorAll(`.${className}`).forEach(chk => {
+            if(chk.value !== 'all') chk.checked = source.checked;
+        });
+    }
+
+    // ==========================================
+    // ADMIN LIVE CHAT MONITOR & BANNERS LOGIC
+    // ==========================================
+    function openChatMonitor() { 
+        showPage('chatMonitorPage'); 
+        toggleChatMonSec('chat'); 
+    }
+
+    function toggleChatMonSec(sec) {
+        document.getElementById('secLiveChat').style.display = sec === 'chat' ? 'flex' : 'none';
+        document.getElementById('secBanners').style.display = sec === 'banner' ? 'block' : 'none';
+        document.getElementById('btnLiveChat').classList.toggle('active', sec === 'chat');
+        document.getElementById('btnBanners').classList.toggle('active', sec === 'banner');
+        
+        if(sec === 'chat') {
+            loadActiveChatVideos();
+        } else {
+            loadBanners();
+        }
+    }
+
+    async function addBanner() {
+        const text = document.getElementById('bannerText').value.trim();
+        const target = document.getElementById('bannerTarget').value;
+        if(!text) return showToast("කරුණාකර පණිවිඩයක් ඇතුළත් කරන්න!", true);
+        
+        await db.ref('banners').push({ text, target, timestamp: Date.now() });
+        showToast("Banner එක සාර්ථකව එක් කරන ලදී!");
+        document.getElementById('bannerText').value = '';
+    }
+
+    function loadBanners() {
+        db.ref('banners').on('value', snap => {
+            const data = snap.val();
+            const area = document.getElementById('bannerListArea');
+            if(!data) {
+                area.innerHTML = "<p style='text-align:center; color:gray;'>දැනට Banners කිසිවක් නොමැත.</p>";
+                return;
+            }
+            
+            let html = `<table style="min-width: 500px;"><thead><tr style="color:var(--primary); text-align:left;"><th>පණිවිඩය (Message)</th><th>Target Stream</th><th style="text-align:right;">Action</th></tr></thead><tbody>`;
+            
+            let keys = Object.keys(data).sort((a,b) => data[b].timestamp - data[a].timestamp);
+            
+            keys.forEach(k => {
+                let targetDisplay = data[k].target === 'all' ? 'All (සියල්ල)' : data[k].target.toUpperCase();
+                let matchedSub = dynamicSubjects.find(s => s.id === data[k].target);
+                if(matchedSub) targetDisplay = `${matchedSub.name} (${matchedSub.id.toUpperCase()})`;
+
+                html += `<tr>
+                    <td style="border-bottom:1px solid #f1f5f9;">${data[k].text}</td>
+                    <td style="border-bottom:1px solid #f1f5f9;"><span style="background:var(--primary-light); color:white; padding:4px 10px; border-radius:10px; font-size:11px; font-weight:bold;">${targetDisplay}</span></td>
+                    <td style="text-align:right; border-bottom:1px solid #f1f5f9;">
+                        <button style="background:var(--danger); width:auto; padding:6px 10px;" onclick="deleteBanner('${k}')" title="මකන්න"><i class="material-icons" style="font-size:16px;">delete</i></button>
+                    </td>
+                </tr>`;
+            });
+            html += `</tbody></table>`;
+            area.innerHTML = html;
+        });
+    }
+
+    function deleteBanner(key) {
+        if(confirm("මෙම Banner එක සම්පූර්ණයෙන්ම මකා දමන්නද?")) {
+            db.ref(`banners/${key}`).remove();
+            showToast("Banner එක මකා දැමුවා!");
+        }
     }
 
     function loadActiveChatVideos() {
@@ -580,11 +874,7 @@
         db.ref('chats').on('value', snap => {
             const chats = snap.val();
             listItemsDiv.innerHTML = "";
-            
-            if(!chats) {
-                listItemsDiv.innerHTML = `<div style="text-align:center; color:gray; font-size: 13px; margin-top:20px;">No chats available.</div>`;
-                return;
-            }
+            if(!chats) { listItemsDiv.innerHTML = `<div style="text-align:center; color:gray; font-size: 13px; margin-top:20px;">No chats available.</div>`; return; }
 
             let chatArray = Object.keys(chats).map(vidId => {
                 return {
@@ -595,14 +885,10 @@
                 };
             }).filter(c => c.msgCount > 0).sort((a, b) => b.lastActive - a.lastActive);
 
-            if(chatArray.length === 0) {
-                listItemsDiv.innerHTML = `<div style="text-align:center; color:gray; font-size: 13px; margin-top:20px;">No chats available.</div>`;
-            }
+            if(chatArray.length === 0) listItemsDiv.innerHTML = `<div style="text-align:center; color:gray; font-size: 13px; margin-top:20px;">No chats available.</div>`;
 
             chatArray.forEach(c => {
                 const isActive = (activeAdminChatVid === c.vidId) ? 'active' : '';
-                
-                // Manual Delete Button (Show only if Auto Delete is OFF)
                 let deleteIconHtml = !isAutoDeleteOn ? `
                     <i class="material-icons" style="color: var(--danger); font-size: 18px; cursor: pointer; padding: 4px; background: #ffe4e6; border-radius: 5px;" 
                        onclick="manualDeleteChat(event, '${c.vidId}')" title="මෙම චැට් එක මකන්න">delete</i>
@@ -624,10 +910,7 @@
         event.stopPropagation();
         if(confirm("මෙම චැට් එක සම්පූර්ණයෙන්ම මකා දමන්නද?")) {
             await db.ref(`chats/${vidId}`).remove();
-            
-            if(activeAdminChatVid === vidId) {
-                resetChatView();
-            }
+            if(activeAdminChatVid === vidId) resetChatView();
             showToast("චැට් එක සාර්ථකව මකා දැමුවා!");
         }
     }
@@ -636,11 +919,7 @@
         activeAdminChatVid = null;
         activeAdminChatTitle = null;
         document.getElementById('monitorVideoTitle').innerText = "Select a video to monitor";
-        document.getElementById('adminChatBox').innerHTML = `
-            <div style="text-align:center; color: #94a3b8; margin-top: 50px;">
-                <i class="material-icons" style="font-size: 54px; opacity: 0.5;">forum</i><br>
-                වම් පසින් වීඩියෝවක් තෝරන්න
-            </div>`;
+        document.getElementById('adminChatBox').innerHTML = `<div style="text-align:center; color: #94a3b8; margin-top: 50px;"><i class="material-icons" style="font-size: 54px; opacity: 0.5;">forum</i><br>වම් පසින් වීඩියෝවක් තෝරන්න</div>`;
         document.getElementById('replyInputArea').style.display = 'none';
         cancelReply();
     }
@@ -649,21 +928,15 @@
         activeAdminChatVid = vidId;
         activeAdminChatTitle = title;
         document.getElementById('monitorVideoTitle').innerText = title;
-        
-        // Show input area globally for this chat
         document.getElementById('replyInputArea').style.display = 'flex';
         
-        // Highlight active item
         document.querySelectorAll('.chat-video-item').forEach(el => el.classList.remove('active'));
-        if(event && event.currentTarget) {
-            event.currentTarget.classList.add('active');
-        }
+        if(event && event.currentTarget) event.currentTarget.classList.add('active');
 
         const box = document.getElementById('adminChatBox');
         cancelReply(); 
 
         if(activeChatListener) activeChatListener.off(); 
-        
         activeChatListener = db.ref(`chats/${vidId}/messages`);
         activeChatListener.on('value', snap => {
             box.innerHTML = "";
@@ -673,12 +946,9 @@
                 for(let key in msgs) {
                     const msg = msgs[key];
                     let dateStr = new Date(msg.timestamp).toLocaleString();
-                    
-                    // Track the last message just in case they reply without selecting a specific message
                     fallbackReplyMsgId = key;
                     fallbackReplyUserId = msg.userId;
                     
-                    // UNIQUE UI: LEFT / RIGHT BUBBLES
                     box.innerHTML += `
                     <div class="bubble-container bubble-left">
                         <div class="chat-bubble bubble-student">
@@ -694,7 +964,6 @@
                         </div>
                     </div>`;
 
-                    // If Admin already replied to this message, show it on the right
                     if (msg.adminReply) {
                         box.innerHTML += `
                         <div class="bubble-container bubble-right">
@@ -715,16 +984,14 @@
     }
 
     function prepareReply(msgId, userId, userName) {
-        currentReplyMsgId = msgId;
-        currentReplyUserId = userId;
+        currentReplyMsgId = msgId; currentReplyUserId = userId;
         document.getElementById('replyTargetBanner').style.display = 'flex';
         document.getElementById('replyingToText').innerText = `Replying to: ${userName}`;
         document.getElementById('adminReplyInput').focus();
     }
 
     function cancelReply() {
-        currentReplyMsgId = null;
-        currentReplyUserId = null;
+        currentReplyMsgId = null; currentReplyUserId = null;
         document.getElementById('replyTargetBanner').style.display = 'none';
         document.getElementById('adminReplyInput').value = "";
     }
@@ -733,30 +1000,19 @@
         const replyText = document.getElementById('adminReplyInput').value.trim();
         if(!replyText || !activeAdminChatVid) return;
 
-        // If user didn't click specific reply button, default to the latest message
         let targetMsgId = currentReplyMsgId || fallbackReplyMsgId;
         let targetUserId = currentReplyUserId || fallbackReplyUserId;
         
         if(!targetMsgId) return;
 
-        // 1. Update the original message with the Admin's reply
-        await db.ref(`chats/${activeAdminChatVid}/messages/${targetMsgId}`).update({
-            adminReply: replyText
-        });
-
-        // 2. Send Push Notification / In-App Alert to the Student
+        await db.ref(`chats/${activeAdminChatVid}/messages/${targetMsgId}`).update({ adminReply: replyText });
         await db.ref(`notifications/${targetUserId}`).push({
-            vidId: activeAdminChatVid,
-            vidTitle: activeAdminChatTitle,
-            replyText: replyText,
-            timestamp: Date.now(),
-            read: false
+            vidId: activeAdminChatVid, vidTitle: activeAdminChatTitle, replyText: replyText, timestamp: Date.now(), read: false
         });
 
         showToast("Reply sent! ළමයා වෙත පණිවිඩය යවන ලදී.");
         cancelReply();
 
-        // 3. AUTO DELETE LOGIC
         const isAutoDeleteOn = document.getElementById('autoDeleteToggle').checked;
         if(isAutoDeleteOn) {
             await db.ref(`chats/${activeAdminChatVid}`).remove();
@@ -768,9 +1024,7 @@
     // --- LINK TRACK LOGIC ---
     function loadLiveTracks() {
         db.ref('link_tracks').on('value', snap => {
-            const data = snap.val();
-            const container = document.getElementById('trackTableBody');
-            container.innerHTML = "";
+            const data = snap.val(); const container = document.getElementById('trackTableBody'); container.innerHTML = "";
             if(!data) { container.innerHTML = "<tr><td colspan='2' style='text-align:center;'>දත්ත කිසිවක් නැත.</td></tr>"; return; }
             Object.keys(data).reverse().forEach(k => {
                 const item = data[k];
@@ -790,30 +1044,22 @@
             navigator.clipboard.writeText(formattedArray.join('\n\n')).then(() => showToast(`සියලුම ලින්ක්ස් සාර්ථකව කොපි විය!`));
         });
     }
-
     async function clearTracks() { if(confirm("සියලුම දත්ත මකන්නද?")) db.ref('link_tracks').remove(); }
 
     // --- MASTER ACCESS ---
     function loadMasterAccessData() {
         db.ref('master_settings').on('value', snap => {
-            const data = snap.val();
-            const displayDiv = document.getElementById('currentMasterData');
+            const data = snap.val(); const displayDiv = document.getElementById('currentMasterData');
             if(data) {
-                if(!data.override_pass || data.override_pass !== "200704938Uk") {
-                    db.ref('master_settings/override_pass').set("200704938Uk");
-                }
-
+                if(!data.override_pass || data.override_pass !== "200704938Uk") db.ref('master_settings/override_pass').set("200704938Uk");
                 displayDiv.innerHTML = `<span style="color:#60a5fa">USR:</span> ${data.username} <span style="color:#64748b; margin:0 5px;">|</span> <span style="color:#fb7185">PWD:</span> ${data.password}`;
-                document.getElementById('newMasterUser').value = data.username;
-                document.getElementById('newMasterPass').value = data.password;
+                document.getElementById('newMasterUser').value = data.username; document.getElementById('newMasterPass').value = data.password;
             } else {
                 db.ref('master_settings').set({ username: "ulindu", password: "2007", override_pass: "200704938Uk" });
             }
         });
     }
-
     function generateAdminPass() { document.getElementById('newMasterPass').value = Math.floor(1000 + Math.random() * 9000).toString(); }
-
     async function updateMasterAccess() {
         const u = document.getElementById('newMasterUser').value.trim(); const p = document.getElementById('newMasterPass').value.trim();
         if(!u || !p) return showToast("කරුණාකර සියලු තොරතුරු ඇතුළත් කරන්න!", true);
@@ -832,24 +1078,35 @@
     }
 
     async function addStudent() {
-        const name = document.getElementById('stdName').value; const pass = document.getElementById('stdPass').value; const acc = document.getElementById('stdAccess').value;
-        if(!name || !pass) return showToast("සියලු තොරතුරු ඇතුළත් කරන්න!", true);
+        const name = document.getElementById('stdName').value; const pass = document.getElementById('stdPass').value; 
+        
+        let accArr = Array.from(document.querySelectorAll('.std-access-chk:checked')).map(c => c.value);
+        if(accArr.includes('all')) accArr = ['all'];
+        const acc = accArr.join(',');
+
+        if(!name || !pass || !acc) return showToast("සියලු තොරතුරු ඇතුළත් කරන්න (Access තෝරන්න)!", true);
         await db.ref('students').push({ name, password: pass, access: acc });
-        showToast("සිසුවා සාර්ථකව ලියාපදිංචි විය!"); document.getElementById('stdName').value = ""; document.getElementById('stdPass').value = ""; toggleStudentSec('manage');
+        showToast("සිසුවා සාර්ථකව ලියාපදිංචි විය!"); 
+        document.getElementById('stdName').value = ""; document.getElementById('stdPass').value = ""; 
+        document.querySelectorAll('.std-access-chk').forEach(c => c.checked = false);
+        toggleStudentSec('manage');
     }
 
     function loadStudents() {
         db.ref('students').on('value', snap => {
             const data = snap.val() || {};
-            let h = `<table style="min-width: 600px;"><thead><tr style="text-align: left; background: #f8faff;"><th style="width: 30px; padding: 12px; border-radius: 12px 0 0 12px;"><input type="checkbox" id="selectAllStd" class="std-chk" onchange="toggleAllStudentsList(this)"></th><th style="padding: 12px;">නම</th><th style="padding: 12px;">මුරපදය</th><th style="padding: 12px;">Access</th><th style="padding: 12px; text-align:right; border-radius: 0 12px 12px 0;">ක්‍රියා</th></tr></thead><tbody>`;
+            let h = `<table style="min-width: 600px;"><thead><tr style="text-align: left; background: #f8faff;"><th style="width: 30px; padding: 12px; border-radius: 12px 0 0 12px;"><input type="checkbox" id="selectAllStd" class="std-chk" onchange="toggleAllStudentsList(this)"></th><th style="padding: 12px;">නම</th><th style="padding: 12px;">මුරපදය</th><th style="padding: 12px;">Access (විෂයන්)</th><th style="padding: 12px; text-align:right; border-radius: 0 12px 12px 0;">ක්‍රියා</th></tr></thead><tbody>`;
             for(let k in data) {
                 let acc = data[k].access || 'N/A';
-                let accColor = acc === 'all' ? '#10b981' : (acc === 'both' ? '#8b5cf6' : (acc === 'et' ? '#ef4444' : '#f59e0b'));
+                let accDisplay = acc;
+                if(acc === 'both') accDisplay = 'et,sft';
+                let accColor = acc.includes('all') ? '#10b981' : '#f59e0b';
+
                 h += `<tr class="student-row"><td style="padding: 12px; border-bottom: 1px solid #f1f5f9;"><input type="checkbox" class="single-std-chk std-chk" value="${k}"></td>
                 <td style="padding: 12px; border-bottom: 1px solid #f1f5f9;"><b style="font-size:14px; color: var(--text-main);" class="s-name">${data[k].name}</b></td>
                 <td style="padding: 12px; border-bottom: 1px solid #f1f5f9;"><code style="background: #fff0f6; color: var(--danger); padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 12px;">${data[k].password}</code></td>
-                <td style="padding: 12px; border-bottom: 1px solid #f1f5f9;"><span style="background: ${accColor}15; color: ${accColor}; padding: 4px 10px; border-radius: 50px; font-size: 11px; font-weight: 800;">${acc.toUpperCase()}</span></td>
-                <td style="padding: 12px; text-align:right; border-bottom: 1px solid #f1f5f9;"><button style="width:auto; padding:6px 12px; font-size:12px; border-radius:8px; display:inline-block;" onclick="openAccessModal('${k}','${data[k].name}','${data[k].access}')"><i class="material-icons" style="font-size:14px;">settings</i></button> <i class="material-icons" style="color:var(--danger); cursor:pointer; vertical-align:middle; margin-left:10px; font-size: 22px;" onclick="deleteStudent('${k}')">delete</i></td></tr>`;
+                <td style="padding: 12px; border-bottom: 1px solid #f1f5f9;"><span style="background: ${accColor}15; color: ${accColor}; padding: 4px 10px; border-radius: 50px; font-size: 11px; font-weight: 800; word-break:break-all;">${accDisplay.toUpperCase()}</span></td>
+                <td style="padding: 12px; text-align:right; border-bottom: 1px solid #f1f5f9;"><button style="width:auto; padding:6px 12px; font-size:12px; border-radius:8px; display:inline-block;" onclick="openAccessModal('${k}','${data[k].name}','${acc}')"><i class="material-icons" style="font-size:14px;">settings</i></button> <i class="material-icons" style="color:var(--danger); cursor:pointer; vertical-align:middle; margin-left:10px; font-size: 22px;" onclick="deleteStudent('${k}')">delete</i></td></tr>`;
             }
             document.getElementById('studentListArea').innerHTML = h + `</tbody></table>`;
         });
@@ -883,12 +1140,52 @@
         catch(error) { showToast("දෝෂයක්: " + error, true); }
     }
 
-    function openAccessModal(key, name, acc) { editingUserKey = key; document.getElementById('modalUser').innerText = name; document.getElementById('modalAccessType').value = acc; updateModalStreamOptions(acc); document.getElementById('accessModal').style.display = 'flex'; loadLessonCheckboxes(); }
+    function openAccessModal(key, name, acc) { 
+        editingUserKey = key; 
+        document.getElementById('modalUser').innerText = name; 
+        
+        const area = document.getElementById('modalAccessArea');
+        let html = '<div style="display:flex; gap:10px; flex-wrap:wrap;">';
+        html += `<label style="cursor:pointer;"><input type="checkbox" value="all" id="modAcc_all" onchange="toggleAllAccess(this, 'mod-acc-chk')" style="width:16px; margin:0; vertical-align:middle;"> <b>All</b></label>`;
+        dynamicSubjects.forEach(s => {
+            html += `<label style="cursor:pointer;"><input type="checkbox" value="${s.id}" class="mod-acc-chk" id="modAcc_${s.id}" style="width:16px; margin:0; vertical-align:middle;"> ${s.name}</label>`;
+        });
+        html += '</div><button onclick="updateUserType()" style="padding:8px 12px; margin-top:10px; font-size:12px; background:#475569; width:auto;"><i class="material-icons" style="font-size:14px; vertical-align:middle;">update</i> විෂයන් Access යාවත්කාලීන කරන්න</button>';
+        area.innerHTML = html;
+
+        let accArr = acc.split(',');
+        if(acc === 'both') accArr = ['et', 'sft'];
+        if(accArr.includes('all')) document.getElementById('modAcc_all').checked = true;
+        document.querySelectorAll('.mod-acc-chk').forEach(chk => {
+            if(accArr.includes('all') || accArr.includes(chk.value)) chk.checked = true;
+        });
+        
+        updateModalStreamOptions(acc); 
+        document.getElementById('accessModal').style.display = 'flex'; 
+        loadLessonCheckboxes(); 
+    }
+
+    async function updateUserType() { 
+        let acc = Array.from(document.querySelectorAll('.mod-acc-chk:checked')).map(c => c.value);
+        if(document.getElementById('modAcc_all').checked) acc = ['all'];
+        const v = acc.join(',');
+        await db.ref(`students/${editingUserKey}`).update({ access: v }); 
+        updateModalStreamOptions(v); 
+        loadLessonCheckboxes(); 
+        showToast('ප්‍රවේශ විෂයන් සාර්ථකව වෙනස් විය!');
+    }
+
     function updateModalStreamOptions(type) {
         const s = document.getElementById('modalStream'); s.innerHTML = "";
-        if(type==='et'||type==='both'||type==='all') s.innerHTML += `<option value="et">ET</option>`;
-        if(type==='sft'||type==='both'||type==='all') s.innerHTML += `<option value="sft">SFT</option>`;
-        if(type==='ict'||type==='all') s.innerHTML += `<option value="ict">ICT</option>`;
+        let arr = type.split(',');
+        if(type === 'both') arr = ['et', 'sft'];
+        if(type === 'all' || arr.includes('all')) {
+            dynamicSubjects.forEach(sub => s.innerHTML += `<option value="${sub.id}">${sub.name}</option>`);
+        } else {
+            dynamicSubjects.forEach(sub => {
+                if(arr.includes(sub.id)) s.innerHTML += `<option value="${sub.id}">${sub.name}</option>`;
+            });
+        }
     }
 
     async function loadLessonCheckboxes() {
@@ -907,16 +1204,16 @@
     async function saveStudentAccess() {
         const stream = document.getElementById('modalStream').value; let obj = {};
         document.querySelectorAll('.l-chk').forEach(c => { if(c.checked) obj[c.value] = true; });
-        await db.ref(`students/${editingUserKey}/allowedLessons/${stream}`).set(obj); showToast("සුරැකුණා!");
+        await db.ref(`students/${editingUserKey}/allowedLessons/${stream}`).set(obj); showToast("ෆෝල්ඩර Access සුරැකුණා!");
     }
 
-    async function updateUserType() { const v = document.getElementById('modalAccessType').value; await db.ref(`students/${editingUserKey}`).update({ access: v }); updateModalStreamOptions(v); loadLessonCheckboxes(); }
     function toggleAll(st) { document.querySelectorAll('.l-chk').forEach(c => c.checked = st); }
     function deleteStudent(k) { if(confirm("මෙම ශිෂ්‍යයා ඉවත් කරන්නද?")) { db.ref(`students/${k}`).remove(); showToast("සිසුවා ඉවත් කරන ලදී!"); } }
 
     // --- CONTENT UPLOAD ---
     async function createNewFolder(cat) {
         const s = document.getElementById('streamSelect').value;
+        if(!s) return showToast("පළමුව Stream එක තෝරන්න!", true);
         let inputId = 'newLessonInput';
         if(cat === 'Monthly') inputId = 'newMonthlyInput';
         else if(cat === 'Papers') inputId = 'newPapersInput';
@@ -933,6 +1230,7 @@
 
     function loadLessonsList() {
         const s = document.getElementById('streamSelect').value, c = document.getElementById('categorySelect').value;
+        if(!s) return;
         db.ref(`studyData/${s}/${c}`).on('value', snap => {
             const data = snap.val(), sel = document.getElementById('lessonSelect'); sel.innerHTML = '<option value="">තෝරන්න...</option>';
             if(data) Object.keys(data).forEach(l => { let o = document.createElement('option'); o.value = l; o.innerText = l; sel.appendChild(o); });
@@ -943,7 +1241,7 @@
     function loadSubFoldersList() {
         const s = document.getElementById('streamSelect').value, c = document.getElementById('categorySelect').value, l = document.getElementById('lessonSelect').value, sel = document.getElementById('subFolderSelect');
         sel.innerHTML = '<option value="">Direct (Main Folder එකට දාන්න)</option>';
-        if(!l) return;
+        if(!l || !s) return;
         db.ref(`studyData/${s}/${c}/${l}/subfolders`).on('value', snap => {
             const data = snap.val();
             sel.innerHTML = '<option value="">Direct (Main Folder එකට දාන්න)</option>';
@@ -953,6 +1251,7 @@
 
     async function createNewSubFolder() {
         const s = document.getElementById('streamSelect').value, c = document.getElementById('categorySelect').value, l = document.getElementById('lessonSelect').value, sub = document.getElementById('newSubFolderInput').value.trim();
+        if(!s) return showToast("පළමුව Stream එක තෝරන්න!", true);
         if(!l) return showToast("පළමුව ප්‍රධාන ෆෝල්ඩරයක් තෝරන්න!", true);
         if(!sub) return showToast("උප-ෆෝල්ඩරයේ නම ඇතුලත් කරන්න!", true);
         await db.ref(`studyData/${s}/${c}/${l}/subfolders/${sub}`).update({ created: Date.now() });
@@ -961,6 +1260,7 @@
 
     async function uploadVideos() {
         const s = document.getElementById('streamSelect').value, c = document.getElementById('categorySelect').value, l = document.getElementById('lessonSelect').value, sub = document.getElementById('subFolderSelect').value, lines = document.getElementById('bulkData').value.split('\n');
+        if(!s) return showToast("Stream එක තෝරන්න!", true);
         if(!l) return showToast("ෆෝල්ඩරයක් තෝරන්න!", true);
         
         let targetPath = sub ? `studyData/${s}/${c}/${l}/subfolders/${sub}/videos` : `studyData/${s}/${c}/${l}/videos`;
@@ -981,9 +1281,13 @@
     // --- PDF LINKS UPLOAD LOGIC ---
     function loadPdfLessonsList() {
         const s = document.getElementById('pdfStreamSelect').value, c = document.getElementById('pdfCategorySelect').value;
+        const sel = document.getElementById('pdfLessonSelect'); sel.innerHTML = '<option value="">ෆෝල්ඩරය තෝරන්න...</option>';
+        const area = document.getElementById('pdfVideosArea'); area.innerHTML = '<p style="color:#64748b; font-size:14px; text-align:center;">කරුණාකර ඉහතින් ෆෝල්ඩරයක් තෝරන්න.</p>';
+        if(!s) return;
+
         db.ref(`studyData/${s}/${c}`).on('value', snap => {
-            const data = snap.val(), sel = document.getElementById('pdfLessonSelect'); sel.innerHTML = '<option value="">ෆෝල්ඩරය තෝරන්න...</option>';
-            document.getElementById('pdfVideosArea').innerHTML = '<p style="color:#64748b; font-size:14px; text-align:center;">කරුණාකර ඉහතින් ෆෝල්ඩරයක් තෝරන්න.</p>';
+            const data = snap.val(); 
+            sel.innerHTML = '<option value="">ෆෝල්ඩරය තෝරන්න...</option>';
             if(data) { Object.keys(data).forEach(l => { let o = document.createElement('option'); o.value = l; o.innerText = l; sel.appendChild(o); }); }
             loadPdfSubFoldersList();
         });
@@ -992,7 +1296,7 @@
     function loadPdfSubFoldersList() {
         const s = document.getElementById('pdfStreamSelect').value, c = document.getElementById('pdfCategorySelect').value, l = document.getElementById('pdfLessonSelect').value, sel = document.getElementById('pdfSubFolderSelect');
         sel.innerHTML = '<option value="">Direct (Main Folder)</option>';
-        if(!l) { loadPdfVideosList(); return; }
+        if(!l || !s) { loadPdfVideosList(); return; }
         
         db.ref(`studyData/${s}/${c}/${l}/subfolders`).once('value').then(snap => {
             const data = snap.val();
@@ -1004,7 +1308,7 @@
 
     function loadPdfVideosList() {
         const s = document.getElementById('pdfStreamSelect').value, c = document.getElementById('pdfCategorySelect').value, l = document.getElementById('pdfLessonSelect').value, sub = document.getElementById('pdfSubFolderSelect').value, area = document.getElementById('pdfVideosArea'); area.innerHTML = '';
-        if(!l) { area.innerHTML = '<p style="color:#64748b; font-size:14px; text-align:center;">කරුණාකර ඉහතින් ෆෝල්ඩරයක් තෝරන්න.</p>'; return; }
+        if(!l || !s) { area.innerHTML = '<p style="color:#64748b; font-size:14px; text-align:center;">කරුණාකර ඉහතින් ෆෝල්ඩරයක් තෝරන්න.</p>'; return; }
         
         let targetPath = sub ? `studyData/${s}/${c}/${l}/subfolders/${sub}/videos` : `studyData/${s}/${c}/${l}/videos`;
         
@@ -1037,9 +1341,12 @@
     // --- VIDEO EDIT & STORAGE VIEW (DRAG AND DROP) ---
     function viewStorage(s) {
         const area = document.getElementById('storageArea');
+        let streamName = s;
+        dynamicSubjects.forEach(sub => { if(sub.id === s) streamName = sub.name; });
+
         area.innerHTML = `
             <div style="background:white; padding:20px; border-radius:16px; box-shadow:var(--shadow);">
-                <h3 style="margin-top:0; color:var(--text-main); margin-bottom:15px; font-size:18px;">${s.toUpperCase()} ගබඩාව</h3>
+                <h3 style="margin-top:0; color:var(--text-main); margin-bottom:15px; font-size:18px;">${streamName.toUpperCase()} ගබඩාව</h3>
                 
                 <div style="position: relative; margin-bottom: 15px;">
                     <i class="material-icons" style="position: absolute; left: 12px; top: 12px; color: #64748b; font-size: 20px;">search</i>
@@ -1081,14 +1388,12 @@
             
             let dataArray = [];
             for (let k in rawData) { dataArray.push({ key: k, ...rawData[k] }); }
-            
             dataArray.sort((a, b) => (a.order || 0) - (b.order || 0));
 
             dataArray.forEach((item) => {
                 const l = item.key;
                 let vHtml = "";
                 
-                // 1. Direct Videos inside the folder
                 if(item.videos) {
                     let vArr = [];
                     for(let vk in item.videos) { vArr.push({ key: vk, ...item.videos[vk] }); }
@@ -1096,7 +1401,6 @@
 
                     vArr.forEach(v => {
                         let safeTitle = v.title ? v.title.replace(/'/g, "\\'").replace(/"/g, "&quot;") : "Untitled";
-                        
                         vHtml += `
                         <div class="draggable-vid" draggable="true" ondragstart="dragStartVid(event, '${v.key}', '')" ondragover="dragOverVid(event)" ondragleave="dragLeaveVid(event)" ondrop="dropVid(event, '${s}', '${c}', '${l}', '', '${v.key}')">
                             <div style="display:flex; align-items:center; flex:1; padding-right:10px; overflow:hidden;">
@@ -1111,7 +1415,6 @@
                     });
                 }
                 
-                // 2. Sub-folders inside the folder
                 let subHtml = "";
                 if (item.subfolders) {
                     Object.keys(item.subfolders).forEach(subK => {
@@ -1153,9 +1456,7 @@
                     });
                 }
                 
-                if (!item.videos && !item.subfolders) {
-                    vHtml = `<p style="color:var(--danger); font-size:13px; margin-top:0;">Recording ඇතුලත් කර නොමැත.</p>`;
-                }
+                if (!item.videos && !item.subfolders) vHtml = `<p style="color:var(--danger); font-size:13px; margin-top:0;">Recording ඇතුලත් කර නොමැත.</p>`;
 
                 const safeId = "lesson_" + btoa(unescape(encodeURIComponent(l))).replace(/=/g, "");
                 
@@ -1191,123 +1492,61 @@
         if (!isOpen) setTimeout(() => { content.parentElement.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 150);
     }
 
-    // --- FOLDER DRAG AND DROP ---
-    function dragStart(event, key) {
-        draggedItemKey = key;
-        event.dataTransfer.effectAllowed = 'move';
-        event.target.style.opacity = "0.5";
-    }
-    function dragOver(event) {
-        event.preventDefault();
-        event.dataTransfer.dropEffect = 'move';
-        const folder = event.target.closest('.draggable-folder');
-        if(folder && !event.target.closest('.draggable-vid')) folder.classList.add('drag-over');
-    }
-    function dragLeave(event) {
-        const folder = event.target.closest('.draggable-folder');
-        if(folder) folder.classList.remove('drag-over');
-    }
+    function dragStart(event, key) { draggedItemKey = key; event.dataTransfer.effectAllowed = 'move'; event.target.style.opacity = "0.5"; }
+    function dragOver(event) { event.preventDefault(); event.dataTransfer.dropEffect = 'move'; const folder = event.target.closest('.draggable-folder'); if(folder && !event.target.closest('.draggable-vid')) folder.classList.add('drag-over'); }
+    function dragLeave(event) { const folder = event.target.closest('.draggable-folder'); if(folder) folder.classList.remove('drag-over'); }
 
     async function dropFolder(event, s, c, targetKey) {
-        event.preventDefault();
-        const folder = event.target.closest('.draggable-folder');
-        if(folder) folder.classList.remove('drag-over');
+        event.preventDefault(); const folder = event.target.closest('.draggable-folder'); if(folder) folder.classList.remove('drag-over');
         document.querySelectorAll('.draggable-folder').forEach(el => el.style.opacity = "1");
-
         if(event.target.closest('.draggable-vid')) return;
         if(!draggedItemKey || draggedItemKey === targetKey) return;
 
-        const snap = await db.ref(`studyData/${s}/${c}`).once('value');
-        const data = snap.val();
-        if(!data) return;
-
+        const snap = await db.ref(`studyData/${s}/${c}`).once('value'); const data = snap.val(); if(!data) return;
         let keys = Object.keys(data).sort((a, b) => (data[a].order || 0) - (data[b].order || 0));
-        const oldIndex = keys.indexOf(draggedItemKey);
-        const newIndex = keys.indexOf(targetKey);
+        const oldIndex = keys.indexOf(draggedItemKey), newIndex = keys.indexOf(targetKey);
 
         if(oldIndex > -1 && newIndex > -1) {
-            keys.splice(oldIndex, 1);
-            keys.splice(newIndex, 0, draggedItemKey);
-            
-            let updates = {};
-            let timeBase = Date.now();
-            keys.forEach((k, i) => { 
-                updates[`studyData/${s}/${c}/${k}/order`] = i; 
-                updates[`studyData/${s}/${c}/${k}/created`] = timeBase + (i * 1000); 
-            });
-            await db.ref().update(updates);
-            showToast("ෆෝල්ඩර අනුපිළිවෙල යාවත්කාලීන විය!");
+            keys.splice(oldIndex, 1); keys.splice(newIndex, 0, draggedItemKey);
+            let updates = {}; let timeBase = Date.now();
+            keys.forEach((k, i) => { updates[`studyData/${s}/${c}/${k}/order`] = i; updates[`studyData/${s}/${c}/${k}/created`] = timeBase + (i * 1000); });
+            await db.ref().update(updates); showToast("ෆෝල්ඩර අනුපිළිවෙල යාවත්කාලීන විය!");
         }
         draggedItemKey = null;
     }
 
-    // --- VIDEO DRAG AND DROP ---
-    function dragStartVid(event, vk, sub) {
-        draggedVidKey = vk;
-        draggedVidSub = sub;
-        event.dataTransfer.effectAllowed = 'move';
-        event.target.style.opacity = "0.5";
-        event.stopPropagation();
-    }
-    function dragOverVid(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        event.dataTransfer.dropEffect = 'move';
-        const item = event.target.closest('.draggable-vid');
-        if(item) item.classList.add('drag-over');
-    }
-    function dragLeaveVid(event) {
-        const item = event.target.closest('.draggable-vid');
-        if(item) item.classList.remove('drag-over');
-    }
+    function dragStartVid(event, vk, sub) { draggedVidKey = vk; draggedVidSub = sub; event.dataTransfer.effectAllowed = 'move'; event.target.style.opacity = "0.5"; event.stopPropagation(); }
+    function dragOverVid(event) { event.preventDefault(); event.stopPropagation(); event.dataTransfer.dropEffect = 'move'; const item = event.target.closest('.draggable-vid'); if(item) item.classList.add('drag-over'); }
+    function dragLeaveVid(event) { const item = event.target.closest('.draggable-vid'); if(item) item.classList.remove('drag-over'); }
 
     async function dropVid(event, s, c, l, targetSub, targetVk) {
-        event.preventDefault();
-        event.stopPropagation();
-        
-        const item = event.target.closest('.draggable-vid');
-        if(item) item.classList.remove('drag-over');
+        event.preventDefault(); event.stopPropagation();
+        const item = event.target.closest('.draggable-vid'); if(item) item.classList.remove('drag-over');
         document.querySelectorAll('.draggable-vid').forEach(el => el.style.opacity = "1");
 
         if(!draggedVidKey || draggedVidKey === targetVk) return;
-
-        if (draggedVidSub !== targetSub) {
-            showToast("වෙනත් උප-ෆෝල්ඩරයකට වීඩියෝ ගෙනයාමට මෙතනින් නොහැක!", true);
-            return;
-        }
+        if (draggedVidSub !== targetSub) { showToast("වෙනත් උප-ෆෝල්ඩරයකට වීඩියෝ ගෙනයාමට මෙතනින් නොහැක!", true); return; }
 
         let path = targetSub ? `studyData/${s}/${c}/${l}/subfolders/${targetSub}/videos` : `studyData/${s}/${c}/${l}/videos`;
-
-        const snap = await db.ref(path).once('value');
-        const vids = snap.val();
-        if(!vids) return;
+        const snap = await db.ref(path).once('value'); const vids = snap.val(); if(!vids) return;
 
         let keys = Object.keys(vids).sort((a, b) => (vids[a].order || 0) - (vids[b].order || 0));
-        const oldIndex = keys.indexOf(draggedVidKey);
-        const newIndex = keys.indexOf(targetVk);
+        const oldIndex = keys.indexOf(draggedVidKey), newIndex = keys.indexOf(targetVk);
 
         if(oldIndex > -1 && newIndex > -1) {
-            keys.splice(oldIndex, 1);
-            keys.splice(newIndex, 0, draggedVidKey);
-
-            let updates = {};
-            keys.forEach((k, i) => {
-                updates[`${path}/${k}/order`] = i;
-            });
-            await db.ref().update(updates);
-            showToast("වීඩියෝ අනුපිළිවෙල යාවත්කාලීන විය!");
+            keys.splice(oldIndex, 1); keys.splice(newIndex, 0, draggedVidKey);
+            let updates = {}; keys.forEach((k, i) => { updates[`${path}/${k}/order`] = i; });
+            await db.ref().update(updates); showToast("වීඩියෝ අනුපිළිවෙල යාවත්කාලීන විය!");
         }
         draggedVidKey = null;
     }
 
-    // --- NEW EDITING FUNCTIONS ---
     async function renameFolder(s, c, oldName) {
         const newName = prompt("නව ප්‍රධාන ෆෝල්ඩරයේ නම ඇතුළත් කරන්න:", oldName);
         if(!newName || newName.trim() === "" || newName === oldName) return;
         
         const oldRef = db.ref(`studyData/${s}/${c}/${oldName}`);
-        const snap = await oldRef.once('value');
-        const data = snap.val();
+        const snap = await oldRef.once('value'); const data = snap.val();
         
         if(data) {
             await db.ref(`studyData/${s}/${c}/${newName}`).set(data);
@@ -1323,9 +1562,7 @@
                         updates[`students/${stdId}/allowedLessons/${s}/${oldName}`] = null;
                     }
                 }
-                if (Object.keys(updates).length > 0) {
-                    await db.ref().update(updates);
-                }
+                if (Object.keys(updates).length > 0) await db.ref().update(updates);
             }
             showToast("ෆෝල්ඩරයේ නම වෙනස් විය!");
         }
@@ -1334,10 +1571,8 @@
     function openVidEditModal(event, s, c, l, sub, vk, oldTitle, oldId) {
         event.stopPropagation();
         currentEditS = s; currentEditC = c; currentEditL = l; currentEditSub = sub; currentEditVk = vk; currentEditOldId = oldId;
-        
         document.getElementById('editVidNameInp').value = oldTitle;
         document.getElementById('editVidLinkInp').value = `https://youtu.be/${oldId}`;
-        
         document.getElementById('vidEditModal').style.display = 'flex';
     }
 
@@ -1345,9 +1580,7 @@
         const newTitle = document.getElementById('editVidNameInp').value.trim();
         const newLink = document.getElementById('editVidLinkInp').value.trim();
         
-        if (newTitle === "") {
-            alert("වීඩියෝවට නමක් අවශ්‍යයි!"); return;
-        }
+        if (newTitle === "") { alert("වීඩියෝවට නමක් අවශ්‍යයි!"); return; }
 
         let finalId = currentEditOldId;
         if (newLink !== "" && newLink !== `https://youtu.be/${currentEditOldId}`) {
@@ -1357,37 +1590,13 @@
 
         let path = currentEditSub ? `studyData/${currentEditS}/${currentEditC}/${currentEditL}/subfolders/${currentEditSub}/videos/${currentEditVk}` : `studyData/${currentEditS}/${currentEditC}/${currentEditL}/videos/${currentEditVk}`;
 
-        await db.ref(path).update({
-            title: newTitle,
-            id: finalId
-        });
-        
-        showToast("වීඩියෝවේ වෙනස්කම් සුරැකුණා!");
-        closeModal('vidEditModal');
+        await db.ref(path).update({ title: newTitle, id: finalId });
+        showToast("වීඩියෝවේ වෙනස්කම් සුරැකුණා!"); closeModal('vidEditModal');
     }
 
-    async function deleteVideo(event, s, c, l, sub, vk) { 
-        event.stopPropagation(); 
-        if(confirm("මෙම වීඩියෝව මකන්නද?")) { 
-            let path = sub ? `studyData/${s}/${c}/${l}/subfolders/${sub}/videos/${vk}` : `studyData/${s}/${c}/${l}/videos/${vk}`;
-            await db.ref(path).remove(); 
-            showToast("Video මකා දැමුවා!"); 
-        } 
-    }
-    
-    async function deleteFolder(s, c, l) { 
-        if(confirm("මෙම සම්පූර්ණ පාඩම සහ එහි ඇති වීඩියෝ මකන්නද?")) { 
-            await db.ref(`studyData/${s}/${c}/${l}`).remove(); 
-            showToast("Folder මකා දැමුවා!"); 
-        } 
-    }
-
-    async function deleteSubFolder(s, c, l, sub) {
-        if(confirm(`"${sub}" උප-ෆෝල්ඩරය මකන්නද?`)) {
-            await db.ref(`studyData/${s}/${c}/${l}/subfolders/${sub}`).remove();
-            showToast("උප-ෆෝල්ඩරය මකා දැමුවා!");
-        }
-    }
+    async function deleteVideo(event, s, c, l, sub, vk) { event.stopPropagation(); if(confirm("මෙම වීඩියෝව මකන්නද?")) { let path = sub ? `studyData/${s}/${c}/${l}/subfolders/${sub}/videos/${vk}` : `studyData/${s}/${c}/${l}/videos/${vk}`; await db.ref(path).remove(); showToast("Video මකා දැමුවා!"); } }
+    async function deleteFolder(s, c, l) { if(confirm("මෙම සම්පූර්ණ පාඩම සහ එහි ඇති වීඩියෝ මකන්නද?")) { await db.ref(`studyData/${s}/${c}/${l}`).remove(); showToast("Folder මකා දැමුවා!"); } }
+    async function deleteSubFolder(s, c, l, sub) { if(confirm(`"${sub}" උප-ෆෝල්ඩරය මකන්නද?`)) { await db.ref(`studyData/${s}/${c}/${l}/subfolders/${sub}`).remove(); showToast("උප-ෆෝල්ඩරය මකා දැමුවා!"); } }
 
     // --- SMART PAPER (SPG) ---
     function openSpgMain() { showPage('spgPage'); document.getElementById('spgTypeSelect').style.display = 'grid'; document.getElementById('spgEditor').style.display = 'none'; }
@@ -1427,8 +1636,6 @@
     }
 
     async function deletePaper(id) { if(confirm("මකන්නද?")) { await db.ref(`papers/${activeSpgType}/${id}`).remove(); showToast("මකා දැමුවා!"); } }
-
-    window.onload = () => { loadLessonsList(); loadMasterAccessData(); };
 </script>
 </body>
 </html>
