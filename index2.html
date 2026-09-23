@@ -53,9 +53,6 @@
         .nav-card:hover i { transform: scale(1.05); }
         .nav-card h3 { font-size: 15px; line-height: 1.4; margin: 0; font-weight: 600; color: var(--text-main); }
 
-        .pulse-card { border: 1px dashed var(--danger); }
-        .pulse-card i { background: #ffe4e6; color: var(--danger); }
-
         /* General Card & Inputs */
         .card { background: white; padding: 30px; border-radius: 16px; box-shadow: var(--shadow); margin-bottom: 25px; border: 1px solid var(--border-color); }
         
@@ -85,9 +82,17 @@
             width: auto; background: white; color: var(--text-main); padding: 10px 20px; 
             margin-bottom: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid var(--border-color); font-size: 14px; border-radius: 10px;
         }
+
+        /* Mobile specific styling for 2 columns grid and hiding back btn */
         @media (max-width: 768px) {
             .back-btn { display: none !important; }
             .chat-monitor-layout { height: calc(100vh - 100px) !important; }
+            
+            /* 2 Columns Mobile Grid */
+            .nav-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .nav-card { padding: 15px 10px; }
+            .nav-card i { font-size: 32px; padding: 12px; margin-bottom: 10px; }
+            .nav-card h3 { font-size: 12px; }
         }
 
         .sub-nav { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; background: #f1f5f9; padding: 6px; border-radius: 12px; width: fit-content; }
@@ -246,11 +251,12 @@
             <div class="nav-card" onclick="showPage('viewPage')">
                 <i class="material-icons" style="color: #0ea5e9;">movie_edit</i><h3>Video Edit & Manage</h3>
             </div>
-            <div class="nav-card pulse-card" onclick="openChatMonitor()">
-                <i class="material-icons">forum</i><h3>Live Chat Monitor</h3>
+            <!-- STANDARD CARDS FOR LIVE CHAT AND BANNERS -->
+            <div class="nav-card" onclick="showPage('chatMonitorPage')">
+                <i class="material-icons" style="color: #ec4899;">forum</i><h3>Live Chat Monitor</h3>
             </div>
-            <div class="nav-card" onclick="showPage('bannersPage')" style="border-color: #ec4899;">
-                <i class="material-icons" style="color: #ec4899;">campaign</i><h3 style="color: #ec4899;">Banners & Posters</h3>
+            <div class="nav-card" onclick="showPage('bannersPage')">
+                <i class="material-icons" style="color: #f43f5e;">campaign</i><h3>Banners & Posters</h3>
             </div>
             <div class="nav-card" onclick="openSpgMain()">
                 <i class="material-icons" style="color: #f59e0b;">psychology</i><h3>Smart Paper (SPG)</h3>
@@ -400,6 +406,7 @@
         
         <!-- Manage Active Students -->
         <div id="secStdManage">
+            <!-- Active Students Count -->
             <div style="font-size:14px; color:var(--text-muted); margin-bottom:10px; font-weight:600;">
                 <i class="material-icons" style="vertical-align:middle; font-size:18px;">group</i> Active Students Count: <span id="activeStudentCount" style="color:var(--primary);">0</span>
             </div>
@@ -448,7 +455,7 @@
 
     <!-- FULL PAGE: Student Profile Details & Access Settings -->
     <div id="studentProfileFullPage" class="page">
-        <button class="back-btn" onclick="showPage('studentPage')"><i class="material-icons">arrow_back</i> සිසුන්ගේ ලැයිස්තුවට</button>
+        <button class="back-btn" onclick="goBackOrHome()"><i class="material-icons">arrow_back</i> ආපසු</button>
         
         <div class="card" style="border-top: 5px solid var(--primary); padding-bottom: 20px;">
             <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:20px;">
@@ -970,7 +977,7 @@
                     box.innerHTML += `
                     <div class="bubble-container bubble-left">
                         <div class="chat-bubble bubble-student">
-                            <div class="chat-msg-header" style="color: #0284c7;">
+                            <div class="chat-msg-header">
                                 ${msg.userName}
                             </div>
                             <div style="color: var(--text-main);">
