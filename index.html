@@ -225,10 +225,10 @@
         .folder-title { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; word-break: break-word; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-align: left; min-height: 34px; width: 100%; line-height: 1.3; }
         .folder-count { font-size: 12px; color: var(--text-sub); margin-bottom: 10px; font-weight: 500; }
         
-        .folder-btn { width: 100%; padding: 10px; background: var(--folder-btn-bg); color: var(--folder-btn-text); border-radius: 10px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; transition: all 0.3s ease; margin-top: auto; border: 1px solid var(--border-color); }
+        .folder-btn { width: 100%; padding: 10px; background: var(--folder-btn-bg); color: var(--folder-btn-text); border-radius: 10px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; transition: all 0.3s ease; margin-top: auto; border: 1px solid var(--border-color); cursor: pointer;}
         .folder-card:hover .folder-btn { background: var(--primary); color: #ffffff; box-shadow: 0 5px 15px var(--glass-glow); border-color: transparent; }
-        .pdf-btn { width: 100%; padding: 10px; background: #10b981; color: #ffffff; border-radius: 10px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; transition: all 0.3s ease; margin-top: 8px; border: 1px solid var(--border-color); }
-        .pdf-btn:hover { background: #059669; box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4); border-color: transparent; transform: translateY(-2px); }
+        .pdf-btn { width: 100%; padding: 10px; background: #10b981; color: #ffffff; border-radius: 10px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; transition: all 0.3s ease; margin-top: 8px; border: 1px solid var(--border-color); cursor: pointer; }
+        .pdf-btn:hover { box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4); transform: translateY(-2px); }
 
         .search-wrapper { max-width: 1200px; margin: 0 auto 30px; padding: 0 10px; position: relative; box-sizing: border-box; }
         .search-input { width: 100%; padding: 16px 45px 16px 50px; margin-bottom: 0; border-radius: 20px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: var(--text-main); font-size: 15px; box-shadow: var(--glass-shadow); transition: all 0.3s ease; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="%23a1a1aa" height="26" viewBox="0 0 24 24" width="26"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>'); background-repeat: no-repeat; background-position: 18px center; box-sizing: border-box; }
@@ -237,7 +237,7 @@
         .search-clear { position: absolute; right: 25px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-sub); display: none; transition: color 0.3s; font-size: 20px; padding: 5px; background: var(--glass-bg); border-radius: 50%; }
 
         /* ==================================================
-           BANNERS SLIDER CSS - UPGRADED GLOSSY & GLOWING 
+           BANNERS SLIDER CSS
            ================================================== */
         .banner-slide {
             min-width: 100%; background: linear-gradient(135deg, rgba(37, 99, 235, 0.25) 0%, rgba(29, 78, 216, 0.15) 100%); border: 2px solid rgba(96, 165, 250, 0.5);
@@ -392,62 +392,32 @@
         function crashAndExit() {
             if (isCrashing) return;
             isCrashing = true;
-            
-            // වෙබ් අඩවිය සම්පූර්ණයෙන්ම හිස් කර ක්‍රෑෂ් කිරීම
             document.documentElement.innerHTML = "";
-            // ඉතිහාසය මකා දමා වෙනත් පිටුවකට ක්ෂණිකව යොමු කිරීම
             window.location.replace("https://www.google.com");
         }
 
-        // 1. Zoom-Proof Resize Detection (Zoom කිරීමේදී එන ගැටලුව නිරාකරණය කර ඇත)
         function detectDocked() {
             const threshold = 160;
             const zoom = window.devicePixelRatio || 1;
-            
-            // False positive වැලැක්වීම සඳහා
             if (window.outerWidth === 0 || window.outerHeight === 0) return;
-
-            // Zoom level එකට අනුව Width/Height ගණනය කිරීම
             const widthDiff = window.outerWidth - (window.innerWidth * zoom);
             const heightDiff = window.outerHeight - (window.innerHeight * zoom);
-
-            // DevTools Right හෝ Bottom විවෘත වූ සැණින් අල්ලා ගැනීම
-            if (widthDiff > threshold || heightDiff > threshold) {
-                crashAndExit();
-            }
+            if (widthDiff > threshold || heightDiff > threshold) { crashAndExit(); }
         }
 
-        // 2. Console Open Detection (Undocked/Floating DevTools ක්ෂණිකව අල්ලා ගැනීම)
         const devtoolsDetector = new Image();
-        Object.defineProperty(devtoolsDetector, 'id', {
-            get: function() {
-                crashAndExit();
-                return 'x';
-            }
-        });
+        Object.defineProperty(devtoolsDetector, 'id', { get: function() { crashAndExit(); return 'x'; } });
 
-        // 3. Debugger Time-Lag Trap (අවසාන ආරක්ෂාව)
         function detectDebugger() {
             const start = new Date().getTime();
             debugger;
             const end = new Date().getTime();
-            if (end - start > 100) {
-                crashAndExit();
-            }
+            if (end - start > 100) { crashAndExit(); }
         }
 
-        // සෑම මිලි තත්පර 500කට වරක් මෙම ක්‍රම 3ම පරීක්ෂා කිරීම
-        setInterval(() => {
-            detectDocked();
-            console.log(devtoolsDetector); // DevTools Console එක Open නම් ක්‍රියාත්මක වේ
-            console.clear();
-            detectDebugger();
-        }, 500);
-
-        // DevTools ඕපන් කරන මොහොතේම Resize හරහා ක්ෂණිකව ක්‍රියාත්මක වීමට 
+        setInterval(() => { detectDocked(); console.log(devtoolsDetector); console.clear(); detectDebugger(); }, 500);
         window.addEventListener('resize', detectDocked);
     })();
-    // ==========================================
 
     (function() {
         const savedTheme = localStorage.getItem('portalTheme');
@@ -544,7 +514,7 @@
     <div id="historyGrid" class="history-grid" style="max-width:1200px; margin:0 auto; padding: 0 10px;"></div>
 </div>
 
-<!-- ==================== TASKS SCREEN (With Filters & Search) ==================== -->
+<!-- ==================== TASKS SCREEN ==================== -->
 <div id="tasksScreen" class="screen">
     <div onclick="showScreen('categoriesScreen')" class="back-btn-ui" style="max-width:1200px; margin:0 auto; padding: 10px;">
         <i class="material-icons">arrow_back</i> <span>Back to Dashboard</span>
@@ -556,7 +526,6 @@
         ඔබට අද දින සම්පූර්ණ කිරීමට අවශ්‍ය වීඩියෝ මෙතැනින් තෝරන්න. අදාල වීඩියෝව සම්පූර්ණයෙන්ම නරඹා අවසන් වූ පසු එය ස්වයංක්‍රීයව Completed ලෙස සටහන් වේ.
     </div>
 
-    <!-- Category Filter -->
     <div style="display:flex; gap:10px; max-width:1200px; margin: 0 auto 15px; padding: 0 10px; overflow-x:auto;">
         <button id="taskCat_All" class="task-cat-btn active" onclick="filterTaskCat('All')">All Tasks</button>
         <button id="taskCat_Lessons" class="task-cat-btn" onclick="filterTaskCat('Lessons')">Lessons</button>
@@ -564,7 +533,6 @@
         <button id="taskCat_Monthly" class="task-cat-btn" onclick="filterTaskCat('Monthly')">Monthly</button>
     </div>
 
-    <!-- Task Search -->
     <div class="search-wrapper" style="margin: 0 auto 20px; padding: 0 10px; width: 100%; max-width: 1200px; box-sizing: border-box;">
         <input type="text" id="taskSearchInput" class="search-input" placeholder="පාඩම හෝ වීඩියෝව සොයන්න..." onkeyup="handleTaskSearch()">
         <i class="material-icons search-clear" id="taskSearchClear" onclick="clearTaskSearch()">close</i>
@@ -573,7 +541,7 @@
     <div id="tasksListContainer" style="max-width:1200px; margin:0 auto; padding: 0 10px;"></div>
 </div>
 
-<!-- ==================== DASHBOARD SCREEN (Inside Selected Subject) ==================== -->
+<!-- ==================== DASHBOARD SCREEN ==================== -->
 <div id="categoriesScreen" class="screen">
     <div onclick="showScreen('mainMenuScreen')" class="back-btn-ui" style="max-width:1200px; margin:0 auto; padding: 10px;">
         <i class="material-icons">arrow_back</i> <span id="catSubTitle">Back</span>
@@ -589,8 +557,6 @@
     </div>
 
     <div id="defaultStreamContent">
-        
-        <!-- DASHBOARD STATS PER SUBJECT -->
         <div class="stats-grid-home pop-target" style="max-width:1200px; margin:0 auto 25px; padding: 0 10px;">
             <div class="stat-box clickable-stat" onclick="showHistoryScreen()" style="border-color: var(--primary);">
                 <h4>Video History</h4>
@@ -601,7 +567,6 @@
                 <h4>Max Continuous Session</h4>
                 <div class="val" id="statMaxSession">0h 0m</div>
             </div>
-            <!-- TASK COMPLETED BOX (Clickable) -->
             <div class="stat-box clickable-stat" onclick="openTasksScreen()">
                 <h4>Tasks Completed</h4>
                 <div class="val" id="statTasks">0/0</div>
@@ -613,9 +578,7 @@
             </div>
         </div>
 
-        <!-- DASHBOARD CHARTS PER SUBJECT -->
         <div class="charts-wrapper pop-target" style="max-width:1200px; margin:0 auto 30px; padding: 0 10px;">
-            <!-- Line Chart -->
             <div class="chart-panel">
                 <h3><i class="material-icons" style="color:var(--primary);">show_chart</i> Daily Session Duration</h3>
                 <div style="padding-top: 20px; width:100%; display:flex; justify-content:center;">
@@ -625,14 +588,10 @@
                     </svg>
                 </div>
             </div>
-
-            <!-- Activity Donut Chart -->
             <div class="chart-panel" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
                 <h3><i class="material-icons" style="color:var(--accent);">pie_chart</i> Activity Focus</h3>
                 <div id="activityDonut" style="position:relative; width:100px; height:100px; border-radius:50%; background: conic-gradient(var(--primary) 0% 34%, #10b981 34% 67%, #f59e0b 67% 100%); display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); margin-top: 10px; transition: background 0.5s;">
-                    <div id="activityMainStat" style="width:70px; height:70px; background:var(--card-bg); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px; color:var(--text-main);">
-                        0%
-                    </div>
+                    <div id="activityMainStat" style="width:70px; height:70px; background:var(--card-bg); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px; color:var(--text-main);">0%</div>
                 </div>
                 <div style="display:flex; gap:12px; margin-top:20px; font-size:11px; color:var(--text-sub); font-weight: 600;">
                     <span><i class="material-icons" style="font-size:10px; color:var(--primary);">circle</i> Lesson</span>
@@ -683,6 +642,7 @@
     <div id="topicsList" class="folder-grid" style="max-width:1200px; margin:0 auto; padding: 0 10px;"></div>
 </div>
 
+<!-- PLAYER SCREEN -->
 <div id="playerScreen" class="screen">
     <div id="videoListContainer" style="max-width:1200px; margin:0 auto; padding: 0 10px;">
         <div id="dynamicBackBtn" class="back-btn-ui">
@@ -719,11 +679,8 @@
                 <div class="time-row">
                     <div class="left-controls">
                         <button class="control-btn skip-btn" onclick="skip(-5)" title="Rewind 5s"><i class="material-icons">replay_5</i></button>
-                        <button class="control-btn play-btn-special" onclick="togglePlay(event)" id="playPauseBtn" title="Play/Pause">
-                            <i class="material-icons">play_arrow</i>
-                        </button>
+                        <button class="control-btn play-btn-special" onclick="togglePlay(event)" id="playPauseBtn" title="Play/Pause"><i class="material-icons">play_arrow</i></button>
                         <button class="control-btn skip-btn" onclick="skip(5)" title="Forward 5s"><i class="material-icons">forward_5</i></button>
-                        
                         <div class="time-display" style="font-size:13px; font-weight:600; font-family:monospace; letter-spacing:0.5px; margin-left:10px; background: rgba(0,0,0,0.7); padding: 5px 10px; border-radius: 8px; color: #ffffff; border: 1px solid rgba(255,255,255,0.15);">
                             <span id="currentTime">0:00:00</span> <span style="color:#a3a3a3; margin:0 4px;">/</span> <span id="totalDuration" style="color:#a3a3a3;">0:00:00</span>
                         </div>
@@ -765,7 +722,7 @@
             </div>
             <div class="chat-input-area">
                 <div id="emojiPicker" class="emoji-picker-container">
-                    <div class="emoji-picker-header">WhatsApp Emojis</div>
+                    <div class="emoji-picker-header">Emojis</div>
                     <div id="emojiPickerGrid" class="emoji-picker-grid"></div>
                 </div>
                 <button class="emoji-btn" onclick="toggleEmojiPicker()"><i class="material-icons">sentiment_satisfied_alt</i></button>
@@ -836,6 +793,19 @@
         targets.forEach((el) => { el.classList.remove('pop-anim'); void el.offsetWidth; el.style.animationDelay = `${delay}s`; el.classList.add('pop-anim'); delay += 0.1; });
     }
 
+    // NEW FUNCTION FOR TOAST MESSAGES
+    function showToast(msg, isError = false) {
+        const toast = document.getElementById('notificationToast');
+        document.getElementById('notifTitle').innerText = isError ? "අවධානයයි!" : "දැනුම්දීමක්";
+        document.getElementById('notifDesc').innerText = msg;
+        toast.style.borderColor = isError ? "var(--danger)" : "var(--primary)";
+        toast.querySelector('.notif-icon').style.backgroundColor = isError ? "var(--danger)" : "var(--primary)";
+        toast.querySelector('.notif-icon i').innerText = isError ? "error" : "info";
+        
+        toast.classList.add('show');
+        setTimeout(() => { toast.classList.remove('show'); }, 3000);
+    }
+
     const firebaseConfig = { apiKey: "AIzaSyApozqbVy4DFupEKafsU_oeC9RUAq1ljuU", databaseURL: "https://tech-590c8-default-rtdb.firebaseio.com" };
     firebase.initializeApp(firebaseConfig); const db = firebase.database();
 
@@ -848,10 +818,17 @@
     let activeTaskCategory = 'All';
     let allStreamVideosForTasks = [];
 
+    // SESSION BAN Variables
+    let currentSessionToken = null;
+    let sessionCheckInterval = null;
+
+    // GLOBAL PDF LOCKS VARIABLE
+    let pdfLocks = {};
+
     let chatListenerRef = null; let notifListenerRef = null;
     const emojis = ['😀','😃','😄','😁','😆','😅','😂','🤣','🥲','☺️','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥸','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🤥','😶','😐','😑','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😵','🤐','🥴','🤢','🤮','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👹','👺','🤡','💩','👻','💀','☠️','👽','👾','🤖','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🙈','🙉','🙊','💋','💌','💘','💝','💖','💗','💓','💞','💕','💟','❣️','💔','❤️','🧡','💛','💚','💙','💜','🤎','🖤','🤍','💯','💢','💥','💫','💦','💨','🕳️','💣','💬','👁️‍🗨️','🗨️','🗯️','💭','💤','👋','🤚','🖐️','✋','🖖','👌','🤌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','✍️','💅','🤳','💪','🦾','🦿','🦵','🦶','👂','🦻','👃','🫀','🫁','🧠','🦷','🦴','👀','👁️','👅','👄'];
 
-    // DYNAMIC STATS TRACKING (PER SUBJECT)
+    // DYNAMIC STATS TRACKING
     function updateDashboardStats() {
         if(!currentUser || !activeStream) return;
         
@@ -1029,60 +1006,78 @@
         } else { history.pushState(null, null, location.href); }
     });
 
+    // ==================== AUTO BAN (SESSION MANAGEMENT) ====================
+    function generateSessionToken() {
+        return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    }
+
+    function checkSessionStatus() {
+        if (!currentUser) return;
+        db.ref(`students/${currentUser.id}`).once('value', snap => {
+            const data = snap.val();
+            if (!data) return;
+
+            // Check if status is explicitly suspended
+            if (data.status === 'suspended') {
+                triggerAutoBanLogout("ඔබේ ගිණුම තහනම් කර ඇත! කරුණාකර ගුරුවරයා අමතන්න.\n(Your account is BANNED!)");
+                return;
+            }
+
+            // Check if token changed (Multiple Logins)
+            if (data.currentSessionToken && data.currentSessionToken !== currentSessionToken) {
+                // Instantly Suspend Account
+                db.ref(`students/${currentUser.id}`).update({ status: 'suspended' }).then(() => {
+                    triggerAutoBanLogout("වෙනත් උපාංගයකින් මෙම ගිණුමට ලොග් වී ඇත. ආරක්ෂිත හේතූන් මත ඔබගේ ගිණුම තහනම් කර ඇත!\n(Account Suspended Due To Multiple Logins)");
+                });
+            }
+        });
+    }
+
+    function triggerAutoBanLogout(msg) {
+        clearInterval(sessionCheckInterval);
+        alert(msg);
+        
+        currentUser = null;
+        currentSessionToken = null;
+        localStorage.removeItem('studyUser');
+        window.location.reload();
+    }
+
+    // ==================== LOGIN AND INIT ====================
     window.onload = () => {
         updateToggleIcons(); initFunAnimations(); initEmojiPicker(); 
         const savedTheme = localStorage.getItem('portalTheme'); const isVerified = localStorage.getItem('isAppVerified'); const savedUser = localStorage.getItem('studyUser');
-        if (!isVerified) { document.getElementById('masterAuthScreen').classList.add('active'); } else if (!savedUser) { document.getElementById('loginScreen').classList.add('active'); } else { currentUser = JSON.parse(savedUser); loadDashboard(); listenForNotifications(); }
+        
+        // Listen to Global PDF Locks in real-time
+        db.ref('pdf_locks').on('value', snap => {
+            pdfLocks = snap.val() || {};
+            updatePdfButtonsRealtime();
+        });
+
+        if (!isVerified) { 
+            document.getElementById('masterAuthScreen').classList.add('active'); 
+        } else if (!savedUser) { 
+            document.getElementById('loginScreen').classList.add('active'); 
+        } else { 
+            currentUser = JSON.parse(savedUser);
+            
+            // Generate a fresh session token on load/refresh if logged in
+            currentSessionToken = generateSessionToken();
+            db.ref(`students/${currentUser.id}`).update({ currentSessionToken: currentSessionToken });
+            
+            // Start checking session immediately and periodically
+            checkSessionStatus();
+            sessionCheckInterval = setInterval(checkSessionStatus, 3000); 
+
+            loadDashboard(); listenForNotifications(); 
+        }
+        
         const loader = document.getElementById('loadingScreen');
         setTimeout(() => { loader.style.transition = 'background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1)'; if (savedTheme === 'light') { loader.classList.replace('dark-stage', 'light-stage'); } else { loader.classList.replace('light-stage', 'dark-stage'); } }, 1500); 
         setTimeout(() => { loader.style.transition += ', opacity 1s cubic-bezier(0.4, 0, 0.2, 1)'; loader.style.opacity = '0'; setTimeout(() => { loader.style.display = 'none'; }, 1000); }, 3000); 
     };
 
     function showErrorMsg(errDivId, message) { const errDiv = document.getElementById(errDivId); errDiv.innerText = message; errDiv.style.display = "block"; errDiv.classList.remove("shake-animation"); void errDiv.offsetWidth; errDiv.classList.add("shake-animation"); }
-
-    function showScreen(id, pushState = true) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        if ((id === 'mainMenuScreen' || id === 'categoriesScreen' || id === 'historyScreen') && currentUser) { if(activeStream) { renderHistory(); updateDashboardStats(); } }
-        if (pushState) { history.pushState(null, null, location.href); }
-    }
-    
-    function showHistoryScreen() { showScreen('historyScreen'); }
-    document.onkeydown = function(e) { if (e.keyCode == 123) return false; if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) return false; if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; };
-
-    window.addEventListener('keydown', (e) => {
-        if(document.activeElement.id === 'chatInputMsg' || document.activeElement.id === 'taskSearchInput') return;
-        if (document.getElementById('playerSection').style.display === 'block' && player) {
-            if (e.code === 'Space') { e.preventDefault(); if (!isSpacePressed) { isSpacePressed = true; this.spaceTimer = setTimeout(() => { if (isSpacePressed) { lastUserSpeed = player.getPlaybackRate() || 1; player.setPlaybackRate(2); document.getElementById('speedToast').style.display = 'block'; } }, 500); } }
-            if (e.code === 'ArrowRight') { e.preventDefault(); skip(5); showOverlayInfo('5s »'); showControls(); }
-            if (e.code === 'ArrowLeft') { e.preventDefault(); skip(-5); showOverlayInfo('« 5s'); showControls(); }
-            if (e.code === 'ArrowUp') { e.preventDefault(); let currentVol = player.getVolume(); let newVol = Math.min(100, currentVol + 10); player.setVolume(newVol); if (newVol > 0 && player.isMuted()) player.unMute(); document.getElementById('volSlider').value = newVol; updateVolIcon(newVol); showOverlayInfo('Volume: ' + newVol + '%'); showControls(); }
-            if (e.code === 'ArrowDown') { e.preventDefault(); let currentVol = player.getVolume(); let newVol = Math.max(0, currentVol - 10); player.setVolume(newVol); document.getElementById('volSlider').value = newVol; updateVolIcon(newVol); showOverlayInfo('Volume: ' + newVol + '%'); showControls(); }
-            if (e.key === ']') { e.preventDefault(); let s = Math.min(2.0, (player.getPlaybackRate() || 1) + 0.1); player.setPlaybackRate(s); showOverlayInfo('Speed: ' + s.toFixed(1) + 'x'); showControls(); }
-            if (e.key === '[') { e.preventDefault(); let s = Math.max(1.0, (player.getPlaybackRate() || 1) - 0.1); player.setPlaybackRate(s); showOverlayInfo('Speed: ' + s.toFixed(1) + 'x'); showControls(); }
-            if (e.code === 'KeyF') { e.preventDefault(); toggleFullScreen(); }
-        }
-    });
-
-    window.addEventListener('keyup', (e) => {
-        if(document.activeElement.id === 'chatInputMsg' || document.activeElement.id === 'taskSearchInput') return;
-        if (e.code === 'Space' && player) { e.preventDefault(); clearTimeout(this.spaceTimer); if (isSpacePressed) { if (player.getPlaybackRate() !== 2 || document.getElementById('speedToast').style.display === 'none') { togglePlay(e); } else { player.setPlaybackRate(lastUserSpeed); document.getElementById('speedToast').style.display = 'none'; } } isSpacePressed = false; }
-    });
-
-    function handlePointerDown(e) {
-        if (!player) return; const currentTime = new Date().getTime(); const tapLength = currentTime - lastTapTime;
-        pressTimer = setTimeout(() => { isLongPressing = true; lastUserSpeed = player.getPlaybackRate() || 1; player.setPlaybackRate(2); document.getElementById('speedToast').style.display = 'block'; }, 500);
-        if (tapLength < 300 && tapLength > 0) {
-            clearTimeout(pressTimer); clearTimeout(tapTimer); const rect = e.target.getBoundingClientRect();
-            if (e.clientX < (rect.left + rect.width / 2)) { skip(-10); showOverlayInfo('« 10s'); } else { skip(10); showOverlayInfo('10s »'); }
-            lastTapTime = 0; 
-        } else {
-            lastTapTime = currentTime; tapTimer = setTimeout(() => { if (!isLongPressing) { const cb = document.getElementById("controlBar"); document.getElementById("speedMenu").classList.remove("show"); if (cb.classList.contains("hidden")) { showControls(); } else { hideControls(); } } }, 300);
-        }
-    }
-    
-    function handlePointerUp(e) { clearTimeout(pressTimer); if (isLongPressing) { isLongPressing = false; if (player) { player.setPlaybackRate(lastUserSpeed); } document.getElementById('speedToast').style.display = 'none'; } }
-    function showOverlayInfo(text) { const el = document.getElementById('playerOverlayInfo'); el.innerText = text; el.style.display = 'block'; clearTimeout(infoTimeout); infoTimeout = setTimeout(() => { el.style.display = 'none'; }, 500); }
 
     function masterAuth() {
         const u = document.getElementById("mUser").value.trim(); const p = document.getElementById("mPass").value.trim();
@@ -1104,16 +1099,41 @@
             const data = snap.val(); let loggedIn = false;
             for(let key in data) { 
                 if(data[key].name === u && data[key].password === p) { 
-                    currentUser = { id: key, ...data[key] }; localStorage.setItem('studyUser', JSON.stringify(currentUser)); document.getElementById('loginError').style.display = 'none';
-                    triggerActionWithLoad(() => { loadDashboard(); listenForNotifications(); }); loggedIn = true; break; 
+                    if(data[key].status === 'suspended') {
+                        showErrorMsg('loginError', "ඔබේ ගිණුම තහනම් කර ඇත! ගුරුවරයා අමතන්න. 🚫");
+                        return;
+                    }
+                    
+                    currentUser = { id: key, ...data[key] }; 
+                    localStorage.setItem('studyUser', JSON.stringify(currentUser)); 
+                    document.getElementById('loginError').style.display = 'none';
+                    
+                    // Assign token on successful login
+                    currentSessionToken = generateSessionToken();
+                    db.ref(`students/${key}`).update({ currentSessionToken: currentSessionToken });
+                    
+                    sessionCheckInterval = setInterval(checkSessionStatus, 3000);
+
+                    triggerActionWithLoad(() => { loadDashboard(); listenForNotifications(); }); 
+                    loggedIn = true; break; 
                 } 
             }
             if(!loggedIn) { showErrorMsg('loginError', "ශිෂ්‍ය නාමය හෝ මුරපදය වැරදියි! නැවත උත්සහ කරන්න. 🚫"); }
         });
     }
 
+    function showScreen(id, pushState = true) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        if ((id === 'mainMenuScreen' || id === 'categoriesScreen' || id === 'historyScreen') && currentUser) { if(activeStream) { renderHistory(); updateDashboardStats(); } }
+        if (pushState) { history.pushState(null, null, location.href); }
+    }
+    
+    function showHistoryScreen() { showScreen('historyScreen'); }
+    document.onkeydown = function(e) { if (e.keyCode == 123) return false; if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) return false; if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; };
+
     /* =========================================================
-       UPDATED DYNAMIC DASHBOARD LOADER - ADD NEW SUBJECTS HERE
+       DYNAMIC DASHBOARD LOADER
        ========================================================= */
     function loadDashboard() {
         document.getElementById("helloMsg").innerText = currentUser.name; 
@@ -1123,55 +1143,36 @@
         
         db.ref(`students/${currentUser.id}/access`).on('value', s => {
 
-            // --- අලුතින් එකතු කළ කොටස (START) ---
             if (s.val() === null) {
-                localStorage.removeItem('studyUser'); 
-                window.location.reload(); 
                 return;
             }
-            // --- අලුතින් එකතු කළ කොටස (END) ---
 
             const acc = s.val() || ''; const list = document.getElementById("subjectList"); 
             
-            // Fetch dynamically created subjects from Admin Panel
             db.ref('subjects').on('value', subSnap => {
                 list.innerHTML = "";
                 const dynamicSubjects = subSnap.val() || {};
                 
-                // Keep the default ones as fallback / base
                 let allSubjects = [
                     { id: 'et', name: 'Engineering Technology', tag: ['et', 'both', 'all'], img: 'https://static.edumix.lk/sisulka//teacher/5f991c128edc0d4ef4e41a51.jpg' },
                     { id: 'sft', name: 'Science for Technology', tag: ['sft', 'both', 'all'], img: 'https://plain-apac-prod-public.komododecks.com/202604/23/FiS91VCeBtbXYo1nzdJk/image.jpg' },
                     { id: 'ict', name: 'Information Technology', tag: ['ict', 'all'], img: 'https://static.edumix.lk/sisulka//teacher/5f97bb4c9483423cb265bae2.jpg' }
                 ];
                 
-                // Append dynamically added subjects from Firebase
                 for(let key in dynamicSubjects) {
-                    // Check if it's already in the default array to avoid duplicates
                     if(!allSubjects.find(x => x.id === key)) {
-                        allSubjects.push({
-                            id: key, 
-                            name: dynamicSubjects[key].name, 
-                            tag: [key, 'all'], // Needs 'all' access or the specific subject ID as access
-                            img: dynamicSubjects[key].image
-                        });
+                        allSubjects.push({ id: key, name: dynamicSubjects[key].name, tag: [key, 'all'], img: dynamicSubjects[key].image || dynamicSubjects[key].img });
                     }
                 }
                 
                 searchIndex = []; let delayCounter = 0.4;
-                
                 let userAccArr = acc.split(',');
                 if(acc === 'both') userAccArr = ['et', 'sft'];
 
                 allSubjects.forEach(sub => {
-                    // Check Access Level
                     let hasAccess = false;
-                    if (acc === 'all' || userAccArr.includes('all') || userAccArr.includes(sub.id)) {
-                        hasAccess = true;
-                    }
-                    if (!hasAccess && sub.tag) {
-                        sub.tag.forEach(t => { if(userAccArr.includes(t)) hasAccess = true; });
-                    }
+                    if (acc === 'all' || userAccArr.includes('all') || userAccArr.includes(sub.id)) { hasAccess = true; }
+                    if (!hasAccess && sub.tag) { sub.tag.forEach(t => { if(userAccArr.includes(t)) hasAccess = true; }); }
 
                     if (hasAccess) {
                         list.innerHTML += `
@@ -1181,7 +1182,6 @@
                         </div>`;
                         delayCounter += 0.1;
                         
-                        // Load search index data dynamically for ANY subject
                         db.ref(`students/${currentUser.id}/allowedLessons/${sub.id}`).once('value', allowSnap => {
                             const allowed = allowSnap.val() || {};
                             db.ref(`studyData/${sub.id}`).once('value', dataSnap => {
@@ -1226,12 +1226,20 @@
             clearBtn.style.display = 'block'; defaultContent.style.display = 'none'; resWrapper.style.display = 'block'; resultsGrid.innerHTML = '';
             const filteredVideos = currentVideos.filter(v => v.title.toLowerCase().includes(query));
             if (filteredVideos.length === 0) { resultsGrid.innerHTML = '<div style="color:var(--text-sub); grid-column: 1 / -1; text-align:center; padding: 20px;">කිසිදු වීඩියෝවක් සොයාගත නොහැකි විය!</div>'; return; }
+            
             filteredVideos.forEach((v) => {
                 const originalIndex = currentVideos.findIndex(orig => orig.id === v.id); const thumbUrl = `https://img.youtube.com/vi/${v.id}/mqdefault.jpg`;
-                let pdfBtnHtml = v.pdfLink ? `<div class="pdf-btn" onclick="event.stopPropagation(); window.open('${v.pdfLink}', '_blank')">Download PDF <i class="material-icons">download</i></div>` : "";
+                
+                let pdfBtnHtml = "";
+                if (v.pdfLink) {
+                    pdfBtnHtml = `<div class="pdf-btn real-time-pdf-btn" data-link="${v.pdfLink}" data-color="green"></div>`;
+                }
+                
                 const safeTitle = v.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
                 resultsGrid.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="playThisVideo(${originalIndex})"><img src="${thumbUrl}" class="video-thumbnail" alt="${safeTitle}"><div class="folder-title">${v.title}</div><div class="folder-count">YouTube Video</div><div class="folder-btn">Watch Now <i class="material-icons">play_circle_filled</i></div>${pdfBtnHtml}</div>`;
-            }); return;
+            }); 
+            updatePdfButtonsRealtime();
+            return;
         }
 
         if (context === 'home') { inputId = 'homeSearch'; resWrapper = document.getElementById("searchResultsContainer"); resultsGrid = document.getElementById("searchResults"); defaultContent = document.getElementById("defaultHomeContent"); displayStyle = 'block'; } 
@@ -1254,12 +1262,13 @@
                 resultsGrid.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="handleSearchClick(${idx})"><div class="folder-icon-wrap" style="${item.type === 'subfolder' ? 'color:var(--primary); background:rgba(37, 99, 235, 0.1);' : ''}"><i class="material-icons">${item.type === 'subfolder' ? 'snippet_folder' : 'folder_open'}</i></div><div class="folder-title">${item.title}</div><div class="folder-count">Stream: ${item.stream.toUpperCase()}</div><div class="folder-btn">View Folder <i class="material-icons">chevron_right</i></div></div>`;
             } else if (item.type === 'video') {
                 const thumbUrl = `https://img.youtube.com/vi/${item.videoData.id}/mqdefault.jpg`;
-                let pdfBtnHtml = item.videoData.pdfLink ? `<div class="pdf-btn" onclick="event.stopPropagation(); window.open('${item.videoData.pdfLink}', '_blank')">Download PDF <i class="material-icons">download</i></div>` : "";
+                let pdfBtnHtml = item.videoData.pdfLink ? `<div class="pdf-btn real-time-pdf-btn" data-link="${item.videoData.pdfLink}" data-color="green"></div>` : "";
                 let folderPathName = item.subFolder ? `${item.folderName} > ${item.subFolder}` : item.folderName;
                 const safeTitle = item.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
                 resultsGrid.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="handleSearchClick(${idx})"><img src="${thumbUrl}" class="video-thumbnail" alt="${safeTitle}"><div class="folder-title">${item.title}</div><div class="folder-count">Folder: ${folderPathName}</div><div class="folder-btn" style="background:var(--primary); color:#ffffff; border:none;">Play Video <i class="material-icons">play_circle_filled</i></div>${pdfBtnHtml}</div>`;
             }
         });
+        updatePdfButtonsRealtime();
     }
 
     function handleSearchClick(idx) {
@@ -1291,6 +1300,34 @@
         });
     }
 
+    // ==============================================================
+    // REAL-TIME PDF UPDATE LOGIC
+    // ==============================================================
+    function updatePdfButtonsRealtime() {
+        let isLocked = false;
+        if (activeStream && activeCatName && pdfLocks[activeStream] && pdfLocks[activeStream][activeCatName] === true) {
+            isLocked = true;
+        }
+
+        document.querySelectorAll('.real-time-pdf-btn').forEach(btn => {
+            let link = btn.getAttribute('data-link');
+            let colorTheme = btn.getAttribute('data-color') || 'green';
+            let bgHex = colorTheme === 'blue' ? 'var(--primary)' : '#10b981';
+
+            if(isLocked) {
+                btn.style.background = '#ef4444';
+                btn.style.color = 'white';
+                btn.innerHTML = 'PDF Locked <i class="material-icons">lock</i>';
+                btn.onclick = (e) => { e.stopPropagation(); showToast('මෙම PDF ගොනුව දැනට ලොක් කර ඇත!', true); };
+            } else {
+                btn.style.background = bgHex;
+                btn.style.color = 'white';
+                btn.innerHTML = 'Download PDF <i class="material-icons">download</i>';
+                btn.onclick = (e) => { e.stopPropagation(); window.open(link, '_blank'); };
+            }
+        });
+    }
+
     function showVideoListRealtime(folderName, catName, isFromSearch, autoPlayVidId = null, scrollToChat = true) {
         document.getElementById("lessonTitle").innerText = folderName; const backBtn = document.getElementById("dynamicBackBtn");
         if (isFromSearch) { backBtn.setAttribute('onclick', "showScreen('mainMenuScreen')"); } else { backBtn.setAttribute('onclick', "showScreen('topicsScreen')"); }
@@ -1302,25 +1339,65 @@
         currentVideosRef = db.ref(`studyData/${activeStream}/${catName}/${folderName}`);
         currentVideosRef.on('value', snap => {
             const folderData = snap.val(); list.innerHTML = ""; currentVideos = [];
+
             if (folderData) {
                 let hasContent = false;
+                
+                // 1. SUBFOLDERS
                 if (folderData.subfolders) {
                     hasContent = true;
-                    Object.keys(folderData.subfolders).forEach(subK => { list.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="openSubFolder('${folderName.replace(/'/g, "\\'")}', '${subK.replace(/'/g, "\\'")}', '${catName}')"><div class="folder-icon-wrap" style="color:var(--primary); background:rgba(37, 99, 235, 0.1);"><i class="material-icons">snippet_folder</i></div><div class="folder-title">${subK}</div><div class="folder-count">Sub Folder</div><div class="folder-btn">විවෘත කරන්න <i class="material-icons">chevron_right</i></div></div>`; });
+                    Object.keys(folderData.subfolders).forEach(subK => { 
+                        list.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="openSubFolder('${folderName.replace(/'/g, "\\'")}', '${subK.replace(/'/g, "\\'")}', '${catName}')"><div class="folder-icon-wrap" style="color:var(--primary); background:rgba(37, 99, 235, 0.1);"><i class="material-icons">snippet_folder</i></div><div class="folder-title">${subK}</div><div class="folder-count">Sub Folder</div><div class="folder-btn">විවෘත කරන්න <i class="material-icons">chevron_right</i></div></div>`; 
+                    });
                 }
+
+                // 2. VIDEOS (and their attached PDFs)
                 if (folderData.videos) {
                     hasContent = true;
-                    let vArr = Object.keys(folderData.videos).map(k => ({ key: k, ...folderData.videos[k] })); vArr.sort((a, b) => (a.order || 0) - (b.order || 0)); currentVideos = vArr; 
+                    let vArr = Object.keys(folderData.videos).map(k => ({ key: k, ...folderData.videos[k] })); 
+                    vArr.sort((a, b) => (a.order || 0) - (b.order || 0)); 
+                    currentVideos = vArr; 
                     currentVideos.forEach((v, index) => {
                         const thumbUrl = `https://img.youtube.com/vi/${v.id}/mqdefault.jpg`;
-                        let pdfBtnHtml = v.pdfLink ? `<div class="pdf-btn" onclick="event.stopPropagation(); window.open('${v.pdfLink}', '_blank')">Download PDF <i class="material-icons">download</i></div>` : "";
                         const safeTitle = v.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        
+                        let pdfBtnHtml = "";
+                        if (v.pdfLink) {
+                            pdfBtnHtml = `<div class="pdf-btn real-time-pdf-btn" data-link="${v.pdfLink}" data-color="green"></div>`;
+                        }
                         list.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="playThisVideo(${index})"><img src="${thumbUrl}" class="video-thumbnail" alt="${safeTitle}"><div class="folder-title">${v.title}</div><div class="folder-count">YouTube Video</div><div class="folder-btn">Watch Now <i class="material-icons">play_circle_filled</i></div>${pdfBtnHtml}</div>`;
                     });
                     if (autoPlayVidId) { const idx = currentVideos.findIndex(v => v.id === autoPlayVidId); if (idx !== -1) { playThisVideo(idx, scrollToChat); autoPlayVidId = null; } }
                 }
+
+                // 3. STANDALONE PDFS
+                if (folderData.pdfs) {
+                    hasContent = true;
+                    let pArr = Object.keys(folderData.pdfs).map(k => ({ key: k, ...folderData.pdfs[k] }));
+                    pArr.sort((a, b) => (a.order || 0) - (b.order || 0));
+                    pArr.forEach((p) => {
+                        const safeTitle = p.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        let btnColor = p.color === 'blue' ? 'blue' : 'green';
+                        
+                        let actionHtml = `<div class="folder-btn real-time-pdf-btn" style="width:100%; border:none; padding:12px; cursor:pointer;" data-link="${p.link}" data-color="${btnColor}"></div>`;
+
+                        list.innerHTML += `
+                        <div class="folder-card glass-card">
+                            <div class="folder-icon-wrap" style="color:#ef4444; background:rgba(239,68,68,0.1); width:100%; aspect-ratio:16/9; display:flex; justify-content:center; align-items:center; border-radius:10px; margin-bottom:12px; border:none;">
+                                <i class="material-icons" style="font-size:48px;">picture_as_pdf</i>
+                            </div>
+                            <div class="folder-title">${safeTitle}</div>
+                            <div class="folder-count">PDF Document</div>
+                            ${actionHtml}
+                        </div>`;
+                    });
+                }
+
                 if (!hasContent) { list.innerHTML = "<div style='color:var(--text-sub); text-align:center; grid-column:1/-1; padding:20px;'>මෙම ෆෝල්ඩරයේ දත්ත නොමැත.</div>"; }
             } else { list.innerHTML = "<div style='color:var(--text-sub); text-align:center; grid-column:1/-1; padding:20px;'>මෙම ෆෝල්ඩරයේ දත්ත නොමැත.</div>"; }
+            
+            // Instantly update the colors and text based on current lock state
+            updatePdfButtonsRealtime();
         });
     }
 
@@ -1330,19 +1407,62 @@
         document.getElementById('videoSearch').value = ''; document.getElementById('videoSearchClear').style.display = 'none'; document.getElementById('videoSearchResultsContainer').style.display = 'none'; document.getElementById('multiVideoList').style.display = 'grid';
 
         if (currentVideosRef) { currentVideosRef.off('value'); }
-        currentVideosRef = db.ref(`studyData/${activeStream}/${catName}/${folderName}/subfolders/${subFolderName}/videos`);
+        currentVideosRef = db.ref(`studyData/${activeStream}/${catName}/${folderName}/subfolders/${subFolderName}`);
         currentVideosRef.on('value', snap => {
-            const videos = snap.val(); const list = document.getElementById("multiVideoList"); list.innerHTML = ""; currentVideos = [];
-            if (videos) {
-                let vArr = Object.keys(videos).map(k => ({ key: k, ...videos[k] })); vArr.sort((a, b) => (a.order || 0) - (b.order || 0)); currentVideos = vArr; 
-                currentVideos.forEach((v, index) => {
-                    const thumbUrl = `https://img.youtube.com/vi/${v.id}/mqdefault.jpg`;
-                    let pdfBtnHtml = v.pdfLink ? `<div class="pdf-btn" onclick="event.stopPropagation(); window.open('${v.pdfLink}', '_blank')">Download PDF <i class="material-icons">download</i></div>` : "";
-                    const safeTitle = v.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
-                    list.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="playThisVideo(${index})"><img src="${thumbUrl}" class="video-thumbnail" alt="${safeTitle}"><div class="folder-title">${v.title}</div><div class="folder-count">YouTube Video</div><div class="folder-btn">Watch Now <i class="material-icons">play_circle_filled</i></div>${pdfBtnHtml}</div>`;
-                });
-                if (autoPlayVidId) { const idx = currentVideos.findIndex(v => v.id === autoPlayVidId); if (idx !== -1) { playThisVideo(idx, scrollToChat); autoPlayVidId = null; } }
-            } else { list.innerHTML = "<div style='color:var(--text-sub); text-align:center; grid-column:1/-1; padding:20px;'>මෙම උප-ෆෝල්ඩරයේ වීඩියෝ නොමැත.</div>"; }
+            const subFolderData = snap.val(); 
+            const list = document.getElementById("multiVideoList"); 
+            list.innerHTML = ""; currentVideos = [];
+            
+            if (subFolderData) {
+                let hasContent = false;
+                
+                // 1. VIDEOS
+                if (subFolderData.videos) {
+                    hasContent = true;
+                    let vArr = Object.keys(subFolderData.videos).map(k => ({ key: k, ...subFolderData.videos[k] })); 
+                    vArr.sort((a, b) => (a.order || 0) - (b.order || 0)); 
+                    currentVideos = vArr; 
+                    currentVideos.forEach((v, index) => {
+                        const thumbUrl = `https://img.youtube.com/vi/${v.id}/mqdefault.jpg`;
+                        const safeTitle = v.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        
+                        let pdfBtnHtml = "";
+                        if (v.pdfLink) {
+                            pdfBtnHtml = `<div class="pdf-btn real-time-pdf-btn" data-link="${v.pdfLink}" data-color="green"></div>`;
+                        }
+                        list.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="playThisVideo(${index})"><img src="${thumbUrl}" class="video-thumbnail" alt="${safeTitle}"><div class="folder-title">${v.title}</div><div class="folder-count">YouTube Video</div><div class="folder-btn">Watch Now <i class="material-icons">play_circle_filled</i></div>${pdfBtnHtml}</div>`;
+                    });
+                    if (autoPlayVidId) { const idx = currentVideos.findIndex(v => v.id === autoPlayVidId); if (idx !== -1) { playThisVideo(idx, scrollToChat); autoPlayVidId = null; } }
+                }
+
+                // 2. STANDALONE PDFS
+                if (subFolderData.pdfs) {
+                    hasContent = true;
+                    let pArr = Object.keys(subFolderData.pdfs).map(k => ({ key: k, ...subFolderData.pdfs[k] }));
+                    pArr.sort((a, b) => (a.order || 0) - (b.order || 0));
+                    pArr.forEach((p) => {
+                        const safeTitle = p.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        let btnColor = p.color === 'blue' ? 'blue' : 'green';
+                        
+                        let actionHtml = `<div class="folder-btn real-time-pdf-btn" style="width:100%; border:none; padding:12px; cursor:pointer;" data-link="${p.link}" data-color="${btnColor}"></div>`;
+
+                        list.innerHTML += `
+                        <div class="folder-card glass-card">
+                            <div class="folder-icon-wrap" style="color:#ef4444; background:rgba(239,68,68,0.1); width:100%; aspect-ratio:16/9; display:flex; justify-content:center; align-items:center; border-radius:10px; margin-bottom:12px; border:none;">
+                                <i class="material-icons" style="font-size:48px;">picture_as_pdf</i>
+                            </div>
+                            <div class="folder-title">${safeTitle}</div>
+                            <div class="folder-count">PDF Document</div>
+                            ${actionHtml}
+                        </div>`;
+                    });
+                }
+
+                if(!hasContent) { list.innerHTML = "<div style='color:var(--text-sub); text-align:center; grid-column:1/-1; padding:20px;'>මෙම උප-ෆෝල්ඩරයේ දත්ත නොමැත.</div>"; }
+            } else { list.innerHTML = "<div style='color:var(--text-sub); text-align:center; grid-column:1/-1; padding:20px;'>මෙම උප-ෆෝල්ඩරයේ දත්ත නොමැත.</div>"; }
+            
+            // Instantly update the colors and text based on current lock state
+            updatePdfButtonsRealtime();
         });
     }
 
@@ -1360,7 +1480,18 @@
         if (!player) { player = new YT.Player('player', { host: 'https://www.youtube-nocookie.com', videoId: vid.id, playerVars: { 'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0, 'playsinline': 1, 'iv_load_policy': 3 }, events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } }); } 
         else { player.loadVideoById({videoId: vid.id, startSeconds: 0}); document.getElementById('volSlider').value = player.getVolume(); updateVolIcon(player.getVolume()); }
         initLiveChat(vid.id, vid.title);
-        if (scrollToChat) { setTimeout(() => { const chatSec = document.getElementById('liveChatSection'); if (chatSec) { chatSec.scrollIntoView({ behavior: 'smooth', block: 'center' }); chatSec.style.transition = "box-shadow 0.5s"; chatSec.style.boxShadow = "0 0 25px var(--primary)"; setTimeout(() => { chatSec.style.boxShadow = "var(--glass-shadow)"; }, 2500); } }, 1000); }
+        
+        if (scrollToChat) { 
+            setTimeout(() => { 
+                const chatSec = document.getElementById('liveChatSection'); 
+                if (chatSec) { 
+                    chatSec.scrollIntoView({ block: 'start' }); 
+                    chatSec.style.transition = "box-shadow 0.5s"; 
+                    chatSec.style.boxShadow = "0 0 25px var(--primary)"; 
+                    setTimeout(() => { chatSec.style.boxShadow = "var(--glass-shadow)"; }, 2500); 
+                } 
+            }, 500); 
+        }
     }
 
     function playVideoDirectly(vidId, vidTitle, scrollToChat = true) {
@@ -1370,7 +1501,18 @@
         if (!player) { player = new YT.Player('player', { host: 'https://www.youtube-nocookie.com', videoId: vidId, playerVars: { 'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'rel': 0, 'playsinline': 1, 'iv_load_policy': 3 }, events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange } }); } 
         else { player.loadVideoById({videoId: vidId, startSeconds: 0}); document.getElementById('volSlider').value = player.getVolume(); updateVolIcon(player.getVolume()); }
         initLiveChat(vidId, vidTitle);
-        if (scrollToChat) { setTimeout(() => { const chatSec = document.getElementById('liveChatSection'); if (chatSec) { chatSec.scrollIntoView({ behavior: 'smooth', block: 'center' }); chatSec.style.transition = "box-shadow 0.5s"; chatSec.style.boxShadow = "0 0 25px var(--primary)"; setTimeout(() => { chatSec.style.boxShadow = "var(--glass-shadow)"; }, 2500); } }, 1000); }
+        
+        if (scrollToChat) { 
+            setTimeout(() => { 
+                const chatSec = document.getElementById('liveChatSection'); 
+                if (chatSec) { 
+                    chatSec.scrollIntoView({ block: 'start' }); 
+                    chatSec.style.transition = "box-shadow 0.5s"; 
+                    chatSec.style.boxShadow = "0 0 25px var(--primary)"; 
+                    setTimeout(() => { chatSec.style.boxShadow = "var(--glass-shadow)"; }, 2500); 
+                } 
+            }, 500); 
+        }
     }
 
     function saveHistory(vid) {
@@ -1464,23 +1606,34 @@
         if(chatListenerRef) chatListenerRef.off(); document.getElementById('emojiPicker').style.display = 'none';
     }
 
+    // ==================== FIX: CHAT RENDER LOGIC ====================
     function initLiveChat(vidId, vidTitle) {
-        const chatBox = document.getElementById('chatMessagesBox'); chatBox.innerHTML = "<div style='text-align:center; color:var(--text-sub); margin-top: 20px;'>Connecting to Live Chat...</div>";
+        const chatBox = document.getElementById('chatMessagesBox'); 
+        chatBox.innerHTML = "<div style='text-align:center; color:var(--text-sub); margin-top: 20px;'>Connecting to Live Chat...</div>";
+        
         db.ref(`chats/${vidId}/meta`).set({ title: vidTitle, lastActive: Date.now() });
-        if(chatListenerRef) chatListenerRef.off(); chatListenerRef = db.ref(`chats/${vidId}/messages`);
+        if(chatListenerRef) chatListenerRef.off(); 
+        chatListenerRef = db.ref(`chats/${vidId}/messages`);
         
         chatListenerRef.on('value', snap => {
-            chatBox.innerHTML = ""; const messages = snap.val();
+            const messages = snap.val();
             if(messages) {
+                let htmlContent = ""; // Build string to avoid DOM flickering
                 for(let key in messages) {
-                    const msg = messages[key]; const isMe = msg.userId === currentUser.id; const alignment = isMe ? "me" : "other"; const senderName = isMe ? "You" : msg.userName; const timeString = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                    chatBox.innerHTML += `
+                    const msg = messages[key]; 
+                    const isMe = msg.userId === currentUser.id; 
+                    const alignment = isMe ? "me" : "other"; 
+                    const senderName = isMe ? "You" : msg.userName; 
+                    const timeString = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    
+                    htmlContent += `
                     <div class="chat-bubble-wrapper ${alignment}">
                         <div class="chat-sender">${senderName}</div><div class="chat-bubble">${msg.text}</div>
                         <div style="font-size: 9px; color: var(--text-sub); margin-top: 4px; text-align: ${isMe ? 'right' : 'left'}; width: 100%; padding: 0 4px;">${timeString}</div>
                     </div>`;
+                    
                     if(msg.adminReply) {
-                        chatBox.innerHTML += `
+                        htmlContent += `
                         <div class="chat-bubble-wrapper other" style="margin-top: 5px;">
                             <div class="chat-sender" style="color: #10b981;">Teacher (Reply)</div>
                             <div class="chat-bubble" style="background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; border-left: 4px solid #10b981; border-bottom-left-radius: 4px; color: var(--text-main);">
@@ -1490,8 +1643,12 @@
                         </div>`;
                     }
                 }
-                chatBox.scrollTop = chatBox.scrollHeight;
-            } else { chatBox.innerHTML = "<div style='text-align:center; color:var(--text-sub); font-size:13px; margin-top:20px;'>No messages yet. Be the first to ask!</div>"; }
+                chatBox.innerHTML = htmlContent;
+                // Timeout to ensure DOM is updated before scrolling
+                setTimeout(() => { chatBox.scrollTop = chatBox.scrollHeight; }, 50);
+            } else { 
+                chatBox.innerHTML = "<div style='text-align:center; color:var(--text-sub); font-size:13px; margin-top:20px;'>No messages yet. Be the first to ask!</div>"; 
+            }
         });
     }
 
