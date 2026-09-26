@@ -1132,6 +1132,45 @@
     function showHistoryScreen() { showScreen('historyScreen'); }
     document.onkeydown = function(e) { if (e.keyCode == 123) return false; if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) return false; if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; };
 
+    // ==========================================
+    // නව අංග ඇතුළත් කිරීම් - වීඩියෝ පාලනය සඳහා (Keyboard සහ Touch)
+    // ==========================================
+    window.addEventListener('keydown', (e) => {
+        if(document.activeElement.id === 'chatInputMsg' || document.activeElement.id === 'taskSearchInput') return;
+        if (document.getElementById('playerSection').style.display === 'block' && player) {
+            if (e.code === 'Space') { e.preventDefault(); if (!isSpacePressed) { isSpacePressed = true; this.spaceTimer = setTimeout(() => { if (isSpacePressed) { lastUserSpeed = player.getPlaybackRate() || 1; player.setPlaybackRate(2); document.getElementById('speedToast').style.display = 'block'; } }, 500); } }
+            if (e.code === 'ArrowRight') { e.preventDefault(); skip(5); showOverlayInfo('5s »'); showControls(); }
+            if (e.code === 'ArrowLeft') { e.preventDefault(); skip(-5); showOverlayInfo('« 5s'); showControls(); }
+            if (e.code === 'ArrowUp') { e.preventDefault(); let currentVol = player.getVolume(); let newVol = Math.min(100, currentVol + 10); player.setVolume(newVol); if (newVol > 0 && player.isMuted()) player.unMute(); document.getElementById('volSlider').value = newVol; updateVolIcon(newVol); showOverlayInfo('Volume: ' + newVol + '%'); showControls(); }
+            if (e.code === 'ArrowDown') { e.preventDefault(); let currentVol = player.getVolume(); let newVol = Math.max(0, currentVol - 10); player.setVolume(newVol); document.getElementById('volSlider').value = newVol; updateVolIcon(newVol); showOverlayInfo('Volume: ' + newVol + '%'); showControls(); }
+            if (e.key === ']') { e.preventDefault(); let s = Math.min(2.0, (player.getPlaybackRate() || 1) + 0.1); player.setPlaybackRate(s); showOverlayInfo('Speed: ' + s.toFixed(1) + 'x'); showControls(); }
+            if (e.key === '[') { e.preventDefault(); let s = Math.max(1.0, (player.getPlaybackRate() || 1) - 0.1); player.setPlaybackRate(s); showOverlayInfo('Speed: ' + s.toFixed(1) + 'x'); showControls(); }
+            if (e.code === 'KeyF') { e.preventDefault(); toggleFullScreen(); }
+        }
+    });
+
+    window.addEventListener('keyup', (e) => {
+        if(document.activeElement.id === 'chatInputMsg' || document.activeElement.id === 'taskSearchInput') return;
+        if (e.code === 'Space' && player) { e.preventDefault(); clearTimeout(this.spaceTimer); if (isSpacePressed) { if (player.getPlaybackRate() !== 2 || document.getElementById('speedToast').style.display === 'none') { togglePlay(e); } else { player.setPlaybackRate(lastUserSpeed); document.getElementById('speedToast').style.display = 'none'; } } isSpacePressed = false; }
+    });
+
+    function handlePointerDown(e) {
+        if (!player) return; const currentTime = new Date().getTime(); const tapLength = currentTime - lastTapTime;
+        pressTimer = setTimeout(() => { isLongPressing = true; lastUserSpeed = player.getPlaybackRate() || 1; player.setPlaybackRate(2); document.getElementById('speedToast').style.display = 'block'; }, 500);
+        if (tapLength < 300 && tapLength > 0) {
+            clearTimeout(pressTimer); clearTimeout(tapTimer); const rect = e.target.getBoundingClientRect();
+            if (e.clientX < (rect.left + rect.width / 2)) { skip(-10); showOverlayInfo('« 10s'); } else { skip(10); showOverlayInfo('10s »'); }
+            lastTapTime = 0; 
+        } else {
+            lastTapTime = currentTime;
+            tapTimer = setTimeout(() => { if (!isLongPressing) { const cb = document.getElementById("controlBar"); document.getElementById("speedMenu").classList.remove("show"); if (cb.classList.contains("hidden")) { showControls(); } else { hideControls(); } } }, 300);
+        }
+    }
+    
+    function handlePointerUp(e) { clearTimeout(pressTimer); if (isLongPressing) { isLongPressing = false; if (player) { player.setPlaybackRate(lastUserSpeed); } document.getElementById('speedToast').style.display = 'none'; } }
+    
+    function showOverlayInfo(text) { const el = document.getElementById('playerOverlayInfo'); el.innerText = text; el.style.display = 'block'; clearTimeout(infoTimeout); infoTimeout = setTimeout(() => { el.style.display = 'none'; }, 500); }
+
     /* =========================================================
        DYNAMIC DASHBOARD LOADER
        ========================================================= */
@@ -1618,7 +1657,7 @@
         chatListenerRef.on('value', snap => {
             const messages = snap.val();
             if(messages) {
-                let htmlContent = ""; // Build string to avoid DOM flickering
+                let htmlContent = ""; 
                 for(let key in messages) {
                     const msg = messages[key]; 
                     const isMe = msg.userId === currentUser.id; 
@@ -1644,7 +1683,6 @@
                     }
                 }
                 chatBox.innerHTML = htmlContent;
-                // Timeout to ensure DOM is updated before scrolling
                 setTimeout(() => { chatBox.scrollTop = chatBox.scrollHeight; }, 50);
             } else { 
                 chatBox.innerHTML = "<div style='text-align:center; color:var(--text-sub); font-size:13px; margin-top:20px;'>No messages yet. Be the first to ask!</div>"; 
