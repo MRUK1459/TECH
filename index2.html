@@ -53,6 +53,9 @@
         .nav-card:hover i { transform: scale(1.05); }
         .nav-card h3 { font-size: 15px; line-height: 1.4; margin: 0; font-weight: 600; color: var(--text-main); }
 
+        .pulse-card { border: 1px dashed var(--danger); }
+        .pulse-card i { background: #ffe4e6; color: var(--danger); }
+
         /* General Card & Inputs */
         .card { background: white; padding: 30px; border-radius: 16px; box-shadow: var(--shadow); margin-bottom: 25px; border: 1px solid var(--border-color); }
         
@@ -82,13 +85,9 @@
             width: auto; background: white; color: var(--text-main); padding: 10px 20px; 
             margin-bottom: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid var(--border-color); font-size: 14px; border-radius: 10px;
         }
-
-        /* Mobile specific styling for 2 columns grid and hiding back btn */
         @media (max-width: 768px) {
             .back-btn { display: none !important; }
             .chat-monitor-layout { height: calc(100vh - 100px) !important; }
-            
-            /* 2 Columns Mobile Grid */
             .nav-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .nav-card { padding: 15px 10px; }
             .nav-card i { font-size: 32px; padding: 12px; margin-bottom: 10px; }
@@ -114,51 +113,38 @@
         .digital-text { font-family: 'Courier New', monospace; font-weight: 700; font-size: 14px; color: var(--success); }
 
         .std-chk, .l-chk, .mod-acc-chk, .std-access-chk, .prof-page-acc-chk { width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary); vertical-align: middle; }
-        
         .lesson-check-item { padding: 12px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 12px; font-size: 14px; background: white; border-radius: 8px; margin-bottom: 5px; border: 1px solid transparent; transition: 0.2s; }
         .lesson-check-item:hover { border-color: var(--primary-light); background: #f0f4ff; }
-
         .student-row { cursor: pointer; transition: 0.2s; }
         .student-row:hover { background: #f8fafc !important; }
         .student-row:hover td { background: #f8fafc; }
 
-        /* PROFESSIONAL LIVE CHAT STYLES (WHATSAPP THEMED COMPACT) */
+        /* PROFESSIONAL LIVE CHAT STYLES */
         #chatListView, #chatDetailView { display: flex; flex-direction: column; height: 80vh; min-height: 600px; background: white; border-radius: 16px; box-shadow: var(--shadow); border: 1px solid var(--border-color); overflow: hidden; animation: slideUp 0.3s; position: relative;}
-        
         .chat-list-header { padding: 20px; border-bottom: 1px solid var(--border-color); background: #f8fafc; display: flex; justify-content: space-between; align-items: center;}
         .chat-video-item { padding: 20px; border-bottom: 1px solid #f1f5f9; cursor: pointer; transition: 0.2s; background: white; display: flex; justify-content: space-between; align-items: center;}
         .chat-video-item:hover { background: #f0f4ff; }
         .chat-video-item h4 { margin: 0 0 5px 0; font-size: 15px; color: var(--text-main); font-weight: 600; }
-        
         .chat-header { background: #f0f2f5; color: var(--text-main); padding: 15px 25px; font-weight: 600; font-size: 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #d1d7db; z-index: 10; }
         
         .chat-box { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; background-color: #efeae2; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-repeat: repeat; }
-        
         .bubble-container { display: flex; margin-bottom: 8px; width: 100%; flex-direction: column; }
         .bubble-left { align-items: flex-start; }
         .bubble-right { align-items: flex-end; }
-        
         .chat-bubble { max-width: 65%; width: fit-content; padding: 6px 10px 8px 10px; font-size: 14.5px; line-height: 1.4; position: relative; word-wrap: break-word; box-shadow: 0 1px 0.5px rgba(11,20,26,.13); }
         .bubble-student { background: #ffffff; border-radius: 0 8px 8px 8px; color: #111111; }
         .bubble-admin { background: #dcf8c6; border-radius: 8px 0 8px 8px; color: #111111; }
-        
         .chat-msg-header { font-size: 12.5px; margin-bottom: 2px; font-weight: 600; color: #3b82f6;}
         .chat-msg-time { font-size: 11px; color: #667781; float: right; margin-left: 15px; margin-top: 5px; }
-
         .chat-reply-btn { background: transparent; color: var(--primary); padding: 0 5px; font-size: 12px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; box-shadow: none; display: inline-flex;}
         .chat-reply-btn:hover { text-decoration: underline; transform: translateY(0); box-shadow: none;}
-
         #replyInputArea { padding: 10px 20px; background: #f0f2f5; border-top: 1px solid #d1d7db; display: flex; flex-direction: column; gap: 10px; z-index: 10; position: relative;}
         .reply-target-info { font-size: 13px; color: var(--text-main); background: #e2e8f0; padding: 8px 12px; border-radius: 8px; display: none; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary); font-weight: 600; margin-bottom: -5px;}
-        
         .chat-input-wrapper { display: flex; gap: 15px; align-items: center; background: transparent; padding: 5px 0; transition: 0.2s; }
-        
         #adminReplyInput { background: #ffffff; padding: 12px 15px; margin: 0; box-shadow: none; font-size: 15px; flex: 1; border-radius: 8px; border: none; color: #111111; }
         #adminReplyInput:focus { border: none; outline: none; box-shadow: none; }
-        
         .send-btn-chat { background: transparent; border: none; color: #54656f; cursor: pointer; padding: 5px; display: flex; align-items: center; justify-content: center; box-shadow: none; border-radius: 50%; width: 40px; height: 40px;}
         .send-btn-chat:hover { color: var(--primary); transform: scale(1.1); box-shadow: none; }
-
         .emoji-picker-container { display: none; position: absolute; bottom: 70px; left: 20px; width: 280px; height: 200px; background: white; border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 10px; z-index: 100; overflow-y: auto; }
         .emoji-item { font-size: 22px; cursor: pointer; padding: 5px; border-radius: 6px; transition: 0.2s; user-select: none; display: inline-block;}
         .emoji-item:hover { background: #f1f5f9; transform: scale(1.1); }
@@ -177,7 +163,7 @@
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; }
         .modal-content { background: white; width: 90%; max-width: 450px; padding: 30px; border-radius: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.15); }
         
-        /* NEW GLOSSY TOAST NOTIFICATION */
+        /* GLOSSY TOAST NOTIFICATION */
         #toast {
             visibility: hidden; min-width: 250px; 
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -240,10 +226,11 @@
                 <i class="material-icons" style="color: #f97316;">library_books</i><h3>විෂයන් කළමනාකරණය</h3>
             </div>
             <div class="nav-card" onclick="showPage('addPage')">
-                <i class="material-icons" style="color: var(--primary);">video_library</i><h3>පාඩම් සහ වීඩියෝ</h3>
+                <i class="material-icons" style="color: var(--primary);">video_library</i><h3>වීඩියෝ එක් කිරීම</h3>
             </div>
+            <!-- PDF PAGE CARD -->
             <div class="nav-card" onclick="showPage('pdfPage')">
-                <i class="material-icons" style="color: #10b981;">picture_as_pdf</i><h3>PDF ගොනු</h3>
+                <i class="material-icons" style="color: #10b981;">picture_as_pdf</i><h3>PDF ගොනු / සටහන්</h3>
             </div>
             <div class="nav-card" onclick="showPage('studentPage')">
                 <i class="material-icons" style="color: #8b5cf6;">groups</i><h3>ශිෂ්‍යයන් පාලනය</h3>
@@ -251,12 +238,11 @@
             <div class="nav-card" onclick="showPage('viewPage')">
                 <i class="material-icons" style="color: #0ea5e9;">movie_edit</i><h3>Video Edit & Manage</h3>
             </div>
-            <!-- STANDARD CARDS FOR LIVE CHAT AND BANNERS -->
             <div class="nav-card" onclick="showPage('chatMonitorPage')">
-                <i class="material-icons" style="color: #ec4899;">forum</i><h3>Live Chat Monitor</h3>
+                <i class="material-icons" style="color: #ec4899;">forum</i><h3 style="color: #ec4899;">Live Chat Monitor</h3>
             </div>
             <div class="nav-card" onclick="showPage('bannersPage')">
-                <i class="material-icons" style="color: #f43f5e;">campaign</i><h3>Banners & Posters</h3>
+                <i class="material-icons" style="color: #f43f5e;">campaign</i><h3 style="color: #f43f5e;">Banners & Posters</h3>
             </div>
             <div class="nav-card" onclick="openSpgMain()">
                 <i class="material-icons" style="color: #f59e0b;">psychology</i><h3>Smart Paper (SPG)</h3>
@@ -301,14 +287,12 @@
         </div>
     </div>
 
-    <!-- LIVE CHAT MONITOR PAGE (Redesigned) -->
+    <!-- LIVE CHAT MONITOR PAGE -->
     <div id="chatMonitorPage" class="page">
         <button class="back-btn" onclick="goBackOrHome()"><i class="material-icons">arrow_back</i> ආපසු</button>
 
-        <!-- SECTION: LIVE CHAT (CLEAN FULL SCREEN FLOW) -->
         <div id="secLiveChat" style="position: relative;">
             
-            <!-- View 1: Chat List (Full Height) -->
             <div id="chatListView">
                 <div class="chat-list-header">
                     <h3 style="margin:0; font-size: 18px; color: var(--text-main); font-weight: 700;"><i class="material-icons" style="vertical-align:middle; color:var(--primary); margin-right:5px; font-size:24px;">forum</i> Active Discussions</h3>
@@ -326,7 +310,6 @@
                 </div>
             </div>
 
-            <!-- View 2: Active Chat Detail (Compact WhatsApp Style) -->
             <div id="chatDetailView" style="display: none;">
                 <div class="chat-header">
                     <div style="display:flex; align-items:center; gap:15px;">
@@ -346,7 +329,6 @@
                     </div>
                     
                     <div class="chat-input-wrapper">
-                        <!-- Emoji Container -->
                         <div id="adminEmojiPicker" class="emoji-picker-container">
                             <div id="adminEmojiGrid" style="display:flex; flex-wrap:wrap; gap:4px; align-content:flex-start;"></div>
                         </div>
@@ -406,7 +388,6 @@
         
         <!-- Manage Active Students -->
         <div id="secStdManage">
-            <!-- Active Students Count -->
             <div style="font-size:14px; color:var(--text-muted); margin-bottom:10px; font-weight:600;">
                 <i class="material-icons" style="vertical-align:middle; font-size:18px;">group</i> Active Students Count: <span id="activeStudentCount" style="color:var(--primary);">0</span>
             </div>
@@ -455,7 +436,7 @@
 
     <!-- FULL PAGE: Student Profile Details & Access Settings -->
     <div id="studentProfileFullPage" class="page">
-        <button class="back-btn" onclick="goBackOrHome()"><i class="material-icons">arrow_back</i> ආපසු</button>
+        <button class="back-btn" onclick="showPage('studentPage')"><i class="material-icons">arrow_back</i> සිසුන්ගේ ලැයිස්තුවට</button>
         
         <div class="card" style="border-top: 5px solid var(--primary); padding-bottom: 20px;">
             <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:20px;">
@@ -512,22 +493,22 @@
         </div>
     </div>
 
-    <!-- Data Add Page -->
+    <!-- Data Add Page (VIDEOS ONLY) -->
     <div id="addPage" class="page">
         <button class="back-btn" onclick="goBackOrHome()"><i class="material-icons">arrow_back</i> ආපසු</button>
         <div class="card">
-            <h3 style="margin-top:0;">වීඩියෝ දත්ත එක් කරන්න</h3>
-            <select id="streamSelect" onchange="loadLessonsList()">
+            <h3 style="margin-top:0;"><i class="material-icons" style="vertical-align:middle; color:var(--primary);">video_library</i> වීඩියෝ දත්ත එක් කරන්න</h3>
+            <select id="streamSelect" onchange="loadGenericLessonsList('video')">
                 <option value="">Stream එක තෝරන්න...</option>
             </select>
 
             <div style="background:#f8fafc; padding:20px; border-radius:12px; margin-bottom:20px; border:1px solid var(--border-color);">
                 <p style="margin-top:0; font-weight:600; font-size:13px; color:var(--primary);">නව ප්‍රධාන ෆෝල්ඩරයක් සාදන්න:</p>
                 <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px;">
-                    <div style="display:flex; gap:5px;"><input type="text" id="newMonthlyInput" placeholder="Monthly Folder" style="margin-bottom:0;"><button style="width:auto; padding:0 15px;" onclick="createNewFolder('Monthly')">සාදන්න</button></div>
-                    <div style="display:flex; gap:5px;"><input type="text" id="newPapersInput" placeholder="Paper Folder" style="margin-bottom:0;"><button style="width:auto; padding:0 15px;" class="btn-success" onclick="createNewFolder('Papers')">සාදන්න</button></div>
-                    <div style="display:flex; gap:5px;"><input type="text" id="newLessonInput" placeholder="Lesson Folder" style="margin-bottom:0;"><button style="width:auto; padding:0 15px; background:#8b5cf6;" onclick="createNewFolder('Lessons')">සාදන්න</button></div>
-                    <div style="display:flex; gap:5px;"><input type="text" id="newVideoEditInput" placeholder="Video Edit" style="margin-bottom:0;"><button style="width:auto; padding:0 15px; background:#f43f5e;" onclick="createNewFolder('Video Edit')">සාදන්න</button></div>
+                    <div style="display:flex; gap:5px;"><input type="text" id="newMonthlyInput" placeholder="Monthly Folder" style="margin-bottom:0;"><button style="width:auto; padding:0 15px;" onclick="createNewFolderContext('Monthly', 'video')">සාදන්න</button></div>
+                    <div style="display:flex; gap:5px;"><input type="text" id="newPapersInput" placeholder="Paper Folder" style="margin-bottom:0;"><button style="width:auto; padding:0 15px;" class="btn-success" onclick="createNewFolderContext('Papers', 'video')">සාදන්න</button></div>
+                    <div style="display:flex; gap:5px;"><input type="text" id="newLessonInput" placeholder="Lesson Folder" style="margin-bottom:0;"><button style="width:auto; padding:0 15px; background:#8b5cf6;" onclick="createNewFolderContext('Lessons', 'video')">සාදන්න</button></div>
+                    <div style="display:flex; gap:5px;"><input type="text" id="newVideoEditInput" placeholder="Video Edit" style="margin-bottom:0;"><button style="width:auto; padding:0 15px; background:#f43f5e;" onclick="createNewFolderContext('Video Edit', 'video')">සාදන්න</button></div>
                 </div>
             </div>
 
@@ -535,11 +516,11 @@
             <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:15px;">
                 <div style="flex:1; min-width: 200px;">
                     <label style="font-size:13px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:5px;">වර්ගය තෝරන්න:</label>
-                    <select id="categorySelect" onchange="loadLessonsList()"><option value="Monthly">Monthly</option><option value="Papers">Papers</option><option value="Lessons">Lessons</option><option value="Video Edit">Video Edit</option></select>
+                    <select id="categorySelect" onchange="loadGenericLessonsList('video')"><option value="Monthly">Monthly</option><option value="Papers">Papers</option><option value="Lessons">Lessons</option><option value="Video Edit">Video Edit</option></select>
                 </div>
                 <div style="flex:1; min-width: 200px;">
                     <label style="font-size:13px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:5px;">ප්‍රධාන ෆෝල්ඩරය තෝරන්න:</label>
-                    <select id="lessonSelect" onchange="loadSubFoldersList()"><option value="">තෝරන්න...</option></select>
+                    <select id="lessonSelect" onchange="loadGenericSubFoldersList('video')"><option value="">තෝරන්න...</option></select>
                 </div>
             </div>
 
@@ -547,7 +528,7 @@
                 <p style="margin-top:0; font-weight:600; font-size:13px; color:var(--primary);">විකල්ප: උප-ෆෝල්ඩරයක් (Sub-folder) අවශ්‍ය නම්</p>
                 <div style="display:flex; gap:10px; margin-bottom:15px;">
                     <input type="text" id="newSubFolderInput" placeholder="නව උප-ෆෝල්ඩරයේ නම..." style="margin-bottom:0;">
-                    <button style="width:auto; padding:0 20px;" onclick="createNewSubFolder()">සාදන්න</button>
+                    <button style="width:auto; padding:0 20px;" onclick="createNewSubFolderContext('video')">සාදන්න</button>
                 </div>
                 <label style="font-size:12px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:5px;">වීඩියෝ දාන උප-ෆෝල්ඩරය තෝරන්න:</label>
                 <select id="subFolderSelect" style="margin-bottom:0;">
@@ -560,40 +541,135 @@
         </div>
     </div>
 
-    <!-- PDF Add Page -->
+    <!-- NEW FULL PDF MANAGEMENT PAGE -->
     <div id="pdfPage" class="page">
         <button class="back-btn" onclick="goBackOrHome()"><i class="material-icons">arrow_back</i> ආපසු</button>
-        <div class="card">
-            <h3 style="margin-top:0;">PDF ලින්ක් එක් කරන්න</h3>
-            <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:15px;">
-                <div style="flex:1; min-width: 200px;">
-                    <label style="font-size:13px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:5px;">Stream එක:</label>
-                    <select id="pdfStreamSelect" onchange="loadPdfLessonsList()"><option value="">Stream තෝරන්න...</option></select>
-                </div>
-                <div style="flex:1; min-width: 200px;">
-                    <label style="font-size:13px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:5px;">වර්ගය:</label>
-                    <select id="pdfCategorySelect" onchange="loadPdfLessonsList()"><option value="Monthly">Monthly</option><option value="Papers">Papers</option><option value="Lessons">Lessons</option><option value="Video Edit">Video Edit</option></select>
-                </div>
-            </div>
-            
-            <div style="display:flex; gap:15px; flex-wrap:wrap;">
-                <div style="flex:1; min-width: 200px;">
-                    <label style="font-size:13px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:5px;">ප්‍රධාන ෆෝල්ඩරය:</label>
-                    <select id="pdfLessonSelect" onchange="loadPdfSubFoldersList()"><option value="">ෆෝල්ඩරය තෝරන්න...</option></select>
-                </div>
-                <div style="flex:1; min-width: 200px;">
-                    <label style="font-size:13px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:5px;">උප-ෆෝල්ඩරය:</label>
-                    <select id="pdfSubFolderSelect" onchange="loadPdfVideosList()"><option value="">Direct (Main Folder)</option></select>
-                </div>
-            </div>
+        
+        <div class="sub-nav" style="margin: 0 auto 20px;">
+            <div class="sub-btn active" id="btnPdfLock" onclick="togglePdfSec('lock')">PDF Lock Control</div>
+            <div class="sub-btn" id="btnPdfStand" onclick="togglePdfSec('stand')">තනි PDF (Standalone)</div>
+            <div class="sub-btn" id="btnPdfVid" onclick="togglePdfSec('vid')">වීඩියෝ PDF (Attach)</div>
+        </div>
 
-            <div id="pdfVideosArea" style="margin-top:30px;">
-                <div style="text-align:center; padding: 30px; border: 1px dashed var(--border-color); border-radius: 12px;">
-                    <i class="material-icons" style="font-size: 48px; color: #cbd5e1;">folder_open</i>
-                    <p style="color:var(--text-muted); font-size:14px; margin-bottom: 0;">කරුණාකර ඉහතින් ෆෝල්ඩරයක් තෝරන්න.</p>
+        <!-- SECTION 1: PDF LOCK CONTROL -->
+        <div id="secPdfLock">
+            <div class="card" style="border-top: 4px solid var(--primary);">
+                <h3 style="margin-top:0; color:var(--primary);"><i class="material-icons" style="vertical-align:middle;">security</i> Global PDF Access Control</h3>
+                <label style="font-size:13px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:8px;">විෂය ධාරාව (Stream) තෝරන්න:</label>
+                <select id="lockStreamSelect" onchange="renderLockControls()" style="padding:14px;">
+                    <option value="">Stream තෝරන්න...</option>
+                </select>
+                
+                <div id="lockControlsArea" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:15px; margin-top:20px;">
+                    <div style="background:#f8fafc; padding:20px; border-radius:12px; border:1px dashed #cbd5e1; grid-column:1/-1; text-align:center;">
+                        <p style="color:var(--text-muted); font-size:14px; margin:0;">කරුණාකර ඉහතින් Stream එකක් තෝරන්න.</p>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- SECTION 2: STANDALONE PDF UPLOAD -->
+        <div id="secPdfStand" style="display:none;">
+            <div class="card" style="border-top: 4px solid #10b981;">
+                <h3 style="margin-top:0;"><i class="material-icons" style="vertical-align:middle; color:#10b981;">picture_as_pdf</i> තනි PDF පත්‍රිකා එක් කිරීම (Standalone)</h3>
+                
+                <select id="standStreamSelect" onchange="loadGenericLessonsList('standalone')">
+                    <option value="">Stream එක තෝරන්න...</option>
+                </select>
+
+                <!-- Folder Creation UI -->
+                <div style="background:#f8fafc; padding:20px; border-radius:12px; margin-bottom:20px; border:1px solid var(--border-color);">
+                    <p style="margin-top:0; font-weight:600; font-size:13px; color:var(--primary);">නව ප්‍රධාන ෆෝල්ඩරයක් සාදන්න:</p>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px;">
+                        <div style="display:flex; gap:5px;"><input type="text" id="newMonthlyInputStand" placeholder="Monthly Folder" style="margin-bottom:0;"><button style="width:auto; padding:0 15px;" onclick="createNewFolderContext('Monthly', 'standalone')">සාදන්න</button></div>
+                        <div style="display:flex; gap:5px;"><input type="text" id="newPapersInputStand" placeholder="Paper Folder" style="margin-bottom:0;"><button style="width:auto; padding:0 15px;" class="btn-success" onclick="createNewFolderContext('Papers', 'standalone')">සාදන්න</button></div>
+                        <div style="display:flex; gap:5px;"><input type="text" id="newLessonInputStand" placeholder="Lesson Folder" style="margin-bottom:0;"><button style="width:auto; padding:0 15px; background:#8b5cf6;" onclick="createNewFolderContext('Lessons', 'standalone')">සාදන්න</button></div>
+                        <div style="display:flex; gap:5px;"><input type="text" id="newVideoEditInputStand" placeholder="Video Edit" style="margin-bottom:0;"><button style="width:auto; padding:0 15px; background:#f43f5e;" onclick="createNewFolderContext('Video Edit', 'standalone')">සාදන්න</button></div>
+                    </div>
+                </div>
+
+                <hr style="margin:20px 0; border:none; border-top:1px dashed #cbd5e1">
+                
+                <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:15px;">
+                    <div style="flex:1; min-width: 200px;">
+                        <label style="font-size:13px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:5px;">වර්ගය තෝරන්න:</label>
+                        <select id="standCategorySelect" onchange="loadGenericLessonsList('standalone')">
+                            <option value="Monthly">Monthly</option><option value="Papers">Papers</option><option value="Lessons">Lessons</option><option value="Video Edit">Video Edit</option>
+                        </select>
+                    </div>
+                    <div style="flex:1; min-width: 200px;">
+                        <label style="font-size:13px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:5px;">ප්‍රධාන ෆෝල්ඩරය තෝරන්න:</label>
+                        <select id="standLessonSelect" onchange="loadGenericSubFoldersList('standalone')">
+                            <option value="">තෝරන්න...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="background:#eff6ff; padding:20px; border-radius:12px; margin-bottom:20px; border:1px dashed var(--primary);">
+                    <p style="margin-top:0; font-weight:600; font-size:13px; color:var(--primary);">විකල්ප: උප-ෆෝල්ඩරයක් (Sub-folder) අවශ්‍ය නම්</p>
+                    <div style="display:flex; gap:10px; margin-bottom:15px;">
+                        <input type="text" id="newSubFolderInputStand" placeholder="නව උප-ෆෝල්ඩරයේ නම..." style="margin-bottom:0;">
+                        <button style="width:auto; padding:0 20px;" onclick="createNewSubFolderContext('standalone')">සාදන්න</button>
+                    </div>
+                    <label style="font-size:12px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:5px;">PDF දාන උප-ෆෝල්ඩරය තෝරන්න:</label>
+                        <select id="standSubFolderSelect" style="margin-bottom:0;" onchange="renderStandaloneManageList()">
+                        <option value="">Direct (Main Folder එකට දාන්න)</option>
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size:13px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:5px;">බොත්තමේ වර්ණය (Button Color):</label>
+                    <select id="bulkPdfColor" style="max-width: 250px;">
+                        <option value="green">කොළ පාට (Green)</option>
+                        <option value="blue">නිල් පාට (Blue)</option>
+                    </select>
+                </div>
+
+                <label style="font-size:13px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:5px;">PDF විස්තර (එක පේළියක නම, ඊළඟ පේළියේ Link එක):</label>
+                <textarea id="standBulkData" rows="6" placeholder="Tute 01&#10;https://drive.google.com/file/...&#10;Tute 02&#10;https://drive.google.com/file/..."></textarea>
+                <button class="btn-success" onclick="uploadBulkStandalonePdfs()"><i class="material-icons">cloud_upload</i> PDF ගොනු Upload කරන්න</button>
+                
+                <div id="standManageArea" style="margin-top:20px;"></div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: VIDEO PDF ATTACH -->
+        <div id="secPdfVid" style="display:none;">
+            <div class="card" style="border-top: 4px solid var(--warning);">
+                <h3 style="margin-top:0; color:var(--warning);"><i class="material-icons" style="vertical-align:middle;">link</i> වීඩියෝ සඳහා PDF ලින්ක් එක් කරන්න</h3>
+                <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:15px;">
+                    <div style="flex:1; min-width: 200px;">
+                        <label style="font-size:13px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:5px;">Stream එක:</label>
+                        <select id="vidPdfStreamSelect" onchange="loadGenericLessonsList('vidPdf')"><option value="">Stream තෝරන්න...</option></select>
+                    </div>
+                    <div style="flex:1; min-width: 200px;">
+                        <label style="font-size:13px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:5px;">වර්ගය:</label>
+                        <select id="vidPdfCategorySelect" onchange="loadGenericLessonsList('vidPdf')">
+                            <option value="Monthly">Monthly</option><option value="Papers">Papers</option><option value="Lessons">Lessons</option><option value="Video Edit">Video Edit</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="display:flex; gap:15px; flex-wrap:wrap;">
+                    <div style="flex:1; min-width: 200px;">
+                        <label style="font-size:13px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:5px;">ප්‍රධාන ෆෝල්ඩරය:</label>
+                        <select id="vidPdfLessonSelect" onchange="loadGenericSubFoldersList('vidPdf')"><option value="">ෆෝල්ඩරය තෝරන්න...</option></select>
+                    </div>
+                    <div style="flex:1; min-width: 200px;">
+                        <label style="font-size:13px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:5px;">උප-ෆෝල්ඩරය (තිබේ නම්):</label>
+                        <select id="vidPdfSubFolderSelect" onchange="loadPdfVideosList()"><option value="">Direct (Main Folder)</option></select>
+                    </div>
+                </div>
+
+                <div id="vidPdfVideosArea" style="margin-top:30px;">
+                    <div style="text-align:center; padding: 30px; border: 1px dashed var(--border-color); border-radius: 12px;">
+                        <i class="material-icons" style="font-size: 48px; color: #cbd5e1;">folder_open</i>
+                        <p style="color:var(--text-muted); font-size:14px; margin-bottom: 0;">කරුණාකර ඉහතින් ෆෝල්ඩරයක් තෝරන්න.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Video Edit & View Page -->
@@ -656,7 +732,7 @@
 
 <!-- Video Edit Modal -->
 <div id="vidEditModal" class="modal-overlay">
-    <div class="modal-content">
+    <div class="modal-content sm-modal">
         <h3 style="margin-top:0; color:#0ea5e9; font-size:20px;"><i class="material-icons" style="vertical-align:middle;">edit</i> වීඩියෝව සංස්කරණය</h3>
         <label style="font-size:13px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:5px;">නව නම (New Name):</label>
         <input type="text" id="editVidNameInp">
@@ -687,6 +763,7 @@
     let activeSpgType = "";
     let dynamicSubjects = []; 
     let globalStudentsData = {}; 
+    let globalPdfLocks = {}; // Global PDF Lock state
     
     let currentEditS = "", currentEditC = "", currentEditL = "", currentEditSub = "", currentEditVk = "", currentEditOldId = "";
     let draggedItemKey = null; let draggedVidKey = null; let draggedVidSub = null; 
@@ -711,12 +788,19 @@
         initAdminEmojiPicker();
         history.replaceState({ page: 'homeScreen' }, null, location.href);
 
-        // System self-healing: remove undefined bugs safely
         db.ref('studyData/undefined').remove();
         db.ref('subjects/undefined').remove();
+
+        // Listen for PDF locks globally
+        db.ref('pdf_locks').on('value', snap => {
+            globalPdfLocks = snap.val() || {};
+            // Refresh PDF lock UI if active
+            if (document.getElementById('pdfPage').classList.contains('active-page') && document.getElementById('secPdfLock').style.display === 'block') {
+                renderLockControls();
+            }
+        });
     };
 
-    // --- NAVIGATION & HISTORY API (MOBILE BACK BUTTON FIX) ---
     function showPage(id, push = true) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
         document.getElementById(id).classList.add('active-page');
@@ -724,7 +808,6 @@
         
         if(id === 'linkTrackPage') loadLiveTracks();
         if(id === 'studentPage') loadStudents();
-        if(id === 'pdfPage') loadPdfLessonsList();
         if(id === 'subjectManagePage') loadSubjects(); 
         if(id === 'bannersPage') loadBanners();
         
@@ -760,7 +843,6 @@
         }
     });
 
-    // GLOSSY TOAST NOTIFICATION FIX
     function showToast(msg, isError = false) {
         const t = document.getElementById('toast');
         const icon = isError ? "error" : "check_circle";
@@ -871,7 +953,7 @@
     }
 
     function populateStreamDropdowns() {
-        const selects = ['streamSelect', 'pdfStreamSelect', 'bulkStream', 'bannerTarget']; 
+        const selects = ['streamSelect', 'standStreamSelect', 'vidPdfStreamSelect', 'lockStreamSelect', 'bulkStream', 'bannerTarget']; 
         selects.forEach(selId => {
             const sel = document.getElementById(selId);
             if(sel) {
@@ -967,19 +1049,19 @@
 
         if(activeChatListener) activeChatListener.off(); 
         activeChatListener = db.ref(`chats/${vidId}/messages`);
+        
         activeChatListener.on('value', snap => {
-            box.innerHTML = ""; const msgs = snap.val();
+            const msgs = snap.val();
             if(msgs) {
+                let htmlContent = ""; // Used to prevent DOM flickering
                 for(let key in msgs) {
                     const msg = msgs[key]; let dateStr = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                     fallbackReplyMsgId = key; fallbackReplyUserId = msg.userId;
                     
-                    box.innerHTML += `
+                    htmlContent += `
                     <div class="bubble-container bubble-left">
                         <div class="chat-bubble bubble-student">
-                            <div class="chat-msg-header">
-                                ${msg.userName}
-                            </div>
+                            <div class="chat-msg-header" style="color: #0284c7;">${msg.userName}</div>
                             <div style="color: var(--text-main);">
                                 ${msg.text}
                                 <span class="chat-msg-time">${dateStr}</span>
@@ -993,7 +1075,7 @@
                     </div>`;
 
                     if (msg.adminReply) {
-                        box.innerHTML += `
+                        htmlContent += `
                         <div class="bubble-container bubble-right">
                             <div class="chat-bubble bubble-admin">
                                 <div style="color: var(--text-main);">
@@ -1004,7 +1086,8 @@
                         </div>`;
                     }
                 }
-                box.scrollTop = box.scrollHeight;
+                box.innerHTML = htmlContent;
+                setTimeout(() => { box.scrollTop = box.scrollHeight; }, 50);
             } else { box.innerHTML = `<div style="text-align:center; color: #8696a0; margin-top: auto; margin-bottom: auto;"><i class="material-icons" style="font-size: 48px;">chat</i><br><span style="font-size: 14px;">Select a discussion to view messages</span></div>`; }
         });
     }
@@ -1396,14 +1479,79 @@
     }
 
 
-    // --- CONTENT UPLOAD ---
-    async function createNewFolder(cat) {
-        const s = document.getElementById('streamSelect').value;
+    // --- UNIFIED FOLDER LOADERS FOR VIDEOS AND PDFs ---
+    function loadGenericLessonsList(context) {
+        let streamId, catId, targetSelectId;
+        if(context === 'video') { streamId = 'streamSelect'; catId = 'categorySelect'; targetSelectId = 'lessonSelect'; }
+        else if (context === 'standalone') { streamId = 'standStreamSelect'; catId = 'standCategorySelect'; targetSelectId = 'standLessonSelect'; }
+        else if (context === 'vidPdf') { streamId = 'vidPdfStreamSelect'; catId = 'vidPdfCategorySelect'; targetSelectId = 'vidPdfLessonSelect'; }
+        
+        const s = document.getElementById(streamId).value;
+        const c = document.getElementById(catId).value;
+        const sel = document.getElementById(targetSelectId);
+        
+        if(!s) { sel.innerHTML = '<option value="">තෝරන්න...</option>'; return; }
+        
+        db.ref(`studyData/${s}/${c}`).on('value', snap => {
+            const data = snap.val();
+            sel.innerHTML = '<option value="">තෝරන්න...</option>';
+            if(data) {
+                Object.keys(data).forEach(l => {
+                    sel.innerHTML += `<option value="${l}">${l}</option>`;
+                });
+            }
+            loadGenericSubFoldersList(context);
+        });
+    }
+
+    function loadGenericSubFoldersList(context) {
+        let streamId, catId, lessonId, targetSelectId;
+        if(context === 'video') { streamId = 'streamSelect'; catId = 'categorySelect'; lessonId = 'lessonSelect'; targetSelectId = 'subFolderSelect'; }
+        else if (context === 'standalone') { streamId = 'standStreamSelect'; catId = 'standCategorySelect'; lessonId = 'standLessonSelect'; targetSelectId = 'standSubFolderSelect'; }
+        else if (context === 'vidPdf') { streamId = 'vidPdfStreamSelect'; catId = 'vidPdfCategorySelect'; lessonId = 'vidPdfLessonSelect'; targetSelectId = 'vidPdfSubFolderSelect'; }
+        
+        const s = document.getElementById(streamId).value;
+        const c = document.getElementById(catId).value;
+        const l = document.getElementById(lessonId).value;
+        const sel = document.getElementById(targetSelectId);
+        
+        sel.innerHTML = '<option value="">Direct (Main Folder)</option>';
+        if(!l || !s) { 
+            if(context === 'vidPdf') loadPdfVideosList();
+            else if(context === 'standalone') renderStandaloneManageList();
+            return; 
+        }
+        
+        db.ref(`studyData/${s}/${c}/${l}/subfolders`).on('value', snap => {
+            const data = snap.val();
+            sel.innerHTML = '<option value="">Direct (Main Folder)</option>';
+            if(data) {
+                Object.keys(data).forEach(sub => {
+                    sel.innerHTML += `<option value="${sub}">${sub}</option>`;
+                });
+            }
+            if(context === 'vidPdf') loadPdfVideosList();
+            else if(context === 'standalone') renderStandaloneManageList();
+        });
+    }
+
+    async function createNewFolderContext(cat, context) {
+        let streamId = context === 'standalone' ? 'standStreamSelect' : 'streamSelect';
+        let s = document.getElementById(streamId).value;
         if(!s) return showToast("පළමුව Stream එක තෝරන්න!", true);
-        let inputId = 'newLessonInput';
-        if(cat === 'Monthly') inputId = 'newMonthlyInput';
-        else if(cat === 'Papers') inputId = 'newPapersInput';
-        else if(cat === 'Video Edit') inputId = 'newVideoEditInput';
+        
+        let inputId = '';
+        if(context === 'standalone') {
+            if(cat === 'Monthly') inputId = 'newMonthlyInputStand';
+            else if(cat === 'Papers') inputId = 'newPapersInputStand';
+            else if(cat === 'Lessons') inputId = 'newLessonInputStand';
+            else if(cat === 'Video Edit') inputId = 'newVideoEditInputStand';
+        } else {
+            if(cat === 'Monthly') inputId = 'newMonthlyInput';
+            else if(cat === 'Papers') inputId = 'newPapersInput';
+            else if(cat === 'Lessons') inputId = 'newLessonInput';
+            else if(cat === 'Video Edit') inputId = 'newVideoEditInput';
+        }
         
         const n = document.getElementById(inputId).value.trim();
         if(!n || n.toLowerCase() === 'undefined') return showToast("මෙම නම භාවිතා කළ නොහැක!", true);
@@ -1411,39 +1559,32 @@
         await db.ref(`studyData/${s}/${cat}/${n}`).update({ created: Date.now() }); 
         showToast(`${cat} ෆෝල්ඩරය සෑදුවා!`); 
         document.getElementById(inputId).value = ""; 
-        loadLessonsList(); 
+        loadGenericLessonsList(context);
     }
 
-    function loadLessonsList() {
-        const s = document.getElementById('streamSelect').value, c = document.getElementById('categorySelect').value;
-        if(!s) return;
-        db.ref(`studyData/${s}/${c}`).on('value', snap => {
-            const data = snap.val(), sel = document.getElementById('lessonSelect'); sel.innerHTML = '<option value="">තෝරන්න...</option>';
-            if(data) Object.keys(data).forEach(l => { let o = document.createElement('option'); o.value = l; o.innerText = l; sel.appendChild(o); });
-            loadSubFoldersList();
-        });
-    }
-
-    function loadSubFoldersList() {
-        const s = document.getElementById('streamSelect').value, c = document.getElementById('categorySelect').value, l = document.getElementById('lessonSelect').value, sel = document.getElementById('subFolderSelect');
-        sel.innerHTML = '<option value="">Direct (Main Folder එකට දාන්න)</option>';
-        if(!l || !s) return;
-        db.ref(`studyData/${s}/${c}/${l}/subfolders`).on('value', snap => {
-            const data = snap.val();
-            sel.innerHTML = '<option value="">Direct (Main Folder එකට දාන්න)</option>';
-            if(data) Object.keys(data).forEach(sub => { let o = document.createElement('option'); o.value = sub; o.innerText = sub; sel.appendChild(o); });
-        });
-    }
-
-    async function createNewSubFolder() {
-        const s = document.getElementById('streamSelect').value, c = document.getElementById('categorySelect').value, l = document.getElementById('lessonSelect').value, sub = document.getElementById('newSubFolderInput').value.trim();
+    async function createNewSubFolderContext(context) {
+        let streamId, catId, lessonId, inputId;
+        if(context === 'standalone') {
+            streamId = 'standStreamSelect'; catId = 'standCategorySelect'; lessonId = 'standLessonSelect'; inputId = 'newSubFolderInputStand';
+        } else {
+            streamId = 'streamSelect'; catId = 'categorySelect'; lessonId = 'lessonSelect'; inputId = 'newSubFolderInput';
+        }
+        
+        const s = document.getElementById(streamId).value;
+        const c = document.getElementById(catId).value;
+        const l = document.getElementById(lessonId).value;
+        const sub = document.getElementById(inputId).value.trim();
+        
         if(!s) return showToast("පළමුව Stream එක තෝරන්න!", true);
         if(!l) return showToast("පළමුව ප්‍රධාන ෆෝල්ඩරයක් තෝරන්න!", true);
         if(!sub || sub.toLowerCase() === 'undefined') return showToast("උප-ෆෝල්ඩරයේ නම ඇතුලත් කරන්න!", true);
+        
         await db.ref(`studyData/${s}/${c}/${l}/subfolders/${sub}`).update({ created: Date.now() });
-        showToast("උප-ෆෝල්ඩරය සෑදුවා!"); document.getElementById('newSubFolderInput').value = "";
+        showToast("උප-ෆෝල්ඩරය සෑදුවා!"); 
+        document.getElementById(inputId).value = "";
     }
 
+    // --- VIDEO UPLOAD LOGIC ---
     async function uploadVideos() {
         const s = document.getElementById('streamSelect').value, c = document.getElementById('categorySelect').value, l = document.getElementById('lessonSelect').value, sub = document.getElementById('subFolderSelect').value, lines = document.getElementById('bulkData').value.split('\n');
         if(!s) return showToast("Stream එක තෝරන්න!", true);
@@ -1464,36 +1605,122 @@
         showToast("Upload සාර්ථකයි!"); document.getElementById('bulkData').value = "";
     }
 
-    // --- PDF LINKS UPLOAD LOGIC ---
-    function loadPdfLessonsList() {
-        const s = document.getElementById('pdfStreamSelect').value, c = document.getElementById('pdfCategorySelect').value;
-        const sel = document.getElementById('pdfLessonSelect'); sel.innerHTML = '<option value="">ෆෝල්ඩරය තෝරන්න...</option>';
-        const area = document.getElementById('pdfVideosArea'); area.innerHTML = '<div style="text-align:center; padding: 30px; border: 1px dashed var(--border-color); border-radius: 12px;"><i class="material-icons" style="font-size: 48px; color: #cbd5e1;">folder_open</i><p style="color:var(--text-muted); font-size:14px; margin-bottom: 0;">කරුණාකර ඉහතින් ෆෝල්ඩරයක් තෝරන්න.</p></div>';
-        if(!s) return;
 
-        db.ref(`studyData/${s}/${c}`).on('value', snap => {
-            const data = snap.val(); 
-            sel.innerHTML = '<option value="">ෆෝල්ඩරය තෝරන්න...</option>';
-            if(data) { Object.keys(data).forEach(l => { let o = document.createElement('option'); o.value = l; o.innerText = l; sel.appendChild(o); }); }
-            loadPdfSubFoldersList();
-        });
-    }
-
-    function loadPdfSubFoldersList() {
-        const s = document.getElementById('pdfStreamSelect').value, c = document.getElementById('pdfCategorySelect').value, l = document.getElementById('pdfLessonSelect').value, sel = document.getElementById('pdfSubFolderSelect');
-        sel.innerHTML = '<option value="">Direct (Main Folder)</option>';
-        if(!l || !s) { loadPdfVideosList(); return; }
+    // --- NEW: PDF PAGE LOGIC ---
+    function togglePdfSec(sec) {
+        document.getElementById('secPdfLock').style.display = sec === 'lock' ? 'block' : 'none';
+        document.getElementById('secPdfStand').style.display = sec === 'stand' ? 'block' : 'none';
+        document.getElementById('secPdfVid').style.display = sec === 'vid' ? 'block' : 'none';
         
-        db.ref(`studyData/${s}/${c}/${l}/subfolders`).once('value').then(snap => {
+        document.getElementById('btnPdfLock').classList.toggle('active', sec === 'lock');
+        document.getElementById('btnPdfStand').classList.toggle('active', sec === 'stand');
+        document.getElementById('btnPdfVid').classList.toggle('active', sec === 'vid');
+    }
+
+    function renderLockControls() {
+        const s = document.getElementById('lockStreamSelect').value;
+        const area = document.getElementById('lockControlsArea');
+        if(!s) { area.innerHTML = "<div style='background:#f8fafc; padding:20px; border-radius:12px; border:1px dashed #cbd5e1; grid-column:1/-1; text-align:center;'><p style='color:var(--text-muted); font-size:14px; margin:0;'>කරුණාකර ඉහතින් Stream එකක් තෝරන්න.</p></div>"; return; }
+        
+        let html = '';
+        cats.forEach(c => {
+            let isLocked = globalPdfLocks[s] && globalPdfLocks[s][c] === true;
+            let bg = isLocked ? '#fee2e2' : '#dcfce7';
+            let border = isLocked ? '#fecaca' : '#bbf7d0';
+            let titleColor = isLocked ? '#991b1b' : '#166534';
+            let icon = isLocked ? 'lock' : 'lock_open';
+            let statusText = isLocked ? 'Locked (සිසුන්ට Download කළ නොහැක)' : 'Unlocked (සාමාන්‍ය පරිදි Download කළ හැක)';
+            
+            let btnAction = isLocked ? 
+                `<button onclick="setPdfLock('${s}', '${c}', false)" class="btn-success" style="width:auto;"><i class="material-icons">lock_open</i> Unlock කිරීම</button>` : 
+                `<button onclick="setPdfLock('${s}', '${c}', true)" class="btn-danger" style="width:auto;"><i class="material-icons">lock</i> Lock කිරීම</button>`;
+            
+            html += `
+            <div style="background:${bg}; border:1px solid ${border}; border-radius:12px; padding:20px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <i class="material-icons" style="font-size:36px; color:${titleColor}; margin-bottom:10px;">${icon}</i>
+                <h4 style="margin:0 0 5px 0; color:${titleColor}; font-size:16px;">${c}</h4>
+                <p style="margin:0 0 15px 0; font-size:12px; color:${titleColor}; opacity:0.8;">${statusText}</p>
+                ${btnAction}
+            </div>
+            `;
+        });
+        area.innerHTML = html;
+    }
+
+    async function setPdfLock(s, c, lockState) {
+        let word = lockState ? 'Lock' : 'Unlock';
+        if(confirm(`${s.toUpperCase()} හි ${c} කාණ්ඩයේ සියලුම PDFs ${word} කිරීමට ඔබට විශ්වාසද?`)) {
+            await db.ref(`pdf_locks/${s}/${c}`).set(lockState);
+            showToast(`PDFs ${word} කරන ලදී!`);
+        }
+    }
+
+    // --- STANDALONE PDF LOGIC ---
+    async function uploadBulkStandalonePdfs() {
+        const s = document.getElementById('standStreamSelect').value;
+        const c = document.getElementById('standCategorySelect').value;
+        const l = document.getElementById('standLessonSelect').value;
+        const sub = document.getElementById('standSubFolderSelect').value;
+        const color = document.getElementById('bulkPdfColor').value;
+        const lines = document.getElementById('standBulkData').value.split('\n');
+
+        if(!s || !l) return showToast("Stream එක සහ Folder එක තෝරන්න!", true);
+        
+        let targetPath = sub ? `studyData/${s}/${c}/${l}/subfolders/${sub}/pdfs` : `studyData/${s}/${c}/${l}/pdfs`;
+        
+        let title = ""; let uploaded = false;
+        for(let line of lines) {
+            line = line.trim(); if(!line) continue;
+            if(line.includes("http")) { 
+                if(title) { await db.ref(targetPath).push({ title, link: line, color, order: Date.now() }); uploaded = true; }
+                title = ""; 
+            } else { title = line; }
+        }
+
+        if(uploaded) { showToast("PDF පත්‍රිකා සාර්ථකව Upload විය!"); document.getElementById('standBulkData').value = ""; } 
+        else { showToast("කරුණාකර නිවැරදිව නම සහ ලින්ක් එක ඇතුළත් කරන්න!", true); }
+    }
+
+    function renderStandaloneManageList() {
+        const s = document.getElementById('standStreamSelect').value;
+        const c = document.getElementById('standCategorySelect').value;
+        const l = document.getElementById('standLessonSelect').value;
+        const sub = document.getElementById('standSubFolderSelect').value;
+        const area = document.getElementById('standManageArea');
+        area.innerHTML = '';
+        if(!l || !s) return;
+        
+        let targetPath = sub ? `studyData/${s}/${c}/${l}/subfolders/${sub}/pdfs` : `studyData/${s}/${c}/${l}/pdfs`;
+        db.ref(targetPath).on('value', snap => {
             const data = snap.val();
-            sel.innerHTML = '<option value="">Direct (Main Folder)</option>';
-            if(data) Object.keys(data).forEach(sub => { let o = document.createElement('option'); o.value = sub; o.innerText = sub; sel.appendChild(o); });
-            loadPdfVideosList();
+            if(!data) { area.innerHTML = "<div style='text-align:center; padding: 20px; border: 1px dashed var(--border-color); border-radius: 12px;'><i class="+'material-icons'+" style='font-size: 32px; color: #cbd5e1;'>description</i><p style='color:var(--text-muted); font-size:13px; margin-bottom:0;'>මෙම ෆෝල්ඩරයේ තනි PDF පත්‍රිකා නොමැත.</p></div>"; return; }
+            
+            let html = `<h4 style="margin:15px 0 10px 0; color:var(--text-main);">දැනට ඇති පත්‍රිකා:</h4>`;
+            for(let pk in data) {
+                let p = data[pk]; let safeTitle = p.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                html += `
+                <div style="background:white; border:1px solid var(--border-color); border-radius:10px; padding:15px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                    <div style="flex:1; min-width:200px; overflow:hidden;">
+                        <h4 style="margin:0 0 5px 0; font-size:14px; color:var(--text-main);"><i class="material-icons" style="font-size:16px; vertical-align:middle; color:#ef4444;">picture_as_pdf</i> ${safeTitle}</h4>
+                        <a href="${p.link}" target="_blank" style="font-size:12px; color:var(--primary); word-break:break-all;">${p.link}</a>
+                    </div>
+                    <button class="btn-danger" style="width:auto; padding:8px 15px; font-size:12px;" onclick="deleteStandalonePdf('${s}','${c}','${l}','${sub}','${pk}')"><i class="material-icons" style="font-size:14px;">delete</i> මකන්න</button>
+                </div>`;
+            }
+            area.innerHTML = html;
         });
     }
 
+    async function deleteStandalonePdf(s, c, l, sub, pk) {
+        if(confirm("මෙම PDF පත්‍රිකාව මකා දමන්නද?")) {
+            let path = sub ? `studyData/${s}/${c}/${l}/subfolders/${sub}/pdfs/${pk}` : `studyData/${s}/${c}/${l}/pdfs/${pk}`;
+            await db.ref(path).remove(); showToast("PDF පත්‍රිකාව මකා දමන ලදී!");
+        }
+    }
+
+    // --- VIDEO PDF ATTACH LOGIC ---
     function loadPdfVideosList() {
-        const s = document.getElementById('pdfStreamSelect').value, c = document.getElementById('pdfCategorySelect').value, l = document.getElementById('pdfLessonSelect').value, sub = document.getElementById('pdfSubFolderSelect').value, area = document.getElementById('pdfVideosArea'); area.innerHTML = '';
+        const s = document.getElementById('vidPdfStreamSelect').value, c = document.getElementById('vidPdfCategorySelect').value, l = document.getElementById('vidPdfLessonSelect').value, sub = document.getElementById('vidPdfSubFolderSelect').value, area = document.getElementById('vidPdfVideosArea'); area.innerHTML = '';
         if(!l || !s) { area.innerHTML = '<div style="text-align:center; padding: 30px; border: 1px dashed var(--border-color); border-radius: 12px;"><i class="material-icons" style="font-size: 48px; color: #cbd5e1;">folder_open</i><p style="color:var(--text-muted); font-size:14px; margin-bottom: 0;">කරුණාකර ඉහතින් ෆෝල්ඩරයක් තෝරන්න.</p></div>'; return; }
         
         let targetPath = sub ? `studyData/${s}/${c}/${l}/subfolders/${sub}/videos` : `studyData/${s}/${c}/${l}/videos`;
@@ -1510,7 +1737,7 @@
                     <h4 style="margin:0 0 15px 0; font-size:14px; color:var(--text-main);"><i class="material-icons" style="font-size:18px; vertical-align:middle; color:var(--primary);">play_circle</i> ${v.title}</h4>
                     <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
                         <input type="text" id="pdfLink_${vk}" placeholder="PDF Link එක මෙතනට Paste කරන්න..." value="${currentPdf}" style="margin-bottom:0; flex:1; min-width:250px;">
-                        <button style="width:auto; padding:12px 20px;" class="btn-success" onclick="savePdfLink('${s}','${c}','${l}','${safeSub}','${vk}')"><i class="material-icons" style="font-size:16px;">save</i> Save PDF</button>
+                        <button style="width:auto; padding:12px 20px;" class="btn-success" onclick="savePdfLink('${s}','${c}','${l}','${safeSub}','${vk}')"><i class="material-icons" style="font-size:16px;">save</i> Save Link</button>
                     </div>
                 </div>`;
             }
@@ -1520,7 +1747,7 @@
 
     async function savePdfLink(s, c, l, sub, vk) {
         let path = sub ? `studyData/${s}/${c}/${l}/subfolders/${sub}/videos/${vk}` : `studyData/${s}/${c}/${l}/videos/${vk}`;
-        try { await db.ref(path).update({ pdfLink: document.getElementById(`pdfLink_${vk}`).value.trim() }); showToast("PDF Link එක සාර්ථකව යාවත්කාලීන විය!"); } 
+        try { await db.ref(path).update({ pdfLink: document.getElementById(`pdfLink_${vk}`).value.trim() }); showToast("වීඩියෝ PDF Link එක සාර්ථකව යාවත්කාලීන විය!"); } 
         catch (error) { showToast("දෝෂයක්: " + error.message, true); }
     }
 
@@ -1545,6 +1772,7 @@
                     <div class="sub-btn" id="viewLes" onclick="renderCategoryView('${s}', 'Lessons')">Lessons</div>
                     <div class="sub-btn" id="viewVidEdit" onclick="renderCategoryView('${s}', 'Video Edit')">Video Edit</div>
                 </div>
+
                 <div id="categoryViewArea" style="text-align:left;"></div>
             </div>
         `;
@@ -1580,6 +1808,29 @@
                 const l = item.key;
                 let vHtml = "";
                 
+                // STANDALONE PDFS (MAIN FOLDER)
+                if(item.pdfs) {
+                    let pArr = [];
+                    for(let pk in item.pdfs) { pArr.push({ key: pk, ...item.pdfs[pk] }); }
+                    pArr.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+                    pArr.forEach(p => {
+                        let safeTitle = p.title ? p.title.replace(/'/g, "\\'").replace(/"/g, "&quot;") : "Untitled";
+                        let borderColor = p.color === 'blue' ? 'var(--primary)' : 'var(--success)';
+                        vHtml += `
+                        <div class="draggable-vid" style="border-left: 4px solid ${borderColor};">
+                            <div style="display:flex; align-items:center; flex:1; padding-right:10px; overflow:hidden;">
+                                <i class="material-icons" style="color:#ef4444; margin-right:8px;">picture_as_pdf</i>
+                                <span style="font-size:13px; word-break:break-all; font-weight:500;">[PDF] ${safeTitle}</span>
+                            </div>
+                            <div style="display:flex; gap:6px; align-items:center;">
+                                <button class="action-icon-btn" style="background:#fef2f2; color:var(--danger);" onclick="deleteStandalonePdfAdmin(event, '${s}','${c}','${l}', '', '${p.key}')" title="Delete PDF"><i class="material-icons" style="font-size:18px;">delete</i></button>
+                            </div>
+                        </div>`;
+                    });
+                }
+
+                // VIDEOS (MAIN FOLDER)
                 if(item.videos) {
                     let vArr = [];
                     for(let vk in item.videos) { vArr.push({ key: vk, ...item.videos[vk] }); }
@@ -1606,6 +1857,30 @@
                     Object.keys(item.subfolders).forEach(subK => {
                         let subData = item.subfolders[subK];
                         let svHtml = "";
+
+                        // STANDALONE PDFS (SUB FOLDER)
+                        if (subData.pdfs) {
+                            let spArr = [];
+                            for(let pk in subData.pdfs) { spArr.push({ key: pk, ...subData.pdfs[pk] }); }
+                            spArr.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+                            spArr.forEach(p => {
+                                let safeTitle = p.title ? p.title.replace(/'/g, "\\'").replace(/"/g, "&quot;") : "Untitled";
+                                let borderColor = p.color === 'blue' ? 'var(--primary)' : 'var(--success)';
+                                svHtml += `
+                                <div class="draggable-vid" style="border-left: 4px solid ${borderColor};">
+                                    <div style="display:flex; align-items:center; flex:1; padding-right:10px; overflow:hidden;">
+                                        <i class="material-icons" style="color:#ef4444; margin-right:8px;">picture_as_pdf</i>
+                                        <span style="font-size:13px; word-break:break-all; font-weight:500;">[PDF] ${safeTitle}</span>
+                                    </div>
+                                    <div style="display:flex; gap:6px; align-items:center;">
+                                        <button class="action-icon-btn" style="background:#fef2f2; color:var(--danger);" onclick="deleteStandalonePdfAdmin(event, '${s}','${c}','${l}', '${subK}', '${p.key}')" title="Delete PDF"><i class="material-icons" style="font-size:18px;">delete</i></button>
+                                    </div>
+                                </div>`;
+                            });
+                        }
+
+                        // VIDEOS (SUB FOLDER)
                         if (subData.videos) {
                             let svArr = [];
                             for(let vk in subData.videos) { svArr.push({ key: vk, ...subData.videos[vk] }); }
@@ -1642,7 +1917,7 @@
                     });
                 }
                 
-                if (!item.videos && !item.subfolders) vHtml = `<p style="color:var(--warning); font-size:13px; margin-top:0; padding:10px; background:#fef3c7; border-radius:6px;"><i class="material-icons" style="font-size:16px; vertical-align:middle;">warning</i> වීඩියෝ ඇතුලත් කර නොමැත.</p>`;
+                if (!item.videos && !item.subfolders && !item.pdfs) vHtml = `<p style="color:var(--warning); font-size:13px; margin-top:0; padding:10px; background:#fef3c7; border-radius:6px;"><i class="material-icons" style="font-size:16px; vertical-align:middle;">warning</i> දත්ත කිසිවක් ඇතුලත් කර නොමැත.</p>`;
 
                 const safeId = "lesson_" + btoa(unescape(encodeURIComponent(l))).replace(/=/g, "");
                 
@@ -1666,6 +1941,15 @@
                 </div>`;
             });
         });
+    }
+
+    async function deleteStandalonePdfAdmin(event, s, c, l, sub, pk) {
+        event.stopPropagation();
+        if(confirm("මෙම තනි PDF ගොනුව මකා දමන්නද?")) {
+            let path = sub ? `studyData/${s}/${c}/${l}/subfolders/${sub}/pdfs/${pk}` : `studyData/${s}/${c}/${l}/pdfs/${pk}`;
+            await db.ref(path).remove();
+            showToast("PDF එක මකා දැමුවා!");
+        }
     }
 
     function toggleAccordion(id) {
@@ -1782,7 +2066,7 @@
     }
 
     async function deleteVideo(event, s, c, l, sub, vk) { event.stopPropagation(); if(confirm("මෙම වීඩියෝව මකන්නද?")) { let path = sub ? `studyData/${s}/${c}/${l}/subfolders/${sub}/videos/${vk}` : `studyData/${s}/${c}/${l}/videos/${vk}`; await db.ref(path).remove(); showToast("Video මකා දැමුවා!"); } }
-    async function deleteFolder(s, c, l) { if(confirm("මෙම සම්පූර්ණ පාඩම සහ එහි ඇති වීඩියෝ මකන්නද?")) { await db.ref(`studyData/${s}/${c}/${l}`).remove(); showToast("Folder මකා දැමුවා!"); } }
+    async function deleteFolder(s, c, l) { if(confirm("මෙම සම්පූර්ණ පාඩම මකන්නද?")) { await db.ref(`studyData/${s}/${c}/${l}`).remove(); showToast("Folder මකා දැමුවා!"); } }
     async function deleteSubFolder(s, c, l, sub) { if(confirm(`"${sub}" උප-ෆෝල්ඩරය මකන්නද?`)) { await db.ref(`studyData/${s}/${c}/${l}/subfolders/${sub}`).remove(); showToast("උප-ෆෝල්ඩරය මකා දැමුවා!"); } }
 
     // --- SMART PAPER (SPG) ---
