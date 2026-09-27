@@ -11,24 +11,27 @@
            CLASSIC DARK MODE (DEFAULT) - MATTE BLACK
            ================================================== */
         :root { 
-            --primary: #2563eb;       
-            --primary-light: #60a5fa; 
-            --accent: #1d4ed8; 
-            --bg: #121212;            
-            --card-bg: #1e1e1e;       
+            --primary: #059669;       
+            --primary-light: #34d399; 
+            --accent: #0d9488; 
+            --grade-primary: #059669;
+            --grade-primary-light: #34d399;
+            --grade-accent: #0d9488;
+            --bg: #0d0d12;            
+            --card-bg: #1a1a22;       
             --text-main: #ffffff; 
-            --text-sub: #a1a1aa; 
+            --text-sub: #a1a1b5; 
             --danger: #ef4444;
-            --border-color: rgba(255,255,255,0.05);
+            --border-color: rgba(255,255,255,0.06);
             
-            --glass-bg: rgba(30, 30, 30, 0.6);
-            --glass-border: rgba(255, 255, 255, 0.05);
-            --glass-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-            --glass-glow: 0 10px 30px rgba(37, 99, 235, 0.1);
+            --glass-bg: rgba(28, 28, 38, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.07);
+            --glass-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
+            --glass-glow: 0 10px 30px rgba(5, 150, 105, 0.18);
             
             --folder-icon-bg: rgba(255, 255, 255, 0.05);
-            --folder-btn-bg: rgba(37, 99, 235, 0.15);
-            --folder-btn-text: #93c5fd;
+            --folder-btn-bg: rgba(5, 150, 105, 0.15);
+            --folder-btn-text: #6ee7b7;
 
             /* WHATSAPP DARK MODE COLORS */
             --chat-me-bg: #005c4b;
@@ -37,21 +40,51 @@
             --chat-other-text: #ffffff;
         }
 
+        /* ==================================================
+           COLOR GRADING SYSTEM (cycled by the palette button)
+           Default (no class) = Emerald. Each grade swaps the
+           accent palette only — layout & functionality untouched.
+           ================================================== */
+        body.grade-teal {
+            --primary: #0891b2; --primary-light: #22d3ee; --accent: #0e7490;
+            --grade-primary: #0891b2; --grade-primary-light: #22d3ee; --grade-accent: #0e7490;
+            --glass-glow: 0 10px 30px rgba(8, 145, 178, 0.2);
+            --folder-btn-bg: rgba(8, 145, 178, 0.15); --folder-btn-text: #67e8f9;
+        }
+        body.grade-indigo {
+            --primary: #4f46e5; --primary-light: #818cf8; --accent: #7c3aed;
+            --grade-primary: #4f46e5; --grade-primary-light: #818cf8; --grade-accent: #7c3aed;
+            --glass-glow: 0 10px 30px rgba(79, 70, 229, 0.2);
+            --folder-btn-bg: rgba(79, 70, 229, 0.15); --folder-btn-text: #a5b4fc;
+        }
+        body.grade-copper {
+            --primary: #b45309; --primary-light: #f59e0b; --accent: #92400e;
+            --grade-primary: #b45309; --grade-primary-light: #f59e0b; --grade-accent: #92400e;
+            --glass-glow: 0 10px 30px rgba(180, 83, 9, 0.2);
+            --folder-btn-bg: rgba(180, 83, 9, 0.15); --folder-btn-text: #fcd34d;
+        }
+        body.grade-wine {
+            --primary: #be123c; --primary-light: #fb7185; --accent: #9f1239;
+            --grade-primary: #be123c; --grade-primary-light: #fb7185; --grade-accent: #9f1239;
+            --glass-glow: 0 10px 30px rgba(190, 18, 60, 0.2);
+            --folder-btn-bg: rgba(190, 18, 60, 0.15); --folder-btn-text: #fda4af;
+        }
+
         body.light-mode {
-            --bg: #f8fafc; 
+            --bg: #f6f5fb; 
             --card-bg: #ffffff; 
-            --text-main: #0f172a; 
-            --text-sub: #475569; 
-            --border-color: #e2e8f0;
+            --text-main: #14121f; 
+            --text-sub: #5c5a72; 
+            --border-color: #e7e5f3;
             
             --glass-bg: rgba(255, 255, 255, 0.9);
-            --glass-border: rgba(0, 0, 0, 0.05);
-            --glass-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
-            --glass-glow: 0 10px 30px rgba(37, 99, 235, 0.1);
+            --glass-border: color-mix(in srgb, var(--primary) 8%, transparent);
+            --glass-shadow: 0 8px 25px color-mix(in srgb, var(--primary) 7%, transparent);
+            --glass-glow: 0 10px 30px color-mix(in srgb, var(--primary) 12%, transparent);
 
-            --folder-icon-bg: rgba(37, 99, 235, 0.08);
-            --folder-btn-bg: rgba(37, 99, 235, 0.1);
-            --folder-btn-text: #2563eb;
+            --folder-icon-bg: color-mix(in srgb, var(--primary) 8%, transparent);
+            --folder-btn-bg: color-mix(in srgb, var(--primary) 10%, transparent);
+            --folder-btn-text: var(--primary);
 
             --chat-me-bg: #dcf8c6;
             --chat-me-text: #111111;
@@ -59,93 +92,56 @@
             --chat-other-text: #111111;
         }
 
-        body.crimson-mode {
-            --primary: #ef4444; 
-            --primary-light: #f87171; 
-            --accent: #b91c1c; 
-            
-            --bg: #0a0a0a; 
-            --glass-bg: rgba(15, 10, 10, 0.65); 
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-shadow: 0 8px 32px rgba(220, 38, 38, 0.2);
-            --glass-glow: 0 10px 30px rgba(239, 68, 68, 0.25);
-            
-            --folder-btn-bg: rgba(239, 68, 68, 0.15);
-            --folder-btn-text: #fca5a5;
-
-            --chat-me-bg: #7f1d1d;
-            --chat-me-text: #ffffff;
-            --chat-other-bg: rgba(255, 255, 255, 0.1);
-            --chat-other-text: #ffffff;
-        }
-        
-        body.crimson-mode.light-mode {
-            --bg: #fff1f2; 
-            --glass-bg: rgba(255, 255, 255, 0.6); 
-            --glass-border: rgba(239, 68, 68, 0.3);
-            --glass-shadow: 0 8px 32px rgba(220, 38, 38, 0.15);
-
-            --chat-me-bg: #fecdd3;
-            --chat-me-text: #881337;
-            --chat-other-bg: #ffffff;
-            --chat-other-text: #111111;
-        }
-
-        body.crimson-mode .glass-card, 
-        body.crimson-mode .search-input {
-            backdrop-filter: blur(30px) saturate(150%);
-            -webkit-backdrop-filter: blur(30px) saturate(150%);
-        }
-
         .stats-grid-home { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; width: 100%; box-sizing: border-box; }
-        .stat-box { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 16px; padding: 18px 15px; text-align: center; box-shadow: var(--glass-shadow); backdrop-filter: blur(10px); transition: 0.3s ease; position: relative; overflow: hidden; box-sizing: border-box; }
+        .stat-box { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 18px; padding: 18px 15px; text-align: center; box-shadow: var(--glass-shadow); backdrop-filter: blur(10px); transition: 0.3s ease; position: relative; overflow: hidden; box-sizing: border-box; }
+        .stat-box::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: linear-gradient(90deg, var(--primary), var(--accent)); opacity:0.8; }
         .stat-box:hover { transform: translateY(-5px); border-color: var(--primary-light); box-shadow: var(--glass-glow); }
         .stat-box h4 { margin: 0 0 8px 0; font-size: 11px; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.5px; }
         .stat-box .val { font-size: 22px; font-weight: 700; color: var(--text-main); }
         .clickable-stat { cursor: pointer; }
-        .clickable-stat:hover { background: rgba(37, 99, 235, 0.1); }
+        .clickable-stat:hover { background: color-mix(in srgb, var(--primary) 10%, transparent); }
         .clickable-stat::after { content: '\e5cc'; font-family: 'Material Icons'; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--text-sub); opacity: 0; transition: 0.3s; }
         .clickable-stat:hover::after { opacity: 1; right: 5px; color: var(--primary-light); }
         
         .charts-wrapper { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; width: 100%; margin-bottom: 30px; box-sizing: border-box; }
-        @media(max-width: 768px) { .charts-wrapper { grid-template-columns: 1fr; } }
+        @media(max-width: 768px) { .charts-wrapper { grid-template-columns: 1fr; } .chart-panel-session { display: none; } }
         .chart-panel { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 25px; box-shadow: var(--glass-shadow); backdrop-filter: blur(10px); box-sizing: border-box; }
         .chart-panel h3 { margin: 0 0 15px 0; font-size: 14px; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; }
 
         .task-item { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; box-shadow: var(--glass-shadow); box-sizing: border-box; }
-        .task-item:hover { border-color: var(--primary-light); background: rgba(37,99,235,0.05); }
+        .task-item:hover { border-color: var(--primary-light); background: color-mix(in srgb, var(--primary) 5%, transparent); }
         .task-checkbox { width: 22px; height: 22px; cursor: pointer; accent-color: var(--primary); }
 
         .task-cat-btn { background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-sub); padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: 0.3s; font-weight: 600; white-space: nowrap; font-size: 13px; }
-        .task-cat-btn.active, .task-cat-btn:hover { background: var(--primary); color: white; border-color: var(--primary-light); box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3); }
+        .task-cat-btn.active, .task-cat-btn:hover { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border-color: transparent; box-shadow: 0 4px 14px var(--glass-glow); }
 
-        .ambient-glow { position: fixed; border-radius: 50%; filter: blur(150px); z-index: -2; opacity: 0; pointer-events: none; transition: opacity 1s ease; }
-        body.crimson-mode .ambient-glow { opacity: 0.55; }
-        body.crimson-mode.light-mode .ambient-glow { opacity: 0.25; filter: blur(100px); }
-        .glow-1 { width: 30vw; height: 30vw; background: #ef4444; top: -5%; left: -5%; animation: floatA 12s infinite alternate ease-in-out; }
-        .glow-2 { width: 25vw; height: 25vw; background: #991b1b; bottom: -5%; right: -5%; animation: floatB 15s infinite alternate ease-in-out; }
-        .glow-3 { width: 35vw; height: 35vw; background: #f43f5e; top: 40%; left: 35%; animation: floatC 18s infinite alternate ease-in-out; }
+        .ambient-glow { position: fixed; border-radius: 50%; filter: blur(150px); z-index: -2; opacity: 0.22; pointer-events: none; transition: opacity 1s ease; }
+        body.light-mode .ambient-glow { opacity: 0.12; filter: blur(100px); }
+        .glow-1 { width: 30vw; height: 30vw; background: var(--primary); top: -5%; left: -5%; animation: floatA 12s infinite alternate ease-in-out; }
+        .glow-2 { width: 25vw; height: 25vw; background: var(--accent); bottom: -5%; right: -5%; animation: floatB 15s infinite alternate ease-in-out; }
+        .glow-3 { width: 35vw; height: 35vw; background: var(--primary-light); top: 40%; left: 35%; animation: floatC 18s infinite alternate ease-in-out; }
         
         @keyframes floatA { 0% { transform: translate(0, 0); } 100% { transform: translate(15vw, 15vh); } }
         @keyframes floatB { 0% { transform: translate(0, 0); } 100% { transform: translate(-15vw, -15vh); } }
         @keyframes floatC { 0% { transform: translate(0, 0) scale(0.9); } 100% { transform: translate(15vw, -10vh) scale(1.1); } }
 
-        .top-action-btn { background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(10px); color: var(--text-main); width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--glass-shadow); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; }
+        .top-action-btn { background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(10px); color: var(--text-main); width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--glass-shadow); transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1); position: relative; overflow: hidden; }
         .top-action-btn i { z-index: 2; transition: 0.3s; }
         .top-action-btn:hover { transform: translateY(-3px) scale(1.1); border-color: var(--primary); color: var(--primary-light); }
         .top-action-btn:active { transform: scale(0.95); }
-        .top-action-btn.active-crimson { border-color: #ef4444; color: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
 
-        @keyframes popBounce { 0% { opacity: 0; transform: translateY(30px) scale(0.95); } 60% { opacity: 1; transform: translateY(-5px) scale(1.02); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
-        .pop-anim { opacity: 0; animation: popBounce 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; }
+        @keyframes popBounce { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+        .pop-anim { opacity: 0; animation: popBounce 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
 
         .loading-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999999; opacity: 1; }
         .loading-screen.dark-stage { background-color: #09090b; }
         .loading-screen.dark-stage .blob { mix-blend-mode: screen; }
-        .loading-screen.dark-stage .blob-3 { background: #ffffff; box-shadow: 0 0 30px rgba(255, 255, 255, 0.8); }
+        .loading-screen.dark-stage .blob-3 { background: color-mix(in srgb, var(--primary) 50%, var(--primary-light) 50%); box-shadow: 0 0 30px color-mix(in srgb, var(--primary-light) 75%, transparent); }
         .loading-screen.light-stage { background-color: #f4f4f5; }
         .loading-screen.light-stage .blob { mix-blend-mode: multiply; }
-        .loading-screen.light-stage .blob-3 { background: #e0e7ff; box-shadow: 0 0 30px rgba(37, 99, 235, 0.3); }
+        .loading-screen.light-stage .blob-1 { background: var(--accent); }
+        .loading-screen.light-stage .blob-2 { background: var(--primary); }
+        .loading-screen.light-stage .blob-3 { background: color-mix(in srgb, var(--primary-light) 65%, white 35%); box-shadow: 0 0 30px color-mix(in srgb, var(--accent) 35%, transparent); }
 
         .live-indicator { position: relative; width: 140px; height: 140px; display: flex; justify-content: center; align-items: center; filter: blur(8px); }
         .blob { position: absolute; border-radius: 50%; transition: mix-blend-mode 1.2s ease, background 0.5s ease; }
@@ -172,8 +168,10 @@
 
         .auth-container { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 85vh; position: relative; }
         .auth-card { width: 90%; max-width: 420px; padding: 50px 40px; text-align: center; animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; position: relative; overflow: visible; }
+        .auth-card::after { content: ''; position: absolute; top: 0; left: 12%; right: 12%; height: 3px; border-radius: 0 0 6px 6px; background: linear-gradient(90deg, transparent, var(--primary), var(--primary-light), var(--primary), transparent); opacity: 0.8; }
         .auth-glow { position: absolute; width: 280px; height: 280px; background: var(--primary); filter: blur(120px); opacity: 0.15; border-radius: 50%; z-index: -1; animation: pulseGlow 4s infinite alternate; }
-        .auth-icon { width: 70px; height: 70px; margin: 0 auto 20px; border-radius: 50%; background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01)); border: 1px solid var(--glass-border); display: flex; justify-content: center; align-items: center; color: var(--primary); font-size: 32px; box-shadow: var(--glass-shadow); }
+        @keyframes iconRing { 0% { box-shadow: 0 10px 28px var(--glass-glow), inset 0 1px 0 rgba(255,255,255,0.25), 0 0 0 0 color-mix(in srgb, var(--primary) 35%, transparent); } 70% { box-shadow: 0 10px 28px var(--glass-glow), inset 0 1px 0 rgba(255,255,255,0.25), 0 0 0 10px transparent; } 100% { box-shadow: 0 10px 28px var(--glass-glow), inset 0 1px 0 rgba(255,255,255,0.25), 0 0 0 0 transparent; } }
+        .auth-icon { width: 74px; height: 74px; margin: 0 auto 22px; border-radius: 22px; background: linear-gradient(145deg, var(--primary), var(--accent)); border: 1px solid var(--glass-border); display: flex; justify-content: center; align-items: center; color: #fff; font-size: 34px; box-shadow: 0 10px 28px var(--glass-glow), inset 0 1px 0 rgba(255,255,255,0.25); animation: iconRing 2.6s ease-out infinite; }
         
         .auth-input-group { position: relative; margin-bottom: 20px; width: 100%; }
         .auth-input-group i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-sub); font-size: 22px; transition: 0.3s; }
@@ -187,24 +185,34 @@
         @keyframes pulseGlow { 0% { transform: scale(1) translate(0, 0); opacity: 0.1; } 100% { transform: scale(1.1) translate(10px, -10px); opacity: 0.25; } }
 
         .greeting-container { padding: 30px 10px 20px 10px; display: flex; align-items: center; gap: 15px; }
-        @keyframes rgb-pulse { 0% { box-shadow: 0 0 15px var(--glass-glow); transform: scale(1); background: var(--primary); } 50% { box-shadow: 0 0 25px var(--glass-glow); transform: scale(1.05); background: var(--accent); } 100% { box-shadow: 0 0 15px var(--glass-glow); transform: scale(1); background: var(--primary); } }
-        .user-avatar { width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 26px; font-weight: 800; animation: rgb-pulse 4s infinite ease-in-out; border: 2px solid rgba(255,255,255,0.2); }
+        @keyframes avatarGlowPulse {
+            0%, 100% { box-shadow: 0 0 14px var(--glass-glow); }
+            50%      { box-shadow: 0 0 30px var(--glass-glow); }
+        }
+        .user-avatar { width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 26px; font-weight: 800; background: linear-gradient(145deg, var(--primary), var(--accent)); animation: avatarGlowPulse 2.4s ease-in-out infinite; border: 2px solid rgba(255,255,255,0.2); }
 
-        .login-btn { width: 100%; padding: 18px; margin-top: 10px; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; border-radius: 18px; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 8px 25px var(--glass-glow); box-sizing: border-box; transition: transform 0.4s, box-shadow 0.3s ease; }
-        .login-btn:hover { box-shadow: 0 12px 30px var(--glass-glow); }
+        .login-btn { width: 100%; padding: 18px; margin-top: 10px; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; border-radius: 16px; font-weight: 700; font-size: 16px; letter-spacing: 0.3px; cursor: pointer; box-shadow: 0 10px 28px var(--glass-glow), inset 0 1px 0 rgba(255,255,255,0.2); box-sizing: border-box; transition: transform 0.4s, box-shadow 0.3s ease; position: relative; overflow: hidden; }
+        .login-btn::before { content: ''; position: absolute; top: 0; left: -75%; width: 50%; height: 100%; background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent); transform: skewX(-20deg); transition: left 0.6s ease; }
+        .login-btn:hover::before { left: 130%; }
+        .login-btn:hover { box-shadow: 0 14px 34px var(--glass-glow), inset 0 1px 0 rgba(255,255,255,0.25); transform: translateY(-2px); }
         .login-btn:active { transform: translateY(0); scale: 0.98; }
 
         #subjectList { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; justify-content: center; padding: 0 10px; box-sizing: border-box; }
-        .glass-card { background: var(--glass-bg); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); border-radius: 24px; overflow: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
+        .glass-card { background: var(--glass-bg); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); border-radius: 24px; overflow: hidden; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1); position: relative; }
+        .glass-card::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent); opacity:0.5; }
         .clickable-card { cursor: pointer; }
         .clickable-card:hover { transform: translateY(-8px) scale(1.02); border-color: var(--primary-light); box-shadow: var(--glass-glow); }
 
         .subject-card { display: flex; flex-direction: column; }
-        .subject-image { width: 100%; aspect-ratio: 16 / 7; object-fit: cover; border-bottom: 1px solid var(--border-color); }
-        .info-box { padding: 22px; display: flex; justify-content: space-between; align-items: center; background: transparent; }
-        .info-box h3 { margin: 0; font-size: 19px; color: var(--text-main); font-weight: 700; }
-        .info-box i { color: var(--primary-light); background: var(--folder-icon-bg); padding: 8px; border-radius: 50%; transition: 0.3s; }
-        .subject-card:hover .info-box i { background: var(--primary); color: white; transform: translateX(5px); }
+        .subject-image-wrap { position: relative; }
+        .subject-image { width: 100%; aspect-ratio: 16 / 7; object-fit: cover; display: block; }
+        .subject-image-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 60%); }
+        .subject-badge { position: absolute; top: 14px; left: 14px; min-width: 28px; height: 28px; padding: 0 6px; border-radius: 9px; background: rgba(0,0,0,0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); color: #fff; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.18); }
+        .info-box { padding: 20px 22px; display: flex; justify-content: space-between; align-items: center; background: transparent; }
+        .info-box h3 { margin: 0; font-size: 18px; color: var(--text-main); font-weight: 700; }
+        .subject-sub { display: block; font-size: 12px; color: var(--text-sub); margin-top: 4px; font-weight: 500; }
+        .info-box i { color: var(--primary-light); background: var(--folder-icon-bg); padding: 8px; border-radius: 50%; transition: 0.3s; flex-shrink: 0; margin-left: 10px; }
+        .subject-card:hover .info-box i { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; transform: translateX(5px); }
 
         .category-grid, .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; justify-content: center; box-sizing: border-box; }
         .history-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; margin-top: 15px; justify-content: center; box-sizing: border-box; }
@@ -218,16 +226,17 @@
             .task-item > div:last-child { align-self: flex-end; }
         }
 
-        .folder-card { padding: 14px; display: flex; flex-direction: column; align-items: flex-start; box-sizing: border-box; width: 100%; }
-        .folder-icon-wrap { background: var(--folder-icon-bg); color: var(--primary-light); padding: 12px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; border: 1px solid var(--border-color); box-shadow: inset 0 2px 10px var(--border-color); }
+        .folder-card { padding: 16px; display: flex; flex-direction: column; align-items: flex-start; box-sizing: border-box; width: 100%; }
+        .folder-icon-wrap { background: var(--folder-icon-bg); color: var(--primary-light); width: 52px; height: 52px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; border: 1px solid var(--border-color); box-shadow: 0 4px 14px rgba(0,0,0,0.25); transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+        .folder-card:hover .folder-icon-wrap { transform: scale(1.06) translateY(-2px); }
         .video-thumbnail { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 1px solid var(--border-color); transition: 0.4s ease; }
         .folder-card:hover .video-thumbnail { transform: scale(1.03); }
         .folder-title { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; word-break: break-word; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-align: left; min-height: 34px; width: 100%; line-height: 1.3; }
         .folder-count { font-size: 12px; color: var(--text-sub); margin-bottom: 10px; font-weight: 500; }
         
-        .folder-btn { width: 100%; padding: 10px; background: var(--folder-btn-bg); color: var(--folder-btn-text); border-radius: 10px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; transition: all 0.3s ease; margin-top: auto; border: 1px solid var(--border-color); cursor: pointer;}
-        .folder-card:hover .folder-btn { background: var(--primary); color: #ffffff; box-shadow: 0 5px 15px var(--glass-glow); border-color: transparent; }
-        .pdf-btn { width: 100%; padding: 10px; background: #10b981; color: #ffffff; border-radius: 10px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; transition: all 0.3s ease; margin-top: 8px; border: 1px solid var(--border-color); cursor: pointer; }
+        .folder-btn { width: 100%; padding: 11px; background: var(--folder-btn-bg); color: var(--folder-btn-text); border-radius: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.2px; display: flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; transition: all 0.3s ease; margin-top: auto; border: 1px solid var(--border-color); cursor: pointer;}
+        .folder-card:hover .folder-btn { background: linear-gradient(135deg, var(--primary), var(--accent)); color: #ffffff; box-shadow: 0 8px 20px var(--glass-glow); border-color: transparent; }
+        .pdf-btn { width: 100%; padding: 10px; background: linear-gradient(135deg, #10b981, #047857); color: #ffffff; border-radius: 12px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; transition: all 0.3s ease; margin-top: 8px; border: 1px solid var(--border-color); cursor: pointer; }
         .pdf-btn:hover { box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4); transform: translateY(-2px); }
 
         .search-wrapper { max-width: 1200px; margin: 0 auto 30px; padding: 0 10px; position: relative; box-sizing: border-box; }
@@ -240,28 +249,22 @@
            BANNERS SLIDER CSS
            ================================================== */
         .banner-slide {
-            min-width: 100%; background: linear-gradient(135deg, rgba(37, 99, 235, 0.25) 0%, rgba(29, 78, 216, 0.15) 100%); border: 2px solid rgba(96, 165, 250, 0.5);
-            border-radius: 20px; padding: 25px 20px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; text-align: center;
-            min-height: 120px; backdrop-filter: blur(15px); position: relative; overflow: hidden; animation: bannerGlowPulse 3s infinite alternate;
+            min-width: 100%; background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 22%, transparent) 0%, color-mix(in srgb, var(--accent) 13%, transparent) 100%); border: 1px solid var(--glass-border);
+            border-radius: 26px; padding: 20px 24px; box-sizing: border-box; display: flex; align-items: center; gap: 16px; text-align: left;
+            min-height: 100px; backdrop-filter: blur(15px); position: relative; overflow: hidden;
+            animation: bannerDrop 0.6s cubic-bezier(0.22, 1, 0.36, 1) both, bannerGlowPulse 4s ease-in-out infinite alternate 0.6s;
         }
         .banner-slide::before {
-            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
-            transform: skewX(-25deg); animation: glossShine 5s infinite;
+            content: ''; position: absolute; top: -30%; right: -10%; width: 55%; height: 160%; border-radius: 50%;
+            background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%); opacity: 0.18; pointer-events: none;
         }
+        @keyframes bannerDrop { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes bannerGlowPulse {
-            0% { box-shadow: 0 8px 25px rgba(37, 99, 235, 0.2), inset 0 2px 10px rgba(255, 255, 255, 0.1); }
-            100% { box-shadow: 0 12px 40px rgba(37, 99, 235, 0.6), inset 0 2px 20px rgba(255, 255, 255, 0.3); }
+            0% { box-shadow: 0 8px 22px color-mix(in srgb, var(--primary) 15%, transparent); }
+            100% { box-shadow: 0 14px 34px color-mix(in srgb, var(--accent) 40%, transparent); }
         }
-        @keyframes glossShine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
-        .banner-text { font-size: 17px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 15px; z-index: 1; letter-spacing: 0.5px; }
-        .banner-text i { font-size: 34px; color: var(--primary); text-shadow: 0 0 15px var(--glass-glow); animation: iconBounce 2s infinite; }
-        @keyframes iconBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-        
-        body.crimson-mode .banner-slide { background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(185, 28, 28, 0.15) 100%); border-color: rgba(248, 113, 113, 0.5); animation: bannerGlowPulseCrimson 3s infinite alternate; }
-        @keyframes bannerGlowPulseCrimson {
-            0% { box-shadow: 0 8px 25px rgba(239, 68, 68, 0.2), inset 0 2px 10px rgba(255, 255, 255, 0.1); }
-            100% { box-shadow: 0 12px 40px rgba(239, 68, 68, 0.6), inset 0 2px 20px rgba(255, 255, 255, 0.3); }
-        }
+        .banner-icon-badge { flex-shrink: 0; width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(145deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px; box-shadow: 0 6px 16px var(--glass-glow); z-index: 1; }
+        .banner-text { font-size: 15px; font-weight: 600; line-height: 1.4; color: var(--text-main); z-index: 1; }
 
         .history-card { width: 100%; padding: 10px; border-radius: 16px; background: rgba(0,0,0,0.2); box-sizing: border-box; cursor: pointer; }
         .history-thumb-wrap { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
@@ -275,7 +278,7 @@
         .history-title { font-size: 13px; font-weight: 600; color: var(--text-main); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3; }
 
         .global-section-title { max-width: 1200px; margin: 0 auto 18px; padding: 0 10px; font-size: 19px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 10px; box-sizing: border-box; }
-        .global-section-title i { color: var(--primary); background: var(--folder-icon-bg); padding: 6px; border-radius: 8px;}
+        .global-section-title i { color: #fff; background: linear-gradient(145deg, var(--primary), var(--accent)); padding: 7px; border-radius: 10px; font-size: 20px; box-shadow: 0 4px 12px var(--glass-glow); }
 
         .video-box { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 25px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.8); border: 1px solid var(--border-color); }
         #player { width: 100%; height: 100%; position: absolute; pointer-events: none; border: none; }
@@ -306,7 +309,7 @@
 
         #playerOverlayInfo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); color: white; padding: 15px 25px; border-radius: 12px; font-size: 22px; font-weight: 700; z-index: 35; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); }
         .speed-dropdown { position: absolute; bottom: 55px; right: 0; background: rgba(15, 15, 15, 0.85); backdrop-filter: blur(15px); border-radius: 16px; display: none; flex-direction: column; border: 1px solid rgba(255,255,255,0.1); width: 120px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
-        .speed-dropdown.show { display: flex; animation: fadeUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .speed-dropdown.show { display: flex; animation: fadeUp 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(15px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
         .speed-opt { padding: 12px; font-size: 14px; font-weight: 600; color: white; cursor: pointer; text-align: center; transition: 0.2s; }
         .speed-opt:hover { background: var(--primary); }
@@ -344,8 +347,8 @@
         .emoji-btn:hover { color: var(--primary); background: rgba(255,255,255,0.05); }
         .chat-input-area input { margin: 0; padding: 12px 20px; border-radius: 30px; font-size: 14px; flex: 1; border: 1px solid var(--border-color); background: rgba(255,255,255,0.05); color: var(--text-main); outline: none;}
         .chat-input-area input:focus { border-color: var(--primary); }
-        .send-btn { background: var(--primary); color: white; width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; border: none; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); }
-        .emoji-picker-container { position: absolute; bottom: 70px; left: 15px; width: 280px; height: 260px; background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); display: none; flex-direction: column; overflow: hidden; z-index: 100;}
+        .send-btn { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; border: none; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px var(--glass-glow); }
+        .emoji-picker-container { position: absolute; bottom: 70px; right: 15px; width: 280px; height: 260px; background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); display: none; flex-direction: column; overflow: hidden; z-index: 100;}
         .emoji-picker-header { padding: 10px; background: rgba(0,0,0,0.2); font-size: 12px; font-weight: bold; text-align: center; border-bottom: 1px solid var(--border-color); color: var(--text-main);}
         .emoji-picker-grid { display: flex; flex-wrap: wrap; gap: 4px; padding: 10px; overflow-y: auto; height: 100%; align-content: flex-start;}
         .emoji-item { font-size: 24px; cursor: pointer; padding: 6px; border-radius: 8px; transition: 0.2s; user-select: none;}
@@ -353,7 +356,7 @@
         .emoji-picker-grid::-webkit-scrollbar { width: 4px; }
         .emoji-picker-grid::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
 
-        #notificationToast { position: fixed; top: 20px; right: 20px; background: var(--glass-bg); border: 1px solid var(--primary); color: var(--text-main); padding: 15px 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 99999; display: flex; align-items: center; gap: 15px; transform: translateX(120%); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(10px); cursor: pointer; }
+        #notificationToast { position: fixed; top: 20px; right: 20px; background: var(--glass-bg); border: 1px solid var(--primary); color: var(--text-main); padding: 15px 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 99999; display: flex; align-items: center; gap: 15px; transform: translateX(120%); transition: 0.5s cubic-bezier(0.22, 1, 0.36, 1); backdrop-filter: blur(10px); cursor: pointer; }
         #notificationToast.show { transform: translateX(0); }
         .notif-icon { background: var(--primary); color: white; padding: 10px; border-radius: 50%; }
 
@@ -421,18 +424,22 @@
 
     (function() {
         const savedTheme = localStorage.getItem('portalTheme');
-        const savedCrimson = localStorage.getItem('portalCrimson');
+        const savedGrade = localStorage.getItem('portalColorGrade');
         const loader = document.getElementById('loadingScreen');
         if (savedTheme === 'light') { loader.classList.add('dark-stage'); document.body.classList.add('light-mode'); } 
         else { loader.classList.add('light-stage'); }
-        if (savedCrimson === 'true') { document.body.classList.add('crimson-mode'); }
+        if (savedGrade) {
+            const grades = ['', 'grade-teal', 'grade-indigo', 'grade-copper', 'grade-wine'];
+            const g = grades[parseInt(savedGrade, 10)];
+            if (g) document.body.classList.add(g);
+        }
     })();
 </script>
 
 <div id="masterAuthScreen" class="screen">
     <div class="auth-container">
         <div style="position: absolute; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 50;">
-            <button class="top-action-btn crimson-btn" onclick="toggleCrimson()"><i class="material-icons">lens_blur</i></button>
+            <button class="top-action-btn grade-btn" onclick="cycleColorGrade()"><i class="material-icons">palette</i></button>
             <button class="top-action-btn theme-btn" onclick="toggleTheme()"><i class="material-icons">light_mode</i></button>
         </div>
         <div class="auth-glow"></div>
@@ -451,7 +458,7 @@
 <div id="loginScreen" class="screen">
     <div class="auth-container">
         <div style="position: absolute; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 50;">
-            <button class="top-action-btn crimson-btn" onclick="toggleCrimson()"><i class="material-icons">lens_blur</i></button>
+            <button class="top-action-btn grade-btn" onclick="cycleColorGrade()"><i class="material-icons">palette</i></button>
             <button class="top-action-btn theme-btn" onclick="toggleTheme()"><i class="material-icons">light_mode</i></button>
         </div>
         <div class="auth-glow"></div>
@@ -477,13 +484,13 @@
             </div>
         </div>
         <div style="display: flex; gap: 10px; padding: 10px;" class="pop-target">
-            <button class="top-action-btn crimson-btn" onclick="toggleCrimson()"><i class="material-icons">lens_blur</i></button>
+            <button class="top-action-btn grade-btn" onclick="cycleColorGrade()"><i class="material-icons">palette</i></button>
             <button class="top-action-btn theme-btn" onclick="toggleTheme()"><i class="material-icons">light_mode</i></button>
         </div>
     </div>
 
     <!-- ANNOUNCEMENT SYSTEM (BANNERS) -->
-    <div id="bannerContainer" style="display:none; max-width: 1200px; margin: 0 auto 20px; padding: 0 10px; position:relative; overflow:hidden; border-radius:15px;">
+    <div id="bannerContainer" style="display:none; max-width: 1200px; margin: 0 auto 20px; padding: 0 10px; position:relative; overflow:hidden; border-radius:26px;">
         <div id="bannerSlides" style="display:flex; transition: transform 0.5s ease; width: 100%;">
             <!-- Slides dynamically injected -->
         </div>
@@ -579,7 +586,7 @@
         </div>
 
         <div class="charts-wrapper pop-target" style="max-width:1200px; margin:0 auto 30px; padding: 0 10px;">
-            <div class="chart-panel">
+            <div class="chart-panel chart-panel-session">
                 <h3><i class="material-icons" style="color:var(--primary);">show_chart</i> Daily Session Duration</h3>
                 <div style="padding-top: 20px; width:100%; display:flex; justify-content:center;">
                     <svg viewBox="0 -5 100 40" style="width:100%; max-width: 400px; height:100px; overflow:visible;">
@@ -603,22 +610,22 @@
 
         <div class="global-section-title pop-target"><i class="material-icons">category</i> MAIN CATEGORIES</div>
         <div class="category-grid pop-target" style="max-width:1200px; margin:0 auto; padding: 0 10px;">
-            <div class="folder-card glass-card clickable-card" onclick="openCategory('Papers')">
-                <div class="folder-icon-wrap" style="color: #f59e0b; background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.3);"><i class="material-icons" style="font-size: 28px;">description</i></div>
-                <div class="folder-title" style="font-size: 16px;">Papers</div>
-                <div class="folder-count">Past Papers & Exams</div>
-                <div class="folder-btn" style="background: rgba(245, 158, 11, 0.15); color: #fcd34d;">Open Folder <i class="material-icons">chevron_right</i></div>
-            </div>
-            <div class="folder-card glass-card clickable-card" onclick="openCategory('Monthly')">
-                <div class="folder-icon-wrap" style="color: #10b981; background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3);"><i class="material-icons" style="font-size: 28px;">date_range</i></div>
-                <div class="folder-title" style="font-size: 16px;">Monthly</div>
-                <div class="folder-count">Monthly Classes</div>
-                <div class="folder-btn" style="background: rgba(16, 185, 129, 0.15); color: #6ee7b7;">Open Folder <i class="material-icons">chevron_right</i></div>
-            </div>
-            <div class="folder-card glass-card clickable-card" onclick="openCategory('Lessons')">
-                <div class="folder-icon-wrap" style="color: var(--primary-light); background: var(--folder-btn-bg);"><i class="material-icons" style="font-size: 28px;">play_lesson</i></div>
+            <div class="folder-card glass-card clickable-card" onclick="openCategory('Lessons')" style="border-left: 3px solid var(--primary);">
+                <div class="folder-icon-wrap" style="color: #ffffff; background: linear-gradient(145deg, var(--primary), var(--accent)); border-color: color-mix(in srgb, var(--primary) 40%, transparent);"><i class="material-icons" style="font-size: 26px;">auto_stories</i></div>
                 <div class="folder-title" style="font-size: 16px;">Lessons</div>
                 <div class="folder-count">Theory Lessons</div>
+                <div class="folder-btn">Open Folder <i class="material-icons">chevron_right</i></div>
+            </div>
+            <div class="folder-card glass-card clickable-card" onclick="openCategory('Papers')" style="border-left: 3px solid var(--primary);">
+                <div class="folder-icon-wrap" style="color: #ffffff; background: linear-gradient(145deg, var(--primary), var(--accent)); border-color: color-mix(in srgb, var(--primary) 40%, transparent);"><i class="material-icons" style="font-size: 26px;">fact_check</i></div>
+                <div class="folder-title" style="font-size: 16px;">Papers</div>
+                <div class="folder-count">Past Papers & Exams</div>
+                <div class="folder-btn">Open Folder <i class="material-icons">chevron_right</i></div>
+            </div>
+            <div class="folder-card glass-card clickable-card" onclick="openCategory('Monthly')" style="border-left: 3px solid var(--primary);">
+                <div class="folder-icon-wrap" style="color: #ffffff; background: linear-gradient(145deg, var(--primary), var(--accent)); border-color: color-mix(in srgb, var(--primary) 40%, transparent);"><i class="material-icons" style="font-size: 26px;">event_available</i></div>
+                <div class="folder-title" style="font-size: 16px;">Monthly</div>
+                <div class="folder-count">Monthly Classes</div>
                 <div class="folder-btn">Open Folder <i class="material-icons">chevron_right</i></div>
             </div>
         </div>
@@ -725,8 +732,8 @@
                     <div class="emoji-picker-header">Emojis</div>
                     <div id="emojiPickerGrid" class="emoji-picker-grid"></div>
                 </div>
-                <button class="emoji-btn" onclick="toggleEmojiPicker()"><i class="material-icons">sentiment_satisfied_alt</i></button>
                 <input type="text" id="chatInputMsg" placeholder="Message..." onkeypress="if(event.key === 'Enter') sendChatMessage()">
+                <button class="emoji-btn" onclick="toggleEmojiPicker()"><i class="material-icons">sentiment_satisfied_alt</i></button>
                 <button class="send-btn" onclick="sendChatMessage()"><i class="material-icons">send</i></button>
             </div>
         </div>
@@ -741,10 +748,7 @@
 <script>
     function updateToggleIcons() {
         const isLight = document.body.classList.contains('light-mode');
-        const isCrimson = document.body.classList.contains('crimson-mode');
         document.querySelectorAll('.theme-btn i').forEach(icon => { icon.innerText = isLight ? 'dark_mode' : 'light_mode'; });
-        document.querySelectorAll('.crimson-btn i').forEach(icon => { icon.innerText = isCrimson ? 'blur_off' : 'lens_blur'; });
-        document.querySelectorAll('.crimson-btn').forEach(btn => { if(isCrimson) { btn.classList.add('active-crimson'); } else { btn.classList.remove('active-crimson'); } });
     }
 
     function toggleTheme() {
@@ -753,10 +757,14 @@
         updateToggleIcons();
     }
 
-    function toggleCrimson() {
-        document.body.classList.toggle('crimson-mode');
-        localStorage.setItem('portalCrimson', document.body.classList.contains('crimson-mode') ? 'true' : 'false');
-        updateToggleIcons();
+    const colorGrades = ['', 'grade-teal', 'grade-indigo', 'grade-copper', 'grade-wine'];
+    function cycleColorGrade() {
+        let current = colorGrades.findIndex(g => g && document.body.classList.contains(g));
+        if (current === -1) current = 0;
+        if (colorGrades[current]) document.body.classList.remove(colorGrades[current]);
+        const next = (current + 1) % colorGrades.length;
+        if (colorGrades[next]) document.body.classList.add(colorGrades[next]);
+        localStorage.setItem('portalColorGrade', String(next));
     }
 
     function applyEscapingButton(btnId, userInpId, passInpId) {
@@ -980,7 +988,7 @@
             if(validBanners.length === 0) { container.style.display = 'none'; return; }
             validBanners.sort((a,b) => b.timestamp - a.timestamp);
             container.style.display = 'block'; let html = '';
-            validBanners.forEach(b => { html += `<div class="banner-slide"><div class="banner-text"><i class="material-icons">campaign</i> <span>${b.text}</span></div></div>`; });
+            validBanners.forEach(b => { html += `<div class="banner-slide"><div class="banner-icon-badge"><i class="material-icons">campaign</i></div><div class="banner-text"><span>${b.text}</span></div></div>`; });
             slidesWrap.innerHTML = html;
             if(validBanners.length > 1) { bannerInterval = setInterval(() => { currentBannerIndex = (currentBannerIndex + 1) % validBanners.length; slidesWrap.style.transform = `translateX(-${currentBannerIndex * 100}%)`; }, 4000); }
         });
@@ -1204,7 +1212,7 @@
                     }
                 }
                 
-                searchIndex = []; let delayCounter = 0.4;
+                searchIndex = []; let delayCounter = 0.4; let subIdx = 0;
                 let userAccArr = acc.split(',');
                 if(acc === 'both') userAccArr = ['et', 'sft'];
 
@@ -1214,10 +1222,14 @@
                     if (!hasAccess && sub.tag) { sub.tag.forEach(t => { if(userAccArr.includes(t)) hasAccess = true; }); }
 
                     if (hasAccess) {
+                        subIdx++;
                         list.innerHTML += `
                         <div class="subject-card glass-card clickable-card pop-anim" style="animation-delay: ${delayCounter}s" onclick="openStream('${sub.id}')">
-                            <img src="${sub.img}" class="subject-image">
-                            <div class="info-box"><h3>${sub.name}</h3><i class="material-icons">arrow_forward</i></div>
+                            <div class="subject-image-wrap">
+                                <img src="${sub.img}" class="subject-image">
+                                <div class="subject-image-overlay"></div>
+                            </div>
+                            <div class="info-box"><div><h3>${sub.name}</h3><span class="subject-sub">Tap to explore</span></div><i class="material-icons">arrow_forward</i></div>
                         </div>`;
                         delayCounter += 0.1;
                         
@@ -1298,7 +1310,7 @@
 
         currentSearchResults.forEach((item, idx) => {
             if (item.type === 'folder' || item.type === 'subfolder') {
-                resultsGrid.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="handleSearchClick(${idx})"><div class="folder-icon-wrap" style="${item.type === 'subfolder' ? 'color:var(--primary); background:rgba(37, 99, 235, 0.1);' : ''}"><i class="material-icons">${item.type === 'subfolder' ? 'snippet_folder' : 'folder_open'}</i></div><div class="folder-title">${item.title}</div><div class="folder-count">Stream: ${item.stream.toUpperCase()}</div><div class="folder-btn">View Folder <i class="material-icons">chevron_right</i></div></div>`;
+                resultsGrid.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="handleSearchClick(${idx})"><div class="folder-icon-wrap" style="${item.type === 'subfolder' ? 'color:var(--primary); background:color-mix(in srgb, var(--primary) 10%, transparent);' : ''}"><i class="material-icons">${item.type === 'subfolder' ? 'snippet_folder' : 'folder_open'}</i></div><div class="folder-title">${item.title}</div><div class="folder-count">Stream: ${item.stream.toUpperCase()}</div><div class="folder-btn">View Folder <i class="material-icons">chevron_right</i></div></div>`;
             } else if (item.type === 'video') {
                 const thumbUrl = `https://img.youtube.com/vi/${item.videoData.id}/mqdefault.jpg`;
                 let pdfBtnHtml = item.videoData.pdfLink ? `<div class="pdf-btn real-time-pdf-btn" data-link="${item.videoData.pdfLink}" data-color="green"></div>` : "";
@@ -1386,7 +1398,7 @@
                 if (folderData.subfolders) {
                     hasContent = true;
                     Object.keys(folderData.subfolders).forEach(subK => { 
-                        list.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="openSubFolder('${folderName.replace(/'/g, "\\'")}', '${subK.replace(/'/g, "\\'")}', '${catName}')"><div class="folder-icon-wrap" style="color:var(--primary); background:rgba(37, 99, 235, 0.1);"><i class="material-icons">snippet_folder</i></div><div class="folder-title">${subK}</div><div class="folder-count">Sub Folder</div><div class="folder-btn">විවෘත කරන්න <i class="material-icons">chevron_right</i></div></div>`; 
+                        list.innerHTML += `<div class="folder-card glass-card clickable-card" onclick="openSubFolder('${folderName.replace(/'/g, "\\'")}', '${subK.replace(/'/g, "\\'")}', '${catName}')"><div class="folder-icon-wrap" style="color:var(--primary); background:color-mix(in srgb, var(--primary) 10%, transparent);"><i class="material-icons">snippet_folder</i></div><div class="folder-title">${subK}</div><div class="folder-count">Sub Folder</div><div class="folder-btn">විවෘත කරන්න <i class="material-icons">chevron_right</i></div></div>`; 
                     });
                 }
 
