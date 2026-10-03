@@ -801,7 +801,6 @@
         targets.forEach((el) => { el.classList.remove('pop-anim'); void el.offsetWidth; el.style.animationDelay = `${delay}s`; el.classList.add('pop-anim'); delay += 0.1; });
     }
 
-    // NEW FUNCTION FOR TOAST MESSAGES
     function showToast(msg, isError = false) {
         const toast = document.getElementById('notificationToast');
         document.getElementById('notifTitle').innerText = isError ? "අවධානයයි!" : "දැනුම්දීමක්";
@@ -828,13 +827,14 @@
 
     // SESSION BAN Variables
     let currentSessionToken = null;
+    let localLoginTime = 0; 
     let sessionCheckInterval = null;
 
     // GLOBAL PDF LOCKS VARIABLE
     let pdfLocks = {};
 
     let chatListenerRef = null; let notifListenerRef = null;
-    const emojis = ['😀','😃','😄','😁','😆','😅','😂','🤣','🥲','☺️','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥸','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🤥','😶','😐','😑','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😵','🤐','🥴','🤢','🤮','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👹','👺','🤡','💩','👻','💀','☠️','👽','👾','🤖','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🙈','🙉','🙊','💋','💌','💘','💝','💖','💗','💓','💞','💕','💟','❣️','💔','❤️','🧡','💛','💚','💙','💜','🤎','🖤','🤍','💯','💢','💥','💫','💦','💨','🕳️','💣','💬','👁️‍🗨️','🗨️','🗯️','💭','💤','👋','🤚','🖐️','✋','🖖','👌','🤌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','✍️','💅','🤳','💪','🦾','🦿','🦵','🦶','👂','🦻','👃','🫀','🫁','🧠','🦷','🦴','👀','👁️','👅','👄'];
+    const emojis = ['😀','😃','😄','😁','😆','😅','😂','🤣','🥲','☺️','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥸','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🤥','😶','😐','😑','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😵','🤐','🥴','🤢','🤮','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👹','👺','🤡','💩','👻','💀','☠️','👽','👾','🤖','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🙈','🙉','🙊','💋','💌','💘','💝','💖','💗','💓','💞','💕','💟','❣️','💔','❤️','🧡','💛','💚','💙','💜','🤎','🖤','🤍','💯','💢','💥','💫','💦','💨','🕳️','💣','💬','👁️‍‍🗨️','🗨️','🗯️','💭','💤','👋','🤚','🖐️','✋','🖖','👌','🤌','🤏','✌️️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','✍️','💅','🤳','💪','🦾','🦿','🦵','🦶','👂','🦻','👃','🫀','🫁','🧠','🦷','🦴','👀','👁️','👅','👄'];
 
     // DYNAMIC STATS TRACKING
     function updateDashboardStats() {
@@ -1031,12 +1031,20 @@
                 return;
             }
 
-            // Check if token changed (Multiple Logins)
+            // Check if token changed (Multiple Logins vs Admin Updates)
             if (data.currentSessionToken && data.currentSessionToken !== currentSessionToken) {
-                // Instantly Suspend Account
-                db.ref(`students/${currentUser.id}`).update({ status: 'suspended' }).then(() => {
-                    triggerAutoBanLogout("වෙනත් උපාංගයකින් මෙම ගිණුමට ලොග් වී ඇත. ආරක්ෂිත හේතූන් මත ඔබගේ ගිණුම තහනම් කර ඇත!\n(Account Suspended Due To Multiple Logins)");
-                });
+                // Database එකේ ඇති ලොගින් වූ කාලය වර්තමාන කාලයට වඩා අලුත් නම් පමණක් බෑන් කරන්න
+                if (data.lastLoginTime && data.lastLoginTime > localLoginTime) {
+                    db.ref(`students/${currentUser.id}`).update({ status: 'suspended' }).then(() => {
+                        triggerAutoBanLogout("වෙනත් උපාංගයකින් මෙම ගිණුමට ලොග් වී ඇත. ආරක්ෂිත හේතූන් මත ඔබගේ ගිණුම තහනම් කර ඇත!\n(Account Suspended Due To Multiple Logins)");
+                    });
+                } else {
+                    // Admin panel එකෙන් සිදුවූ වෙනස්වීමක් නම්, Token එක නැවත නිවැරදි කර සුරකින්න
+                    db.ref(`students/${currentUser.id}`).update({ 
+                        currentSessionToken: currentSessionToken,
+                        lastLoginTime: localLoginTime
+                    });
+                }
             }
         });
     }
@@ -1047,7 +1055,10 @@
         
         currentUser = null;
         currentSessionToken = null;
+        localLoginTime = 0;
         localStorage.removeItem('studyUser');
+        localStorage.removeItem('activeSessionToken'); 
+        localStorage.removeItem('localLoginTime');
         window.location.reload();
     }
 
@@ -1069,9 +1080,24 @@
         } else { 
             currentUser = JSON.parse(savedUser);
             
-            // Generate a fresh session token on load/refresh if logged in
-            currentSessionToken = generateSessionToken();
-            db.ref(`students/${currentUser.id}`).update({ currentSessionToken: currentSessionToken });
+            // Multiple Tabs වලදී එකම token එක භාවිතා කිරීම සඳහා
+            let savedToken = localStorage.getItem('activeSessionToken');
+            let savedLoginTime = localStorage.getItem('localLoginTime');
+            
+            if (savedToken && savedLoginTime) {
+                currentSessionToken = savedToken;
+                localLoginTime = parseInt(savedLoginTime);
+            } else {
+                currentSessionToken = generateSessionToken();
+                localLoginTime = Date.now();
+                localStorage.setItem('activeSessionToken', currentSessionToken);
+                localStorage.setItem('localLoginTime', localLoginTime);
+            }
+
+            db.ref(`students/${currentUser.id}`).update({ 
+                currentSessionToken: currentSessionToken,
+                lastLoginTime: localLoginTime
+            });
             
             // Start checking session immediately and periodically
             checkSessionStatus();
@@ -1116,9 +1142,16 @@
                     localStorage.setItem('studyUser', JSON.stringify(currentUser)); 
                     document.getElementById('loginError').style.display = 'none';
                     
-                    // Assign token on successful login
+                    // අලුත් Login එකක් සඳහා Token සහ Time එක සකස් කිරීම
                     currentSessionToken = generateSessionToken();
-                    db.ref(`students/${key}`).update({ currentSessionToken: currentSessionToken });
+                    localLoginTime = Date.now();
+                    localStorage.setItem('activeSessionToken', currentSessionToken);
+                    localStorage.setItem('localLoginTime', localLoginTime);
+                    
+                    db.ref(`students/${key}`).update({ 
+                        currentSessionToken: currentSessionToken,
+                        lastLoginTime: localLoginTime
+                    });
                     
                     sessionCheckInterval = setInterval(checkSessionStatus, 3000);
 
