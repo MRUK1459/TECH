@@ -767,6 +767,7 @@
     
     let currentEditS = "", currentEditC = "", currentEditL = "", currentEditSub = "", currentEditVk = "", currentEditOldId = "";
     let draggedItemKey = null; let draggedVidKey = null; let draggedVidSub = null; 
+    let openFolders = {}; 
 
     let activeAdminChatVid = null;
     let activeAdminChatTitle = null;
@@ -1678,7 +1679,7 @@
         }
 
         if(uploaded) { showToast("PDF පත්‍රිකා සාර්ථකව Upload විය!"); document.getElementById('standBulkData').value = ""; } 
-        else { showToast("කරුණාකර නිවැරදිව නම සහ ලින්ක් එක ඇතුළත් කරන්න!", true); }
+        else { showToast("කරුණාකර නිවැරදිව නම සහ ලින්ක් එක ඇතුළත් জ্ঞකරන්න!", true); }
     }
 
     function renderStandaloneManageList() {
@@ -1697,7 +1698,7 @@
             
             let html = `<h4 style="margin:15px 0 10px 0; color:var(--text-main);">දැනට ඇති පත්‍රිකා:</h4>`;
             for(let pk in data) {
-                let p = data[pk]; let safeTitle = p.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                let p = data[pk]; let safeTitle = p.title.replace(/'/g, "\\'").replace(/"/g, "&quot;")
                 html += `
                 <div style="background:white; border:1px solid var(--border-color); border-radius:10px; padding:15px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                     <div style="flex:1; min-width:200px; overflow:hidden;">
@@ -1842,6 +1843,7 @@
                         <div class="draggable-vid" draggable="true" ondragstart="dragStartVid(event, '${v.key}', '')" ondragover="dragOverVid(event)" ondragleave="dragLeaveVid(event)" ondrop="dropVid(event, '${s}', '${c}', '${l}', '', '${v.key}')">
                             <div style="display:flex; align-items:center; flex:1; padding-right:10px; overflow:hidden;">
                                 <i class="material-icons drag-handle" title="Drag to reorder">drag_indicator</i>
+                                <input type="checkbox" class="bulk-del-vid-chk" data-path="studyData/${s}/${c}/${l}/videos/${v.key}" style="margin: 0 10px 0 0; width: 16px; height: 16px; cursor: pointer;" onclick="event.stopPropagation()">
                                 <span style="font-size:13px; word-break:break-all; font-weight:500;">${v.title}</span>
                             </div>
                             <div style="display:flex; gap:6px; align-items:center;">
@@ -1892,6 +1894,7 @@
                                 <div class="draggable-vid" draggable="true" ondragstart="dragStartVid(event, '${v.key}', '${subK}')" ondragover="dragOverVid(event)" ondragleave="dragLeaveVid(event)" ondrop="dropVid(event, '${s}', '${c}', '${l}', '${subK}', '${v.key}')">
                                     <div style="display:flex; align-items:center; flex:1; padding-right:10px; overflow:hidden;">
                                         <i class="material-icons drag-handle" title="Drag to reorder">drag_indicator</i>
+                                        <input type="checkbox" class="bulk-del-vid-chk" data-path="studyData/${s}/${c}/${l}/subfolders/${subK}/videos/${v.key}" style="margin: 0 10px 0 0; width: 16px; height: 16px; cursor: pointer;" onclick="event.stopPropagation()">
                                         <span style="font-size:13px; word-break:break-all; font-weight:500;">${v.title}</span>
                                     </div>
                                     <div style="display:flex; gap:6px; align-items:center;">
@@ -1928,12 +1931,13 @@
                             <i class="material-icons drag-handle" title="Drag to reorder">drag_indicator</i>
                             <b class="folder-name" style="font-size:15px; color:var(--text-main);">${l}</b>
                         </div>
-                        <i class="material-icons" id="icon-${safeId}" style="color:var(--text-muted);">expand_more</i>
+                        <i class="material-icons" id="icon-${safeId}" style="color:var(--text-muted);">${openFolders[safeId] ? 'expand_less' : 'expand_more'}</i>
                     </div>
-                    <div id="content-${safeId}" style="display:none; padding: 20px; border-top:1px solid var(--border-color); cursor: default;" onclick="event.stopPropagation()">
+                    <div id="content-${safeId}" style="display:${openFolders[safeId] ? 'block' : 'none'}; padding: 20px; border-top:1px solid var(--border-color); cursor: default;" onclick="event.stopPropagation()">
                         <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
                             <button style="width:auto; padding:8px 15px; font-size:12px; border-radius:8px; box-shadow:none;" onclick="renameFolder('${s}','${c}','${l}')"><i class="material-icons" style="font-size:16px;">edit</i> නම වෙනස් කරන්න</button>
                             <button style="width:auto; padding:8px 15px; font-size:12px; background:white; color:var(--danger); border:1px solid var(--danger); box-shadow:none; border-radius:8px;" onclick="deleteFolder('${s}','${c}','${l}')"><i class="material-icons" style="font-size:16px;">delete</i> ෆෝල්ඩරය මකන්න</button>
+                            <button style="width:auto; padding:8px 15px; font-size:12px; background:var(--danger); color:white; border:none; box-shadow:none; border-radius:8px;" onclick="bulkDeleteVideos(event)"><i class="material-icons" style="font-size:16px;">delete_sweep</i> තෝරාගත් සියල්ල මකන්න</button>
                         </div>
                         ${subHtml}
                         ${vHtml}
@@ -1960,6 +1964,7 @@
         content.style.display = isOpen ? 'none' : 'block';
         icon.innerText = isOpen ? 'expand_more' : 'expand_less';
         content.parentElement.style.borderColor = isOpen ? 'var(--border-color)' : 'var(--primary-light)';
+        openFolders[id] = !isOpen; 
         if (!isOpen) setTimeout(() => { content.parentElement.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 150);
     }
 
@@ -2065,9 +2070,35 @@
         showToast("වීඩියෝවේ වෙනස්කම් සුරැකුණා!"); closeModal('vidEditModal');
     }
 
-    async function deleteVideo(event, s, c, l, sub, vk) { event.stopPropagation(); if(confirm("මෙම වීඩියෝව මකන්නද?")) { let path = sub ? `studyData/${s}/${c}/${l}/subfolders/${sub}/videos/${vk}` : `studyData/${s}/${c}/${l}/videos/${vk}`; await db.ref(path).remove(); showToast("Video මකා දැමුවා!"); } }
+    async function deleteVideo(event, s, c, l, sub, vk) { 
+        event.stopPropagation(); 
+        let path = sub ? `studyData/${s}/${c}/${l}/subfolders/${sub}/videos/${vk}` : `studyData/${s}/${c}/${l}/videos/${vk}`; 
+        await db.ref(path).remove(); 
+        showToast("වීඩියෝව මකා දැමුවා!"); 
+    }
+    
     async function deleteFolder(s, c, l) { if(confirm("මෙම සම්පූර්ණ පාඩම මකන්නද?")) { await db.ref(`studyData/${s}/${c}/${l}`).remove(); showToast("Folder මකා දැමුවා!"); } }
     async function deleteSubFolder(s, c, l, sub) { if(confirm(`"${sub}" උප-ෆෝල්ඩරය මකන්නද?`)) { await db.ref(`studyData/${s}/${c}/${l}/subfolders/${sub}`).remove(); showToast("උප-ෆෝල්ඩරය මකා දැමුවා!"); } }
+
+    async function bulkDeleteVideos(event) {
+        event.stopPropagation();
+        let container = event.target.closest('div[id^="content-"]');
+        let checkboxes = container.querySelectorAll('.bulk-del-vid-chk:checked');
+        
+        if(checkboxes.length === 0) return showToast("මකා දැමීමට වීඩියෝ තෝරා නැත!", true);
+        
+        let updates = {};
+        checkboxes.forEach(chk => {
+            updates[chk.getAttribute('data-path')] = null;
+        });
+
+        try {
+            await db.ref().update(updates);
+            showToast("තෝරාගත් වීඩියෝ සියල්ල මකා දැමුවා!");
+        } catch(e) {
+            showToast("දෝෂයකි!", true);
+        }
+    }
 
     // --- SMART PAPER (SPG) ---
     function openSpgMain() { showPage('spgPage'); document.getElementById('spgTypeSelect').style.display = 'grid'; document.getElementById('spgEditor').style.display = 'none'; }
