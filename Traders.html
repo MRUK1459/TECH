@@ -369,7 +369,8 @@
     .input-suffix { right: 15px; }
 
     input[type="text"],
-    input[type="number"] {
+    input[type="number"],
+    select {
       width: 100%;
       background: var(--surface);
       border: 1.5px solid var(--border);
@@ -382,10 +383,16 @@
       transition: all 0.2s ease;
     }
 
+    select option {
+      background: var(--card-solid);
+      color: var(--text);
+    }
+
     input.has-prefix { padding-left: 52px; }
     input.has-suffix { padding-right: 70px; }
 
-    input:focus {
+    input:focus,
+    select:focus {
       border-color: var(--accent);
       background: var(--card-solid);
       box-shadow: 0 0 0 4px var(--accent-glow);
@@ -625,6 +632,16 @@
       transform: translateY(-2px);
     }
 
+    .btn-danger-soft {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-danger-soft:hover {
+      background: rgba(239, 68, 68, 0.22);
+    }
+
     .btn-sm-back {
       flex: 0 0 auto;
       min-width: auto;
@@ -844,6 +861,14 @@
       border-radius: 14px;
       padding: 14px;
       font-size: 0.84rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .hist-card:hover {
+      border-color: var(--accent);
+      background: var(--surface-hover);
+      transform: translateY(-1px);
     }
 
     .hist-top {
@@ -852,6 +877,7 @@
       align-items: center;
       margin-bottom: 8px;
       font-weight: 700;
+      gap: 8px;
     }
 
     .hist-items-mini {
@@ -869,9 +895,200 @@
       font-weight: 700;
     }
 
+    .hist-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+
+    .hist-act-btn {
+      flex: 1;
+      padding: 7px 10px;
+      border-radius: 10px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--card-solid);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+    }
+
+    .hist-act-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .hist-act-btn.share-quick {
+      background: rgba(253, 199, 5, 0.12);
+      border-color: rgba(253, 199, 5, 0.35);
+      color: var(--accent);
+    }
+
+    .hist-act-btn.share-quick:hover {
+      background: var(--accent);
+      color: var(--accent-text);
+    }
+
     .drawer-foot {
       padding: 16px 20px;
       border-top: 1px solid var(--border);
+    }
+
+    /* History Detail & Edit Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(6px);
+      z-index: 140;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .edit-modal {
+      width: 100%;
+      max-width: 560px;
+      max-height: 92vh;
+      background: var(--card-solid);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform: translateY(20px) scale(0.96);
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .modal-backdrop.open .edit-modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .edit-modal-head {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface);
+      gap: 10px;
+    }
+
+    .edit-modal-body {
+      padding: 18px 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .edit-item-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .edit-item-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .edit-item-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .edit-item-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .edit-mini-field label {
+      display: block;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+
+    .edit-mini-field input,
+    .edit-mini-field select {
+      padding: 9px 11px;
+      font-size: 0.9rem;
+      border-radius: 10px;
+    }
+
+    .edit-item-calc {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      padding-top: 8px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .edit-item-calc strong {
+      color: var(--accent);
+      font-size: 0.92rem;
+    }
+
+    .edit-summary-bar {
+      background: linear-gradient(135deg, rgba(253, 199, 5, 0.12), rgba(253, 199, 5, 0.03));
+      border: 1px solid rgba(253, 199, 5, 0.35);
+      border-radius: 16px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .edit-modal-foot {
+      padding: 14px 20px 18px;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .edit-foot-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .edit-foot-row .btn {
+      padding: 12px 14px;
+      font-size: 0.88rem;
+      min-width: 120px;
     }
 
     /* Toast */
@@ -912,7 +1129,7 @@
 
     /* Responsive */
     @media (max-width: 540px) {
-      .form-row-2, .pack-cards { grid-template-columns: 1fr; }
+      .form-row-2, .pack-cards, .edit-item-grid, .edit-item-grid-3 { grid-template-columns: 1fr; }
       .steps-body { padding: 20px 16px 24px; }
       .stepper-wrap { padding: 16px 14px 12px; }
       .step-label { font-size: 0.68rem; }
@@ -1235,7 +1452,7 @@
     <div class="drawer-head">
       <div>
         <h3 style="font-size:1.05rem; font-weight:800;">📋 දෛනික බිල්පත් වාර්තා</h3>
-        <p style="font-size:0.76rem; color:var(--muted);">සුරකින ලද ගනුදෙනු</p>
+        <p style="font-size:0.76rem; color:var(--muted);">විස්තර බැලීමට / Edit කිරීමට බිල්පත ඔබන්න</p>
       </div>
       <button class="icon-btn" onclick="closeHistory()">✕</button>
     </div>
@@ -1260,6 +1477,67 @@
     </div>
   </aside>
 
+  <!-- Saved Bill View & Edit Modal -->
+  <div class="modal-backdrop" id="editModalBackdrop" onclick="handleModalBackdropClick(event)">
+    <div class="edit-modal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+      <div class="edit-modal-head">
+        <div>
+          <h3 id="editModalTitle" style="font-size:1.05rem; font-weight:800;">📄 බිල්පත් විස්තර සහ සංස්කරණය</h3>
+          <p id="editModalTime" style="font-size:0.76rem; color:var(--muted);"></p>
+        </div>
+        <button type="button" class="icon-btn" onclick="closeOrderModal()">✕</button>
+      </div>
+
+      <div class="edit-modal-body">
+        <div class="edit-mini-field">
+          <label>Customer Details</label>
+          <input type="text" id="editCustomerInput" placeholder="Customer Details" oninput="onEditCustomerChange(this.value)" />
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+          <span style="font-size:0.84rem; font-weight:800;">කැලැන්ඩර් වර්ග විස්තර</span>
+          <button type="button" class="chip" onclick="addEditItem()" style="border-color:var(--accent); color:var(--accent);">+ තව වර්ගයක්</button>
+        </div>
+
+        <div id="editItemsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
+
+        <div class="edit-summary-bar">
+          <div>
+            <div style="font-size:0.76rem; color:var(--muted);">මුළු කැලැන්ඩර් ගණන</div>
+            <strong id="editTotalQtyDisplay" style="font-size:1.15rem;">0</strong>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:0.76rem; color:var(--muted);">සම්පූර්ණ බිල්පත</div>
+            <strong id="editGrandTotalDisplay" style="font-size:1.4rem; color:var(--accent);">රු. 0.00</strong>
+          </div>
+        </div>
+
+        <div class="edit-item-grid">
+          <div class="edit-mini-field">
+            <label>දුන් මුදල (රු.)</label>
+            <input type="number" id="editCashGivenInput" min="0" step="0.01" inputmode="decimal" placeholder="0.00" oninput="onEditCashChange(this.value)" />
+          </div>
+          <div class="edit-mini-field">
+            <label id="editBalanceLabel">ඉතිරි මුදල</label>
+            <div id="editBalanceDisplay" style="padding:10px 12px; border-radius:10px; background:var(--surface); border:1.5px solid var(--border); font-weight:800; font-size:0.98rem;">
+              රු. 0.00
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="edit-modal-foot">
+        <div class="edit-foot-row">
+          <button type="button" class="btn btn-success" onclick="saveEditedOrder(true)">💾 වෙනස්කම් සුරකින්න</button>
+          <button type="button" class="btn btn-primary" id="editModalShareBtn" onclick="saveAndShareEditedOrder()">📤 WhatsApp PDF Share</button>
+        </div>
+        <button type="button" class="btn btn-danger-soft" style="padding:9px 14px; font-size:0.8rem;" onclick="deleteEditingOrder()">
+          🗑️ මෙම බිල්පත මකන්න
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Hidden Receipt Template for PDF Generation -->
   <div class="print-receipt" id="printReceipt"></div>
 
@@ -1272,6 +1550,7 @@
     let selectedPackSize = 25;
     let vanItems = [];
     let historyOrders = JSON.parse(localStorage.getItem('calendar_strip_history_v1') || '[]');
+    let editingOrder = null;
 
     // --- Helpers ---
     const $ = (id) => document.getElementById(id);
@@ -1571,7 +1850,7 @@
       }
     }
 
-    // --- Save Order & WhatsApp PDF Share ---
+    // --- Save Order & Reusable WhatsApp PDF Share ---
     function saveAndFinishOrder() {
       if (vanItems.length === 0) return;
 
@@ -1610,27 +1889,23 @@
       goToStep(1);
     }
 
-    async function shareBillToWhatsApp() {
-      if (vanItems.length === 0) return;
+    async function generateAndShareBillPDF(orderData, btnEl) {
+      const { customerDetails, time, items, totalQty, grandTotal, cashGiven, balance } = orderData;
+      if (!items || items.length === 0) return;
 
-      const shareBtn = $('shareBillBtn');
-      const originalBtnText = shareBtn.textContent;
-      shareBtn.disabled = true;
-      shareBtn.textContent = '⏳ PDF සකසමින්...';
+      const originalBtnText = btnEl ? btnEl.textContent : '';
+      if (btnEl) {
+        btnEl.disabled = true;
+        btnEl.textContent = '⏳ PDF සකසමින්...';
+      }
 
-      const { grandTotal, grandQty } = getGrandTotals();
-      const cashGiven = parseFloat($('cashGivenInput').value) || 0;
-      const balance = cashGiven - grandTotal;
-      const customerDetails = $('vanName').value.trim() || 'සාමාන්‍ය ඇණවුම';
-      const now = new Date().toLocaleString('si-LK');
-
-      let rows = vanItems.map((it) => `
+      let rows = items.map((it) => `
         <tr>
           <td>
             <strong>${escapeHtml(it.company)}</strong><br/>
             <small>(${it.packs}×${it.packSize})+${it.extra} = ${it.totalQty} × ${it.stripPrice}</small>
           </td>
-          <td class="right">${it.subtotal.toFixed(2)}</td>
+          <td class="right">${Number(it.subtotal).toFixed(2)}</td>
         </tr>
       `).join('');
 
@@ -1640,7 +1915,7 @@
         <div class="p-address">No. 46, Kaldemulla Road, Moratuwa</div>
         <div class="p-meta">
           <strong>Customer Details:</strong> ${escapeHtml(customerDetails)}<br/>
-          දිනය: ${now}
+          දිනය: ${escapeHtml(time)}
         </div>
         <table>
           <thead>
@@ -1649,7 +1924,7 @@
           <tbody>${rows}</tbody>
         </table>
         <div class="p-totals">
-          <div class="p-row"><span>මුළු කැලැන්ඩර්:</span><strong>${grandQty.toLocaleString()}</strong></div>
+          <div class="p-row"><span>මුළු කැලැන්ඩර්:</span><strong>${Number(totalQty).toLocaleString()}</strong></div>
           <div class="p-row"><span>සම්පූර්ණ බිල:</span><strong>${formatRs(grandTotal)}</strong></div>
           ${cashGiven > 0 ? `
             <div class="p-row"><span>දුන් මුදල:</span><span>${formatRs(cashGiven)}</span></div>
@@ -1662,11 +1937,11 @@
         `*J P T M TRADERS*`,
         `No. 46, Kaldemulla Road, Moratuwa`,
         `Customer Details: ${customerDetails}`,
-        `දිනය: ${now}`,
+        `දිනය: ${time}`,
         `--------------------`,
-        ...vanItems.map((it, i) => `${i + 1}. ${it.company}: (${it.packs}×${it.packSize})+${it.extra} = ${it.totalQty} × රු.${it.stripPrice} = ${formatRs(it.subtotal)}`),
+        ...items.map((it, i) => `${i + 1}. ${it.company}: (${it.packs}×${it.packSize})+${it.extra} = ${it.totalQty} × රු.${it.stripPrice} = ${formatRs(it.subtotal)}`),
         `--------------------`,
-        `මුළු කැලැන්ඩර්: ${grandQty.toLocaleString()}`,
+        `මුළු කැලැන්ඩර්: ${Number(totalQty).toLocaleString()}`,
         `*සම්පූර්ණ බිල: ${formatRs(grandTotal)}*`,
         ...(cashGiven > 0 ? [
           `දුන් මුදල: ${formatRs(cashGiven)}`,
@@ -1740,9 +2015,31 @@
           showToast('WhatsApp හරහා බිල්පත විවෘත කළා.');
         }
       } finally {
-        shareBtn.disabled = false;
-        shareBtn.textContent = originalBtnText;
+        if (btnEl) {
+          btnEl.disabled = false;
+          btnEl.textContent = originalBtnText;
+        }
       }
+    }
+
+    async function shareBillToWhatsApp() {
+      if (vanItems.length === 0) return;
+
+      const { grandTotal, grandQty } = getGrandTotals();
+      const cashGiven = parseFloat($('cashGivenInput').value) || 0;
+      const balance = cashGiven - grandTotal;
+      const customerDetails = $('vanName').value.trim() || 'සාමාන්‍ය ඇණවුම';
+      const now = new Date().toLocaleString('si-LK');
+
+      await generateAndShareBillPDF({
+        customerDetails,
+        time: now,
+        items: vanItems,
+        totalQty: grandQty,
+        grandTotal,
+        cashGiven,
+        balance
+      }, $('shareBillBtn'));
     }
 
     // --- History Drawer ---
@@ -1772,10 +2069,10 @@
       }
 
       list.innerHTML = historyOrders.map((o) => `
-        <div class="hist-card">
+        <div class="hist-card" onclick="openOrderModal(${o.id})">
           <div class="hist-top">
             <span>👤 ${escapeHtml(o.vanName)}</span>
-            <span style="font-size:0.74rem; color:var(--muted);">${o.time}</span>
+            <span style="font-size:0.74rem; color:var(--muted);">${escapeHtml(o.time)}</span>
           </div>
           <div class="hist-items-mini">
             ${o.items.map((it) => `• ${escapeHtml(it.company)}: (${it.packs}×${it.packSize})+${it.extra} = ${it.totalQty} × රු.${it.stripPrice}`).join('<br/>')}
@@ -1792,8 +2089,274 @@
               </span>
             </div>
           ` : ''}
+          <div class="hist-actions">
+            <button type="button" class="hist-act-btn" onclick="event.stopPropagation(); openOrderModal(${o.id})">
+              ✏️ බලන්න / වෙනස් කරන්න
+            </button>
+            <button type="button" class="hist-act-btn share-quick" onclick="event.stopPropagation(); shareSavedOrderDirect(${o.id}, this)">
+              📤 PDF Share
+            </button>
+          </div>
         </div>
       `).join('');
+    }
+
+    async function shareSavedOrderDirect(orderId, btnEl) {
+      const order = historyOrders.find((o) => o.id === orderId);
+      if (!order) return;
+
+      await generateAndShareBillPDF({
+        customerDetails: order.vanName || 'Customer',
+        time: order.time,
+        items: order.items,
+        totalQty: order.totalQty,
+        grandTotal: order.grandTotal,
+        cashGiven: order.cashGiven || 0,
+        balance: (order.cashGiven || 0) - order.grandTotal
+      }, btnEl);
+    }
+
+    // --- Saved Bill View & Edit Modal Logic ---
+    function openOrderModal(orderId) {
+      const original = historyOrders.find((o) => o.id === orderId);
+      if (!original) return;
+
+      // Deep clone so edits are staged until saved
+      editingOrder = JSON.parse(JSON.stringify(original));
+
+      $('editModalTime').textContent = `දිනය: ${editingOrder.time}`;
+      $('editCustomerInput').value = editingOrder.vanName || '';
+      $('editCashGivenInput').value = editingOrder.cashGiven > 0 ? editingOrder.cashGiven : '';
+
+      renderEditItems();
+      recalcEditingTotalsUI();
+
+      $('editModalBackdrop').classList.add('open');
+    }
+
+    function closeOrderModal() {
+      $('editModalBackdrop').classList.remove('open');
+      editingOrder = null;
+    }
+
+    function handleModalBackdropClick(e) {
+      if (e.target === $('editModalBackdrop')) {
+        closeOrderModal();
+      }
+    }
+
+    function renderEditItems() {
+      if (!editingOrder) return;
+      const container = $('editItemsContainer');
+      container.innerHTML = '';
+
+      editingOrder.items.forEach((it, idx) => {
+        const card = document.createElement('div');
+        card.className = 'edit-item-card';
+        card.innerHTML = `
+          <div class="edit-item-head">
+            <strong style="font-size:0.86rem;">වර්ගය #${idx + 1}</strong>
+            ${editingOrder.items.length > 1 ? `<button type="button" class="del-item-btn" title="මෙම වර්ගය ඉවත් කරන්න" onclick="removeEditItem(${idx})">✕</button>` : ''}
+          </div>
+          <div class="edit-item-grid">
+            <div class="edit-mini-field">
+              <label>කැලැන්ඩර් ආයතනය</label>
+              <input type="text" value="${escapeHtml(it.company)}" placeholder="ආයතනයේ නම" oninput="onEditItemField(${idx}, 'company', this.value)" />
+            </div>
+            <div class="edit-mini-field">
+              <label>හට්ටි වර්ගය</label>
+              <select onchange="onEditItemField(${idx}, 'packSize', this.value)">
+                <option value="25" ${Number(it.packSize) === 25 ? 'selected' : ''}>25 හට්ටි (කොළ 12)</option>
+                <option value="50" ${Number(it.packSize) === 50 ? 'selected' : ''}>50 හට්ටි (කොළ 6)</option>
+              </select>
+            </div>
+          </div>
+          <div class="edit-item-grid-3">
+            <div class="edit-mini-field">
+              <label>හට්ටි ගණන</label>
+              <input type="number" min="0" inputmode="numeric" value="${it.packs}" oninput="onEditItemField(${idx}, 'packs', this.value)" />
+            </div>
+            <div class="edit-mini-field">
+              <label>අමතර කැලැන්ඩර්</label>
+              <input type="number" min="0" inputmode="numeric" value="${it.extra}" oninput="onEditItemField(${idx}, 'extra', this.value)" />
+            </div>
+            <div class="edit-mini-field">
+              <label>පටියක මිල (රු.)</label>
+              <input type="number" min="0" step="0.01" inputmode="decimal" value="${it.stripPrice}" oninput="onEditItemField(${idx}, 'stripPrice', this.value)" />
+            </div>
+          </div>
+          <div class="edit-item-calc">
+            <span id="edit-item-formula-${idx}">(${it.packs}×${it.packSize})+${it.extra} = ${it.totalQty.toLocaleString()} කැලැන්ඩර්</span>
+            <strong id="edit-item-sub-${idx}">${formatRs(it.subtotal)}</strong>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function onEditCustomerChange(val) {
+      if (!editingOrder) return;
+      editingOrder.vanName = val;
+    }
+
+    function onEditItemField(idx, field, val) {
+      if (!editingOrder || !editingOrder.items[idx]) return;
+      const item = editingOrder.items[idx];
+
+      if (field === 'company') {
+        item.company = val;
+      } else if (field === 'packSize') {
+        item.packSize = parseInt(val, 10) === 50 ? 50 : 25;
+        item.sheetType = item.packSize === 25 ? 'කොළ 12' : 'කොළ 6';
+      } else if (field === 'packs') {
+        item.packs = Math.max(0, parseInt(val, 10) || 0);
+      } else if (field === 'extra') {
+        item.extra = Math.max(0, parseInt(val, 10) || 0);
+      } else if (field === 'stripPrice') {
+        item.stripPrice = Math.max(0, parseFloat(val) || 0);
+      }
+
+      item.totalQty = (item.packs * item.packSize) + item.extra;
+      item.subtotal = item.totalQty * item.stripPrice;
+
+      const formulaEl = $(`edit-item-formula-${idx}`);
+      const subEl = $(`edit-item-sub-${idx}`);
+      if (formulaEl) {
+        formulaEl.textContent = `(${item.packs}×${item.packSize})+${item.extra} = ${item.totalQty.toLocaleString()} කැලැන්ඩර්`;
+      }
+      if (subEl) {
+        subEl.textContent = formatRs(item.subtotal);
+      }
+
+      recalcEditingTotalsUI();
+    }
+
+    function onEditCashChange(val) {
+      if (!editingOrder) return;
+      editingOrder.cashGiven = val === '' ? 0 : Math.max(0, parseFloat(val) || 0);
+      recalcEditingTotalsUI();
+    }
+
+    function addEditItem() {
+      if (!editingOrder) return;
+      editingOrder.items.push({
+        id: Date.now() + Math.random(),
+        company: `කැලැන්ඩර් වර්ගය ${editingOrder.items.length + 1}`,
+        packSize: 25,
+        sheetType: 'කොළ 12',
+        packs: 0,
+        extra: 0,
+        totalQty: 0,
+        stripPrice: 0,
+        subtotal: 0
+      });
+      renderEditItems();
+      recalcEditingTotalsUI();
+    }
+
+    function removeEditItem(idx) {
+      if (!editingOrder || editingOrder.items.length <= 1) return;
+      editingOrder.items.splice(idx, 1);
+      renderEditItems();
+      recalcEditingTotalsUI();
+    }
+
+    function recalcEditingTotalsUI() {
+      if (!editingOrder) return;
+
+      const totalQty = editingOrder.items.reduce((s, it) => s + (Number(it.totalQty) || 0), 0);
+      const grandTotal = editingOrder.items.reduce((s, it) => s + (Number(it.subtotal) || 0), 0);
+      const cashGiven = Number(editingOrder.cashGiven) || 0;
+      const balance = cashGiven > 0 ? cashGiven - grandTotal : 0;
+
+      editingOrder.totalQty = totalQty;
+      editingOrder.grandTotal = grandTotal;
+      editingOrder.balance = balance;
+
+      $('editTotalQtyDisplay').textContent = totalQty.toLocaleString();
+      $('editGrandTotalDisplay').textContent = formatRs(grandTotal);
+
+      const balLabel = $('editBalanceLabel');
+      const balDisplay = $('editBalanceDisplay');
+
+      if ($('editCashGivenInput').value === '') {
+        balLabel.textContent = 'ඉතිරි මුදල';
+        balDisplay.textContent = formatRs(0);
+        balDisplay.style.color = 'var(--text)';
+      } else {
+        const diff = cashGiven - grandTotal;
+        if (diff >= 0) {
+          balLabel.textContent = 'ආපසු දිය යුතු ඉතිරි මුදල';
+          balDisplay.textContent = formatRs(diff);
+          balDisplay.style.color = 'var(--success)';
+        } else {
+          balLabel.textContent = 'තවත් ගෙවිය යුතු හිඟ මුදල';
+          balDisplay.textContent = formatRs(Math.abs(diff));
+          balDisplay.style.color = 'var(--danger)';
+        }
+      }
+    }
+
+    function saveEditedOrder(closeAfter = true) {
+      if (!editingOrder) return false;
+
+      if (editingOrder.items.length === 0 || editingOrder.totalQty <= 0) {
+        showToast('කරුණාකර වලංගු කැලැන්ඩර් ගණනක් ඇතුළත් කරන්න.');
+        return false;
+      }
+
+      const invalidPrice = editingOrder.items.some((it) => it.totalQty > 0 && it.stripPrice <= 0);
+      if (invalidPrice) {
+        showToast('කරුණාකර සෑම වර්ගයකටම පටියක මිල නිවැරදිව ඇතුළත් කරන්න.');
+        return false;
+      }
+
+      editingOrder.vanName = (editingOrder.vanName || '').trim() || 'Customer';
+      editingOrder.items = editingOrder.items.map((it, idx) => ({
+        ...it,
+        company: (it.company || '').trim() || `කැලැන්ඩර් වර්ගය ${idx + 1}`
+      }));
+
+      const targetIdx = historyOrders.findIndex((o) => o.id === editingOrder.id);
+      if (targetIdx !== -1) {
+        historyOrders[targetIdx] = JSON.parse(JSON.stringify(editingOrder));
+        localStorage.setItem('calendar_strip_history_v1', JSON.stringify(historyOrders));
+        updateHistoryUI();
+      }
+
+      if (closeAfter) {
+        showToast('බිල්පතේ වෙනස්කම් සාර්ථකව සුරකින ලදී!');
+        closeOrderModal();
+      }
+      return true;
+    }
+
+    async function saveAndShareEditedOrder() {
+      const ok = saveEditedOrder(false);
+      if (!ok || !editingOrder) return;
+
+      showToast('වෙනස්කම් සුරැකුණා! PDF සකසමින්...');
+
+      await generateAndShareBillPDF({
+        customerDetails: editingOrder.vanName || 'Customer',
+        time: editingOrder.time,
+        items: editingOrder.items,
+        totalQty: editingOrder.totalQty,
+        grandTotal: editingOrder.grandTotal,
+        cashGiven: editingOrder.cashGiven || 0,
+        balance: (editingOrder.cashGiven || 0) - editingOrder.grandTotal
+      }, $('editModalShareBtn'));
+    }
+
+    function deleteEditingOrder() {
+      if (!editingOrder) return;
+      if (confirm('මෙම බිල්පත වාර්තා වලින් මකා දැමීමට අවශ්‍යද?')) {
+        historyOrders = historyOrders.filter((o) => o.id !== editingOrder.id);
+        localStorage.setItem('calendar_strip_history_v1', JSON.stringify(historyOrders));
+        updateHistoryUI();
+        closeOrderModal();
+        showToast('බිල්පත ඉවත් කරන ලදී.');
+      }
     }
 
     function clearAllHistory() {
