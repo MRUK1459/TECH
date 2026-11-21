@@ -182,6 +182,42 @@
       flex-shrink: 0;
     }
 
+    /* Live Dynamic Calendar Icon */
+    .brand-icon.cal-widget {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      overflow: hidden;
+      padding: 0;
+      background: #ffffff;
+      border: 1.5px solid var(--accent);
+      border-radius: 12px;
+    }
+
+    .cal-month {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: #ffffff;
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-align: center;
+      padding: 3px 0 2px;
+      line-height: 1;
+    }
+
+    .cal-day {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      color: #0f172a;
+      font-size: 19px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
     .brand h1 {
       font-size: 1.1rem;
       font-weight: 800;
@@ -1337,8 +1373,8 @@
 
       <form id="loginForm" onsubmit="handleLogin(event)" class="form-grid">
         <div class="field">
-          <label>Email</label>
-          <input type="email" id="loginEmail" placeholder="Enter email" required autocomplete="username" />
+          <label>Username</label>
+          <input type="text" id="loginUsername" placeholder="Enter username" required autocomplete="username" />
         </div>
         <div class="field">
           <label>Password</label>
@@ -1354,7 +1390,10 @@
   <!-- Top Bar -->
   <header class="topbar">
     <div class="brand">
-      <div class="brand-icon">📅</div>
+      <div class="brand-icon cal-widget" aria-label="Today's Date">
+        <span class="cal-month" id="liveCalMonth">---</span>
+        <span class="cal-day" id="liveCalDay">--</span>
+      </div>
       <div>
         <h1>J P T M TRADERS</h1>
         <p><span class="cloud-dot" id="cloudDot"></span> Calendar Billing System</p>
@@ -1688,13 +1727,17 @@
     const db = firebase.database();
     const billsRef = db.ref('bills');
 
+    // --- Access Credentials ---
+    const AUTH_USER = 'Ulindu';
+    const AUTH_PASS = '2007';
+
     // --- Application State ---
     let currentStep = 1;
     let selectedPackSize = 25;
     let vanItems = [];
     let historyOrders = [];
     let editingOrder = null;
-    let currentUser = null;
+    let isLoggedIn = false;
     let dbListenerAttached = false;
 
     // --- Helpers ---
@@ -1720,10 +1763,35 @@
       el.focus();
     }
 
-    // --- Firebase Auth & Real-Time Cloud Sync ---
+    // --- Live Calendar Icon (Today's Month & Date) ---
+    function updateLiveCalendarIcon() {
+      const now = new Date();
+      const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+      $('liveCalMonth').textContent = months[now.getMonth()];
+      $('liveCalDay').textContent = now.getDate();
+    }
+
+    // --- Username / Password Auth & Real-Time Cloud Sync ---
+    async function activateSession() {
+      isLoggedIn = true;
+      localStorage.setItem('jptm_logged_in', 'true');
+      $('authOverlay').classList.add('hidden');
+      $('logoutBtn').style.display = 'inline-flex';
+
+      try {
+        if (!auth.currentUser) {
+          await auth.signInAnonymously();
+        }
+      } catch (e) {
+        // Continues using current Realtime Database rules if Anonymous Auth is disabled
+      }
+
+      startCloudSync();
+    }
+
     async function handleLogin(e) {
       e.preventDefault();
-      const email = $('loginEmail').value.trim();
+      const username = $('loginUsername').value.trim();
       const password = $('loginPassword').value;
       const errBox = $('authError');
       const btn = $('loginBtn');
@@ -1732,22 +1800,43 @@
       btn.disabled = true;
       btn.textContent = 'Signing in...';
 
-      try {
-        await auth.signInWithEmailAndPassword(email, password);
+      if (username === AUTH_USER && password === AUTH_PASS) {
         $('loginPassword').value = '';
-      } catch (err) {
-        errBox.textContent = 'Invalid email or password.';
+        await activateSession();
+      } else {
+        errBox.textContent = 'Invalid username or password.';
         errBox.classList.add('show');
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Sign In';
+        shakeEl($('loginPassword'));
       }
+
+      btn.disabled = false;
+      btn.textContent = 'Sign In';
     }
 
     async function handleLogout() {
       if (confirm('Sign out from J P T M TRADERS?')) {
-        await auth.signOut();
+        isLoggedIn = false;
+        localStorage.removeItem('jptm_logged_in');
+        stopCloudSync();
+        closeOrderModal();
+        closeHistory();
+        try { await auth.signOut(); } catch (e) {}
+        $('logoutBtn').style.display = 'none';
+        $('authOverlay').classList.remove('hidden');
+        $('loginUsername').value = '';
+        $('loginPassword').value = '';
+        setTimeout(() => $('loginUsername').focus(), 100);
         showToast('Signed out.');
+      }
+    }
+
+    function initAuth() {
+      if (localStorage.getItem('jptm_logged_in') === 'true') {
+        activateSession();
+      } else {
+        $('logoutBtn').style.display = 'none';
+        $('authOverlay').classList.remove('hidden');
+        setTimeout(() => $('loginUsername').focus(), 100);
       }
     }
 
@@ -1785,22 +1874,6 @@
       $('cloudDot').classList.remove('online');
       updateHistoryUI();
     }
-
-    auth.onAuthStateChanged((user) => {
-      currentUser = user;
-      if (user) {
-        $('authOverlay').classList.add('hidden');
-        $('logoutBtn').style.display = 'inline-flex';
-        startCloudSync();
-      } else {
-        stopCloudSync();
-        closeOrderModal();
-        closeHistory();
-        $('logoutBtn').style.display = 'none';
-        $('authOverlay').classList.remove('hidden');
-        setTimeout(() => $('loginEmail').focus(), 100);
-      }
-    });
 
     // --- Theme Toggle ---
     function initTheme() {
@@ -2076,7 +2149,7 @@
 
     // --- Save Order to Firebase Cloud & Reusable WhatsApp PDF Share ---
     async function saveAndFinishOrder() {
-      if (vanItems.length === 0 || !currentUser) return;
+      if (vanItems.length === 0 || !isLoggedIn) return;
 
       const saveBtn = $('saveBillBtn');
       const origText = saveBtn.textContent;
@@ -2534,7 +2607,7 @@
     }
 
     async function saveEditedOrder(closeAfter = true) {
-      if (!editingOrder || !currentUser) return false;
+      if (!editingOrder || !isLoggedIn) return false;
 
       if (editingOrder.items.length === 0 || editingOrder.totalQty <= 0) {
         showToast('Please enter a valid calendar quantity.');
@@ -2592,7 +2665,7 @@
     }
 
     async function deleteEditingOrder() {
-      if (!editingOrder || !currentUser) return;
+      if (!editingOrder || !isLoggedIn) return;
       if (confirm('Delete this bill from cloud history?')) {
         try {
           await billsRef.child(String(editingOrder.id)).remove();
@@ -2605,7 +2678,7 @@
     }
 
     async function clearAllHistory() {
-      if (historyOrders.length === 0 || !currentUser) return;
+      if (historyOrders.length === 0 || !isLoggedIn) return;
       if (confirm('Clear all saved bills from cloud history?')) {
         try {
           await billsRef.remove();
@@ -2646,6 +2719,9 @@
 
     // --- Init ---
     initTheme();
+    updateLiveCalendarIcon();
+    setInterval(updateLiveCalendarIcon, 60000);
+    initAuth();
     updateHistoryUI();
   </script>
 </body>
