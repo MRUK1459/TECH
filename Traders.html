@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="si">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>කැලැන්ඩර් පටි ගැසීමේ බිල්පත් පද්ධතිය | Calendar Strip POS</title>
+  <title>J P T M TRADERS | Calendar Billing System</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -59,7 +59,7 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Noto Sans Sinhala', 'Inter', system-ui, -apple-system, sans-serif;
+      font-family: 'Inter', 'Noto Sans Sinhala', system-ui, -apple-system, sans-serif;
     }
 
     body {
@@ -313,13 +313,18 @@
     .step-title {
       font-size: 1.25rem;
       font-weight: 800;
-      margin-bottom: 4px;
+      margin-bottom: 18px;
     }
 
     .step-desc {
       font-size: 0.86rem;
       color: var(--muted);
-      margin-bottom: 22px;
+      margin-top: -12px;
+      margin-bottom: 18px;
+    }
+
+    .step-desc:empty {
+      display: none;
     }
 
     /* Form Controls */
@@ -1152,7 +1157,7 @@
       box-sizing: border-box;
       background: #ffffff;
       color: #000000;
-      font-family: 'Noto Sans Sinhala', 'Inter', sans-serif;
+      font-family: 'Inter', 'Noto Sans Sinhala', sans-serif;
       padding: 24px 22px;
       z-index: -1;
     }
@@ -1232,15 +1237,15 @@
     <div class="brand">
       <div class="brand-icon">📅</div>
       <div>
-        <h1>කැලැන්ඩර් පටි බිල්පත් පද්ධතිය</h1>
-        <p>25 &amp; 50 හට්ටි ගණනය සහ ක්ෂණික බිල්පත්</p>
+        <h1>J P T M TRADERS</h1>
+        <p>Calendar Billing System</p>
       </div>
     </div>
     <div class="top-actions">
-      <button class="icon-btn" onclick="openHistory()" title="අද දින වාර්තා">
-        📋 වාර්තා <span class="badge-count" id="histBadge">0</span>
+      <button class="icon-btn" onclick="openHistory()" title="Bill History">
+        📋 History <span class="badge-count" id="histBadge">0</span>
       </button>
-      <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" title="තේමාව මාරු කරන්න">
+      <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" title="Switch Theme">
         ☀️
       </button>
     </div>
@@ -1254,15 +1259,15 @@
       <div class="stepper">
         <div class="step-node active" id="node-1">
           <div class="step-circle">1</div>
-          <span class="step-label">Customer සහ වර්ගය</span>
+          <span class="step-label">Customer &amp; Type</span>
         </div>
         <div class="step-node" id="node-2">
           <div class="step-circle">2</div>
-          <span class="step-label">හට්ටි සහ පටියේ මිල</span>
+          <span class="step-label">Quantity &amp; Price</span>
         </div>
         <div class="step-node" id="node-3">
           <div class="step-circle">3</div>
-          <span class="step-label">බිල සහ ඉතිරි</span>
+          <span class="step-label">Bill &amp; Payment</span>
         </div>
       </div>
       <div class="progress-track">
@@ -1270,10 +1275,10 @@
       </div>
     </div>
 
-    <!-- Active Customer Cart Notice (when adding multiple calendar types for same customer) -->
+    <!-- Active Customer Cart Notice -->
     <div class="van-banner" id="vanBanner">
-      <span id="vanBannerText">මෙම Customer සඳහා කැලැන්ඩර් වර්ග 0 ක් එකතු කර ඇත</span>
-      <button onclick="goToStep(3)">බිල්පත බලන්න →</button>
+      <span id="vanBannerText">Added Items: 0</span>
+      <button onclick="goToStep(3)">View Bill →</button>
     </div>
 
     <!-- Steps Body -->
@@ -1281,36 +1286,35 @@
 
       <!-- STEP 1: Customer Details, Company & Pack Type -->
       <section class="step-panel active" id="step-1">
-        <h2 class="step-title">පියවර 1: Customer Details සහ කැලැන්ඩර් වර්ගය</h2>
-        <p class="step-desc">Customer Details / ආයතනයේ විස්තර සහ හට්ටි වර්ගය තෝරන්න.</p>
+        <h2 class="step-title">Customer &amp; Calendar Type</h2>
 
         <div class="form-grid">
           <div class="form-row-2">
             <div class="field">
-              <label>Customer Details <span class="hint">(අත්‍යවශ්‍ය නොවේ)</span></label>
-              <input type="text" id="vanName" placeholder="උදා: නම / දුරකථන / විස්තර" autocomplete="off" />
+              <label>Customer Details</label>
+              <input type="text" id="vanName" placeholder="Customer name" autocomplete="off" />
             </div>
             <div class="field">
-              <label>කැලැන්ඩර් ආයතනය <span class="hint">(උදා: Abans)</span></label>
-              <input type="text" id="companyName" placeholder="උදා: Perera & Sons" autocomplete="off" />
+              <label>Company / Brand</label>
+              <input type="text" id="companyName" placeholder="Company name" autocomplete="off" />
             </div>
           </div>
 
           <div class="field">
-            <label>කැලැන්ඩර් හට්ටි වර්ගය තෝරන්න</label>
+            <label>Bundle Type</label>
             <div class="pack-cards">
               <button type="button" class="pack-card selected" id="packCard25" onclick="selectPackType(25)">
                 <div class="pack-check">✓</div>
-                <span class="pack-badge">25 හට්ටි</span>
-                <h3>කොළ 12 කැලැන්ඩර්</h3>
-                <p>එක් හට්ටියක කැලැන්ඩර් 25 බැගින් ගණනය වේ.</p>
+                <span class="pack-badge">25 Pack</span>
+                <h3>12-Sheet Calendar</h3>
+                <p>25 pcs per bundle</p>
               </button>
 
               <button type="button" class="pack-card" id="packCard50" onclick="selectPackType(50)">
                 <div class="pack-check">✓</div>
-                <span class="pack-badge">50 හට්ටි</span>
-                <h3>කොළ 6 කැලැන්ඩර්</h3>
-                <p>එක් හට්ටියක කැලැන්ඩර් 50 බැගින් ගණනය වේ.</p>
+                <span class="pack-badge">50 Pack</span>
+                <h3>6-Sheet Calendar</h3>
+                <p>50 pcs per bundle</p>
               </button>
             </div>
           </div>
@@ -1318,78 +1322,78 @@
 
         <div class="btn-row">
           <button type="button" class="btn btn-primary" onclick="nextFromStep1()">
-            ඊළඟ පියවරට යන්න (හට්ටි සහ පටියේ මිල) →
+            Next →
           </button>
         </div>
       </section>
 
       <!-- STEP 2: Bundles, Extra Calendars & Strip Price Combined -->
       <section class="step-panel" id="step-2">
-        <h2 class="step-title" id="step2Title">පියවර 2: 25 හට්ටි, අමතර කැලැන්ඩර් සහ පටියේ මිල</h2>
-        <p class="step-desc" id="step2Desc">හට්ටි ගණන, අමතර කැලැන්ඩර් ගණන සහ එක් පටියක මිල මෙතැනින්ම ඇතුළත් කරන්න.</p>
+        <h2 class="step-title" id="step2Title">Quantity &amp; Strip Price (25 Pack)</h2>
+        <p class="step-desc" id="step2Desc"></p>
 
         <div class="form-grid">
           <div class="form-row-2">
             <div class="field">
-              <label id="packsLabel">25 හට්ටි ගණන <span class="hint" id="packsHint">(× 25)</span></label>
+              <label id="packsLabel">25-Pack Bundles <span class="hint" id="packsHint">(× 25)</span></label>
               <div class="input-box">
                 <input type="number" id="packsInput" class="big-num has-suffix" min="0" inputmode="numeric" placeholder="0" oninput="updateCombinedPreview()" />
-                <span class="input-suffix">හට්ටි</span>
+                <span class="input-suffix">Packs</span>
               </div>
             </div>
 
             <div class="field">
-              <label>අමතර කැලැන්ඩර් ගණන <span class="hint">(වෙනම ගැසූ)</span></label>
+              <label>Extra Calendars</label>
               <div class="input-box">
                 <input type="number" id="extraInput" class="big-num has-suffix" min="0" inputmode="numeric" placeholder="0" oninput="updateCombinedPreview()" />
-                <span class="input-suffix">කැලැන්ඩර්</span>
+                <span class="input-suffix">Pcs</span>
               </div>
             </div>
           </div>
 
           <div class="field">
-            <label>එක් කැලැන්ඩර් පටියක මිල <span class="hint">(රුපියල්)</span></label>
+            <label>Strip Price</label>
             <div class="input-box">
-              <span class="input-prefix">රු.</span>
+              <span class="input-prefix">Rs.</span>
               <input type="number" id="stripPriceInput" class="big-num has-prefix" min="0" step="0.01" inputmode="decimal" placeholder="0.00" oninput="updateCombinedPreview()" />
             </div>
 
             <!-- Quick preset strip prices -->
             <div class="chip-row">
-              <button type="button" class="chip" onclick="setQuickPrice(8)">රු. 8</button>
-              <button type="button" class="chip" onclick="setQuickPrice(10)">රු. 10</button>
-              <button type="button" class="chip" onclick="setQuickPrice(11)">රු. 11</button>
-              <button type="button" class="chip" onclick="setQuickPrice(12)">රු. 12</button>
-              <button type="button" class="chip" onclick="setQuickPrice(15)">රු. 15</button>
-              <button type="button" class="chip" onclick="setQuickPrice(20)">රු. 20</button>
+              <button type="button" class="chip" onclick="setQuickPrice(8)">Rs. 8</button>
+              <button type="button" class="chip" onclick="setQuickPrice(10)">Rs. 10</button>
+              <button type="button" class="chip" onclick="setQuickPrice(11)">Rs. 11</button>
+              <button type="button" class="chip" onclick="setQuickPrice(12)">Rs. 12</button>
+              <button type="button" class="chip" onclick="setQuickPrice(15)">Rs. 15</button>
+              <button type="button" class="chip" onclick="setQuickPrice(20)">Rs. 20</button>
             </div>
           </div>
         </div>
 
         <div class="calc-preview">
           <div class="calc-formula" id="combinedFormula">
-            හට්ටි (25): <strong>0 × 25 = 0</strong> + අමතර: <strong>0</strong><br />
-            පටියක මිල: <strong>රු. 0.00</strong>
+            Bundles (25): <strong>0 × 25 = 0</strong> + Extra: <strong>0</strong><br />
+            Unit Price: <strong>Rs. 0.00</strong>
           </div>
           <div class="calc-results-group">
             <div class="calc-result">
-              <span class="lbl">සම්පූර්ණ කැලැන්ඩර්</span>
+              <span class="lbl">Total Qty</span>
               <span class="val qty-val" id="totalQtyDisplay">0</span>
             </div>
             <div class="calc-result">
-              <span class="lbl">මෙම කොටසේ මුළු මුදල</span>
-              <span class="val" id="itemTotalDisplay">රු. 0.00</span>
+              <span class="lbl">Subtotal</span>
+              <span class="val" id="itemTotalDisplay">Rs. 0.00</span>
             </div>
           </div>
         </div>
 
         <div class="btn-row">
-          <button type="button" class="btn btn-secondary btn-sm-back" onclick="goToStep(1)">← ආපසු</button>
+          <button type="button" class="btn btn-secondary btn-sm-back" onclick="goToStep(1)">← Back</button>
           <button type="button" class="btn btn-outline-accent" onclick="commitItem('add_more')">
-            + මෙම Customer ටම තව වර්ගයක්
+            + Add Another Item
           </button>
           <button type="button" class="btn btn-primary" onclick="commitItem('checkout')">
-            ටෝටල් බිල් සහ ගෙවීම් →
+            Total Bill →
           </button>
         </div>
       </section>
@@ -1398,11 +1402,11 @@
       <section class="step-panel" id="step-3">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
           <div>
-            <h2 class="step-title">පියවර 3: සම්පූර්ණ බිල්පත සහ ඉතිරි මුදල</h2>
-            <p class="step-desc" style="margin-bottom:0;" id="checkoutVanLabel">Customer Details</p>
+            <h2 class="step-title" style="margin-bottom:4px;">Final Bill &amp; Payment</h2>
+            <p class="step-desc" style="margin-top:0; margin-bottom:0;" id="checkoutVanLabel">Customer Details</p>
           </div>
           <button type="button" class="icon-btn" onclick="addAnotherFromCheckout()" style="font-size:0.8rem;">
-            + තව වර්ගයක් එකතු කරන්න
+            + Add Item
           </button>
         </div>
 
@@ -1412,18 +1416,18 @@
         <!-- Grand Total -->
         <div class="total-summary-card">
           <div>
-            <div style="font-weight:800; font-size:1rem;">සම්පූර්ණ බිල්පත (ටෝටල් බිල්)</div>
-            <div class="meta" id="grandMeta">වර්ග 0 • මුළු කැලැන්ඩර් 0</div>
+            <div style="font-weight:800; font-size:1rem;">Grand Total</div>
+            <div class="meta" id="grandMeta">0 Items • 0 Calendars</div>
           </div>
-          <div class="grand-val" id="grandTotalDisplay">රු. 0.00</div>
+          <div class="grand-val" id="grandTotalDisplay">Rs. 0.00</div>
         </div>
 
         <!-- Cash Given Input -->
         <div class="field">
-          <label>පාරිභෝගිකයා ලබා දුන් මුදල <span class="hint">(Cash Received)</span></label>
+          <label>Cash Received</label>
           <div class="input-box">
-            <span class="input-prefix">රු.</span>
-            <input type="number" id="cashGivenInput" class="big-num has-prefix" min="0" step="0.01" inputmode="decimal" placeholder="උදා: 1500" oninput="updateBalance()" />
+            <span class="input-prefix">Rs.</span>
+            <input type="number" id="cashGivenInput" class="big-num has-prefix" min="0" step="0.01" inputmode="decimal" placeholder="0.00" oninput="updateBalance()" />
           </div>
           <div class="chip-row" id="quickCashChips"></div>
         </div>
@@ -1431,15 +1435,15 @@
         <!-- Balance / Change Box -->
         <div class="balance-box" id="balanceBox">
           <div>
-            <div class="b-title" id="balanceTitle">ආපසු දිය යුතු ඉතිරි මුදල</div>
-            <div class="b-sub" id="balanceSub">ලබා දුන් මුදල ඇතුළත් කරන්න</div>
+            <div class="b-title" id="balanceTitle">Change Due</div>
+            <div class="b-sub" id="balanceSub">Enter cash received</div>
           </div>
-          <div class="b-amount" id="balanceDisplay">රු. 0.00</div>
+          <div class="b-amount" id="balanceDisplay">Rs. 0.00</div>
         </div>
 
         <div class="btn-row">
-          <button type="button" class="btn btn-secondary" id="shareBillBtn" onclick="shareBillToWhatsApp()">📤 බිල්පත Share (WhatsApp PDF)</button>
-          <button type="button" class="btn btn-success" onclick="saveAndFinishOrder()">✓ ගනුදෙනුව සුරකින්න (අලුත් Customer)</button>
+          <button type="button" class="btn btn-secondary" id="shareBillBtn" onclick="shareBillToWhatsApp()">📤 Share Bill (WhatsApp PDF)</button>
+          <button type="button" class="btn btn-success" onclick="saveAndFinishOrder()">✓ Save &amp; New Bill</button>
         </div>
       </section>
 
@@ -1451,20 +1455,20 @@
   <aside class="drawer" id="historyDrawer">
     <div class="drawer-head">
       <div>
-        <h3 style="font-size:1.05rem; font-weight:800;">📋 දෛනික බිල්පත් වාර්තා</h3>
-        <p style="font-size:0.76rem; color:var(--muted);">විස්තර බැලීමට / Edit කිරීමට බිල්පත ඔබන්න</p>
+        <h3 style="font-size:1.05rem; font-weight:800;">📋 Bill History</h3>
+        <p style="font-size:0.76rem; color:var(--muted);">Saved Invoices</p>
       </div>
       <button class="icon-btn" onclick="closeHistory()">✕</button>
     </div>
 
     <div class="drawer-stats">
       <div class="stat-mini">
-        <span>මුළු කැලැන්ඩර්</span>
+        <span>Total Calendars</span>
         <strong id="statTotalCal">0</strong>
       </div>
       <div class="stat-mini">
-        <span>මුළු ආදායම</span>
-        <strong id="statTotalRev">රු. 0</strong>
+        <span>Total Revenue</span>
+        <strong id="statTotalRev">Rs. 0.00</strong>
       </div>
     </div>
 
@@ -1472,7 +1476,7 @@
 
     <div class="drawer-foot">
       <button class="btn btn-secondary" style="width:100%; color:var(--danger); border-color:var(--danger-bg);" onclick="clearAllHistory()">
-        🗑️ සියලුම වාර්තා මකන්න
+        🗑️ Clear All History
       </button>
     </div>
   </aside>
@@ -1482,7 +1486,7 @@
     <div class="edit-modal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
       <div class="edit-modal-head">
         <div>
-          <h3 id="editModalTitle" style="font-size:1.05rem; font-weight:800;">📄 බිල්පත් විස්තර සහ සංස්කරණය</h3>
+          <h3 id="editModalTitle" style="font-size:1.05rem; font-weight:800;">📄 Bill Details &amp; Edit</h3>
           <p id="editModalTime" style="font-size:0.76rem; color:var(--muted);"></p>
         </div>
         <button type="button" class="icon-btn" onclick="closeOrderModal()">✕</button>
@@ -1491,36 +1495,36 @@
       <div class="edit-modal-body">
         <div class="edit-mini-field">
           <label>Customer Details</label>
-          <input type="text" id="editCustomerInput" placeholder="Customer Details" oninput="onEditCustomerChange(this.value)" />
+          <input type="text" id="editCustomerInput" placeholder="Customer name" oninput="onEditCustomerChange(this.value)" />
         </div>
 
         <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
-          <span style="font-size:0.84rem; font-weight:800;">කැලැන්ඩර් වර්ග විස්තර</span>
-          <button type="button" class="chip" onclick="addEditItem()" style="border-color:var(--accent); color:var(--accent);">+ තව වර්ගයක්</button>
+          <span style="font-size:0.84rem; font-weight:800;">Items</span>
+          <button type="button" class="chip" onclick="addEditItem()" style="border-color:var(--accent); color:var(--accent);">+ Add Item</button>
         </div>
 
         <div id="editItemsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
 
         <div class="edit-summary-bar">
           <div>
-            <div style="font-size:0.76rem; color:var(--muted);">මුළු කැලැන්ඩර් ගණන</div>
+            <div style="font-size:0.76rem; color:var(--muted);">Total Calendars</div>
             <strong id="editTotalQtyDisplay" style="font-size:1.15rem;">0</strong>
           </div>
           <div style="text-align:right;">
-            <div style="font-size:0.76rem; color:var(--muted);">සම්පූර්ණ බිල්පත</div>
-            <strong id="editGrandTotalDisplay" style="font-size:1.4rem; color:var(--accent);">රු. 0.00</strong>
+            <div style="font-size:0.76rem; color:var(--muted);">Grand Total</div>
+            <strong id="editGrandTotalDisplay" style="font-size:1.4rem; color:var(--accent);">Rs. 0.00</strong>
           </div>
         </div>
 
         <div class="edit-item-grid">
           <div class="edit-mini-field">
-            <label>දුන් මුදල (රු.)</label>
+            <label>Cash Received (Rs.)</label>
             <input type="number" id="editCashGivenInput" min="0" step="0.01" inputmode="decimal" placeholder="0.00" oninput="onEditCashChange(this.value)" />
           </div>
           <div class="edit-mini-field">
-            <label id="editBalanceLabel">ඉතිරි මුදල</label>
+            <label id="editBalanceLabel">Change Due</label>
             <div id="editBalanceDisplay" style="padding:10px 12px; border-radius:10px; background:var(--surface); border:1.5px solid var(--border); font-weight:800; font-size:0.98rem;">
-              රු. 0.00
+              Rs. 0.00
             </div>
           </div>
         </div>
@@ -1528,11 +1532,11 @@
 
       <div class="edit-modal-foot">
         <div class="edit-foot-row">
-          <button type="button" class="btn btn-success" onclick="saveEditedOrder(true)">💾 වෙනස්කම් සුරකින්න</button>
+          <button type="button" class="btn btn-success" onclick="saveEditedOrder(true)">💾 Save Changes</button>
           <button type="button" class="btn btn-primary" id="editModalShareBtn" onclick="saveAndShareEditedOrder()">📤 WhatsApp PDF Share</button>
         </div>
         <button type="button" class="btn btn-danger-soft" style="padding:9px 14px; font-size:0.8rem;" onclick="deleteEditingOrder()">
-          🗑️ මෙම බිල්පත මකන්න
+          🗑️ Delete Bill
         </button>
       </div>
     </div>
@@ -1557,7 +1561,7 @@
 
     function formatRs(num) {
       const val = Number(num) || 0;
-      return 'රු. ' + val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      return 'Rs. ' + val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
     function showToast(msg) {
@@ -1621,7 +1625,7 @@
       const banner = $('vanBanner');
       if (vanItems.length > 0 && step < 3) {
         const subTotal = vanItems.reduce((s, x) => s + x.subtotal, 0);
-        $('vanBannerText').textContent = `මෙම Customer සඳහා එකතු කළ වර්ග: ${vanItems.length} (${formatRs(subTotal)})`;
+        $('vanBannerText').textContent = `Added Items: ${vanItems.length} (${formatRs(subTotal)})`;
         banner.classList.add('show');
       } else {
         banner.classList.remove('show');
@@ -1652,13 +1656,11 @@
     }
 
     function updatePackLabels() {
-      const sheetText = selectedPackSize === 25 ? 'කොළ 12' : 'කොළ 6';
+      const sheetText = selectedPackSize === 25 ? '12-Sheet' : '6-Sheet';
       const comp = $('companyName').value.trim();
-      $('step2Title').textContent = `පියවර 2: ${selectedPackSize} හට්ටි, අමතර ගණන සහ පටියේ මිල (${sheetText})`;
-      $('step2Desc').textContent = comp
-        ? `"${comp}" සඳහා හට්ටි ගණන, අමතර කැලැන්ඩර් සහ පටියක මිල ඇතුළත් කරන්න.`
-        : 'හට්ටි ගණන, අමතර කැලැන්ඩර් ගණන සහ එක් පටියක මිල මෙතැනින්ම ඇතුළත් කරන්න.';
-      $('packsLabel').innerHTML = `${selectedPackSize} හට්ටි ගණන <span class="hint">(× ${selectedPackSize})</span>`;
+      $('step2Title').textContent = `Quantity & Strip Price (${selectedPackSize} Pack - ${sheetText})`;
+      $('step2Desc').textContent = comp ? `Company: ${comp}` : '';
+      $('packsLabel').innerHTML = `${selectedPackSize}-Pack Bundles <span class="hint">(× ${selectedPackSize})</span>`;
     }
 
     function nextFromStep1() {
@@ -1686,8 +1688,8 @@
       const subtotal = total * price;
 
       $('combinedFormula').innerHTML =
-        `හට්ටි (${selectedPackSize}): <strong>${packs} × ${selectedPackSize} = ${fromPacks.toLocaleString()}</strong> + අමතර: <strong>${extra.toLocaleString()}</strong><br />` +
-        `පටියක මිල: <strong>${formatRs(price)}</strong>`;
+        `Bundles (${selectedPackSize}): <strong>${packs} × ${selectedPackSize} = ${fromPacks.toLocaleString()}</strong> + Extra: <strong>${extra.toLocaleString()}</strong><br />` +
+        `Unit Price: <strong>${formatRs(price)}</strong>`;
       $('totalQtyDisplay').textContent = total.toLocaleString();
       $('itemTotalDisplay').textContent = formatRs(subtotal);
     }
@@ -1697,18 +1699,18 @@
       const price = parseFloat($('stripPriceInput').value);
 
       if (total <= 0) {
-        showToast('කරුණාකර හට්ටි ගණන හෝ අමතර කැලැන්ඩර් ගණන ඇතුළත් කරන්න.');
+        showToast('Please enter bundle count or extra calendars.');
         shakeEl($('packsInput'));
         return;
       }
       if (isNaN(price) || price <= 0) {
-        showToast('කරුණාකර පටියක මිල නිවැරදිව ඇතුළත් කරන්න.');
+        showToast('Please enter a valid strip price.');
         shakeEl($('stripPriceInput'));
         return;
       }
 
-      const company = $('companyName').value.trim() || `කැලැන්ඩර් වර්ගය ${vanItems.length + 1}`;
-      const sheetType = selectedPackSize === 25 ? 'කොළ 12' : 'කොළ 6';
+      const company = $('companyName').value.trim() || `Item ${vanItems.length + 1}`;
+      const sheetType = selectedPackSize === 25 ? '12-Sheet' : '6-Sheet';
 
       vanItems.push({
         id: Date.now() + Math.random(),
@@ -1729,7 +1731,7 @@
       $('stripPriceInput').value = '';
 
       if (mode === 'add_more') {
-        showToast(`"${company}" එකතු කළා! ඊළඟ වර්ගය ඇතුළත් කරන්න.`);
+        showToast(`"${company}" added.`);
         goToStep(1);
       } else {
         goToStep(3);
@@ -1747,7 +1749,7 @@
       const customerLabel = $('vanName').value.trim();
       $('checkoutVanLabel').textContent = customerLabel
         ? `Customer Details: ${customerLabel}`
-        : 'වත්මන් ඇණවුමේ සම්පූර්ණ විස්තරය';
+        : 'Order Summary';
 
       const list = $('billItemsList');
       list.innerHTML = '';
@@ -1757,12 +1759,12 @@
         div.className = 'bill-item';
         div.innerHTML = `
           <div class="bill-item-info">
-            <h4>${idx + 1}. ${escapeHtml(item.company)} <span style="font-size:0.74rem; color:var(--accent);">(${item.sheetType} / ${item.packSize} හට්ටි)</span></h4>
-            <p>(${item.packs} × ${item.packSize}) + ${item.extra} = <strong>${item.totalQty.toLocaleString()} කැලැන්ඩර්</strong> × ${formatRs(item.stripPrice)}</p>
+            <h4>${idx + 1}. ${escapeHtml(item.company)} <span style="font-size:0.74rem; color:var(--accent);">(${escapeHtml(item.sheetType)} / ${item.packSize} Pack)</span></h4>
+            <p>(${item.packs} × ${item.packSize}) + ${item.extra} = <strong>${item.totalQty.toLocaleString()} pcs</strong> × ${formatRs(item.stripPrice)}</p>
           </div>
           <div class="bill-item-right">
             <div class="bill-item-price">${formatRs(item.subtotal)}</div>
-            <button type="button" class="del-item-btn" title="මෙම වර්ගය ඉවත් කරන්න" onclick="removeItem(${idx})">✕</button>
+            <button type="button" class="del-item-btn" title="Remove Item" onclick="removeItem(${idx})">✕</button>
           </div>
         `;
         list.appendChild(div);
@@ -1770,7 +1772,7 @@
 
       const { grandTotal, grandQty } = getGrandTotals();
       $('grandTotalDisplay').textContent = formatRs(grandTotal);
-      $('grandMeta').textContent = `කැලැන්ඩර් වර්ග ${vanItems.length} • මුළු කැලැන්ඩර් ${grandQty.toLocaleString()}`;
+      $('grandMeta').textContent = `${vanItems.length} ${vanItems.length === 1 ? 'Item' : 'Items'} • ${grandQty.toLocaleString()} Calendars`;
 
       // Smart quick cash suggestion buttons
       renderQuickCashChips(grandTotal);
@@ -1798,7 +1800,7 @@
           const btn = document.createElement('button');
           btn.type = 'button';
           btn.className = 'chip';
-          btn.textContent = `රු. ${amt.toLocaleString()}`;
+          btn.textContent = `Rs. ${amt.toLocaleString()}`;
           btn.onclick = () => {
             $('cashGivenInput').value = amt;
             updateBalance();
@@ -1810,7 +1812,7 @@
     function removeItem(idx) {
       vanItems.splice(idx, 1);
       if (vanItems.length === 0) {
-        showToast('සියලුම වර්ග ඉවත් කළා.');
+        showToast('All items removed.');
         goToStep(1);
       } else {
         renderCheckout();
@@ -1828,8 +1830,8 @@
       box.classList.remove('positive', 'negative');
 
       if (rawVal === '') {
-        $('balanceTitle').textContent = 'ආපසු දිය යුතු ඉතිරි මුදල';
-        $('balanceSub').textContent = 'පාරිභෝගිකයා දුන් මුදල ඇතුළත් කරන්න';
+        $('balanceTitle').textContent = 'Change Due';
+        $('balanceSub').textContent = 'Enter cash received';
         $('balanceDisplay').textContent = formatRs(0);
         return;
       }
@@ -1839,13 +1841,13 @@
 
       if (diff >= 0) {
         box.classList.add('positive');
-        $('balanceTitle').textContent = 'ආපසු දිය යුතු ඉතිරි මුදල';
+        $('balanceTitle').textContent = 'Change Due';
         $('balanceSub').textContent = `${formatRs(cash)} - ${formatRs(grandTotal)}`;
         $('balanceDisplay').textContent = formatRs(diff);
       } else {
         box.classList.add('negative');
-        $('balanceTitle').textContent = 'තවත් ගෙවිය යුතු හිඟ මුදල';
-        $('balanceSub').textContent = `සම්පූර්ණ බිලට වඩා අඩුවෙන් ලැබී ඇත`;
+        $('balanceTitle').textContent = 'Balance Due';
+        $('balanceSub').textContent = 'Amount short of total bill';
         $('balanceDisplay').textContent = formatRs(Math.abs(diff));
       }
     }
@@ -1860,9 +1862,9 @@
 
       const order = {
         id: Date.now(),
-        time: new Date().toLocaleString('si-LK', {
+        time: new Date().toLocaleString('en-GB', {
           year: 'numeric', month: 'short', day: 'numeric',
-          hour: '2-digit', minute: '2-digit'
+          hour: '2-digit', minute: '2-digit', hour12: true
         }),
         vanName: $('vanName').value.trim() || 'Customer',
         items: [...vanItems],
@@ -1885,7 +1887,7 @@
       $('stripPriceInput').value = '';
       $('cashGivenInput').value = '';
 
-      showToast('ගනුදෙනුව සාර්ථකව සුරකින ලදී! ඊළඟ Customer සඳහා සූදානම්.');
+      showToast('Bill saved successfully.');
       goToStep(1);
     }
 
@@ -1896,7 +1898,7 @@
       const originalBtnText = btnEl ? btnEl.textContent : '';
       if (btnEl) {
         btnEl.disabled = true;
-        btnEl.textContent = '⏳ PDF සකසමින්...';
+        btnEl.textContent = '⏳ Generating PDF...';
       }
 
       let rows = items.map((it) => `
@@ -1915,20 +1917,20 @@
         <div class="p-address">No. 46, Kaldemulla Road, Moratuwa</div>
         <div class="p-meta">
           <strong>Customer Details:</strong> ${escapeHtml(customerDetails)}<br/>
-          දිනය: ${escapeHtml(time)}
+          Date: ${escapeHtml(time)}
         </div>
         <table>
           <thead>
-            <tr><th>විස්තරය</th><th class="right">මුදල (රු.)</th></tr>
+            <tr><th>Description</th><th class="right">Amount (Rs.)</th></tr>
           </thead>
           <tbody>${rows}</tbody>
         </table>
         <div class="p-totals">
-          <div class="p-row"><span>මුළු කැලැන්ඩර්:</span><strong>${Number(totalQty).toLocaleString()}</strong></div>
-          <div class="p-row"><span>සම්පූර්ණ බිල:</span><strong>${formatRs(grandTotal)}</strong></div>
+          <div class="p-row"><span>Total Calendars:</span><strong>${Number(totalQty).toLocaleString()}</strong></div>
+          <div class="p-row"><span>Grand Total:</span><strong>${formatRs(grandTotal)}</strong></div>
           ${cashGiven > 0 ? `
-            <div class="p-row"><span>දුන් මුදල:</span><span>${formatRs(cashGiven)}</span></div>
-            <div class="p-row"><span>${balance >= 0 ? 'ඉතිරි මුදල:' : 'හිඟ මුදල:'}</span><strong>${formatRs(Math.abs(balance))}</strong></div>
+            <div class="p-row"><span>Cash Received:</span><span>${formatRs(cashGiven)}</span></div>
+            <div class="p-row"><span>${balance >= 0 ? 'Change Due:' : 'Balance Due:'}</span><strong>${formatRs(Math.abs(balance))}</strong></div>
           ` : ''}
         </div>
       `;
@@ -1937,15 +1939,15 @@
         `*J P T M TRADERS*`,
         `No. 46, Kaldemulla Road, Moratuwa`,
         `Customer Details: ${customerDetails}`,
-        `දිනය: ${time}`,
+        `Date: ${time}`,
         `--------------------`,
-        ...items.map((it, i) => `${i + 1}. ${it.company}: (${it.packs}×${it.packSize})+${it.extra} = ${it.totalQty} × රු.${it.stripPrice} = ${formatRs(it.subtotal)}`),
+        ...items.map((it, i) => `${i + 1}. ${it.company}: (${it.packs}×${it.packSize})+${it.extra} = ${it.totalQty} × Rs.${it.stripPrice} = ${formatRs(it.subtotal)}`),
         `--------------------`,
-        `මුළු කැලැන්ඩර්: ${Number(totalQty).toLocaleString()}`,
-        `*සම්පූර්ණ බිල: ${formatRs(grandTotal)}*`,
+        `Total Calendars: ${Number(totalQty).toLocaleString()}`,
+        `*Grand Total: ${formatRs(grandTotal)}*`,
         ...(cashGiven > 0 ? [
-          `දුන් මුදල: ${formatRs(cashGiven)}`,
-          `${balance >= 0 ? 'ඉතිරි මුදල' : 'හිඟ මුදල'}: ${formatRs(Math.abs(balance))}`
+          `Cash Received: ${formatRs(cashGiven)}`,
+          `${balance >= 0 ? 'Change Due' : 'Balance Due'}: ${formatRs(Math.abs(balance))}`
         ] : [])
       ].join('\n');
 
@@ -2000,19 +2002,19 @@
         if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
           await navigator.share({
             files: [pdfFile],
-            title: 'J P T M TRADERS - බිල්පත',
+            title: 'J P T M TRADERS - Invoice',
             text: textSummary
           });
         } else {
           pdf.save(fileName);
           window.open(`https://wa.me/?text=${encodeURIComponent(textSummary)}`, '_blank');
-          showToast('PDF බිල්පත Download විය. WhatsApp වෙත Attach කර යවන්න.');
+          showToast('PDF downloaded. Attach and send on WhatsApp.');
         }
       } catch (err) {
         receiptEl.classList.remove('pdf-capture');
         if (err && err.name !== 'AbortError') {
           window.open(`https://wa.me/?text=${encodeURIComponent(textSummary)}`, '_blank');
-          showToast('WhatsApp හරහා බිල්පත විවෘත කළා.');
+          showToast('Opened bill in WhatsApp.');
         }
       } finally {
         if (btnEl) {
@@ -2028,8 +2030,11 @@
       const { grandTotal, grandQty } = getGrandTotals();
       const cashGiven = parseFloat($('cashGivenInput').value) || 0;
       const balance = cashGiven - grandTotal;
-      const customerDetails = $('vanName').value.trim() || 'සාමාන්‍ය ඇණවුම';
-      const now = new Date().toLocaleString('si-LK');
+      const customerDetails = $('vanName').value.trim() || 'Customer';
+      const now = new Date().toLocaleString('en-GB', {
+        year: 'numeric', month: 'short', day: 'numeric',
+        hour: '2-digit', minute: '2-digit', hour12: true
+      });
 
       await generateAndShareBillPDF({
         customerDetails,
@@ -2064,7 +2069,7 @@
 
       const list = $('historyList');
       if (historyOrders.length === 0) {
-        list.innerHTML = `<p style="text-align:center; color:var(--muted); margin-top:40px; font-size:0.9rem;">තවම සුරකින ලද බිල්පත් නොමැත.</p>`;
+        list.innerHTML = `<p style="text-align:center; color:var(--muted); margin-top:40px; font-size:0.9rem;">No saved bills yet.</p>`;
         return;
       }
 
@@ -2075,23 +2080,23 @@
             <span style="font-size:0.74rem; color:var(--muted);">${escapeHtml(o.time)}</span>
           </div>
           <div class="hist-items-mini">
-            ${o.items.map((it) => `• ${escapeHtml(it.company)}: (${it.packs}×${it.packSize})+${it.extra} = ${it.totalQty} × රු.${it.stripPrice}`).join('<br/>')}
+            ${o.items.map((it) => `• ${escapeHtml(it.company)}: (${it.packs}×${it.packSize})+${it.extra} = ${it.totalQty} × Rs.${it.stripPrice}`).join('<br/>')}
           </div>
           <div class="hist-foot">
-            <span>මුළු: ${o.totalQty.toLocaleString()} කැලැන්ඩර්</span>
+            <span>Total: ${o.totalQty.toLocaleString()} pcs</span>
             <span style="color:var(--accent);">${formatRs(o.grandTotal)}</span>
           </div>
           ${o.cashGiven > 0 ? `
             <div style="font-size:0.76rem; color:var(--muted); margin-top:4px; display:flex; justify-content:space-between;">
-              <span>දුන් මුදල: ${formatRs(o.cashGiven)}</span>
+              <span>Cash: ${formatRs(o.cashGiven)}</span>
               <span style="color:${o.balance >= 0 ? 'var(--success)' : 'var(--danger)'};">
-                ${o.balance >= 0 ? 'ඉතිරි:' : 'හිඟ:'} ${formatRs(Math.abs(o.balance))}
+                ${o.balance >= 0 ? 'Change:' : 'Due:'} ${formatRs(Math.abs(o.balance))}
               </span>
             </div>
           ` : ''}
           <div class="hist-actions">
             <button type="button" class="hist-act-btn" onclick="event.stopPropagation(); openOrderModal(${o.id})">
-              ✏️ බලන්න / වෙනස් කරන්න
+              ✏️ View / Edit
             </button>
             <button type="button" class="hist-act-btn share-quick" onclick="event.stopPropagation(); shareSavedOrderDirect(${o.id}, this)">
               📤 PDF Share
@@ -2124,7 +2129,7 @@
       // Deep clone so edits are staged until saved
       editingOrder = JSON.parse(JSON.stringify(original));
 
-      $('editModalTime').textContent = `දිනය: ${editingOrder.time}`;
+      $('editModalTime').textContent = `Date: ${editingOrder.time}`;
       $('editCustomerInput').value = editingOrder.vanName || '';
       $('editCashGivenInput').value = editingOrder.cashGiven > 0 ? editingOrder.cashGiven : '';
 
@@ -2155,38 +2160,38 @@
         card.className = 'edit-item-card';
         card.innerHTML = `
           <div class="edit-item-head">
-            <strong style="font-size:0.86rem;">වර්ගය #${idx + 1}</strong>
-            ${editingOrder.items.length > 1 ? `<button type="button" class="del-item-btn" title="මෙම වර්ගය ඉවත් කරන්න" onclick="removeEditItem(${idx})">✕</button>` : ''}
+            <strong style="font-size:0.86rem;">Item #${idx + 1}</strong>
+            ${editingOrder.items.length > 1 ? `<button type="button" class="del-item-btn" title="Remove Item" onclick="removeEditItem(${idx})">✕</button>` : ''}
           </div>
           <div class="edit-item-grid">
             <div class="edit-mini-field">
-              <label>කැලැන්ඩර් ආයතනය</label>
-              <input type="text" value="${escapeHtml(it.company)}" placeholder="ආයතනයේ නම" oninput="onEditItemField(${idx}, 'company', this.value)" />
+              <label>Company / Brand</label>
+              <input type="text" value="${escapeHtml(it.company)}" placeholder="Company name" oninput="onEditItemField(${idx}, 'company', this.value)" />
             </div>
             <div class="edit-mini-field">
-              <label>හට්ටි වර්ගය</label>
+              <label>Bundle Type</label>
               <select onchange="onEditItemField(${idx}, 'packSize', this.value)">
-                <option value="25" ${Number(it.packSize) === 25 ? 'selected' : ''}>25 හට්ටි (කොළ 12)</option>
-                <option value="50" ${Number(it.packSize) === 50 ? 'selected' : ''}>50 හට්ටි (කොළ 6)</option>
+                <option value="25" ${Number(it.packSize) === 25 ? 'selected' : ''}>25 Pack (12-Sheet)</option>
+                <option value="50" ${Number(it.packSize) === 50 ? 'selected' : ''}>50 Pack (6-Sheet)</option>
               </select>
             </div>
           </div>
           <div class="edit-item-grid-3">
             <div class="edit-mini-field">
-              <label>හට්ටි ගණන</label>
+              <label>Bundles</label>
               <input type="number" min="0" inputmode="numeric" value="${it.packs}" oninput="onEditItemField(${idx}, 'packs', this.value)" />
             </div>
             <div class="edit-mini-field">
-              <label>අමතර කැලැන්ඩර්</label>
+              <label>Extra Pcs</label>
               <input type="number" min="0" inputmode="numeric" value="${it.extra}" oninput="onEditItemField(${idx}, 'extra', this.value)" />
             </div>
             <div class="edit-mini-field">
-              <label>පටියක මිල (රු.)</label>
+              <label>Strip Price (Rs.)</label>
               <input type="number" min="0" step="0.01" inputmode="decimal" value="${it.stripPrice}" oninput="onEditItemField(${idx}, 'stripPrice', this.value)" />
             </div>
           </div>
           <div class="edit-item-calc">
-            <span id="edit-item-formula-${idx}">(${it.packs}×${it.packSize})+${it.extra} = ${it.totalQty.toLocaleString()} කැලැන්ඩර්</span>
+            <span id="edit-item-formula-${idx}">(${it.packs}×${it.packSize})+${it.extra} = ${it.totalQty.toLocaleString()} pcs</span>
             <strong id="edit-item-sub-${idx}">${formatRs(it.subtotal)}</strong>
           </div>
         `;
@@ -2207,7 +2212,7 @@
         item.company = val;
       } else if (field === 'packSize') {
         item.packSize = parseInt(val, 10) === 50 ? 50 : 25;
-        item.sheetType = item.packSize === 25 ? 'කොළ 12' : 'කොළ 6';
+        item.sheetType = item.packSize === 25 ? '12-Sheet' : '6-Sheet';
       } else if (field === 'packs') {
         item.packs = Math.max(0, parseInt(val, 10) || 0);
       } else if (field === 'extra') {
@@ -2222,7 +2227,7 @@
       const formulaEl = $(`edit-item-formula-${idx}`);
       const subEl = $(`edit-item-sub-${idx}`);
       if (formulaEl) {
-        formulaEl.textContent = `(${item.packs}×${item.packSize})+${item.extra} = ${item.totalQty.toLocaleString()} කැලැන්ඩර්`;
+        formulaEl.textContent = `(${item.packs}×${item.packSize})+${item.extra} = ${item.totalQty.toLocaleString()} pcs`;
       }
       if (subEl) {
         subEl.textContent = formatRs(item.subtotal);
@@ -2241,9 +2246,9 @@
       if (!editingOrder) return;
       editingOrder.items.push({
         id: Date.now() + Math.random(),
-        company: `කැලැන්ඩර් වර්ගය ${editingOrder.items.length + 1}`,
+        company: `Item ${editingOrder.items.length + 1}`,
         packSize: 25,
-        sheetType: 'කොළ 12',
+        sheetType: '12-Sheet',
         packs: 0,
         extra: 0,
         totalQty: 0,
@@ -2280,17 +2285,17 @@
       const balDisplay = $('editBalanceDisplay');
 
       if ($('editCashGivenInput').value === '') {
-        balLabel.textContent = 'ඉතිරි මුදල';
+        balLabel.textContent = 'Change Due';
         balDisplay.textContent = formatRs(0);
         balDisplay.style.color = 'var(--text)';
       } else {
         const diff = cashGiven - grandTotal;
         if (diff >= 0) {
-          balLabel.textContent = 'ආපසු දිය යුතු ඉතිරි මුදල';
+          balLabel.textContent = 'Change Due';
           balDisplay.textContent = formatRs(diff);
           balDisplay.style.color = 'var(--success)';
         } else {
-          balLabel.textContent = 'තවත් ගෙවිය යුතු හිඟ මුදල';
+          balLabel.textContent = 'Balance Due';
           balDisplay.textContent = formatRs(Math.abs(diff));
           balDisplay.style.color = 'var(--danger)';
         }
@@ -2301,20 +2306,20 @@
       if (!editingOrder) return false;
 
       if (editingOrder.items.length === 0 || editingOrder.totalQty <= 0) {
-        showToast('කරුණාකර වලංගු කැලැන්ඩර් ගණනක් ඇතුළත් කරන්න.');
+        showToast('Please enter a valid calendar quantity.');
         return false;
       }
 
       const invalidPrice = editingOrder.items.some((it) => it.totalQty > 0 && it.stripPrice <= 0);
       if (invalidPrice) {
-        showToast('කරුණාකර සෑම වර්ගයකටම පටියක මිල නිවැරදිව ඇතුළත් කරන්න.');
+        showToast('Please enter a valid strip price for all items.');
         return false;
       }
 
       editingOrder.vanName = (editingOrder.vanName || '').trim() || 'Customer';
       editingOrder.items = editingOrder.items.map((it, idx) => ({
         ...it,
-        company: (it.company || '').trim() || `කැලැන්ඩර් වර්ගය ${idx + 1}`
+        company: (it.company || '').trim() || `Item ${idx + 1}`
       }));
 
       const targetIdx = historyOrders.findIndex((o) => o.id === editingOrder.id);
@@ -2325,7 +2330,7 @@
       }
 
       if (closeAfter) {
-        showToast('බිල්පතේ වෙනස්කම් සාර්ථකව සුරකින ලදී!');
+        showToast('Bill updated successfully.');
         closeOrderModal();
       }
       return true;
@@ -2335,7 +2340,7 @@
       const ok = saveEditedOrder(false);
       if (!ok || !editingOrder) return;
 
-      showToast('වෙනස්කම් සුරැකුණා! PDF සකසමින්...');
+      showToast('Changes saved. Generating PDF...');
 
       await generateAndShareBillPDF({
         customerDetails: editingOrder.vanName || 'Customer',
@@ -2350,22 +2355,22 @@
 
     function deleteEditingOrder() {
       if (!editingOrder) return;
-      if (confirm('මෙම බිල්පත වාර්තා වලින් මකා දැමීමට අවශ්‍යද?')) {
+      if (confirm('Delete this bill from history?')) {
         historyOrders = historyOrders.filter((o) => o.id !== editingOrder.id);
         localStorage.setItem('calendar_strip_history_v1', JSON.stringify(historyOrders));
         updateHistoryUI();
         closeOrderModal();
-        showToast('බිල්පත ඉවත් කරන ලදී.');
+        showToast('Bill deleted.');
       }
     }
 
     function clearAllHistory() {
       if (historyOrders.length === 0) return;
-      if (confirm('සුරකින ලද සියලුම දෛනික වාර්තා මකා දැමීමට අවශ්‍යද?')) {
+      if (confirm('Clear all saved bills from history?')) {
         historyOrders = [];
         localStorage.removeItem('calendar_strip_history_v1');
         updateHistoryUI();
-        showToast('වාර්තා සියල්ල ඉවත් කළා.');
+        showToast('All history cleared.');
       }
     }
 
