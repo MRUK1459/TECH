@@ -251,7 +251,7 @@
       transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    /* Active Van Cart Banner */
+    /* Active Customer Cart Banner */
     .van-banner {
       display: none;
       align-items: center;
@@ -945,8 +945,16 @@
       font-size: 20px;
       font-weight: 800;
       letter-spacing: 0.04em;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       color: #000000;
+    }
+
+    .print-receipt .p-address {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: #222222;
+      margin-bottom: 10px;
     }
 
     .print-receipt .p-meta {
@@ -956,7 +964,7 @@
       margin-bottom: 14px;
       border-bottom: 1.5px dashed #000000;
       padding-bottom: 10px;
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
     .print-receipt table {
@@ -1029,7 +1037,7 @@
       <div class="stepper">
         <div class="step-node active" id="node-1">
           <div class="step-circle">1</div>
-          <span class="step-label">වෑන් සහ වර්ගය</span>
+          <span class="step-label">Customer සහ වර්ගය</span>
         </div>
         <div class="step-node" id="node-2">
           <div class="step-circle">2</div>
@@ -1045,25 +1053,25 @@
       </div>
     </div>
 
-    <!-- Active Van Cart Notice (when adding multiple calendar types for same van) -->
+    <!-- Active Customer Cart Notice (when adding multiple calendar types for same customer) -->
     <div class="van-banner" id="vanBanner">
-      <span id="vanBannerText">මෙම වෑන් රථයට කැලැන්ඩර් වර්ග 0 ක් එකතු කර ඇත</span>
+      <span id="vanBannerText">මෙම Customer සඳහා කැලැන්ඩර් වර්ග 0 ක් එකතු කර ඇත</span>
       <button onclick="goToStep(3)">බිල්පත බලන්න →</button>
     </div>
 
     <!-- Steps Body -->
     <div class="steps-body">
 
-      <!-- STEP 1: Van, Company & Pack Type -->
+      <!-- STEP 1: Customer Details, Company & Pack Type -->
       <section class="step-panel active" id="step-1">
-        <h2 class="step-title">පියවර 1: වෑන් රථය සහ කැලැන්ඩර් වර්ගය</h2>
-        <p class="step-desc">කැලැන්ඩර් ගෙන ආ වෑන් රථයේ / ආයතනයේ විස්තර සහ හට්ටි වර්ගය තෝරන්න.</p>
+        <h2 class="step-title">පියවර 1: Customer Details සහ කැලැන්ඩර් වර්ගය</h2>
+        <p class="step-desc">Customer Details / ආයතනයේ විස්තර සහ හට්ටි වර්ගය තෝරන්න.</p>
 
         <div class="form-grid">
           <div class="form-row-2">
             <div class="field">
-              <label>වෑන් රථයේ අංකය / නම <span class="hint">(අත්‍යවශ්‍ය නොවේ)</span></label>
-              <input type="text" id="vanName" placeholder="උදා: වෑන් 01 / WP-1234" autocomplete="off" />
+              <label>Customer Details <span class="hint">(අත්‍යවශ්‍ය නොවේ)</span></label>
+              <input type="text" id="vanName" placeholder="උදා: නම / දුරකථන / විස්තර" autocomplete="off" />
             </div>
             <div class="field">
               <label>කැලැන්ඩර් ආයතනය <span class="hint">(උදා: Abans)</span></label>
@@ -1161,7 +1169,7 @@
         <div class="btn-row">
           <button type="button" class="btn btn-secondary btn-sm-back" onclick="goToStep(1)">← ආපසු</button>
           <button type="button" class="btn btn-outline-accent" onclick="commitItem('add_more')">
-            + මෙම වෑන් එකටම තව වර්ගයක්
+            + මෙම Customer ටම තව වර්ගයක්
           </button>
           <button type="button" class="btn btn-primary" onclick="commitItem('checkout')">
             ටෝටල් බිල් සහ ගෙවීම් →
@@ -1174,7 +1182,7 @@
         <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
           <div>
             <h2 class="step-title">පියවර 3: සම්පූර්ණ බිල්පත සහ ඉතිරි මුදල</h2>
-            <p class="step-desc" style="margin-bottom:0;" id="checkoutVanLabel">වෑන් රථයේ සම්පූර්ණ විස්තරය</p>
+            <p class="step-desc" style="margin-bottom:0;" id="checkoutVanLabel">Customer Details</p>
           </div>
           <button type="button" class="icon-btn" onclick="addAnotherFromCheckout()" style="font-size:0.8rem;">
             + තව වර්ගයක් එකතු කරන්න
@@ -1214,7 +1222,7 @@
 
         <div class="btn-row">
           <button type="button" class="btn btn-secondary" id="shareBillBtn" onclick="shareBillToWhatsApp()">📤 බිල්පත Share (WhatsApp PDF)</button>
-          <button type="button" class="btn btn-success" onclick="saveAndFinishOrder()">✓ ගනුදෙනුව සුරකින්න (අලුත් වෑන්)</button>
+          <button type="button" class="btn btn-success" onclick="saveAndFinishOrder()">✓ ගනුදෙනුව සුරකින්න (අලුත් Customer)</button>
         </div>
       </section>
 
@@ -1330,11 +1338,11 @@
       // Progress bar
       $('progressFill').style.width = `${(step / 3) * 100}%`;
 
-      // Update van cart banner (show on steps 1-2 if van already has saved items)
+      // Update customer cart banner (show on steps 1-2 if customer already has saved items)
       const banner = $('vanBanner');
       if (vanItems.length > 0 && step < 3) {
         const subTotal = vanItems.reduce((s, x) => s + x.subtotal, 0);
-        $('vanBannerText').textContent = `මෙම වෑන් රථයේ එකතු කළ වර්ග: ${vanItems.length} (${formatRs(subTotal)})`;
+        $('vanBannerText').textContent = `මෙම Customer සඳහා එකතු කළ වර්ග: ${vanItems.length} (${formatRs(subTotal)})`;
         banner.classList.add('show');
       } else {
         banner.classList.remove('show');
@@ -1435,7 +1443,7 @@
         subtotal: total * price
       });
 
-      // Reset current item inputs (keep vanName!)
+      // Reset current item inputs (keep customer details!)
       $('companyName').value = '';
       $('packsInput').value = '';
       $('extraInput').value = '';
@@ -1457,9 +1465,9 @@
     }
 
     function renderCheckout() {
-      const vanLabel = $('vanName').value.trim();
-      $('checkoutVanLabel').textContent = vanLabel
-        ? `වෑන් රථය: ${vanLabel}`
+      const customerLabel = $('vanName').value.trim();
+      $('checkoutVanLabel').textContent = customerLabel
+        ? `Customer Details: ${customerLabel}`
         : 'වත්මන් ඇණවුමේ සම්පූර්ණ විස්තරය';
 
       const list = $('billItemsList');
@@ -1577,7 +1585,7 @@
           year: 'numeric', month: 'short', day: 'numeric',
           hour: '2-digit', minute: '2-digit'
         }),
-        vanName: $('vanName').value.trim() || 'වෑන් රථය',
+        vanName: $('vanName').value.trim() || 'Customer',
         items: [...vanItems],
         totalQty: grandQty,
         grandTotal,
@@ -1589,7 +1597,7 @@
       localStorage.setItem('calendar_strip_history_v1', JSON.stringify(historyOrders));
       updateHistoryUI();
 
-      // Reset for next van
+      // Reset for next customer
       vanItems = [];
       $('vanName').value = '';
       $('companyName').value = '';
@@ -1598,7 +1606,7 @@
       $('stripPriceInput').value = '';
       $('cashGivenInput').value = '';
 
-      showToast('ගනුදෙනුව සාර්ථකව සුරකින ලදී! ඊළඟ වෑන් රථයට සූදානම්.');
+      showToast('ගනුදෙනුව සාර්ථකව සුරකින ලදී! ඊළඟ Customer සඳහා සූදානම්.');
       goToStep(1);
     }
 
@@ -1613,7 +1621,7 @@
       const { grandTotal, grandQty } = getGrandTotals();
       const cashGiven = parseFloat($('cashGivenInput').value) || 0;
       const balance = cashGiven - grandTotal;
-      const vanName = $('vanName').value.trim() || 'සාමාන්‍ය ඇණවුම';
+      const customerDetails = $('vanName').value.trim() || 'සාමාන්‍ය ඇණවුම';
       const now = new Date().toLocaleString('si-LK');
 
       let rows = vanItems.map((it) => `
@@ -1629,8 +1637,9 @@
       const receiptEl = $('printReceipt');
       receiptEl.innerHTML = `
         <h2>J P T M TRADERS</h2>
+        <div class="p-address">No. 46, Kaldemulla Road, Moratuwa</div>
         <div class="p-meta">
-          වෑන් රථය: ${escapeHtml(vanName)}<br/>
+          <strong>Customer Details:</strong> ${escapeHtml(customerDetails)}<br/>
           දිනය: ${now}
         </div>
         <table>
@@ -1651,7 +1660,8 @@
 
       const textSummary = [
         `*J P T M TRADERS*`,
-        `වෑන් රථය: ${vanName}`,
+        `No. 46, Kaldemulla Road, Moratuwa`,
+        `Customer Details: ${customerDetails}`,
         `දිනය: ${now}`,
         `--------------------`,
         ...vanItems.map((it, i) => `${i + 1}. ${it.company}: (${it.packs}×${it.packSize})+${it.extra} = ${it.totalQty} × රු.${it.stripPrice} = ${formatRs(it.subtotal)}`),
@@ -1764,7 +1774,7 @@
       list.innerHTML = historyOrders.map((o) => `
         <div class="hist-card">
           <div class="hist-top">
-            <span>🚐 ${escapeHtml(o.vanName)}</span>
+            <span>👤 ${escapeHtml(o.vanName)}</span>
             <span style="font-size:0.74rem; color:var(--muted);">${o.time}</span>
           </div>
           <div class="hist-items-mini">
