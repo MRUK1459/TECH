@@ -9,6 +9,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
   <style>
     :root {
@@ -75,6 +79,78 @@
       overflow-x: hidden;
     }
 
+    /* Auth Lock Screen */
+    .auth-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: var(--bg);
+      background-image: var(--bg-grad);
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .auth-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 410px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      padding: 28px 24px;
+      animation: stepEnter 0.35s ease;
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .auth-header .brand-icon {
+      margin: 0 auto 12px;
+      width: 52px;
+      height: 52px;
+      font-size: 24px;
+    }
+
+    .auth-header h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .auth-header p {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .auth-error {
+      display: none;
+      background: var(--danger-bg);
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 10px 12px;
+      border-radius: 12px;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .auth-error.show {
+      display: block;
+    }
+
     /* Top Header */
     .topbar {
       width: 100%;
@@ -121,6 +197,7 @@
     .top-actions {
       display: flex;
       gap: 8px;
+      align-items: center;
     }
 
     .icon-btn {
@@ -151,6 +228,19 @@
       font-weight: 800;
       padding: 1px 6px;
       border-radius: 99px;
+    }
+
+    .cloud-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--muted);
+      display: inline-block;
+    }
+
+    .cloud-dot.online {
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
     }
 
     /* Main Container */
@@ -375,6 +465,8 @@
 
     input[type="text"],
     input[type="number"],
+    input[type="email"],
+    input[type="password"],
     select {
       width: 100%;
       background: var(--surface);
@@ -1110,7 +1202,7 @@
       font-weight: 700;
       font-size: 0.88rem;
       box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
-      z-index: 200;
+      z-index: 400;
       opacity: 0;
       transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
     }
@@ -1232,13 +1324,40 @@
 </head>
 <body>
 
+  <!-- Secure Login Overlay -->
+  <div class="auth-overlay" id="authOverlay">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="brand-icon">🔒</div>
+        <h2>J P T M TRADERS</h2>
+        <p>Authorized Access Only</p>
+      </div>
+
+      <div class="auth-error" id="authError"></div>
+
+      <form id="loginForm" onsubmit="handleLogin(event)" class="form-grid">
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="loginEmail" placeholder="Enter email" required autocomplete="username" />
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="loginPassword" placeholder="Enter password" required autocomplete="current-password" />
+        </div>
+        <button type="submit" class="btn btn-primary" id="loginBtn" style="margin-top:6px;">
+          Sign In
+        </button>
+      </form>
+    </div>
+  </div>
+
   <!-- Top Bar -->
   <header class="topbar">
     <div class="brand">
       <div class="brand-icon">📅</div>
       <div>
         <h1>J P T M TRADERS</h1>
-        <p>Calendar Billing System</p>
+        <p><span class="cloud-dot" id="cloudDot"></span> Calendar Billing System</p>
       </div>
     </div>
     <div class="top-actions">
@@ -1247,6 +1366,9 @@
       </button>
       <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" title="Switch Theme">
         ☀️
+      </button>
+      <button class="icon-btn" onclick="handleLogout()" id="logoutBtn" title="Sign Out" style="display:none;">
+        🚪
       </button>
     </div>
   </header>
@@ -1443,7 +1565,7 @@
 
         <div class="btn-row">
           <button type="button" class="btn btn-secondary" id="shareBillBtn" onclick="shareBillToWhatsApp()">📤 Share Bill (WhatsApp PDF)</button>
-          <button type="button" class="btn btn-success" onclick="saveAndFinishOrder()">✓ Save &amp; New Bill</button>
+          <button type="button" class="btn btn-success" id="saveBillBtn" onclick="saveAndFinishOrder()">✓ Save &amp; New Bill</button>
         </div>
       </section>
 
@@ -1456,7 +1578,7 @@
     <div class="drawer-head">
       <div>
         <h3 style="font-size:1.05rem; font-weight:800;">📋 Bill History</h3>
-        <p style="font-size:0.76rem; color:var(--muted);">Saved Invoices</p>
+        <p style="font-size:0.76rem; color:var(--muted);">Cloud Synced Invoices</p>
       </div>
       <button class="icon-btn" onclick="closeHistory()">✕</button>
     </div>
@@ -1532,7 +1654,7 @@
 
       <div class="edit-modal-foot">
         <div class="edit-foot-row">
-          <button type="button" class="btn btn-success" onclick="saveEditedOrder(true)">💾 Save Changes</button>
+          <button type="button" class="btn btn-success" id="editModalSaveBtn" onclick="saveEditedOrder(true)">💾 Save Changes</button>
           <button type="button" class="btn btn-primary" id="editModalShareBtn" onclick="saveAndShareEditedOrder()">📤 WhatsApp PDF Share</button>
         </div>
         <button type="button" class="btn btn-danger-soft" style="padding:9px 14px; font-size:0.8rem;" onclick="deleteEditingOrder()">
@@ -1549,12 +1671,31 @@
   <div class="toast" id="toast"></div>
 
   <script>
+    // --- Firebase Configuration ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyCCT3DbaSWvcwPg2O76PGB1QxK6vvMrR2Q",
+      authDomain: "j-p-t-m-traders.firebaseapp.com",
+      databaseURL: "https://j-p-t-m-traders-default-rtdb.firebaseio.com",
+      projectId: "j-p-t-m-traders",
+      storageBucket: "j-p-t-m-traders.firebasestorage.app",
+      messagingSenderId: "866135332134",
+      appId: "1:866135332134:web:1d9ce14a258673f2f01de7",
+      measurementId: "G-NR4LS24FN8"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+    const billsRef = db.ref('bills');
+
     // --- Application State ---
     let currentStep = 1;
     let selectedPackSize = 25;
     let vanItems = [];
-    let historyOrders = JSON.parse(localStorage.getItem('calendar_strip_history_v1') || '[]');
+    let historyOrders = [];
     let editingOrder = null;
+    let currentUser = null;
+    let dbListenerAttached = false;
 
     // --- Helpers ---
     const $ = (id) => document.getElementById(id);
@@ -1578,6 +1719,88 @@
       el.classList.add('shake');
       el.focus();
     }
+
+    // --- Firebase Auth & Real-Time Cloud Sync ---
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = $('loginEmail').value.trim();
+      const password = $('loginPassword').value;
+      const errBox = $('authError');
+      const btn = $('loginBtn');
+
+      errBox.classList.remove('show');
+      btn.disabled = true;
+      btn.textContent = 'Signing in...';
+
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+        $('loginPassword').value = '';
+      } catch (err) {
+        errBox.textContent = 'Invalid email or password.';
+        errBox.classList.add('show');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Sign In';
+      }
+    }
+
+    async function handleLogout() {
+      if (confirm('Sign out from J P T M TRADERS?')) {
+        await auth.signOut();
+        showToast('Signed out.');
+      }
+    }
+
+    function startCloudSync() {
+      if (dbListenerAttached) return;
+      dbListenerAttached = true;
+
+      billsRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          historyOrders = Object.values(data)
+            .filter((o) => o && typeof o === 'object')
+            .map((o) => ({
+              ...o,
+              items: Array.isArray(o.items) ? o.items : Object.values(o.items || {})
+            }))
+            .sort((a, b) => (b.id || 0) - (a.id || 0));
+        } else {
+          historyOrders = [];
+        }
+        $('cloudDot').classList.add('online');
+        updateHistoryUI();
+      }, (err) => {
+        $('cloudDot').classList.remove('online');
+        showToast('Cloud access denied. Check Firebase rules.');
+      });
+    }
+
+    function stopCloudSync() {
+      if (dbListenerAttached) {
+        billsRef.off();
+        dbListenerAttached = false;
+      }
+      historyOrders = [];
+      $('cloudDot').classList.remove('online');
+      updateHistoryUI();
+    }
+
+    auth.onAuthStateChanged((user) => {
+      currentUser = user;
+      if (user) {
+        $('authOverlay').classList.add('hidden');
+        $('logoutBtn').style.display = 'inline-flex';
+        startCloudSync();
+      } else {
+        stopCloudSync();
+        closeOrderModal();
+        closeHistory();
+        $('logoutBtn').style.display = 'none';
+        $('authOverlay').classList.remove('hidden');
+        setTimeout(() => $('loginEmail').focus(), 100);
+      }
+    });
 
     // --- Theme Toggle ---
     function initTheme() {
@@ -1621,7 +1844,7 @@
       // Progress bar
       $('progressFill').style.width = `${(step / 3) * 100}%`;
 
-      // Update customer cart banner (show on steps 1-2 if customer already has saved items)
+      // Update customer cart banner
       const banner = $('vanBanner');
       if (vanItems.length > 0 && step < 3) {
         const subTotal = vanItems.reduce((s, x) => s + x.subtotal, 0);
@@ -1713,7 +1936,7 @@
       const sheetType = selectedPackSize === 25 ? '12-Sheet' : '6-Sheet';
 
       vanItems.push({
-        id: Date.now() + Math.random(),
+        id: Date.now() + Math.floor(Math.random() * 1000),
         company,
         packSize: selectedPackSize,
         sheetType,
@@ -1774,7 +1997,6 @@
       $('grandTotalDisplay').textContent = formatRs(grandTotal);
       $('grandMeta').textContent = `${vanItems.length} ${vanItems.length === 1 ? 'Item' : 'Items'} • ${grandQty.toLocaleString()} Calendars`;
 
-      // Smart quick cash suggestion buttons
       renderQuickCashChips(grandTotal);
       updateBalance();
     }
@@ -1852,9 +2074,14 @@
       }
     }
 
-    // --- Save Order & Reusable WhatsApp PDF Share ---
-    function saveAndFinishOrder() {
-      if (vanItems.length === 0) return;
+    // --- Save Order to Firebase Cloud & Reusable WhatsApp PDF Share ---
+    async function saveAndFinishOrder() {
+      if (vanItems.length === 0 || !currentUser) return;
+
+      const saveBtn = $('saveBillBtn');
+      const origText = saveBtn.textContent;
+      saveBtn.disabled = true;
+      saveBtn.textContent = '⏳ Saving to Cloud...';
 
       const { grandTotal, grandQty } = getGrandTotals();
       const cashGiven = parseFloat($('cashGivenInput').value) || 0;
@@ -1874,21 +2101,26 @@
         balance
       };
 
-      historyOrders.unshift(order);
-      localStorage.setItem('calendar_strip_history_v1', JSON.stringify(historyOrders));
-      updateHistoryUI();
+      try {
+        await billsRef.child(String(order.id)).set(order);
 
-      // Reset for next customer
-      vanItems = [];
-      $('vanName').value = '';
-      $('companyName').value = '';
-      $('packsInput').value = '';
-      $('extraInput').value = '';
-      $('stripPriceInput').value = '';
-      $('cashGivenInput').value = '';
+        // Reset for next customer
+        vanItems = [];
+        $('vanName').value = '';
+        $('companyName').value = '';
+        $('packsInput').value = '';
+        $('extraInput').value = '';
+        $('stripPriceInput').value = '';
+        $('cashGivenInput').value = '';
 
-      showToast('Bill saved successfully.');
-      goToStep(1);
+        showToast('Bill saved to cloud.');
+        goToStep(1);
+      } catch (err) {
+        showToast('Failed to save to cloud. Check connection.');
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = origText;
+      }
     }
 
     async function generateAndShareBillPDF(orderData, btnEl) {
@@ -2062,8 +2294,8 @@
     function updateHistoryUI() {
       $('histBadge').textContent = historyOrders.length;
 
-      const totalCal = historyOrders.reduce((s, o) => s + o.totalQty, 0);
-      const totalRev = historyOrders.reduce((s, o) => s + o.grandTotal, 0);
+      const totalCal = historyOrders.reduce((s, o) => s + (Number(o.totalQty) || 0), 0);
+      const totalRev = historyOrders.reduce((s, o) => s + (Number(o.grandTotal) || 0), 0);
       $('statTotalCal').textContent = totalCal.toLocaleString();
       $('statTotalRev').textContent = formatRs(totalRev);
 
@@ -2080,10 +2312,10 @@
             <span style="font-size:0.74rem; color:var(--muted);">${escapeHtml(o.time)}</span>
           </div>
           <div class="hist-items-mini">
-            ${o.items.map((it) => `• ${escapeHtml(it.company)}: (${it.packs}×${it.packSize})+${it.extra} = ${it.totalQty} × Rs.${it.stripPrice}`).join('<br/>')}
+            ${(o.items || []).map((it) => `• ${escapeHtml(it.company)}: (${it.packs}×${it.packSize})+${it.extra} = ${it.totalQty} × Rs.${it.stripPrice}`).join('<br/>')}
           </div>
           <div class="hist-foot">
-            <span>Total: ${o.totalQty.toLocaleString()} pcs</span>
+            <span>Total: ${Number(o.totalQty).toLocaleString()} pcs</span>
             <span style="color:var(--accent);">${formatRs(o.grandTotal)}</span>
           </div>
           ${o.cashGiven > 0 ? `
@@ -2126,7 +2358,6 @@
       const original = historyOrders.find((o) => o.id === orderId);
       if (!original) return;
 
-      // Deep clone so edits are staged until saved
       editingOrder = JSON.parse(JSON.stringify(original));
 
       $('editModalTime').textContent = `Date: ${editingOrder.time}`;
@@ -2245,7 +2476,7 @@
     function addEditItem() {
       if (!editingOrder) return;
       editingOrder.items.push({
-        id: Date.now() + Math.random(),
+        id: Date.now() + Math.floor(Math.random() * 1000),
         company: `Item ${editingOrder.items.length + 1}`,
         packSize: 25,
         sheetType: '12-Sheet',
@@ -2302,8 +2533,8 @@
       }
     }
 
-    function saveEditedOrder(closeAfter = true) {
-      if (!editingOrder) return false;
+    async function saveEditedOrder(closeAfter = true) {
+      if (!editingOrder || !currentUser) return false;
 
       if (editingOrder.items.length === 0 || editingOrder.totalQty <= 0) {
         showToast('Please enter a valid calendar quantity.');
@@ -2322,22 +2553,29 @@
         company: (it.company || '').trim() || `Item ${idx + 1}`
       }));
 
-      const targetIdx = historyOrders.findIndex((o) => o.id === editingOrder.id);
-      if (targetIdx !== -1) {
-        historyOrders[targetIdx] = JSON.parse(JSON.stringify(editingOrder));
-        localStorage.setItem('calendar_strip_history_v1', JSON.stringify(historyOrders));
-        updateHistoryUI();
-      }
+      const saveBtn = $('editModalSaveBtn');
+      const origText = saveBtn.textContent;
+      saveBtn.disabled = true;
+      saveBtn.textContent = '⏳ Saving...';
 
-      if (closeAfter) {
-        showToast('Bill updated successfully.');
-        closeOrderModal();
+      try {
+        await billsRef.child(String(editingOrder.id)).set(JSON.parse(JSON.stringify(editingOrder)));
+        if (closeAfter) {
+          showToast('Bill updated in cloud.');
+          closeOrderModal();
+        }
+        return true;
+      } catch (err) {
+        showToast('Failed to update bill in cloud.');
+        return false;
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = origText;
       }
-      return true;
     }
 
     async function saveAndShareEditedOrder() {
-      const ok = saveEditedOrder(false);
+      const ok = await saveEditedOrder(false);
       if (!ok || !editingOrder) return;
 
       showToast('Changes saved. Generating PDF...');
@@ -2353,24 +2591,28 @@
       }, $('editModalShareBtn'));
     }
 
-    function deleteEditingOrder() {
-      if (!editingOrder) return;
-      if (confirm('Delete this bill from history?')) {
-        historyOrders = historyOrders.filter((o) => o.id !== editingOrder.id);
-        localStorage.setItem('calendar_strip_history_v1', JSON.stringify(historyOrders));
-        updateHistoryUI();
-        closeOrderModal();
-        showToast('Bill deleted.');
+    async function deleteEditingOrder() {
+      if (!editingOrder || !currentUser) return;
+      if (confirm('Delete this bill from cloud history?')) {
+        try {
+          await billsRef.child(String(editingOrder.id)).remove();
+          closeOrderModal();
+          showToast('Bill deleted.');
+        } catch (err) {
+          showToast('Failed to delete bill.');
+        }
       }
     }
 
-    function clearAllHistory() {
-      if (historyOrders.length === 0) return;
-      if (confirm('Clear all saved bills from history?')) {
-        historyOrders = [];
-        localStorage.removeItem('calendar_strip_history_v1');
-        updateHistoryUI();
-        showToast('All history cleared.');
+    async function clearAllHistory() {
+      if (historyOrders.length === 0 || !currentUser) return;
+      if (confirm('Clear all saved bills from cloud history?')) {
+        try {
+          await billsRef.remove();
+          showToast('All cloud history cleared.');
+        } catch (err) {
+          showToast('Failed to clear history.');
+        }
       }
     }
 
