@@ -1748,6 +1748,13 @@
       return 'Rs. ' + val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
+    function getFormattedNow() {
+      return new Date().toLocaleString('en-GB', {
+        year: 'numeric', month: 'short', day: 'numeric',
+        hour: '2-digit', minute: '2-digit', hour12: true
+      });
+    }
+
     function showToast(msg) {
       const t = $('toast');
       t.textContent = msg;
@@ -2162,10 +2169,7 @@
 
       const order = {
         id: Date.now(),
-        time: new Date().toLocaleString('en-GB', {
-          year: 'numeric', month: 'short', day: 'numeric',
-          hour: '2-digit', minute: '2-digit', hour12: true
-        }),
+        time: getFormattedNow(),
         vanName: $('vanName').value.trim() || 'Customer',
         items: [...vanItems],
         totalQty: grandQty,
@@ -2197,8 +2201,11 @@
     }
 
     async function generateAndShareBillPDF(orderData, btnEl) {
-      const { customerDetails, time, items, totalQty, grandTotal, cashGiven, balance } = orderData;
+      const { customerDetails, items, totalQty, grandTotal, cashGiven, balance } = orderData;
       if (!items || items.length === 0) return;
+
+      // Always capture the exact date & time when the bill is shared
+      const shareTime = getFormattedNow();
 
       const originalBtnText = btnEl ? btnEl.textContent : '';
       if (btnEl) {
@@ -2222,7 +2229,7 @@
         <div class="p-address">No. 46, Kaldemulla Road, Moratuwa</div>
         <div class="p-meta">
           <strong>Customer Details:</strong> ${escapeHtml(customerDetails)}<br/>
-          Date: ${escapeHtml(time)}
+          Date: ${escapeHtml(shareTime)}
         </div>
         <table>
           <thead>
@@ -2244,7 +2251,7 @@
         `*J P T M TRADERS*`,
         `No. 46, Kaldemulla Road, Moratuwa`,
         `Customer Details: ${customerDetails}`,
-        `Date: ${time}`,
+        `Date: ${shareTime}`,
         `--------------------`,
         ...items.map((it, i) => `${i + 1}. ${it.company}: (${it.packs}×${it.packSize})+${it.extra} = ${it.totalQty} × Rs.${it.stripPrice} = ${formatRs(it.subtotal)}`),
         `--------------------`,
@@ -2336,14 +2343,9 @@
       const cashGiven = parseFloat($('cashGivenInput').value) || 0;
       const balance = cashGiven - grandTotal;
       const customerDetails = $('vanName').value.trim() || 'Customer';
-      const now = new Date().toLocaleString('en-GB', {
-        year: 'numeric', month: 'short', day: 'numeric',
-        hour: '2-digit', minute: '2-digit', hour12: true
-      });
 
       await generateAndShareBillPDF({
         customerDetails,
-        time: now,
         items: vanItems,
         totalQty: grandQty,
         grandTotal,
@@ -2417,7 +2419,6 @@
 
       await generateAndShareBillPDF({
         customerDetails: order.vanName || 'Customer',
-        time: order.time,
         items: order.items,
         totalQty: order.totalQty,
         grandTotal: order.grandTotal,
@@ -2655,7 +2656,6 @@
 
       await generateAndShareBillPDF({
         customerDetails: editingOrder.vanName || 'Customer',
-        time: editingOrder.time,
         items: editingOrder.items,
         totalQty: editingOrder.totalQty,
         grandTotal: editingOrder.grandTotal,
